@@ -1,10 +1,9 @@
 <div align="center">
   
-  ![GitHub repo size](https://img.shields.io/github/repo-size/codewithsadee/portfolio)
-  ![GitHub stars](https://img.shields.io/github/stars/codewithsadee/portfolio?style=social)
-  ![GitHub forks](https://img.shields.io/github/forks/codewithsadee/portfolio?style=social)
-[![Twitter Follow](https://img.shields.io/twitter/follow/codewithsadee_?style=social)](https://twitter.com/intent/follow?screen_name=codewithsadee_)
-  [![YouTube Video Views](https://img.shields.io/youtube/views/SAu7e09vXoQ?style=social)](https://youtu.be/SAu7e09vXoQ)
+  ![GitHub repo size](https://img.shields.io/github/repo-size/pawan1198/portfolio)
+  ![GitHub stars](https://img.shields.io/github/stars/pawan1198/portfolio?style=social)
+  ![GitHub forks](https://img.shields.io/github/forks/pawan1198/portfolio?style=social)
+[![Twitter Follow](https://img.shields.io/twitter/follow/pawan1198_?style=social)](https://twitter.com/intent/follow?screen_name=pawanjangra1198_)
 
   <br />
   <br />
@@ -47,7 +46,7 @@ git clone https://github.com/codewithsadee/portfolio.git
 
 ### Contact
 
-If you want to contact with me you can reach me at [Twitter](https://www.twitter.com/codewithsadee).
+If you want to contact with me you can reach me at [Twitter](https://www.twitter.com/pawanjangra1198).
 
 ### License
 

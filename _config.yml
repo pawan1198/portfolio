@@ -1,8 +1,0 @@
-title: Pawan - Research Analyst
-description: [A brief description of your professional profile]
-
-# Choose a theme or create your own CSS
-theme: jekyll-theme-minimal # Example theme
-
-# Set up your permalinks (optional)
-permalink: /:year/:month/:day/:title.html

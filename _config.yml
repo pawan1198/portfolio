@@ -1,6 +1,19 @@
 title: Pawan
 logo: /assets/img/profile-pic.jpeg
 #description: text below image
-email: pawanjangra1198@gmail.comm
+# email: pawanjangra1198@gmail.com
 show_downloads: false
 theme: jekyll-theme-minimal
+
+# Social Media Links
+social:
+  linkedin: https://www.linkedin.com/in/pawanjangra1198/
+  github: https://github.com/pawan1198
+  website: https://pawan1198.github.io/r-cheatsheets/
+  twitter: https://twitter.com/pawanjangra1198
+  #facebook: https://facebook.com/yourusername
+
+# Contact Information
+contact:
+  phone: 
+  email: pawanjangra1198@gmail.com

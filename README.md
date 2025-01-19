@@ -17,8 +17,8 @@ Knowledge of Linux, Windows, and macOS, with expertise in troubleshooting, and s
 Experienced in coordinating and conducting field surveys.
 
 ## Education      		
-- M.Sc., Applied Statistics	| Indira Gandhi National Open University (IGNOU), New Delhi (_Pursing_)	 			        		
-- B.Sc., Physics | Kurukshetra University, Haryana (India) (_2020_)
+- M.Sc. Applied Statistics	| Indira Gandhi National Open University (IGNOU), New Delhi (_Pursing_)	 			        		
+- B.Sc. Physics | Kurukshetra University, Haryana (India) (_2020_)
 
 ## Work Experience
 ### Course Assistant  

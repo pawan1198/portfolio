@@ -1,8 +1,8 @@
-# Research Analyst
+# Data Analyst
 
 ## SKILLS
 ### Data Analysis
-Proficient in Microsoft Office, R, and Python for data analysis. Also, experienced in managing and analyzing large datasets.
+Proficient in Microsoft Office, R, and Python for data analysis. Also, I am experienced in managing and analyzing large datasets.
 
 ### Management of Virtual Platforms
 Proficient in managing virtual learning platforms, including Zoom, OBS-Studio, and YouTube streaming.
@@ -29,10 +29,10 @@ IDEAs (International Development Economics Associates) – Advanced Certificate 
 
 ### Research Assistant
 Society for Social and Economic Research (SSER)
-- Compilation of data from union budgets and analysis to identify expenditure trends and changes in budgetary allocations for various schemes.
+- Compile and analyze data from union budgets to identify expenditure trends and changes in budgetary allocations for various schemes.
 - Extraction and analysis of data from PLFS (Periodic Labour Force Surveys).
-- Data scraping from secondary sources, such as food price data from Agmarknet, procurement data from FCI, consumer price index data, and fertilizer statistics.
-- Analysis and visualization of compiled data using R for research projects.
+- Data scraping from secondary sources, such as Agmarknet's food price data, FCI's procurement data, consumer price index data, and fertilizer statistics.
+- Analyze and visualize compiled data using R for research projects.
 - Participation and assistance in field surveys such as the Survey of Rural Households in Haryana (2018), the Survey of Industrial Workers in Faridabad (2019), the Survey of Farmers during Farm Protests (2021), and the Survey of Farmers in Madhya Pradesh during the Fertiliser Crisis in 2021.
 - Data entry for various primary surveys conducted by SSER.
 - Bibliography management for multiple research projects.

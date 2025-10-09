@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Portfolio"
+  navbar:
+    left:
+      - href: index.qmd
+        text: "Home"
+      - href: about.qmd
+        text: "About Me"
+
+format:
+  html:
+    theme: litera
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+editor: visual
+

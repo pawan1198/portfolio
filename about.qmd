@@ -22,19 +22,19 @@ sidebar: false
 
 # Skills
 
-##Data Analysis
+## Data Analysis
 Proficient in Microsoft Office, R, and Python for data analysis. Also, experienced in managing and analyzing large datasets.
 
-##Management of Virtual Platforms
+## Management of Virtual Platforms
 Proficient in managing virtual learning platforms, including Zoom, OBS-Studio, and YouTube streaming.
 
-##Administrative and Office Management
+## Administrative and Office Management
 Efficient in managing administrative tasks such as inventory management, account maintenance, and other activities for office functioning.
 
-##Operating System Management
+## Operating System Management
 Knowledge of Linux, Windows, and macOS, with expertise in troubleshooting, and software installation and updating.
 
-##Survey Management and Assistance
+## Survey Management and Assistance
 Experienced in coordinating and conducting field surveys.
 
 # Education
@@ -54,7 +54,7 @@ Kurukshetra University, Haryana (India) (2020)
 -    Participation and assistance in field surveys such as surveys of households in Madhya Pradesh (2022) and survey of textile workers in Panipat (2023).
 -    Administrative responsibilities such as classroom management and accounts maintenance.
 
-##Research Assistant
+## Research Assistant
 *Society for Social and Economic Research (SSER)*
 
 -    Compile and analyze data from union budgets to identify expenditure trends and changes in budgetary allocations for various schemes.

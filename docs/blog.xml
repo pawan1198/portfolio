@@ -10,7 +10,7 @@
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Pawan</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Thu, 30 Oct 2025 10:37:23 GMT</lastBuildDate>
+<lastBuildDate>Thu, 30 Oct 2025 10:43:40 GMT</lastBuildDate>
 <item>
   <title>Combining plots in ggplot2</title>
   <link>https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot.html</link>
@@ -24,6 +24,8 @@
 <h1>Sample plots</h1>
 <p>Let’s create four different plots and assign them to objects named <b>p1</b>, <b>p2</b>, <b>p3</b> and <b>p4</b>. You can use any other names.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
@@ -143,84 +145,55 @@ font-style: inherit;">"gray20"</span>)</span>
 <span id="cb1-23"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># View the plots</span></span>
-<span id="cb1-24">p1</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p2</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p3</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">p4</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+<span id="cb1-24">p1</span>
+<span id="cb1-25">p2</span>
+<span id="cb1-26">p3</span>
+<span id="cb1-27">p4</span></code></pre></div></div>
+</details>
 </div>
 </section>
 <section id="gridextra" class="level1">
 <h1>gridExtra</h1>
 <p>The <mark>gridExtra</mark> package provides the <mark>grid.arrange</mark> function to combine several plots on a single figure.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># install.packages("gridExtra")</span></span>
-<span id="cb5-2"><span class="fu" style="color: #4758AB;
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb5-3"><span class="fu" style="color: #4758AB;
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(gridExtra)</span>
-<span id="cb5-4"></span>
-<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+<span id="cb2-4"></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Combine the plots with gridExtra</span></span>
-<span id="cb5-6"><span class="fu" style="color: #4758AB;
+<span id="cb2-6"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">grid.arrange</span>(p2, p3, p1, p4) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <p>You can also specify the number of rows with <b>nrow</b>, the number of columns with <b>ncol</b>, and the sizes with <b>widths</b> and <b>heights</b> and also we can add labels at the top, bottom, left and right of the figures.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb6-2"><span class="fu" style="color: #4758AB;
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(gridExtra)</span>
-<span id="cb6-3"></span>
-<span id="cb6-4"><span class="co" style="color: #5E5E5E;
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Combine the plots</span></span>
-<span id="cb6-5"><span class="fu" style="color: #4758AB;
+<span id="cb3-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">grid.arrange</span>(p4, p3, p2, p1,</span>
-<span id="cb6-6">             <span class="at" style="color: #657422;
+<span id="cb3-6">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">top =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -229,7 +202,7 @@ background-color: null;
 font-style: inherit;">bottom =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bottom label"</span>, </span>
-<span id="cb6-7">             <span class="at" style="color: #657422;
+<span id="cb3-7">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">left =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -238,7 +211,7 @@ background-color: null;
 font-style: inherit;">right =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Right label"</span>,</span>
-<span id="cb6-8">             <span class="at" style="color: #657422;
+<span id="cb3-8">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">widths =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -255,27 +228,23 @@ background-color: null;
 font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">3</span>)) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <p>We can create a layout matrix indicating the positions for each plot and use the <mark>layout_matrix</mark> function in order to specify the desired layout.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb7-2"><span class="fu" style="color: #4758AB;
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(gridExtra)</span>
-<span id="cb7-3"></span>
-<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+<span id="cb4-3"></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># layout</span></span>
-<span id="cb7-5">layout <span class="ot" style="color: #003B4F;
+<span id="cb4-5">layout <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -286,12 +255,12 @@ background-color: null;
 font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>,</span>
-<span id="cb7-6">                   <span class="dv" style="color: #AD0000;
+<span id="cb4-6">                   <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">3</span>,</span>
-<span id="cb7-7">                   <span class="dv" style="color: #AD0000;
+<span id="cb4-7">                   <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -304,20 +273,14 @@ background-color: null;
 font-style: inherit;">byrow =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>)</span>
-<span id="cb7-8"></span>
-<span id="cb7-9"><span class="fu" style="color: #4758AB;
+<span id="cb4-8"></span>
+<span id="cb4-9"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">grid.arrange</span>(p2, p3, p1, p4,</span>
-<span id="cb7-10">             <span class="at" style="color: #657422;
+<span id="cb4-10">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">layout_matrix =</span> layout) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 <section id="patchwork" class="level1">
@@ -326,46 +289,44 @@ font-style: inherit;">layout_matrix =</span> layout) </span></code></pre></div><
 <h2 class="anchored" data-anchor-id="combining-ggplot2-plots">Combining ggplot2 plots</h2>
 <p>patchwork is designed to combine ggplot2 plots into the same figure easily with using the + operator to combine the charts.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># install.packages("patchwork")</span></span>
-<span id="cb8-2"><span class="fu" style="color: #4758AB;
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb8-3"><span class="fu" style="color: #4758AB;
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb8-4"></span>
-<span id="cb8-5"><span class="co" style="color: #5E5E5E;
+<span id="cb5-4"></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Combine the plots</span></span>
-<span id="cb8-6">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb5-6">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p2 </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 <section id="controlling-the-layout" class="level2">
 <h2 class="anchored" data-anchor-id="controlling-the-layout">Controlling the layout</h2>
 <p>If you want to customize the number of rows or columns of the figure you can use the <mark>plot_layout</mark> function. Also you can also specify the widths and heights of the plots with widths and heights arguments.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb9-2"><span class="fu" style="color: #4758AB;
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb9-3"></span>
-<span id="cb9-4"><span class="co" style="color: #5E5E5E;
+<span id="cb6-3"></span>
+<span id="cb6-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Combine the plots</span></span>
-<span id="cb9-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb6-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -374,34 +335,30 @@ background-color: null;
 font-style: inherit;">+</span> p4 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb9-6">  <span class="fu" style="color: #4758AB;
+<span id="cb6-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_layout</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">3</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <p>The most interesting functionality of the plot_layout function is that you can create a custom layout design as shown in the example below, where 1, 2, 3 and 4 represents the locations for p1,p2, p3 and p4, respectively, and # represents an empty space. Recall that you can use numbers but also letters to represent the plot locations.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb10-2"><span class="fu" style="color: #4758AB;
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb10-3"></span>
-<span id="cb10-4"><span class="co" style="color: #5E5E5E;
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Combine the plots with a custom layout</span></span>
-<span id="cb10-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb7-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -410,45 +367,41 @@ background-color: null;
 font-style: inherit;">+</span> p4 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb10-6">  <span class="fu" style="color: #4758AB;
+<span id="cb7-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_layout</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">design =</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"111</span></span>
-<span id="cb10-7"><span class="st" style="color: #20794D;
+<span id="cb7-7"><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">                       2#3</span></span>
-<span id="cb10-8"><span class="st" style="color: #20794D;
+<span id="cb7-8"><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">                       443"</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <section id="the-wrap_plots-function" class="level3">
 <h3 class="anchored" data-anchor-id="the-wrap_plots-function">The <mark>wrap_plots</mark> function</h3>
 <p>Sometimes you can’t use the + operator programatically, so if you don’t know the number of plots beforehand you can use the <mark>wrap_plots</mark> function and pass a list of plots to it. This function also allows specifying the number of rows and columns, the sizes and the custom layouts.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb11-2"><span class="fu" style="color: #4758AB;
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb11-3"></span>
-<span id="cb11-4"><span class="co" style="color: #5E5E5E;
+<span id="cb8-3"></span>
+<span id="cb8-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Combine the plots</span></span>
-<span id="cb11-5"><span class="fu" style="color: #4758AB;
+<span id="cb8-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">wrap_plots</span>(p1, p2, p3, p4, </span>
-<span id="cb11-6">           <span class="at" style="color: #657422;
+<span id="cb8-6">           <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -457,7 +410,7 @@ background-color: null;
 font-style: inherit;">nrow =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>,</span>
-<span id="cb11-7">           <span class="at" style="color: #657422;
+<span id="cb8-7">           <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">widths =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -474,30 +427,26 @@ background-color: null;
 font-style: inherit;">0.5</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>)) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 <section id="adding-spacers" class="level3">
 <h3 class="anchored" data-anchor-id="adding-spacers">Adding spacers</h3>
 <p>When creating a custom layout you can use # to add spaces, as shown in one of the previous examples, but if you are using + there is also a function named <mark>plot_spacer</mark> to add spaces or gaps between plots.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb12-2"><span class="fu" style="color: #4758AB;
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb12-3"></span>
-<span id="cb12-4"><span class="co" style="color: #5E5E5E;
+<span id="cb9-3"></span>
+<span id="cb9-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Plots with spaces</span></span>
-<span id="cb12-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb9-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -508,13 +457,7 @@ background-color: null;
 font-style: inherit;">plot_spacer</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p3 </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 </section>
@@ -525,6 +468,70 @@ font-style: inherit;">+</span> p3 </span></code></pre></div></div>
 <h3 class="anchored" data-anchor-id="arranging-ggplot2-plots-in-rows-beside-each-other">Arranging ggplot2 plots in rows (beside each other)</h3>
 <p>The | operator places plots in a row. This operator is similar to + when you have two plots but | will place all plots in a single row while + will try to create a square layout if possible.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb10-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb10-3"></span>
+<span id="cb10-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots in rows</span></span>
+<span id="cb10-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> p2</span></code></pre></div></div>
+</details>
+</div>
+</section>
+<section id="arranging-ggplot2-plots-in-columns-stacked" class="level3">
+<h3 class="anchored" data-anchor-id="arranging-ggplot2-plots-in-columns-stacked">Arranging ggplot2 plots in columns (stacked)</h3>
+<p>The / operator stacks the ggplot2 plots into columns without the need of using the <mark>plot_layout</mark> function and specifying ncol = 1.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb11-3"></span>
+<span id="cb11-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots as column</span></span>
+<span id="cb11-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p2</span></code></pre></div></div>
+</details>
+</div>
+<p>You can create complex layouts. The | and / operators can be use to create complex layouts combining plots. In the following example we are creating a layout with two plots at the top and one wider at the bottom.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb12-3"></span>
+<span id="cb12-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Two plots on top and one at the bottom</span></span>
+<span id="cb12-5">(p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> p2) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p3 </span></code></pre></div></div>
+</details>
+</div>
+<p>The following example is similar to the previous, but with one plot at the left and two at the right.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
@@ -534,93 +541,13 @@ font-style: inherit;">library</span>(patchwork)</span>
 <span id="cb13-3"></span>
 <span id="cb13-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Combine the plots in rows</span></span>
-<span id="cb13-5">p1 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|</span> p2</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="arranging-ggplot2-plots-in-columns-stacked" class="level3">
-<h3 class="anchored" data-anchor-id="arranging-ggplot2-plots-in-columns-stacked">Arranging ggplot2 plots in columns (stacked)</h3>
-<p>The / operator stacks the ggplot2 plots into columns without the need of using the <mark>plot_layout</mark> function and specifying ncol = 1.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb14-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb14-3"></span>
-<span id="cb14-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Combine the plots as column</span></span>
-<span id="cb14-5">p1 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> p2</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>You can create complex layouts. The | and / operators can be use to create complex layouts combining plots. In the following example we are creating a layout with two plots at the top and one wider at the bottom.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb15-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb15-3"></span>
-<span id="cb15-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Two plots on top and one at the bottom</span></span>
-<span id="cb15-5">(p1 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|</span> p2) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> p3 </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The following example is similar to the previous, but with one plot at the left and two at the right.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb16-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb16-3"></span>
-<span id="cb16-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
 font-style: inherit;"># One plot at the left and two at the right</span></span>
-<span id="cb16-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb13-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|</span> (p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span> p3) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 </section>
@@ -630,17 +557,19 @@ font-style: inherit;">/</span> p3) </span></code></pre></div></div>
 <h3 class="anchored" data-anchor-id="title-for-all-the-plots">Title for all the plots</h3>
 <p>You can add a title, subtitle and captions to all plots with the <mark>plot_annotation</mark> function.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb17-2"><span class="fu" style="color: #4758AB;
+<span id="cb14-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb17-3"></span>
-<span id="cb17-4"><span class="co" style="color: #5E5E5E;
+<span id="cb14-3"></span>
+<span id="cb14-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Title for the combined plots</span></span>
-<span id="cb17-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb14-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> ((p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -649,44 +578,40 @@ background-color: null;
 font-style: inherit;">/</span> p4) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb17-6"><span class="fu" style="color: #4758AB;
+<span id="cb14-6"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Title"</span>,</span>
-<span id="cb17-7">                <span class="at" style="color: #657422;
+<span id="cb14-7">                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Subtitle"</span>,</span>
-<span id="cb17-8">                <span class="at" style="color: #657422;
+<span id="cb14-8">                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Caption"</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <p>The plot_annotation function can also be used to label each plot individually with the <mark>tags_level</mark> argument. Possible options are “1” for numbers, “a” for lowercase letters, “A” for uppercase letters, “i” for lowercase Roman numerals, “I” for uppercase Roman numerals or a vector with your own tags.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb18-2"><span class="fu" style="color: #4758AB;
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb18-3"></span>
-<span id="cb18-4"><span class="co" style="color: #5E5E5E;
+<span id="cb15-3"></span>
+<span id="cb15-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Labels for each plot</span></span>
-<span id="cb18-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb15-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -697,27 +622,23 @@ background-color: null;
 font-style: inherit;">tag_levels =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"A"</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <p>The labels can be customized with the <mark>tag_prefix</mark>, <mark>tag_suffix</mark> and <mark>tag_sep</mark> arguments.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb19-2"><span class="fu" style="color: #4758AB;
+<span id="cb16-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb19-3"></span>
-<span id="cb19-4"><span class="co" style="color: #5E5E5E;
+<span id="cb16-3"></span>
+<span id="cb16-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Labels for each plot</span></span>
-<span id="cb19-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb16-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -732,13 +653,7 @@ background-color: null;
 font-style: inherit;">tag_prefix =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Plot "</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 </section>
@@ -746,44 +661,40 @@ font-style: inherit;">"Plot "</span>) </span></code></pre></div></div>
 <h2 class="anchored" data-anchor-id="adding-more-layers">Adding more layers</h2>
 <p>The figures created with patchwork behave the same way as a ggplot2 object, so you can add new layers as with normal plots, but the layer will be applied to the last added plot.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb20-2"><span class="fu" style="color: #4758AB;
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb20-3"></span>
-<span id="cb20-4"><span class="co" style="color: #5E5E5E;
+<span id="cb17-3"></span>
+<span id="cb17-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Add a new layer</span></span>
-<span id="cb20-5">p2 <span class="sc" style="color: #5E5E5E;
+<span id="cb17-5">p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb20-6">  <span class="fu" style="color: #4758AB;
+<span id="cb17-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_jitter</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"blue"</span>)</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">"blue"</span>)</span>
+<span id="cb17-7"></span>
+<span id="cb17-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Equivalent to:</span></span>
-<span id="cb21-2">p <span class="ot" style="color: #003B4F;
+<span id="cb17-9">p <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p1</span>
-<span id="cb21-3">p <span class="sc" style="color: #5E5E5E;
+<span id="cb17-10">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -792,49 +703,39 @@ background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"blue"</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <p>If you want to customize other than the last plot added you can add the new layer to it or save the patchwork, access the desired element and customize it, as shown in the following example.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb22-2"><span class="fu" style="color: #4758AB;
+<span id="cb18-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb22-3"></span>
-<span id="cb22-4"><span class="co" style="color: #5E5E5E;
+<span id="cb18-3"></span>
+<span id="cb18-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Add a new layer to the first plot</span></span>
-<span id="cb22-5">p2 <span class="sc" style="color: #5E5E5E;
+<span id="cb18-5">p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span> p1</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">+</span> p1</span>
+<span id="cb18-6"></span>
+<span id="cb18-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Equivalent to:</span></span>
-<span id="cb23-2">p <span class="ot" style="color: #003B4F;
+<span id="cb18-8">p <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p1</span>
-<span id="cb23-3">p[[<span class="dv" style="color: #AD0000;
+<span id="cb18-9">p[[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>]] <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -845,30 +746,26 @@ background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_bw</span>()</span>
-<span id="cb23-4">p</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+<span id="cb18-10">p</span></code></pre></div></div>
+</details>
 </div>
 <section id="modifying-all-plots-at-the-same-time" class="level3">
 <h3 class="anchored" data-anchor-id="modifying-all-plots-at-the-same-time">Modifying all plots at the same time</h3>
 <p>patchwork also provides the &amp; operator to modify all the plots at the same time to set the same theme for all plots at the same time.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb24-2"><span class="fu" style="color: #4758AB;
+<span id="cb19-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb24-3"></span>
-<span id="cb24-4"><span class="co" style="color: #5E5E5E;
+<span id="cb19-3"></span>
+<span id="cb19-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Change the theme for all plots</span></span>
-<span id="cb24-5">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb19-5">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -879,13 +776,7 @@ background-color: null;
 font-style: inherit;">&amp;</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_classic</span>() </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 </section>
@@ -894,20 +785,22 @@ font-style: inherit;">theme_classic</span>() </span></code></pre></div></div>
 <p>When adding base R plots and ggplot2 plots patchwork won’t be able to align the plots, so you will need to customize the margins for one of the plots and try to fine tune the values until you reach a good alignment.</p>
 <p>Making use of the <mark>tableGrob</mark> function from the <mark>gridExtra</mark> package you can add a table to a layout created with patchwork.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="co" style="color: #5E5E5E;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># install.packages("gridExtra")</span></span>
-<span id="cb25-2"><span class="fu" style="color: #4758AB;
+<span id="cb20-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb25-3"><span class="fu" style="color: #4758AB;
+<span id="cb20-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb25-4"><span class="fu" style="color: #4758AB;
+<span id="cb20-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(gridExtra)</span>
-<span id="cb25-5"></span>
-<span id="cb25-6">tab <span class="ot" style="color: #003B4F;
+<span id="cb20-5"></span>
+<span id="cb20-6">tab <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -920,56 +813,46 @@ background-color: null;
 font-style: inherit;">$</span>mpg), <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>))</span>
-<span id="cb25-7"></span>
-<span id="cb25-8"><span class="co" style="color: #5E5E5E;
+<span id="cb20-7"></span>
+<span id="cb20-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># ggplot2 with table</span></span>
-<span id="cb25-9">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb20-9">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tableGrob</span>(tab) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <p>You can also use the <mark>textGrob</mark> function from <mark>gridExtra</mark> to add a text to the layout, but note that if you want the text to be the first element you will need to use the <mark>wrap_elements</mark> function.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb26-2"><span class="fu" style="color: #4758AB;
+<span id="cb21-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(patchwork)</span>
-<span id="cb26-3"><span class="fu" style="color: #4758AB;
+<span id="cb21-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(grid)</span>
-<span id="cb26-4"></span>
-<span id="cb26-5"><span class="co" style="color: #5E5E5E;
+<span id="cb21-4"></span>
+<span id="cb21-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># ggplot2 with text</span></span>
-<span id="cb26-6">p1 <span class="sc" style="color: #5E5E5E;
+<span id="cb21-6">p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">textGrob</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Text at the right"</span>)</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">"Text at the right"</span>)</span>
+<span id="cb21-7"></span>
+<span id="cb21-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># To put the text first use:</span></span>
-<span id="cb27-2"><span class="fu" style="color: #4758AB;
+<span id="cb21-9"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">wrap_elements</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -978,13 +861,7 @@ background-color: null;
 font-style: inherit;">"Text at the left"</span>)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> p1 </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 </section>
@@ -992,77 +869,63 @@ font-style: inherit;">+</span> p1 </span></code></pre></div></div>
 <h1>cowplot</h1>
 <p>The <mark>cowplot</mark> package combinign plots using the <mark>plot_grid</mark> function.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="co" style="color: #5E5E5E;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># install.packages("cowplot")</span></span>
-<span id="cb28-2"><span class="fu" style="color: #4758AB;
+<span id="cb22-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb28-3"><span class="fu" style="color: #4758AB;
+<span id="cb22-3"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">library</span>(cowplot)</span></code></pre></div></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'cowplot'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:patchwork':
-
-    align_plots</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
+font-style: inherit;">library</span>(cowplot)</span>
+<span id="cb22-4"></span>
+<span id="cb22-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_grid</span>(p1, p2, p3, p4)</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 <section id="aligning-the-plots" class="level2">
 <h2 class="anchored" data-anchor-id="aligning-the-plots">Aligning the plots</h2>
 <p>The <b>plot_grid function also customize the number of rows and columns of plots with the nrow and ncol arguments.</b></p><b>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb32-2"><span class="fu" style="color: #4758AB;
+<span id="cb23-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(cowplot)</span>
-<span id="cb32-3"></span>
-<span id="cb32-4"><span class="fu" style="color: #4758AB;
+<span id="cb23-3"></span>
+<span id="cb23-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_grid</span>(p1, p2, p3, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </b></section><b>
 <section id="adding-labels-to-each-plot" class="level2">
 <h2 class="anchored" data-anchor-id="adding-labels-to-each-plot">Adding labels to each plot</h2>
 <p>If you want to label each plot individually you can make use the labels argument of the function, where you can specify a vector of labels or use the “A” or “a” keywords for automatic labels in uppercase or lowercase, respectively. The function also provides several arguments to customize the style of the texts.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb33-2"><span class="fu" style="color: #4758AB;
+<span id="cb24-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(cowplot)</span>
-<span id="cb33-3"></span>
-<span id="cb33-4"><span class="fu" style="color: #4758AB;
+<span id="cb24-3"></span>
+<span id="cb24-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_grid</span>(p1, p2, p4,</span>
-<span id="cb33-5">          <span class="at" style="color: #657422;
+<span id="cb24-5">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">labels =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1073,45 +936,41 @@ background-color: null;
 font-style: inherit;">"b"</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>),</span>
-<span id="cb33-6">          <span class="at" style="color: #657422;
+<span id="cb24-6">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label_fontfamily =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"serif"</span>,</span>
-<span id="cb33-7">          <span class="at" style="color: #657422;
+<span id="cb24-7">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label_fontface =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bold"</span>,</span>
-<span id="cb33-8">          <span class="at" style="color: #657422;
+<span id="cb24-8">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label_colour =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"dodgerblue2"</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 </section>
 <section id="mixing-plots-with-cowplot" class="level2">
 <h2 class="anchored" data-anchor-id="mixing-plots-with-cowplot">Mixing plots with cowplot</h2>
 <p>With <mark>cowplot</mark> you can also create more complex layouts combining <mark>plot_grid</mark> functions, as shown in the example below, where we are creating a layout with two plots at the bottom and one at the top.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="fu" style="color: #4758AB;
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb34-2"><span class="fu" style="color: #4758AB;
+<span id="cb25-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(cowplot)</span>
-<span id="cb34-3"></span>
-<span id="cb34-4"><span class="co" style="color: #5E5E5E;
+<span id="cb25-3"></span>
+<span id="cb25-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Grid layout with cowplot</span></span>
-<span id="cb34-5"><span class="fu" style="color: #4758AB;
+<span id="cb25-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_grid</span>(p3, <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1120,13 +979,7 @@ background-color: null;
 font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>) </span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+</details>
 </div>
 
 
@@ -1134,8 +987,10 @@ font-style: inherit;">1</span>) </span></code></pre></div></div>
 </b></section><b>
 
 </b> ]]></description>
+  <category>Data Viz</category>
+  <category>ggplot2</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot.html</guid>
-  <pubDate>Thu, 30 Oct 2025 10:37:23 GMT</pubDate>
+  <pubDate>Thu, 30 Oct 2025 10:43:40 GMT</pubDate>
 </item>
 <item>
   <title>The Advantages of R for Statistical Analysis</title>
@@ -1191,8 +1046,11 @@ font-style: inherit;">1</span>) </span></code></pre></div></div>
 </section>
 
  ]]></description>
+  <category>Data Viz</category>
+  <category>ggplot2</category>
+  <category>R Programming</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/blog/why-R.html</guid>
-  <pubDate>Thu, 30 Oct 2025 10:37:23 GMT</pubDate>
+  <pubDate>Thu, 30 Oct 2025 10:43:40 GMT</pubDate>
 </item>
 </channel>
 </rss>

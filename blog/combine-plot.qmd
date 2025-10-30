@@ -1,7 +1,20 @@
 ---
 title: "Combining plots in ggplot2"
 name: Pawan
-format: html
+categories:
+  - "Data Viz"
+  - "ggplot2"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options: 
+  chunk_output_type: console
+execute: 
+  error: false
+  message: false
+  warning: false
+  eval: false
 ---
 
 The ggplot2 package doesn’t providing function to arrange multiples plots in a single figure, but there are some packages, that allow combine multiples plots into a single figure with custom layouts, width, height, such as <mark>cowplot</mark>, <mark>gridExtra</mark>, <mark>patchwork</mark>

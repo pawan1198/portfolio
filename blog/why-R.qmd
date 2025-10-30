@@ -3,7 +3,21 @@ title: "The Advantages of R for Statistical Analysis"
 description: ""
 author: "Pawan"
 date: ""
-format: html
+categories:
+  - "Data Viz"
+  - "ggplot2"
+  - "R Programming"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: false
 ---
 [R](https://www.r-project.org/) has emerged as one of the most powerful and versatile programming languages in data analysis and statistical computing. It’s Developed by statisticians for statisticians, R is specifically designed to handle complex data analysis tasks, making it an ideal choice for researchers, data scientists, and analysts across various fields. This essay explores the numerous advantages of R for statistical analysis, including its extensive libraries, community support, data visualization capabilities, and flexibility.
 

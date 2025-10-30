@@ -23,8 +23,8 @@ website:
 format:
   html:
     theme: litera
-      - cosmo
-      - brand
+      - superhero
+      
     css: styles.css
     toc: true
 

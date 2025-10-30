@@ -15,12 +15,11 @@ website:
         file: data_vizs.qmd
       - text: "About Me"
         file: about.qmd
- 
-  tools:
-  - icon: github
-    href: "https://github.com/pawan1198"
-  - icon: linkedin
-    href: "https://www.linkedin.com/in/pawanjangra1198/"    
+    tools:
+      - icon: github
+        href: "https://github.com/pawan1198"
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/pawanjangra1198/"    
   listing:
     feed: true    
 ---

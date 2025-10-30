@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/index.html</loc>
-    <lastmod>2025-10-30T09:39:49.865Z</lastmod>
+    <lastmod>2025-10-30T09:59:48.397Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.html</loc>
@@ -11,5 +11,13 @@
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/about.html</loc>
     <lastmod>2025-10-25T07:10:58.357Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/data_vizs.html/blog.html</loc>
+    <lastmod>2025-10-30T09:50:23.157Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/data_vizs.html/blog/why-R.html</loc>
+    <lastmod>2025-10-30T09:59:35.404Z</lastmod>
   </url>
 </urlset>

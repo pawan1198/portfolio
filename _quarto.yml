@@ -15,6 +15,8 @@ website:
         text: "Home"
       - href: data_vizs.qmd
         text: "Data Visualizations"
+      - href: blog.qmd
+        text: "Blog"
       - href: about.qmd
         text: "About Me"
 

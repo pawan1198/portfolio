@@ -1,0 +1,21 @@
+---
+title: "Blog"
+author: "Pawan"
+listing:
+  id: "blog"
+  contents: blog
+  exclude: 
+    title: "Template"
+  sort: "date desc"
+  type: grid
+  image-align: left
+  categories: numbered
+  grid-item-border: false
+  grid-columns: 4
+  table-hover: true
+  date-format: "long"
+  feed: true
+  fields: [image,title, date]
+  sort-ui: [date, title]
+  page-size: 20
+---

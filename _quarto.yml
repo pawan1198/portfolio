@@ -6,6 +6,7 @@ website:
   title: "Portfolio"
   search: true
   reader-mode: true
+  repo-url: "https://github.com/pawan1198/portfolio"
   repo-actions: [edit, issue]
   site-url: "https://pawan1198.github.io/portfolio/data_vizs.html"
   description: "Pawan"
@@ -19,12 +20,19 @@ website:
         text: "Blog"
       - href: about.qmd
         text: "About Me"
-
+tools:
+      - icon: rss
+        href: index.xml
+      - icon: github
+        menu:
+          - text: "Source Code"
+            url:  https://github.com/pawan1198/portfolio
+          - text: "Suggestions / Feedback"
+            url:  https://github.com/pawan1198/portfolio/issues
 format:
   html:
     theme: litera
-      - superhero
-      
+       - superhero
     css: styles.css
     toc: true
 

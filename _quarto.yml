@@ -8,6 +8,8 @@ website:
     left:
       - href: index.qmd
         text: "Home"
+      - href: data_vizs.qmd
+        text: "Data Visualizations"
       - href: about.qmd
         text: "About Me"
 

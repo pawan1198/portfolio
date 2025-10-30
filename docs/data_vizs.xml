@@ -10,9 +10,10 @@
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.xml" rel="self" type="application/rss+xml"/>
 <description>Pawan</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Thu, 30 Oct 2025 09:51:21 GMT</lastBuildDate>
+<lastBuildDate>Thu, 30 Oct 2025 11:10:13 GMT</lastBuildDate>
 <item>
-  <title></title>
+  <title>Annually Edible Oils Import by India</title>
+  <dc:creator>Pawan </dc:creator>
   <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil.html</link>
   <description><![CDATA[ 
 
@@ -20,6 +21,8 @@
 
 
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(data.table)</span>
@@ -192,8 +195,11 @@ font-style: inherit;">NA</span>) <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Style facet strips (if used)</span></span>
 <span id="cb1-20">          )</span></code></pre></div></div>
+</details>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
@@ -465,8 +471,11 @@ font-style: inherit;">sum</span>(ImportYear))),</span>
 <span id="cb2-27">                             Edibleoil,ImportYear),.(Year)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>oil</span></code></pre></div></div>
+</details>
 </div>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(oil, <span class="fu" style="color: #4758AB;
@@ -574,6 +583,7 @@ font-style: inherit;">"Edible Oil Import"</span>)<span class="ot" style="color: 
 background-color: null;
 font-style: inherit;">-&gt;</span>p5</span>
 <span id="cb3-11">p5</span></code></pre></div></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -581,13 +591,30 @@ font-style: inherit;">-&gt;</span>p5</span>
 </figure>
 </div>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"annual-edibleoil-import.png"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">height =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>)</span></code></pre></div></div>
+</details>
 </div>
 
 
 
  ]]></description>
+  <category>Trade</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil.html</guid>
-  <pubDate>Thu, 30 Oct 2025 09:51:21 GMT</pubDate>
+  <pubDate>Thu, 30 Oct 2025 11:10:13 GMT</pubDate>
 </item>
 </channel>
 </rss>

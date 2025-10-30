@@ -1,3 +1,23 @@
+---
+title: "Annually Edible Oils Import by India"
+description: ""
+author: "Pawan"
+date: ""
+categories:
+  - "Trade"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
 ```{r}
 library(data.table)
 library(ggplot2)
@@ -61,4 +81,5 @@ ggplot(oil, aes(x = Year, y = ImportYear, fill = Edibleoil)) +
     labs(y = "Values in US $ Million") +
     ggtitle("Edible Oil Import")->p5
 p5
+ggsave("annual-edibleoil-import.png", width = 12, height = 8)
 ```

@@ -8,6 +8,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/blog/combine-plot.html",
       "/blog/why-R.html"
     ]
   }

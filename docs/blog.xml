@@ -10,7 +10,1133 @@
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Pawan</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Thu, 30 Oct 2025 10:27:05 GMT</lastBuildDate>
+<lastBuildDate>Thu, 30 Oct 2025 10:37:23 GMT</lastBuildDate>
+<item>
+  <title>Combining plots in ggplot2</title>
+  <link>https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>The ggplot2 package doesn’t providing function to arrange multiples plots in a single figure, but there are some packages, that allow combine multiples plots into a single figure with custom layouts, width, height, such as <mark>cowplot</mark>, <mark>gridExtra</mark>, <mark>patchwork</mark></p>
+<section id="sample-plots" class="level1">
+<h1>Sample plots</h1>
+<p>Let’s create four different plots and assign them to objects named <b>p1</b>, <b>p2</b>, <b>p3</b> and <b>p4</b>. You can use any other names.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#Data</span></span>
+<span id="cb1-4">mtcars<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>df</span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Box plot</span></span>
+<span id="cb1-7">p1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> mpg)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>()</span>
+<span id="cb1-9"></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Density plot</span></span>
+<span id="cb1-11">p2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_function</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fun =</span> dnorm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"density"</span>,</span>
+<span id="cb1-13">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xlim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>) </span>
+<span id="cb1-14"></span>
+<span id="cb1-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Line chart</span></span>
+<span id="cb1-16">p3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> mpg, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> disp)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray20"</span>)</span>
+<span id="cb1-18"></span>
+<span id="cb1-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Scatter plot</span></span>
+<span id="cb1-20">p4 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> hp, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> wt)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gray20"</span>)</span>
+<span id="cb1-22"></span>
+<span id="cb1-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># View the plots</span></span>
+<span id="cb1-24">p1</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">p2</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">p3</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">p4</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="gridextra" class="level1">
+<h1>gridExtra</h1>
+<p>The <mark>gridExtra</mark> package provides the <mark>grid.arrange</mark> function to combine several plots on a single figure.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install.packages("gridExtra")</span></span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gridExtra)</span>
+<span id="cb5-4"></span>
+<span id="cb5-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots with gridExtra</span></span>
+<span id="cb5-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grid.arrange</span>(p2, p3, p1, p4) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can also specify the number of rows with <b>nrow</b>, the number of columns with <b>ncol</b>, and the sizes with <b>widths</b> and <b>heights</b> and also we can add labels at the top, bottom, left and right of the figures.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gridExtra)</span>
+<span id="cb6-3"></span>
+<span id="cb6-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots</span></span>
+<span id="cb6-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grid.arrange</span>(p4, p3, p2, p1,</span>
+<span id="cb6-6">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">top =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Top label"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bottom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bottom label"</span>, </span>
+<span id="cb6-7">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">left =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Left label"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">right =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Right label"</span>,</span>
+<span id="cb6-8">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">widths =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">heights =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can create a layout matrix indicating the positions for each plot and use the <mark>layout_matrix</mark> function in order to specify the desired layout.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gridExtra)</span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># layout</span></span>
+<span id="cb7-5">layout <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">matrix</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb7-6">                   <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>,</span>
+<span id="cb7-7">                   <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">byrow =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)</span>
+<span id="cb7-8"></span>
+<span id="cb7-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grid.arrange</span>(p2, p3, p1, p4,</span>
+<span id="cb7-10">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">layout_matrix =</span> layout) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="patchwork" class="level1">
+<h1>patchwork</h1>
+<section id="combining-ggplot2-plots" class="level2">
+<h2 class="anchored" data-anchor-id="combining-ggplot2-plots">Combining ggplot2 plots</h2>
+<p>patchwork is designed to combine ggplot2 plots into the same figure easily with using the + operator to combine the charts.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install.packages("patchwork")</span></span>
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb8-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb8-4"></span>
+<span id="cb8-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots</span></span>
+<span id="cb8-6">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2 </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="controlling-the-layout" class="level2">
+<h2 class="anchored" data-anchor-id="controlling-the-layout">Controlling the layout</h2>
+<p>If you want to customize the number of rows or columns of the figure you can use the <mark>plot_layout</mark> function. Also you can also specify the widths and heights of the plots with widths and heights arguments.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb9-3"></span>
+<span id="cb9-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots</span></span>
+<span id="cb9-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p3 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_layout</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The most interesting functionality of the plot_layout function is that you can create a custom layout design as shown in the example below, where 1, 2, 3 and 4 represents the locations for p1,p2, p3 and p4, respectively, and # represents an empty space. Recall that you can use numbers but also letters to represent the plot locations.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb10-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb10-3"></span>
+<span id="cb10-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots with a custom layout</span></span>
+<span id="cb10-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p3 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_layout</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">design =</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"111</span></span>
+<span id="cb10-7"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">                       2#3</span></span>
+<span id="cb10-8"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">                       443"</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="the-wrap_plots-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-wrap_plots-function">The <mark>wrap_plots</mark> function</h3>
+<p>Sometimes you can’t use the + operator programatically, so if you don’t know the number of plots beforehand you can use the <mark>wrap_plots</mark> function and pass a list of plots to it. This function also allows specifying the number of rows and columns, the sizes and the custom layouts.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb11-3"></span>
+<span id="cb11-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots</span></span>
+<span id="cb11-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(p1, p2, p3, p4, </span>
+<span id="cb11-6">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nrow =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb11-7">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">widths =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">heights =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="adding-spacers" class="level3">
+<h3 class="anchored" data-anchor-id="adding-spacers">Adding spacers</h3>
+<p>When creating a custom layout you can use # to add spaces, as shown in one of the previous examples, but if you are using + there is also a function named <mark>plot_spacer</mark> to add spaces or gaps between plots.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb12-3"></span>
+<span id="cb12-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Plots with spaces</span></span>
+<span id="cb12-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_spacer</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_spacer</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p3 </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="operators" class="level2">
+<h2 class="anchored" data-anchor-id="operators">Operators</h2>
+<p>The patchwork package also provides two operators to place plots beside each other or to stack them.</p>
+<section id="arranging-ggplot2-plots-in-rows-beside-each-other" class="level3">
+<h3 class="anchored" data-anchor-id="arranging-ggplot2-plots-in-rows-beside-each-other">Arranging ggplot2 plots in rows (beside each other)</h3>
+<p>The | operator places plots in a row. This operator is similar to + when you have two plots but | will place all plots in a single row while + will try to create a square layout if possible.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb13-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb13-3"></span>
+<span id="cb13-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots in rows</span></span>
+<span id="cb13-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> p2</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="arranging-ggplot2-plots-in-columns-stacked" class="level3">
+<h3 class="anchored" data-anchor-id="arranging-ggplot2-plots-in-columns-stacked">Arranging ggplot2 plots in columns (stacked)</h3>
+<p>The / operator stacks the ggplot2 plots into columns without the need of using the <mark>plot_layout</mark> function and specifying ncol = 1.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb14-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb14-3"></span>
+<span id="cb14-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the plots as column</span></span>
+<span id="cb14-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p2</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can create complex layouts. The | and / operators can be use to create complex layouts combining plots. In the following example we are creating a layout with two plots at the top and one wider at the bottom.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb15-3"></span>
+<span id="cb15-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Two plots on top and one at the bottom</span></span>
+<span id="cb15-5">(p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> p2) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p3 </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The following example is similar to the previous, but with one plot at the left and two at the right.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb16-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb16-3"></span>
+<span id="cb16-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># One plot at the left and two at the right</span></span>
+<span id="cb16-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> (p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p3) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="titles-and-labels" class="level2">
+<h2 class="anchored" data-anchor-id="titles-and-labels">Titles and labels</h2>
+<section id="title-for-all-the-plots" class="level3">
+<h3 class="anchored" data-anchor-id="title-for-all-the-plots">Title for all the plots</h3>
+<p>You can add a title, subtitle and captions to all plots with the <mark>plot_annotation</mark> function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb17-3"></span>
+<span id="cb17-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Title for the combined plots</span></span>
+<span id="cb17-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> ((p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> p3) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> p4) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb17-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Title"</span>,</span>
+<span id="cb17-7">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Subtitle"</span>,</span>
+<span id="cb17-8">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Caption"</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The plot_annotation function can also be used to label each plot individually with the <mark>tags_level</mark> argument. Possible options are “1” for numbers, “a” for lowercase letters, “A” for uppercase letters, “i” for lowercase Roman numerals, “I” for uppercase Roman numerals or a vector with your own tags.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb18-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb18-3"></span>
+<span id="cb18-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Labels for each plot</span></span>
+<span id="cb18-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tag_levels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The labels can be customized with the <mark>tag_prefix</mark>, <mark>tag_suffix</mark> and <mark>tag_sep</mark> arguments.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb19-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb19-3"></span>
+<span id="cb19-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Labels for each plot</span></span>
+<span id="cb19-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tag_levels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">tag_prefix =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Plot "</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="adding-more-layers" class="level2">
+<h2 class="anchored" data-anchor-id="adding-more-layers">Adding more layers</h2>
+<p>The figures created with patchwork behave the same way as a ggplot2 object, so you can add new layers as with normal plots, but the layer will be applied to the last added plot.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb20-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb20-3"></span>
+<span id="cb20-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Add a new layer</span></span>
+<span id="cb20-5">p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_jitter</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"blue"</span>)</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Equivalent to:</span></span>
+<span id="cb21-2">p <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p1</span>
+<span id="cb21-3">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_jitter</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"blue"</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you want to customize other than the last plot added you can add the new layer to it or save the patchwork, access the desired element and customize it, as shown in the following example.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb22-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb22-3"></span>
+<span id="cb22-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Add a new layer to the first plot</span></span>
+<span id="cb22-5">p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p1</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Equivalent to:</span></span>
+<span id="cb23-2">p <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p1</span>
+<span id="cb23-3">p[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> p[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]] <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>()</span>
+<span id="cb23-4">p</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="modifying-all-plots-at-the-same-time" class="level3">
+<h3 class="anchored" data-anchor-id="modifying-all-plots-at-the-same-time">Modifying all plots at the same time</h3>
+<p>patchwork also provides the &amp; operator to modify all the plots at the same time to set the same theme for all plots at the same time.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb24-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb24-3"></span>
+<span id="cb24-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Change the theme for all plots</span></span>
+<span id="cb24-5">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p3 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_classic</span>() </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="adding-tables-and-text" class="level2">
+<h2 class="anchored" data-anchor-id="adding-tables-and-text">Adding tables and text</h2>
+<p>When adding base R plots and ggplot2 plots patchwork won’t be able to align the plots, so you will need to customize the margins for one of the plots and try to fine tune the values until you reach a good alignment.</p>
+<p>Making use of the <mark>tableGrob</mark> function from the <mark>gridExtra</mark> package you can add a table to a layout created with patchwork.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install.packages("gridExtra")</span></span>
+<span id="cb25-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb25-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb25-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gridExtra)</span>
+<span id="cb25-5"></span>
+<span id="cb25-6">tab <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quantile</span>(df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>mpg), <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>))</span>
+<span id="cb25-7"></span>
+<span id="cb25-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ggplot2 with table</span></span>
+<span id="cb25-9">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tableGrob</span>(tab) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can also use the <mark>textGrob</mark> function from <mark>gridExtra</mark> to add a text to the layout, but note that if you want the text to be the first element you will need to use the <mark>wrap_elements</mark> function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb26-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb26-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(grid)</span>
+<span id="cb26-4"></span>
+<span id="cb26-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ggplot2 with text</span></span>
+<span id="cb26-6">p1 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">textGrob</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Text at the right"</span>)</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># To put the text first use:</span></span>
+<span id="cb27-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_elements</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">textGrob</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Text at the left"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> p1 </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="cowplot" class="level1">
+<h1>cowplot</h1>
+<p>The <mark>cowplot</mark> package combinign plots using the <mark>plot_grid</mark> function.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install.packages("cowplot")</span></span>
+<span id="cb28-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb28-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(cowplot)</span></code></pre></div></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:patchwork':
+
+    align_plots</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_grid</span>(p1, p2, p3, p4)</span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="aligning-the-plots" class="level2">
+<h2 class="anchored" data-anchor-id="aligning-the-plots">Aligning the plots</h2>
+<p>The <b>plot_grid function also customize the number of rows and columns of plots with the nrow and ncol arguments.</b></p><b>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb32-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(cowplot)</span>
+<span id="cb32-3"></span>
+<span id="cb32-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_grid</span>(p1, p2, p3, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</b></section><b>
+<section id="adding-labels-to-each-plot" class="level2">
+<h2 class="anchored" data-anchor-id="adding-labels-to-each-plot">Adding labels to each plot</h2>
+<p>If you want to label each plot individually you can make use the labels argument of the function, where you can specify a vector of labels or use the “A” or “a” keywords for automatic labels in uppercase or lowercase, respectively. The function also provides several arguments to customize the style of the texts.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb33-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(cowplot)</span>
+<span id="cb33-3"></span>
+<span id="cb33-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_grid</span>(p1, p2, p4,</span>
+<span id="cb33-5">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"b"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),</span>
+<span id="cb33-6">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label_fontfamily =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"serif"</span>,</span>
+<span id="cb33-7">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label_fontface =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold"</span>,</span>
+<span id="cb33-8">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label_colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dodgerblue2"</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="mixing-plots-with-cowplot" class="level2">
+<h2 class="anchored" data-anchor-id="mixing-plots-with-cowplot">Mixing plots with cowplot</h2>
+<p>With <mark>cowplot</mark> you can also create more complex layouts combining <mark>plot_grid</mark> functions, as shown in the example below, where we are creating a layout with two plots at the bottom and one at the top.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb34-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(cowplot)</span>
+<span id="cb34-3"></span>
+<span id="cb34-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Grid layout with cowplot</span></span>
+<span id="cb34-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_grid</span>(p3, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_grid</span>(p1, p2), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) </span></code></pre></div></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</b></section><b>
+
+</b> ]]></description>
+  <guid>https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot.html</guid>
+  <pubDate>Thu, 30 Oct 2025 10:37:23 GMT</pubDate>
+</item>
 <item>
   <title>The Advantages of R for Statistical Analysis</title>
   <dc:creator>Pawan </dc:creator>
@@ -20,25 +1146,53 @@
 
 
 
-<p>R has emerged as one of the most powerful and versatile programming languages in data analysis and statistical computing. It’s Developed by statisticians for statisticians, R is specifically designed to handle complex data analysis tasks, making it an ideal choice for researchers, data scientists, and analysts across various fields. This essay explores the numerous advantages of R for statistical analysis, including its extensive libraries, community support, data visualization capabilities, and flexibility.</p>
-<ol type="1">
-<li><p>Comprehensive Statistical Libraries One of the most significant advantages of R is its collection of packages and libraries tailored for statistical analysis. The Comprehensive R Archive Network (CRAN) hosts thousands of packages that cover a wide range of statistical techniques, from basic descriptive statistics to advanced machine learning algorithms. For instance, packages like data.table, dplyr and tidyr facilitate data manipulation and cleaning, while ggplot2 provides powerful tools for data visualization. More specialized packages, such as base-R for mixed and various statistical in-builts functions and survival for survival analysis, enable users to conduct sophisticated analyses with relative ease. The availability of these packages means that R can be used for virtually any statistical task, making it a one-stop solution for data analysis.</p></li>
-<li><p>Strong Community Support R boasts a vibrant and active community of users and developers who contribute to its growth and evolution. This community support is invaluable for both novice and experienced users. Online forums, such as Stack Overflow and R-bloggers, statictiaclglobe provide platforms for users to ask questions, share insights, and collaborate on projects. Additionally, the R community regularly organizes conferences, workshops, and meetups, fostering an environment of continuous learning and knowledge sharing. The collaborative nature of the R community also means that users can access a wealth of resources, including tutorials, documentation, and example datasets. This support network is particularly beneficial for those new to statistical analysis, as it allows them to learn from others’ experiences and quickly overcome challenges.</p></li>
-<li><p>Data Visualization Capabilities Effective data visualization is a crucial aspect of statistical analysis, as it helps to communicate findings clearly and intuitively. R in this area, offering a range of powerful visualization tools that enable users to create high-quality graphics. The ggplot2 package, in particular, has gained widespread acclaim for its ability to produce complex and aesthetically pleasing visualizations with minimal code. With ggplot2, users can create a variety of plots, including scatter plots, line graphs, histograms, and box plots, all while maintaining control over the aesthetics and layout. The grammar of the graphics approach used by ggplot2 allows for layering of visual elements, making it easy to add annotations, customize scales, and combine multiple plots into a single visualization. This flexibility ensures that users can effectively convey their analytical results, making R an excellent choice for presenting data-driven insights.</p></li>
-<li><p>Flexibility and Extensibility R is an open-source language, which means that users have the freedom to modify and extend its capabilities. This flexibility is particularly advantageous for researchers and analysts who may need to implement custom statistical methods or algorithms. Users can write their functions or modify existing ones to suit their specific needs, allowing for a high degree of customization in their analyses. Moreover, R can easily integrate with other programming languages, such as Python and C++, enabling users to leverage the strengths of multiple languages in their projects. This interoperability allows for the incorporation of R into larger data processing pipelines, making it a versatile tool in a data scientist’s toolkit.</p></li>
-<li><p>Reproducibility and Documentation Reproducibility is a cornerstone of scientific research, and R provides several tools to ensure that analyses can be easily replicated. The use of R Markdown allows users to create dynamic documents that combine code, output, and narrative text in a single file. This feature not only enhances the clarity of the analysis but also facilitates the sharing of results with others. R Markdown documents can be rendered in various formats, including HTML, PDF, and Word, making it easy to present findings professionally. Additionally, the integration of code and documentation ensures that analyses are transparent and reproducible, which is essential for building trust in research findings.</p></li>
-<li><p>Statistical Modeling and Machine Learning R is particularly well-suited for statistical modeling and machine learning applications. The language provides a rich set of tools for fitting various statistical models, including linear regression, generalized linear models, and time series analysis. The caret package, for example, offers a unified interface for training and evaluating machine learning models, making it easier for users to experiment with different algorithms and tuning parameters. Furthermore, R’s ability to handle large datasets and perform complex calculations efficiently makes it a strong contender for big data applications. With the advent of packages like data.table and dplyr, R can process large volumes of data quickly, allowing analysts to derive insights from big data without sacrificing performance.</p></li>
-<li><p>Integration with Other Tools R’s versatility extends to its ability to integrate seamlessly with various data sources and tools. It can connect to databases such as MySQL, PostgreSQL, and SQLite, enabling users to perform analyses directly on data stored in relational databases. Additionally, R can read and write data in multiple formats, including CSV, Excel, and JSON, making it easy to import and export data as needed. Moreover, R can be integrated with web applications and dashboards through packages like Shiny, which allows users to create interactive web applications for data visualization and analysis. This capability is particularly useful for sharing insights with stakeholders who may not have a technical background, as it enables them to explore data and results intuitively.</p></li>
-<li><p>Educational Resources and Learning Curve For those new to statistical analysis, R offers a wealth of educational resources that can help users get up to speed quickly. Numerous online courses, tutorials, and textbooks are available, catering to different learning styles and levels of expertise. The availability of these resources makes it easier for individuals to learn R and apply it to their statistical analyses. While R has a reputation for having a steeper learning curve compared to some other programming languages, its syntax is logical and consistent, which can facilitate the learning process. Once users become familiar with the basics, they often find that R’s capabilities and flexibility far outweigh the initial challenges.</p></li>
-<li><p>Industry Adoption and Job Market Demand R has gained significant traction in various industries, particularly in fields such as finance, healthcare, and academia. Many organizations recognize the value of R for data analysis and statistical modeling, leading to an increasing demand for professionals skilled in R. This trend is reflected in job postings that frequently list R as a required or preferred skill for data analyst and data scientist positions. As more companies adopt data-driven decision-making practices, proficiency in R can enhance career prospects and open doors to new opportunities. The language’s strong reputation in the statistical community further solidifies its position as a valuable asset for anyone looking to advance their career in data analysis.</p></li>
-<li><p>Conclusion In conclusion, R stands out as a powerful and flexible tool for statistical analysis, offering a wide range of advantages that cater to the needs of researchers, analysts, and data scientists. Its comprehensive libraries, strong community support, exceptional data visualization capabilities, and flexibility make it an ideal choice for tackling complex data analysis tasks. Furthermore, R’s emphasis on reproducibility and documentation ensures that analyses are transparent and trustworthy. As the demand for data analysis continues to grow across various industries, R’s relevance and utility are likely to persist. By leveraging R’s capabilities, users can unlock valuable insights from their data, ultimately driving informed decision-making and contributing to advancements in their respective fields. Whether you are a seasoned statistician or a newcomer to data analysis, R provides the tools and resources necessary to succeed in the ever-evolving landscape of data science.</p></li>
-</ol>
+<p><a href="https://www.r-project.org/">R</a> has emerged as one of the most powerful and versatile programming languages in data analysis and statistical computing. It’s Developed by statisticians for statisticians, R is specifically designed to handle complex data analysis tasks, making it an ideal choice for researchers, data scientists, and analysts across various fields. This essay explores the numerous advantages of R for statistical analysis, including its extensive libraries, community support, data visualization capabilities, and flexibility.</p>
+<section id="comprehensive-statistical-libraries" class="level1">
+<h1>Comprehensive Statistical Libraries</h1>
+<p>One of the most significant advantages of R is its collection of packages and libraries tailored for statistical analysis. <a href="https://cloud.r-project.org/web/packages/available_packages_by_name.html">The Comprehensive R Archive Network (CRAN)</a> hosts thousands of packages that cover a wide range of statistical techniques, from basic descriptive statistics to advanced machine learning algorithms. For instance, packages like data.table, dplyr and tidyr facilitate data manipulation and cleaning, while ggplot2 provides powerful tools for data visualization. More specialized packages, such as base-R for mixed and various statistical in-builts functions and survival for survival analysis, enable users to conduct sophisticated analyses with relative ease. The availability of these packages means that R can be used for virtually any statistical task, making it a one-stop solution for data analysis.</p>
+</section>
+<section id="strong-community-support" class="level1">
+<h1>Strong Community Support</h1>
+<p>R boasts a vibrant and active community of users and developers who contribute to its growth and evolution. This community support is invaluable for both novice and experienced users. Online forums, such as Stack Overflow and R-bloggers, statictiaclglobe provide platforms for users to ask questions, share insights, and collaborate on projects. Additionally, the R community regularly organizes conferences, workshops, and meetups, fostering an environment of continuous learning and knowledge sharing. The collaborative nature of the R community also means that users can access a wealth of resources, including tutorials, documentation, and example datasets. This support network is particularly beneficial for those new to statistical analysis, as it allows them to learn from others’ experiences and quickly overcome challenges.</p>
+</section>
+<section id="data-visualization-capabilities" class="level1">
+<h1>Data Visualization Capabilities</h1>
+<p>Effective data visualization is a crucial aspect of statistical analysis, as it helps to communicate findings clearly and intuitively. R in this area, offering a range of powerful visualization tools that enable users to create high-quality graphics. The <a href="https://ggplot2.tidyverse.org/">ggplot2</a> package, in particular, has gained widespread acclaim for its ability to produce complex and aesthetically pleasing visualizations with minimal code. With ggplot2, users can create a variety of plots, including scatter plots, line graphs, histograms, and box plots, all while maintaining control over the aesthetics and layout. The grammar of the graphics approach used by ggplot2 allows for layering of visual elements, making it easy to add annotations, customize scales, and combine multiple plots into a single visualization. This flexibility ensures that users can effectively convey their analytical results, making R an excellent choice for presenting data-driven insights.</p>
+</section>
+<section id="flexibility-and-extensibility" class="level1">
+<h1>Flexibility and Extensibility</h1>
+<p>R is an open-source language, which means that users have the freedom to modify and extend its capabilities. This flexibility is particularly advantageous for researchers and analysts who may need to implement custom statistical methods or algorithms. Users can write their functions or modify existing ones to suit their specific needs, allowing for a high degree of customization in their analyses. Moreover, R can easily integrate with other programming languages, such as Python and C++, enabling users to leverage the strengths of multiple languages in their projects. This interoperability allows for the incorporation of R into larger data processing pipelines, making it a versatile tool in a data scientist’s toolkit.</p>
+</section>
+<section id="reproducibility-and-documentation" class="level1">
+<h1>Reproducibility and Documentation</h1>
+<p>Reproducibility is a cornerstone of scientific research, and R provides several tools to ensure that analyses can be easily replicated. The use of R Markdown allows users to create dynamic documents that combine code, output, and narrative text in a single file. This feature not only enhances the clarity of the analysis but also facilitates the sharing of results with others. R Markdown documents can be rendered in various formats, including HTML, PDF, and Word, making it easy to present findings professionally. Additionally, the integration of code and documentation ensures that analyses are transparent and reproducible, which is essential for building trust in research findings.</p>
+</section>
+<section id="statistical-modeling-and-machine-learning" class="level1">
+<h1>Statistical Modeling and Machine Learning</h1>
+<p>R is particularly well-suited for statistical modeling and machine learning applications. The language provides a rich set of tools for fitting various statistical models, including linear regression, generalized linear models, and time series analysis. The caret package, for example, offers a unified interface for training and evaluating machine learning models, making it easier for users to experiment with different algorithms and tuning parameters. Furthermore, R’s ability to handle large datasets and perform complex calculations efficiently makes it a strong contender for big data applications. With the advent of packages like data.table and dplyr, R can process large volumes of data quickly, allowing analysts to derive insights from big data without sacrificing performance.</p>
+</section>
+<section id="integration-with-other-tools" class="level1">
+<h1>Integration with Other Tools</h1>
+<p>R’s versatility extends to its ability to integrate seamlessly with various data sources and tools. It can connect to databases such as MySQL, PostgreSQL, and SQLite, enabling users to perform analyses directly on data stored in relational databases. Additionally, R can read and write data in multiple formats, including CSV, Excel, and JSON, making it easy to import and export data as needed. Moreover, R can be integrated with web applications and dashboards through packages like Shiny, which allows users to create interactive web applications for data visualization and analysis. This capability is particularly useful for sharing insights with stakeholders who may not have a technical background, as it enables them to explore data and results intuitively.</p>
+</section>
+<section id="educational-resources-and-learning-curve" class="level1">
+<h1>Educational Resources and Learning Curve</h1>
+<p>For those new to statistical analysis, R offers a wealth of educational resources that can help users get up to speed quickly. Numerous online courses, tutorials, and textbooks are available, catering to different learning styles and levels of expertise. The availability of these resources makes it easier for individuals to learn R and apply it to their statistical analyses. While R has a reputation for having a steeper learning curve compared to some other programming languages, its syntax is logical and consistent, which can facilitate the learning process. Once users become familiar with the basics, they often find that R’s capabilities and flexibility far outweigh the initial challenges.</p>
+</section>
+<section id="industry-adoption-and-job-market-demand" class="level1">
+<h1>Industry Adoption and Job Market Demand</h1>
+<p>R has gained significant traction in various industries, particularly in fields such as finance, healthcare, and academia. Many organizations recognize the value of R for data analysis and statistical modeling, leading to an increasing demand for professionals skilled in R. This trend is reflected in job postings that frequently list R as a required or preferred skill for data analyst and data scientist positions. As more companies adopt data-driven decision-making practices, proficiency in R can enhance career prospects and open doors to new opportunities. The language’s strong reputation in the statistical community further solidifies its position as a valuable asset for anyone looking to advance their career in data analysis.</p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>In conclusion, R stands out as a powerful and flexible tool for statistical analysis, offering a wide range of advantages that cater to the needs of researchers, analysts, and data scientists. Its comprehensive libraries, strong community support, exceptional data visualization capabilities, and flexibility make it an ideal choice for tackling complex data analysis tasks. Furthermore, R’s emphasis on reproducibility and documentation ensures that analyses are transparent and trustworthy. As the demand for data analysis continues to grow across various industries, R’s relevance and utility are likely to persist. By leveraging R’s capabilities, users can unlock valuable insights from their data, ultimately driving informed decision-making and contributing to advancements in their respective fields. Whether you are a seasoned statistician or a newcomer to data analysis, R provides the tools and resources necessary to succeed in the ever-evolving landscape of data science.</p>
 
 
+</section>
 
  ]]></description>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/blog/why-R.html</guid>
-  <pubDate>Thu, 30 Oct 2025 10:27:05 GMT</pubDate>
+  <pubDate>Thu, 30 Oct 2025 10:37:23 GMT</pubDate>
 </item>
 </channel>
 </rss>

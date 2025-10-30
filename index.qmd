@@ -1,5 +1,5 @@
 ---
-title: "statistics-with-R"
+title: ""
 author: "Pawan"
 website:
   search: 
@@ -10,9 +10,18 @@ website:
     left:
       - text: "Home"
         file: index.qmd
+      - text: "Data Visualizations"
+        file: data_vizs.qmd
       - text: "About Me"
-        file: about.qmd 
-    
+        file: about.qmd
+ 
+  tools:
+  - icon: github
+    text: Github
+    href: "https://github.com/pawan1198"
+  - icon: linkedin
+    text: LinkedIn
+    href: "https://www.linkedin.com/in/pawanjangra1198/"    
   listing:
     feed: true    
 ---

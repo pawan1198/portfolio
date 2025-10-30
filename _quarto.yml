@@ -4,6 +4,11 @@ project:
 
 website:
   title: "Portfolio"
+  search: true
+  reader-mode: true
+  repo-actions: [edit, issue]
+  site-url: "https://pawan1198.github.io/portfolio/data_vizs.html"
+  description: "Pawan"
   navbar:
     left:
       - href: index.qmd

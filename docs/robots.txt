@@ -1,1 +1,1 @@
-Sitemap: https://pawan1198.github.io/portfolio/sitemap.xml
+Sitemap: https://pawan1198.github.io/portfolio/data_vizs.html/sitemap.xml

@@ -1,0 +1,64 @@
+```{r}
+library(data.table)
+library(ggplot2)
+library(gridExtra)
+library(ggthemes) ## For more themes
+
+## Custom theme for plots
+my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
+    theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
+          plot.title = element_text(size = 20, face = "bold",
+                                    hjust = 0.5, margin = margin(10, 0, 10, 0)), ## Center and style title
+          axis.title = element_text(size = 18),
+          axis.text = element_text(size = 14),
+          legend.position = "bottom",
+          legend.title = element_blank(),  ## Remove legend title
+          panel.grid.major = element_line(color = "#EEEEEE"), ## Lighter grid lines
+          panel.border = element_blank(), ## Remove panel border
+          axis.line = element_line(color = "#333333"), ## Add axis lines
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+          strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
+          )
+```
+```{r}
+readRDS("/home/pawan/edibleoils/palmoil_import.rds")->palm
+readRDS("/home/pawan/edibleoils/soyabean_import.rds")->soyabean
+readRDS("/home/pawan/edibleoils/sunflower_import.rds")->sunflower
+
+paste0("Palm Oil")->palm$Edibleoil
+paste0("Soyabean Oil")->soyabean$Edibleoil
+paste0("Sunflower Oil")->sunflower$Edibleoil
+
+paste0(as.numeric(substr(palm$Year,1,4)),"-",
+       as.numeric(substr(palm$Year,3,4))+1)->palm$Year
+paste0(as.numeric(substr(palm$LagYear,1,4)),"-",
+       as.numeric(substr(palm$LagYear,8,9)))->palm$LagYear
+
+paste0(as.numeric(substr(soyabean$Year,1,4)),"-",
+       as.numeric(substr(soyabean$Year,3,4))+1)->soyabean$Year
+paste0(as.numeric(substr(soyabean$LagYear,1,4)),"-",
+       as.numeric(substr(soyabean$LagYear,8,9)))->soyabean$LagYear
+
+paste0(as.numeric(substr(sunflower$Year,1,4)),"-",
+       as.numeric(substr(sunflower$Year,3,4))+1)->sunflower$Year
+paste0(as.numeric(substr(sunflower$LagYear,1,4)),"-",
+       as.numeric(substr(sunflower$LagYear,8,9)))->sunflower$LagYear
+
+rbind(palm,soyabean,sunflower)->edibleoil
+
+edibleoil[Country=="Total",.(Share=(round(ImportYear*100/sum(ImportYear))),
+                             Edibleoil,ImportYear),.(Year)]->oil
+```
+```{r}
+ggplot(oil, aes(x = Year, y = ImportYear, fill = Edibleoil)) +
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(x = Year, y = ImportYear,
+                   label = ifelse(Share<5, "", paste0(Share, "%"))),
+               position = position_stack(vjust = 0.5), size = 5, color = "black") +
+    scale_fill_brewer(palette="Set2")+
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Values in US $ Million") +
+    ggtitle("Edible Oil Import")->p5
+p5
+```

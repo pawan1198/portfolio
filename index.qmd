@@ -17,10 +17,8 @@ website:
  
   tools:
   - icon: github
-    text: Github
     href: "https://github.com/pawan1198"
   - icon: linkedin
-    text: LinkedIn
     href: "https://www.linkedin.com/in/pawanjangra1198/"    
   listing:
     feed: true    

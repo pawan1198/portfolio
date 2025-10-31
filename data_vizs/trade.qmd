@@ -1,0 +1,198 @@
+---
+title: "Trade Statistics "
+description: ""
+author: "Pawan"
+date: ""
+categories:
+  - "Trade"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+```{r}
+library(data.table)
+library(ggplot2)
+library(gridExtra)
+library(readxl)
+library(viridis)
+library(hrbrthemes)
+
+readRDS("/home/pawan/trade/totaltrade/total_exportsusd.rds")->usd
+readRDS("/home/pawan/trade/totaltrade/total_exportsqty.rds")->qty
+readRDS("/home/pawan/trade/totaltrade/total_importsusd.rds")->musd
+readRDS("/home/pawan/trade/totaltrade/total_importsqty.rds")->mqty
+as.data.table(read_excel("/home/pawan/trade/totaltrade/two-digit.xlsx"))->twodigit
+
+my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
+    theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
+          plot.title = element_text(size = 20, face = "bold",
+                                    hjust = 0.5, margin = margin(10, 0, 10, 0)), ## Center and style title
+          axis.title = element_text(size = 18),
+          axis.text = element_text(size = 14),
+          legend.position = "bottom",
+          legend.title = element_blank(),  ## Remove legend title
+          panel.grid.major = element_line(color = "#EEEEEE"), ## Lighter grid lines
+          panel.border = element_blank(), ## Remove panel border
+          axis.line = element_line(color = "#333333"), ## Add axis lines
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+          strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
+          )
+```
+```{r}          
+## Export Data Cleaning
+usd[,HSCode4 := substr(HSCode, 1, 4)]
+usd[,HSCode6 := substr(HSCode, 1, 6)]
+usd[,HSCode2 := substr(HSCode, 1, 2)]
+qty[,HSCode2 := substr(HSCode, 1, 2)]
+qty[,HSCode4 := substr(HSCode, 1, 4)]
+qty[,HSCode6 := substr(HSCode, 1, 6)]
+
+as.numeric(twodigit$HSCode2)->twodigit$HSCode2
+as.numeric(qty$HSCode2)->qty$HSCode2
+
+merge(qty,twodigit,by=c("HSCode2"),all.x=TRUE)->qty
+
+as.numeric(gsub(",", "", qty$Export))->qty$Export
+ifelse(is.na(qty$Export), 0, qty$Export)->qty$Export
+
+as.numeric(gsub(",", "", usd$Export))->usd$Export
+ifelse(is.na(usd$Export), 0, usd$Export)->usd$Export
+
+qty[,.(Export_Qty = sum(Export)),.(Year)]->exportqty
+usd[,.(Export_USD = sum(Export)),.(Year)]->exportusd
+
+qty[,.(Qty = sum(Export)),.(Year, HSCode2)]->hscode2
+hscode2[,.(Qty = sum(Qty)),.(HSCode2)]->a
+a[, Share := round(Qty*100/(sum(a$Qty)),2)][order(Share)]
+
+## Import Data Cleaning
+musd[,HSCode4 := substr(HSCode, 1, 4)]
+musd[,HSCode6 := substr(HSCode, 1, 6)]
+musd[,HSCode2 := substr(HSCode, 1, 2)]
+mqty[,HSCode2 := substr(HSCode, 1, 2)]
+mqty[,HSCode4 := substr(HSCode, 1, 4)]
+mqty[,HSCode6 := substr(HSCode, 1, 6)]
+
+as.numeric(gsub(",", "", mqty$Import))->mqty$Import
+ifelse(is.na(mqty$Import), 0, mqty$Import)->mqty$Import
+
+as.numeric(gsub(",", "", musd$Import))->musd$Import
+ifelse(is.na(musd$Import), 0, musd$Import)->musd$Import
+
+mqty[,.(Import_Qty = sum(Import)),.(Year)]->importqty
+musd[,.(Import_USD = sum(Import)),.(Year)]->importusd
+
+mqty[,.(Qty = sum(Import)),.(Year, HSCode2)]->hscode21
+hscode21[,.(Qty = sum(Qty)),.(HSCode2)]->b
+b[, Share := round(Qty*100/(sum(b$Qty)),2)][order(Share)]
+
+
+## Net Trade Tarde Balance
+merge(exportqty, importqty, by = "Year")->trade
+merge(trade, exportusd, by = "Year")->trade
+merge(trade, importusd, by = "Year")->trade
+
+trade[, Trade_Balance := (Export_USD - Import_USD)]
+```
+
+# Trade Statistics
+```{r}
+ggplot(trade, aes(x = Year, y = Export_USD, group = 1)) +
+    geom_line(linewidth = 1) +
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "US $ Million") +
+    ggtitle("Net Exports By India")->p1
+p1
+
+ggplot(trade, aes(x = Year, y = Import_USD, group = 1)) +
+    geom_line(linewidth = 1) +
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "US $ Million") +
+    ggtitle("Net Imports By India")->p2
+p2
+grid.arrange(p1, p2)
+```
+```{r}
+# Trade Balance
+ggplot(trade, aes(x = Year, y = Trade_Balance, group = 1)) +
+    geom_line(linewidth = 1) +
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "US $ Million") +
+    ggtitle("Trade Balance")
+```
+
+# Cereals Export
+```{r}
+qty[HSCode2 == "10"]->t0
+ifelse(t0$HSCode4 == "1006", "Rice",
+ifelse(t0$HSCode4 == "1001", "Wheat",
+ifelse(t0$HSCode4 == "1005", "Maize", "Other Ceraeals")))->t0$Commodity4
+t0[,.(Qty = sum(Export)),.(Year, Commodity4)]->t0
+
+factor(t0$Commodity4, levels = c("Other Ceraeals", "Maize",
+                                    "Wheat", "Rice"))->t0$Commodity4
+ggplot(t0, aes(x = Year, y = Qty)) +
+    geom_bar(aes(fill = Commodity4), stat = "identity") +
+    my_theme +
+    scale_fill_brewer(palette = "Set1") +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Thousands Tonns)") +
+    ggtitle("Cereals Exports")
+```
+
+# Fertilizer Import
+```{r}
+mqty[HSCode2 == "31"]->f
+ifelse(f$HSCode4 == "3102", "Nitrogenous Fertilizer",
+ifelse(f$HSCode4 == "3104", "Potassic Fertilizer",
+ifelse(f$HSCode4 == "3105", "DAP and NPK", "Other Chemical Fertilizer")))->f$Commodity4
+f[,.(Qty = sum(Import)),.(Year, Commodity4)]->f
+ggplot(f, aes(x = Year, y = Qty)) +
+    geom_bar(aes(fill = Commodity4), stat = "identity") +
+    scale_fill_viridis(discrete = T, option = "E") +
+    theme_ipsum() +
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Thousands Tonns)") +
+    ggtitle("Fertilizer Imports")
+```
+
+# Fats and Oil Import
+```{r}
+mqty[HSCode2 == "15"]->h1
+h1[,.(Qty = sum(Import)),.(Year)]->h1
+ggplot(h1, aes(x = Year, y = Qty, group = 1)) +
+    geom_line(linewidth = 1) +
+    my_theme +
+    scale_fill_brewer(palette = "Set2") +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Thousands Tonns)") +
+    ggtitle("Vegetable Fats and Edible Oils Imports")
+```
+
+# Petrolium Import
+```{r}
+mqty[HSCode2 == "27"]->h2
+ifelse(h2$HSCode4 == "2701", "Coal",
+ifelse(h2$HSCode4 == "2709", "Petrolium Oils",
+ifelse(h2$HSCode4 == "2711", "Petrolium Gases", "Other Petrolium")))->h2$Commodity4
+h2[,.(Qty = sum(Import)),.(Year, Commodity4)]->h2
+ggplot(h2, aes(x = Year, y = Qty)) +
+    geom_bar(aes(fill = Commodity4), stat = "identity") +
+    my_theme +
+    scale_fill_brewer(palette = "Set2") +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Thousands Tonns)") +
+    ggtitle("Petrolium Imports")
+```

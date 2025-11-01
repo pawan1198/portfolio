@@ -10,7 +10,7 @@
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Pawan</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Fri, 31 Oct 2025 11:06:07 GMT</lastBuildDate>
+<lastBuildDate>Sat, 01 Nov 2025 05:56:11 GMT</lastBuildDate>
 <item>
   <title>Combining plots in ggplot2</title>
   <link>https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot.html</link>
@@ -990,7 +990,7 @@ font-style: inherit;">1</span>) </span></code></pre></div></div>
   <category>Data Viz</category>
   <category>ggplot2</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/blog/combine-plot.html</guid>
-  <pubDate>Fri, 31 Oct 2025 11:06:07 GMT</pubDate>
+  <pubDate>Sat, 01 Nov 2025 05:56:11 GMT</pubDate>
 </item>
 <item>
   <title>The Advantages of R for Statistical Analysis</title>
@@ -1050,7 +1050,7 @@ font-style: inherit;">1</span>) </span></code></pre></div></div>
   <category>ggplot2</category>
   <category>R Programming</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/blog/why-R.html</guid>
-  <pubDate>Fri, 31 Oct 2025 11:06:07 GMT</pubDate>
+  <pubDate>Sat, 01 Nov 2025 05:56:11 GMT</pubDate>
 </item>
 </channel>
 </rss>

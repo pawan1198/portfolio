@@ -2,7 +2,7 @@
 title: "Daily Fuel Price in Metro City of India"
 description: "Fuel Prices in Metro city in India and Crude Oil International Price"
 author: "Pawan"
-date: ""
+date: last-modified	
 categories:
   - "Fuel"
   - "Prices"

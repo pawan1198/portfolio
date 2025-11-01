@@ -2,9 +2,10 @@
   {
     "listing": "/data_vizs.html",
     "items": [
-      "/data_vizs/fuelprice.html",
       "/data_vizs/edibleoil.html",
-      "/data_vizs/trade.html"
+      "/data_vizs/trade.html",
+      "/data_vizs/procurement.html",
+      "/data_vizs/fuelprice.html"
     ]
   },
   {

@@ -10,7 +10,1754 @@
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.xml" rel="self" type="application/rss+xml"/>
 <description>Pawan</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Fri, 31 Oct 2025 11:08:24 GMT</lastBuildDate>
+<lastBuildDate>Sat, 01 Nov 2025 05:55:31 GMT</lastBuildDate>
+<item>
+  <title>Trade Statistics</title>
+  <dc:creator>Pawan </dc:creator>
+  <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(data.table)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gridExtra)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(readxl)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(viridis)</span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(hrbrthemes)</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/trade/totaltrade/total_exportsusd.rds"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>usd</span>
+<span id="cb1-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/trade/totaltrade/total_exportsqty.rds"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>qty</span>
+<span id="cb1-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/trade/totaltrade/total_importsusd.rds"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>musd</span>
+<span id="cb1-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/trade/totaltrade/total_importsqty.rds"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>mqty</span>
+<span id="cb1-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.data.table</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_excel</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/trade/totaltrade/two-digit.xlsx"</span>))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>twodigit</span>
+<span id="cb1-13"></span>
+<span id="cb1-14">my_theme <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span>  <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Start with theme_bw and increase base size</span></span>
+<span id="cb1-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"serif"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Set font family and color</span></span>
+<span id="cb1-16">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold"</span>,</span>
+<span id="cb1-17">                                    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Center and style title</span></span>
+<span id="cb1-18">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">18</span>),</span>
+<span id="cb1-19">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>),</span>
+<span id="cb1-20">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>,</span>
+<span id="cb1-21">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),  <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Remove legend title</span></span>
+<span id="cb1-22">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.grid.major =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#EEEEEE"</span>), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Lighter grid lines</span></span>
+<span id="cb1-23">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.border =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Remove panel border</span></span>
+<span id="cb1-24">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Add axis lines</span></span>
+<span id="cb1-25">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">90</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),</span>
+<span id="cb1-26">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#F2F2F2"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>) <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Style facet strips (if used)</span></span>
+<span id="cb1-27">          )</span></code></pre></div></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Export Data Cleaning</span></span>
+<span id="cb2-2">usd[,HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)]</span>
+<span id="cb2-3">usd[,HSCode6 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)]</span>
+<span id="cb2-4">usd[,HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)]</span>
+<span id="cb2-5">qty[,HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)]</span>
+<span id="cb2-6">qty[,HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)]</span>
+<span id="cb2-7">qty[,HSCode6 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)]</span>
+<span id="cb2-8"></span>
+<span id="cb2-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(twodigit<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode2)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>twodigit<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode2</span>
+<span id="cb2-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode2)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode2</span>
+<span id="cb2-11"></span>
+<span id="cb2-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">merge</span>(qty,twodigit,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"HSCode2"</span>),<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">all.x=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>qty</span>
+<span id="cb2-13"></span>
+<span id="cb2-14"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export</span>
+<span id="cb2-15"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export), <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export</span>
+<span id="cb2-16"></span>
+<span id="cb2-17"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, usd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>usd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export</span>
+<span id="cb2-18"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(usd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export), <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, usd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>usd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Export</span>
+<span id="cb2-19"></span>
+<span id="cb2-20">qty[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Export_Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Export)),.(Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>exportqty</span>
+<span id="cb2-21">usd[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Export_USD =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Export)),.(Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>exportusd</span>
+<span id="cb2-22"></span>
+<span id="cb2-23">qty[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Export)),.(Year, HSCode2)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>hscode2</span>
+<span id="cb2-24">hscode2[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Qty)),.(HSCode2)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>a</span>
+<span id="cb2-25">a[, Share <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(Qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(a<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Qty)),<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)][<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">order</span>(Share)]</span></code></pre></div></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    HSCode2          Qty Share
+      &lt;num&gt;        &lt;num&gt; &lt;num&gt;
+ 1:       1     57386.01  0.00
+ 2:      43      5854.14  0.00
+ 3:      45     18059.74  0.00
+ 4:      46    172331.36  0.00
+ 5:      65    106770.22  0.00
+ 6:      66     21892.15  0.00
+ 7:      67     83606.20  0.00
+ 8:      80    158712.90  0.00
+ 9:      81     99503.36  0.00
+10:      88    151253.43  0.00
+11:      89       272.58  0.00
+12:      92    141410.24  0.00
+13:      93     96216.58  0.00
+14:      99         0.00  0.00
+15:      18    408822.89  0.01
+16:      37    384881.26  0.01
+17:      47    198465.10  0.01
+18:      50    570319.77  0.01
+19:      51    419656.74  0.01
+20:      75    214353.15  0.01
+21:      86    202509.95  0.01
+22:      91    343247.84  0.01
+23:      98    300749.51  0.01
+24:       6    685362.74  0.02
+25:       5   1046260.29  0.03
+26:      36   1017258.02  0.03
+27:      41   1130457.78  0.03
+28:      14   1593237.80  0.04
+29:      16   1349979.59  0.04
+30:      58   1463885.18  0.04
+31:      60   1423811.29  0.04
+32:      35   1997244.81  0.05
+33:      97   1843448.56  0.05
+34:      44   2389352.56  0.06
+35:      78   2328337.80  0.06
+36:      56   2523293.29  0.07
+37:      94   3142096.61  0.08
+38:      83   3589717.35  0.09
+39:      21   3874862.38  0.10
+40:      59   4286776.32  0.11
+41:      22   4466206.17  0.12
+42:      31   4517466.78  0.12
+43:      33   4453885.91  0.12
+44:      57   4525781.90  0.12
+45:      64   4388485.46  0.12
+46:      79   4518806.71  0.12
+47:      24   5692707.51  0.15
+48:      19   6066888.36  0.16
+49:      34   6058425.85  0.16
+50:      95   6831130.69  0.18
+51:      69   7388098.29  0.19
+52:      74   7445222.51  0.20
+53:      82   8533886.81  0.22
+54:      13   8833219.84  0.23
+55:      42   8869994.13  0.23
+56:      70   8710743.58  0.23
+57:      30   9202345.03  0.24
+58:      20   9410197.68  0.25
+59:      49  12268144.88  0.32
+60:      11  13811909.37  0.36
+61:      32  13828177.60  0.36
+62:      15  15555901.75  0.41
+63:       4  17582034.85  0.46
+64:      53  18942390.17  0.50
+65:       3  21869681.60  0.57
+66:      87  21924832.97  0.57
+67:       8  22260569.64  0.58
+68:      55  22166164.28  0.58
+69:       2  22383882.17  0.59
+70:      84  23221827.79  0.61
+71:      40  24917098.01  0.65
+72:      38  25144722.14  0.66
+73:      12  25557876.07  0.67
+74:      63  27160873.41  0.71
+75:      48  28024570.74  0.73
+76:      76  28986020.42  0.76
+77:      71  29500489.72  0.77
+78:       9  29619992.49  0.78
+79:      62  32160782.14  0.84
+80:      54  32763337.09  0.86
+81:      61  46094554.16  1.21
+82:      68  47308999.08  1.24
+83:       7  60446992.73  1.58
+84:      90  62888329.34  1.65
+85:      39  66282101.26  1.74
+86:      28  69128102.86  1.81
+87:      73  74871272.42  1.96
+88:      52  82459600.99  2.16
+89:      29  91920137.68  2.41
+90:      17  96911207.17  2.54
+91:      85  97459997.91  2.55
+92:      96 124708411.45  3.27
+93:      23 127625217.05  3.34
+94:      72 247501238.48  6.49
+95:      10 328288525.47  8.60
+96:      26 356321890.63  9.34
+97:      27 495448743.58 12.98
+98:      25 670751324.83 17.58
+    HSCode2          Qty Share</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Import Data Cleaning</span></span>
+<span id="cb4-2">musd[,HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)]</span>
+<span id="cb4-3">musd[,HSCode6 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)]</span>
+<span id="cb4-4">musd[,HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)]</span>
+<span id="cb4-5">mqty[,HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)]</span>
+<span id="cb4-6">mqty[,HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)]</span>
+<span id="cb4-7">mqty[,HSCode6 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)]</span>
+<span id="cb4-8"></span>
+<span id="cb4-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, mqty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>mqty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import</span>
+<span id="cb4-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(mqty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import), <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, mqty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>mqty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import</span>
+<span id="cb4-11"></span>
+<span id="cb4-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, musd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>musd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import</span>
+<span id="cb4-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(musd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import), <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, musd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>musd<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Import</span>
+<span id="cb4-14"></span>
+<span id="cb4-15">mqty[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import_Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>importqty</span>
+<span id="cb4-16">musd[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import_USD =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>importusd</span>
+<span id="cb4-17"></span>
+<span id="cb4-18">mqty[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Year, HSCode2)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>hscode21</span>
+<span id="cb4-19">hscode21[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Qty)),.(HSCode2)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>b</span>
+<span id="cb4-20">b[, Share <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(Qty<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(b<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Qty)),<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)][<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">order</span>(Share)]</span></code></pre></div></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    HSCode2          Qty Share
+     &lt;char&gt;        &lt;num&gt; &lt;num&gt;
+ 1:      01 3.584730e+03  0.00
+ 2:      02 1.033574e+04  0.00
+ 3:      04 5.056488e+05  0.00
+ 4:      05 1.440119e+05  0.00
+ 5:      06 1.281618e+05  0.00
+ 6:      16 2.182949e+04  0.00
+ 7:      24 1.240792e+05  0.00
+ 8:      30 2.869202e+05  0.00
+ 9:      36 1.150939e+04  0.00
+10:      43 5.144310e+04  0.00
+11:      45 6.401317e+04  0.00
+12:      46 2.777328e+04  0.00
+13:      57 3.751304e+05  0.00
+14:      65 1.078908e+05  0.00
+15:      67 1.324753e+05  0.00
+16:      80 2.260796e+05  0.00
+17:      88 6.922053e+04  0.00
+18:      89 7.684720e+03  0.00
+19:      92 1.778048e+05  0.00
+20:      93 2.967135e+05  0.00
+21:      97 6.913320e+03  0.00
+22:      99 0.000000e+00  0.00
+23:      03 6.368178e+05  0.01
+24:      11 1.445115e+06  0.01
+25:      13 1.463007e+06  0.01
+26:      14 1.085953e+06  0.01
+27:      18 1.292217e+06  0.01
+28:      19 9.736307e+05  0.01
+29:      20 1.041778e+06  0.01
+30:      21 1.203420e+06  0.01
+31:      49 1.254153e+06  0.01
+32:      50 7.604266e+05  0.01
+33:      58 9.811175e+05  0.01
+34:      66 5.429846e+05  0.01
+35:      75 1.052377e+06  0.01
+36:      81 1.321740e+06  0.01
+37:      86 8.840297e+05  0.01
+38:      33 1.785591e+06  0.02
+39:      35 2.065950e+06  0.02
+40:      37 2.472297e+06  0.02
+41:      41 2.037341e+06  0.02
+42:      42 2.640793e+06  0.02
+43:      51 2.464337e+06  0.02
+44:      56 1.632632e+06  0.02
+45:      62 1.925560e+06  0.02
+46:      69 2.560533e+06  0.02
+47:      60 3.253739e+06  0.03
+48:      64 3.552718e+06  0.03
+49:      82 2.713851e+06  0.03
+50:      83 4.631210e+06  0.04
+51:      09 5.409774e+06  0.05
+52:      61 5.552442e+06  0.05
+53:      79 5.165851e+06  0.05
+54:      91 4.867880e+06  0.05
+55:      53 6.249523e+06  0.06
+56:      78 6.587412e+06  0.06
+57:      98 6.757452e+06  0.06
+58:      12 7.721081e+06  0.07
+59:      34 7.790692e+06  0.07
+60:      55 7.759872e+06  0.07
+61:      32 9.054527e+06  0.08
+62:      22 9.725604e+06  0.09
+63:      68 9.890219e+06  0.09
+64:      70 1.046068e+07  0.10
+65:      23 1.157155e+07  0.11
+66:      44 1.207241e+07  0.11
+67:      52 1.257919e+07  0.12
+68:      74 1.295066e+07  0.12
+69:      94 1.423236e+07  0.13
+70:      63 1.505935e+07  0.14
+71:      87 1.519237e+07  0.14
+72:      10 2.502074e+07  0.23
+73:      54 2.995820e+07  0.28
+74:      17 3.151585e+07  0.30
+75:      71 3.176260e+07  0.30
+76:      73 3.162889e+07  0.30
+77:      76 3.173169e+07  0.30
+78:      95 3.315395e+07  0.31
+79:      38 3.866092e+07  0.36
+80:      08 3.951892e+07  0.37
+81:      84 4.985482e+07  0.47
+82:      48 5.381667e+07  0.50
+83:      40 5.439581e+07  0.51
+84:      07 8.342665e+07  0.78
+85:      90 8.414214e+07  0.79
+86:      47 1.116978e+08  1.05
+87:      39 1.328582e+08  1.25
+88:      26 1.414729e+08  1.33
+89:      96 1.429565e+08  1.34
+90:      28 2.323163e+08  2.18
+91:      29 2.318574e+08  2.18
+92:      15 2.568370e+08  2.41
+93:      59 2.912324e+08  2.73
+94:      72 3.184954e+08  2.99
+95:      31 3.751674e+08  3.52
+96:      25 7.684029e+08  7.21
+97:      27 2.514609e+09 23.60
+98:      85 4.271295e+09 40.08
+    HSCode2          Qty Share</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Net Trade Tarde Balance</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">merge</span>(exportqty, importqty, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>trade</span>
+<span id="cb6-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">merge</span>(trade, exportusd, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>trade</span>
+<span id="cb6-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">merge</span>(trade, importusd, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Year"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>trade</span>
+<span id="cb6-5"></span>
+<span id="cb6-6">trade[, Trade_Balance <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> (Export_USD <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> Import_USD)]</span></code></pre></div></div>
+</details>
+</div>
+<section id="trade-statistics" class="level1">
+<h1>Trade Statistics</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(trade, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Export_USD, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-3">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"US $ Million"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Net Exports By India"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p1</span>
+<span id="cb7-7">p1</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(trade, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Import_USD, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-3">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"US $ Million"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Net Imports By India"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p2</span>
+<span id="cb8-7">p2</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grid.arrange</span>(p1, p2)</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Trade Balance</span></span>
+<span id="cb10-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(trade, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Trade_Balance, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-4">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"US $ Million"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Trade Balance"</span>)</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cereals-export" class="level1">
+<h1>Cereals Export</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">qty[HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"10"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t0</span>
+<span id="cb11-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(t0<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1006"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Rice"</span>,</span>
+<span id="cb11-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(t0<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1001"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Wheat"</span>,</span>
+<span id="cb11-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(t0<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1005"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Maize"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Other Ceraeals"</span>)))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t0<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Commodity4</span>
+<span id="cb11-5">t0[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Export)),.(Year, Commodity4)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t0</span>
+<span id="cb11-6"></span>
+<span id="cb11-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(t0<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Commodity4, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">levels =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Other Ceraeals"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Maize"</span>,</span>
+<span id="cb11-8">                                    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Wheat"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Rice"</span>))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t0<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Commodity4</span>
+<span id="cb11-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(t0, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Qty)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Commodity4), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-11">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set1"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-14">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Cereals Exports"</span>)</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="fertilizer-import" class="level1">
+<h1>Fertilizer Import</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">mqty[HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"31"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>f</span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(f<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3102"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Nitrogenous Fertilizer"</span>,</span>
+<span id="cb12-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(f<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3104"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Potassic Fertilizer"</span>,</span>
+<span id="cb12-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(f<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3105"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"DAP and NPK"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Other Chemical Fertilizer"</span>)))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>f<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Commodity4</span>
+<span id="cb12-5">f[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Year, Commodity4)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>f</span>
+<span id="cb12-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(f, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Qty)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb12-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Commodity4), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb12-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_viridis</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">discrete =</span> T, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">option =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"E"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb12-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_ipsum</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb12-10">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb12-11">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb12-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb12-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fertilizer Imports"</span>)</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="fats-and-oil-import" class="level1">
+<h1>Fats and Oil Import</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">mqty[HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"15"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>h1</span>
+<span id="cb13-2">h1[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>h1</span>
+<span id="cb13-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(h1, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Qty, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-5">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Vegetable Fats and Edible Oils Imports"</span>)</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="petrolium-import" class="level1">
+<h1>Petrolium Import</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">mqty[HSCode2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"27"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>h2</span>
+<span id="cb14-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(h2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2701"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Coal"</span>,</span>
+<span id="cb14-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(h2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2709"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Petrolium Oils"</span>,</span>
+<span id="cb14-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(h2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2711"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Petrolium Gases"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Other Petrolium"</span>)))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>h2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Commodity4</span>
+<span id="cb14-5">h2[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Year, Commodity4)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>h2</span>
+<span id="cb14-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(h2, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Qty)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb14-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Commodity4), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb14-8">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb14-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb14-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb14-11">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb14-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Petrolium Imports"</span>)</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+
+ ]]></description>
+  <category>Trade</category>
+  <guid>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade.html</guid>
+  <pubDate>Sat, 01 Nov 2025 05:55:31 GMT</pubDate>
+</item>
+<item>
+  <title>Public Procurement</title>
+  <dc:creator>Pawan </dc:creator>
+  <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/procurement.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<ul>
+<li>Whatever foodgrains are produced and offered, i.e.&nbsp;wheat, paddy, coarse grains, by the farmers, within the stipulated procurement period are purchased by the State Government Agencies including the Food Corporation of India (FCI) at Minimum Support price (MSP).</li>
+<li>The government procures foodgrains in order to ensure farmers receive the minimum support price (MSP) and a stock is maintained to distribute to the poor under the Public Distribution System (PDS) and other schemes and also to ensure the country’s food security.</li>
+<li>Before the harvest during each Crop season, the Government of India announces the Minimum Support Price (MSP) for procurement.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(data.table)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggplot2)</span>
+<span id="cb1-3"></span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fread</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/procurement/procurement.csv"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t1</span>
+<span id="cb1-5">t1[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Total=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Total),<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">FCI=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(FCI),</span>
+<span id="cb1-6">      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">StateAgency=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(StateAgency)),.(Crop,MarketingSeason)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t1</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(t1,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>MarketingSeason,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>Total,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>Crop))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p</span>
+<span id="cb1-9">p<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>Crop)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p</span>
+<span id="cb1-10">p<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p</span>
+<span id="cb1-11">p<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>,</span>
+<span id="cb1-12">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.x=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">90</span>,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p</span>
+<span id="cb1-13">p<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Qty (in LMT)"</span>)</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/procurement_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="paddy-procurement" class="level2">
+<h2 class="anchored" data-anchor-id="paddy-procurement">Paddy Procurement</h2>
+<ul>
+<li>Paddy procurement marketing season in India begins each year on 1st October and ends on 30th September the following year.</li>
+<li>The figure gives the month-wise weekly paddy procurement in India for about 3.5 years from 2018 to 2022.</li>
+<li>Overall paddy procurement has been increasing over the last 3 years.</li>
+<li>There was a fall in procurement in Oct-Dec (2021-22) over the same period in the previous year.</li>
+<li>Paddy procurement however picked up subsequently and was higher in Jan-Mar (2021-22) over the corresponding period in 2020-21.</li>
+<li>The decline in procurement in Oct-Dec (2021-22) is mainly because of the decline in paddy procurement in Haryana and Punjab.</li>
+<li>And the recovery in procurement starting in January end 2022 is due to a large increase in paddy procurement in Chhattisgarh and Madhya Pradesh.</li>
+<li>The paddy procurement in Haryana in this season is much less as compared to the previous seasons</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>Food</category>
+  <guid>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/procurement.html</guid>
+  <pubDate>Sat, 01 Nov 2025 05:55:15 GMT</pubDate>
+</item>
 <item>
   <title>Daily Fuel Price in Metro City of India</title>
   <dc:creator>Pawan </dc:creator>
@@ -1977,7 +3724,7 @@ font-style: inherit;">-&gt;</span>p</span>
   <category>Fuel</category>
   <category>Prices</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/fuelprice.html</guid>
-  <pubDate>Fri, 31 Oct 2025 11:08:24 GMT</pubDate>
+  <pubDate>Fri, 31 Oct 2025 11:18:27 GMT</pubDate>
 </item>
 <item>
   <title>Annually Edible Oils Import by India</title>
@@ -2582,1602 +4329,7 @@ font-style: inherit;">8</span>)</span></code></pre></div></div>
  ]]></description>
   <category>Trade</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil.html</guid>
-  <pubDate>Fri, 31 Oct 2025 11:08:24 GMT</pubDate>
-</item>
-<item>
-  <title>Trade Statistics</title>
-  <dc:creator>Pawan </dc:creator>
-  <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade.html</link>
-  <description><![CDATA[ 
-
-
-
-
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(data.table)</span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(gridExtra)</span>
-<span id="cb1-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(readxl)</span>
-<span id="cb1-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(viridis)</span>
-<span id="cb1-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(hrbrthemes)</span>
-<span id="cb1-7"></span>
-<span id="cb1-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"/home/pawan/trade/totaltrade/total_exportsusd.rds"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>usd</span>
-<span id="cb1-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"/home/pawan/trade/totaltrade/total_exportsqty.rds"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>qty</span>
-<span id="cb1-10"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"/home/pawan/trade/totaltrade/total_importsusd.rds"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>musd</span>
-<span id="cb1-11"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"/home/pawan/trade/totaltrade/total_importsqty.rds"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>mqty</span>
-<span id="cb1-12"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.data.table</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">read_excel</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"/home/pawan/trade/totaltrade/two-digit.xlsx"</span>))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>twodigit</span>
-<span id="cb1-13"></span>
-<span id="cb1-14">my_theme <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">16</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span>  <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Start with theme_bw and increase base size</span></span>
-<span id="cb1-15">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">text =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"serif"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Set font family and color</span></span>
-<span id="cb1-16">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bold"</span>,</span>
-<span id="cb1-17">                                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">margin</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)), <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Center and style title</span></span>
-<span id="cb1-18">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.title =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">18</span>),</span>
-<span id="cb1-19">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">14</span>),</span>
-<span id="cb1-20">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>,</span>
-<span id="cb1-21">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.title =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_blank</span>(),  <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Remove legend title</span></span>
-<span id="cb1-22">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">panel.grid.major =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_line</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#EEEEEE"</span>), <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Lighter grid lines</span></span>
-<span id="cb1-23">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">panel.border =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_blank</span>(), <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Remove panel border</span></span>
-<span id="cb1-24">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_line</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Add axis lines</span></span>
-<span id="cb1-25">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">90</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>),</span>
-<span id="cb1-26">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#F2F2F2"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>) <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Style facet strips (if used)</span></span>
-<span id="cb1-27">          )</span></code></pre></div></div>
-</details>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Export Data Cleaning</span></span>
-<span id="cb2-2">usd[,HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>)]</span>
-<span id="cb2-3">usd[,HSCode6 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>)]</span>
-<span id="cb2-4">usd[,HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)]</span>
-<span id="cb2-5">qty[,HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)]</span>
-<span id="cb2-6">qty[,HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>)]</span>
-<span id="cb2-7">qty[,HSCode6 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>)]</span>
-<span id="cb2-8"></span>
-<span id="cb2-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(twodigit<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode2)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>twodigit<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode2</span>
-<span id="cb2-10"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode2)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode2</span>
-<span id="cb2-11"></span>
-<span id="cb2-12"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">merge</span>(qty,twodigit,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by=</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"HSCode2"</span>),<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">all.x=</span><span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>qty</span>
-<span id="cb2-13"></span>
-<span id="cb2-14"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>, qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export</span>
-<span id="cb2-15"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export</span>
-<span id="cb2-16"></span>
-<span id="cb2-17"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>, usd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>usd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export</span>
-<span id="cb2-18"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(usd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, usd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>usd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Export</span>
-<span id="cb2-19"></span>
-<span id="cb2-20">qty[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Export_Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Export)),.(Year)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>exportqty</span>
-<span id="cb2-21">usd[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Export_USD =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Export)),.(Year)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>exportusd</span>
-<span id="cb2-22"></span>
-<span id="cb2-23">qty[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Export)),.(Year, HSCode2)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>hscode2</span>
-<span id="cb2-24">hscode2[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Qty)),.(HSCode2)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>a</span>
-<span id="cb2-25">a[, Share <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(Qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(a<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Qty)),<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)][<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">order</span>(Share)]</span></code></pre></div></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    HSCode2          Qty Share
-      &lt;num&gt;        &lt;num&gt; &lt;num&gt;
- 1:       1     57386.01  0.00
- 2:      43      5854.14  0.00
- 3:      45     18059.74  0.00
- 4:      46    172331.36  0.00
- 5:      65    106770.22  0.00
- 6:      66     21892.15  0.00
- 7:      67     83606.20  0.00
- 8:      80    158712.90  0.00
- 9:      81     99503.36  0.00
-10:      88    151253.43  0.00
-11:      89       272.58  0.00
-12:      92    141410.24  0.00
-13:      93     96216.58  0.00
-14:      99         0.00  0.00
-15:      18    408822.89  0.01
-16:      37    384881.26  0.01
-17:      47    198465.10  0.01
-18:      50    570319.77  0.01
-19:      51    419656.74  0.01
-20:      75    214353.15  0.01
-21:      86    202509.95  0.01
-22:      91    343247.84  0.01
-23:      98    300749.51  0.01
-24:       6    685362.74  0.02
-25:       5   1046260.29  0.03
-26:      36   1017258.02  0.03
-27:      41   1130457.78  0.03
-28:      14   1593237.80  0.04
-29:      16   1349979.59  0.04
-30:      58   1463885.18  0.04
-31:      60   1423811.29  0.04
-32:      35   1997244.81  0.05
-33:      97   1843448.56  0.05
-34:      44   2389352.56  0.06
-35:      78   2328337.80  0.06
-36:      56   2523293.29  0.07
-37:      94   3142096.61  0.08
-38:      83   3589717.35  0.09
-39:      21   3874862.38  0.10
-40:      59   4286776.32  0.11
-41:      22   4466206.17  0.12
-42:      31   4517466.78  0.12
-43:      33   4453885.91  0.12
-44:      57   4525781.90  0.12
-45:      64   4388485.46  0.12
-46:      79   4518806.71  0.12
-47:      24   5692707.51  0.15
-48:      19   6066888.36  0.16
-49:      34   6058425.85  0.16
-50:      95   6831130.69  0.18
-51:      69   7388098.29  0.19
-52:      74   7445222.51  0.20
-53:      82   8533886.81  0.22
-54:      13   8833219.84  0.23
-55:      42   8869994.13  0.23
-56:      70   8710743.58  0.23
-57:      30   9202345.03  0.24
-58:      20   9410197.68  0.25
-59:      49  12268144.88  0.32
-60:      11  13811909.37  0.36
-61:      32  13828177.60  0.36
-62:      15  15555901.75  0.41
-63:       4  17582034.85  0.46
-64:      53  18942390.17  0.50
-65:       3  21869681.60  0.57
-66:      87  21924832.97  0.57
-67:       8  22260569.64  0.58
-68:      55  22166164.28  0.58
-69:       2  22383882.17  0.59
-70:      84  23221827.79  0.61
-71:      40  24917098.01  0.65
-72:      38  25144722.14  0.66
-73:      12  25557876.07  0.67
-74:      63  27160873.41  0.71
-75:      48  28024570.74  0.73
-76:      76  28986020.42  0.76
-77:      71  29500489.72  0.77
-78:       9  29619992.49  0.78
-79:      62  32160782.14  0.84
-80:      54  32763337.09  0.86
-81:      61  46094554.16  1.21
-82:      68  47308999.08  1.24
-83:       7  60446992.73  1.58
-84:      90  62888329.34  1.65
-85:      39  66282101.26  1.74
-86:      28  69128102.86  1.81
-87:      73  74871272.42  1.96
-88:      52  82459600.99  2.16
-89:      29  91920137.68  2.41
-90:      17  96911207.17  2.54
-91:      85  97459997.91  2.55
-92:      96 124708411.45  3.27
-93:      23 127625217.05  3.34
-94:      72 247501238.48  6.49
-95:      10 328288525.47  8.60
-96:      26 356321890.63  9.34
-97:      27 495448743.58 12.98
-98:      25 670751324.83 17.58
-    HSCode2          Qty Share</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Import Data Cleaning</span></span>
-<span id="cb4-2">musd[,HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>)]</span>
-<span id="cb4-3">musd[,HSCode6 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>)]</span>
-<span id="cb4-4">musd[,HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)]</span>
-<span id="cb4-5">mqty[,HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)]</span>
-<span id="cb4-6">mqty[,HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>)]</span>
-<span id="cb4-7">mqty[,HSCode6 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">substr</span>(HSCode, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>)]</span>
-<span id="cb4-8"></span>
-<span id="cb4-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>, mqty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>mqty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import</span>
-<span id="cb4-10"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(mqty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, mqty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>mqty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import</span>
-<span id="cb4-11"></span>
-<span id="cb4-12"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">","</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>, musd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>musd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import</span>
-<span id="cb4-13"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(musd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import), <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>, musd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>musd<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Import</span>
-<span id="cb4-14"></span>
-<span id="cb4-15">mqty[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Import_Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Import)),.(Year)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>importqty</span>
-<span id="cb4-16">musd[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Import_USD =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Import)),.(Year)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>importusd</span>
-<span id="cb4-17"></span>
-<span id="cb4-18">mqty[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Import)),.(Year, HSCode2)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>hscode21</span>
-<span id="cb4-19">hscode21[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Qty)),.(HSCode2)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>b</span>
-<span id="cb4-20">b[, Share <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(Qty<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(b<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Qty)),<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)][<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">order</span>(Share)]</span></code></pre></div></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    HSCode2          Qty Share
-     &lt;char&gt;        &lt;num&gt; &lt;num&gt;
- 1:      01 3.584730e+03  0.00
- 2:      02 1.033574e+04  0.00
- 3:      04 5.056488e+05  0.00
- 4:      05 1.440119e+05  0.00
- 5:      06 1.281618e+05  0.00
- 6:      16 2.182949e+04  0.00
- 7:      24 1.240792e+05  0.00
- 8:      30 2.869202e+05  0.00
- 9:      36 1.150939e+04  0.00
-10:      43 5.144310e+04  0.00
-11:      45 6.401317e+04  0.00
-12:      46 2.777328e+04  0.00
-13:      57 3.751304e+05  0.00
-14:      65 1.078908e+05  0.00
-15:      67 1.324753e+05  0.00
-16:      80 2.260796e+05  0.00
-17:      88 6.922053e+04  0.00
-18:      89 7.684720e+03  0.00
-19:      92 1.778048e+05  0.00
-20:      93 2.967135e+05  0.00
-21:      97 6.913320e+03  0.00
-22:      99 0.000000e+00  0.00
-23:      03 6.368178e+05  0.01
-24:      11 1.445115e+06  0.01
-25:      13 1.463007e+06  0.01
-26:      14 1.085953e+06  0.01
-27:      18 1.292217e+06  0.01
-28:      19 9.736307e+05  0.01
-29:      20 1.041778e+06  0.01
-30:      21 1.203420e+06  0.01
-31:      49 1.254153e+06  0.01
-32:      50 7.604266e+05  0.01
-33:      58 9.811175e+05  0.01
-34:      66 5.429846e+05  0.01
-35:      75 1.052377e+06  0.01
-36:      81 1.321740e+06  0.01
-37:      86 8.840297e+05  0.01
-38:      33 1.785591e+06  0.02
-39:      35 2.065950e+06  0.02
-40:      37 2.472297e+06  0.02
-41:      41 2.037341e+06  0.02
-42:      42 2.640793e+06  0.02
-43:      51 2.464337e+06  0.02
-44:      56 1.632632e+06  0.02
-45:      62 1.925560e+06  0.02
-46:      69 2.560533e+06  0.02
-47:      60 3.253739e+06  0.03
-48:      64 3.552718e+06  0.03
-49:      82 2.713851e+06  0.03
-50:      83 4.631210e+06  0.04
-51:      09 5.409774e+06  0.05
-52:      61 5.552442e+06  0.05
-53:      79 5.165851e+06  0.05
-54:      91 4.867880e+06  0.05
-55:      53 6.249523e+06  0.06
-56:      78 6.587412e+06  0.06
-57:      98 6.757452e+06  0.06
-58:      12 7.721081e+06  0.07
-59:      34 7.790692e+06  0.07
-60:      55 7.759872e+06  0.07
-61:      32 9.054527e+06  0.08
-62:      22 9.725604e+06  0.09
-63:      68 9.890219e+06  0.09
-64:      70 1.046068e+07  0.10
-65:      23 1.157155e+07  0.11
-66:      44 1.207241e+07  0.11
-67:      52 1.257919e+07  0.12
-68:      74 1.295066e+07  0.12
-69:      94 1.423236e+07  0.13
-70:      63 1.505935e+07  0.14
-71:      87 1.519237e+07  0.14
-72:      10 2.502074e+07  0.23
-73:      54 2.995820e+07  0.28
-74:      17 3.151585e+07  0.30
-75:      71 3.176260e+07  0.30
-76:      73 3.162889e+07  0.30
-77:      76 3.173169e+07  0.30
-78:      95 3.315395e+07  0.31
-79:      38 3.866092e+07  0.36
-80:      08 3.951892e+07  0.37
-81:      84 4.985482e+07  0.47
-82:      48 5.381667e+07  0.50
-83:      40 5.439581e+07  0.51
-84:      07 8.342665e+07  0.78
-85:      90 8.414214e+07  0.79
-86:      47 1.116978e+08  1.05
-87:      39 1.328582e+08  1.25
-88:      26 1.414729e+08  1.33
-89:      96 1.429565e+08  1.34
-90:      28 2.323163e+08  2.18
-91:      29 2.318574e+08  2.18
-92:      15 2.568370e+08  2.41
-93:      59 2.912324e+08  2.73
-94:      72 3.184954e+08  2.99
-95:      31 3.751674e+08  3.52
-96:      25 7.684029e+08  7.21
-97:      27 2.514609e+09 23.60
-98:      85 4.271295e+09 40.08
-    HSCode2          Qty Share</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">## Net Trade Tarde Balance</span></span>
-<span id="cb6-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">merge</span>(exportqty, importqty, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Year"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>trade</span>
-<span id="cb6-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">merge</span>(trade, exportusd, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Year"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>trade</span>
-<span id="cb6-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">merge</span>(trade, importusd, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Year"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>trade</span>
-<span id="cb6-5"></span>
-<span id="cb6-6">trade[, Trade_Balance <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="er" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">=</span> (Export_USD <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> Import_USD)]</span></code></pre></div></div>
-</details>
-</div>
-<section id="trade-statistics" class="level1">
-<h1>Trade Statistics</h1>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(trade, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> Export_USD, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-2">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-3">    my_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-4">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-5">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"US $ Million"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb7-6">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Net Exports By India"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>p1</span>
-<span id="cb7-7">p1</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(trade, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> Import_USD, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-2">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-3">    my_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-4">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-5">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"US $ Million"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb8-6">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Net Imports By India"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>p2</span>
-<span id="cb8-7">p2</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">grid.arrange</span>(p1, p2)</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Trade Balance</span></span>
-<span id="cb10-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(trade, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> Trade_Balance, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-3">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-4">    my_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-5">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-6">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"US $ Million"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb10-7">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Trade Balance"</span>)</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="cereals-export" class="level1">
-<h1>Cereals Export</h1>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">qty[HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"10"</span>]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>t0</span>
-<span id="cb11-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(t0<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1006"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Rice"</span>,</span>
-<span id="cb11-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(t0<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1001"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Wheat"</span>,</span>
-<span id="cb11-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(t0<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1005"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Maize"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Other Ceraeals"</span>)))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>t0<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Commodity4</span>
-<span id="cb11-5">t0[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Export)),.(Year, Commodity4)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>t0</span>
-<span id="cb11-6"></span>
-<span id="cb11-7"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">factor</span>(t0<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Commodity4, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">levels =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Other Ceraeals"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Maize"</span>,</span>
-<span id="cb11-8">                                    <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Wheat"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Rice"</span>))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>t0<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Commodity4</span>
-<span id="cb11-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(t0, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> Qty)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-10">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_bar</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> Commodity4), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"identity"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-11">    my_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-12">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Set1"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-13">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-14">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb11-15">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Cereals Exports"</span>)</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="fertilizer-import" class="level1">
-<h1>Fertilizer Import</h1>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">mqty[HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"31"</span>]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>f</span>
-<span id="cb12-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(f<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"3102"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Nitrogenous Fertilizer"</span>,</span>
-<span id="cb12-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(f<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"3104"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Potassic Fertilizer"</span>,</span>
-<span id="cb12-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(f<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"3105"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"DAP and NPK"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Other Chemical Fertilizer"</span>)))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>f<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Commodity4</span>
-<span id="cb12-5">f[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Import)),.(Year, Commodity4)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>f</span>
-<span id="cb12-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(f, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> Qty)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb12-7">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_bar</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> Commodity4), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"identity"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb12-8">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_viridis</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">discrete =</span> T, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">option =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"E"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb12-9">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_ipsum</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb12-10">    my_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb12-11">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb12-12">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb12-13">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Fertilizer Imports"</span>)</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="fats-and-oil-import" class="level1">
-<h1>Fats and Oil Import</h1>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">mqty[HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"15"</span>]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>h1</span>
-<span id="cb13-2">h1[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Import)),.(Year)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>h1</span>
-<span id="cb13-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(h1, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> Qty, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-4">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linewidth =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-5">    my_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-6">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Set2"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-7">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-8">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-9">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Vegetable Fats and Edible Oils Imports"</span>)</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="petrolium-import" class="level1">
-<h1>Petrolium Import</h1>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">mqty[HSCode2 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"27"</span>]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>h2</span>
-<span id="cb14-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(h2<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2701"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Coal"</span>,</span>
-<span id="cb14-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(h2<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2709"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Petrolium Oils"</span>,</span>
-<span id="cb14-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(h2<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>HSCode4 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2711"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Petrolium Gases"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Other Petrolium"</span>)))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>h2<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>Commodity4</span>
-<span id="cb14-5">h2[,.(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Qty =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(Import)),.(Year, Commodity4)]<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>h2</span>
-<span id="cb14-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(h2, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> Qty)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb14-7">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_bar</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> Commodity4), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"identity"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb14-8">    my_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb14-9">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Set2"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb14-10">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb14-11">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Quantity (Thousands Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb14-12">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Petrolium Imports"</span>)</span></code></pre></div></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-
-
-</section>
-
- ]]></description>
-  <category>Trade</category>
-  <guid>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade.html</guid>
-  <pubDate>Fri, 31 Oct 2025 11:08:24 GMT</pubDate>
+  <pubDate>Sat, 01 Nov 2025 05:56:08 GMT</pubDate>
 </item>
 </channel>
 </rss>

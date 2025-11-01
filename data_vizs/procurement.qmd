@@ -1,0 +1,49 @@
+---
+title: "Public Procurement"
+description: ""
+author: "Pawan"
+date: last-modified
+categories:
+  - "Food"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
++ Whatever foodgrains are produced and offered, i.e. wheat, paddy, coarse grains, by the farmers, within the stipulated procurement period are purchased by the State Government Agencies including the Food Corporation of India (FCI) at Minimum Support price (MSP).
++ The government procures foodgrains in order to ensure farmers receive the minimum support price (MSP) and a stock is maintained to distribute to the poor under the Public Distribution System (PDS) and other schemes and also to ensure the country's food security.
++ Before the harvest during each Crop season, the Government of India announces the Minimum Support Price (MSP) for procurement.
+
+```{r}
+library(data.table)
+library(ggplot2)
+
+fread("/home/pawan/procurement/procurement.csv")->t1
+t1[,.(Total=sum(Total),FCI=sum(FCI),
+      StateAgency=sum(StateAgency)),.(Crop,MarketingSeason)]->t1
+
+ggplot(t1,aes(x=MarketingSeason,y=Total,fill=Crop))->p
+p+geom_bar(stat="identity")+facet_wrap(~Crop)->p
+p+theme_bw(base_size=15)->p
+p+theme(legend.position="none",
+        axis.text.x=element_text(angle=90,vjust=0.5))->p
+p+labs(y="Qty (in LMT)")
+```
+
+## Paddy Procurement
++ Paddy procurement marketing season in India begins each year on 1st October and ends on 30th September the following year.
++ The figure gives the month-wise weekly paddy procurement in India for about 3.5 years from 2018 to 2022.
++ Overall paddy procurement has been increasing over the last 3 years.
++ There was a fall in procurement in Oct-Dec (2021-22) over the same period in the previous year.
++ Paddy procurement however picked up subsequently and was higher in Jan-Mar (2021-22) over the corresponding period in 2020-21.
++ The decline in procurement in Oct-Dec (2021-22) is mainly because of the decline in paddy procurement in Haryana and Punjab.
++ And the recovery in procurement starting in January end 2022  is due to a large increase in paddy procurement in Chhattisgarh and Madhya Pradesh.
++ The paddy procurement in Haryana in this season is much less as compared to the previous seasons

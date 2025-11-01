@@ -2,7 +2,8 @@
 title: "Foodgrain Stock"
 description: ""
 author: "Pawan"
-date: last-modified
+date: "2025/11/01"
+date-modified: last-modified
 categories:
   - "Food"
 # image: "thumbnails/health_map_hy.png"

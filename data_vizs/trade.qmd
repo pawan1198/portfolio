@@ -2,7 +2,8 @@
 title: "Trade Statistics"
 description: ""
 author: "Pawan"
-date: last-modified	
+date: "2025/10/29"
+date-modified: last-modified
 categories:
   - "Trade"
 # image: "thumbnails/health_map_hy.png"
@@ -17,6 +18,7 @@ execute:
   warning: false
   eval: true
 ---
+
 ```{r}
 library(data.table)
 library(ggplot2)
@@ -46,7 +48,8 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
           strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
           )
 ```
-```{r}          
+
+```{r}
 ## Export Data Cleaning
 usd[,HSCode4 := substr(HSCode, 1, 4)]
 usd[,HSCode6 := substr(HSCode, 1, 6)]
@@ -104,6 +107,7 @@ trade[, Trade_Balance := (Export_USD - Import_USD)]
 ```
 
 # Trade Statistics
+
 ```{r}
 ggplot(trade, aes(x = Year, y = Export_USD, group = 1)) +
     geom_line(linewidth = 1) +
@@ -122,6 +126,7 @@ ggplot(trade, aes(x = Year, y = Import_USD, group = 1)) +
 p2
 grid.arrange(p1, p2)
 ```
+
 ```{r}
 # Trade Balance
 ggplot(trade, aes(x = Year, y = Trade_Balance, group = 1)) +
@@ -133,6 +138,7 @@ ggplot(trade, aes(x = Year, y = Trade_Balance, group = 1)) +
 ```
 
 # Cereals Export
+
 ```{r}
 qty[HSCode2 == "10"]->t0
 ifelse(t0$HSCode4 == "1006", "Rice",
@@ -152,6 +158,7 @@ ggplot(t0, aes(x = Year, y = Qty)) +
 ```
 
 # Fertilizer Import
+
 ```{r}
 mqty[HSCode2 == "31"]->f
 ifelse(f$HSCode4 == "3102", "Nitrogenous Fertilizer",
@@ -169,6 +176,7 @@ ggplot(f, aes(x = Year, y = Qty)) +
 ```
 
 # Fats and Oil Import
+
 ```{r}
 mqty[HSCode2 == "15"]->h1
 h1[,.(Qty = sum(Import)),.(Year)]->h1
@@ -182,6 +190,7 @@ ggplot(h1, aes(x = Year, y = Qty, group = 1)) +
 ```
 
 # Petrolium Import
+
 ```{r}
 mqty[HSCode2 == "27"]->h2
 ifelse(h2$HSCode4 == "2701", "Coal",

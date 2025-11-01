@@ -2,7 +2,8 @@
 title: "Annually Edible Oils Import by India"
 description: ""
 author: "Pawan"
-date: ""
+date: "2025/10/28"
+date-modified: last-modified
 categories:
   - "Trade"
 # image: "thumbnails/health_map_hy.png"
@@ -40,6 +41,7 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
           strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
           )
 ```
+
 ```{r}
 readRDS("/home/pawan/edibleoils/palmoil_import.rds")->palm
 readRDS("/home/pawan/edibleoils/soyabean_import.rds")->soyabean
@@ -69,6 +71,7 @@ rbind(palm,soyabean,sunflower)->edibleoil
 edibleoil[Country=="Total",.(Share=(round(ImportYear*100/sum(ImportYear))),
                              Edibleoil,ImportYear),.(Year)]->oil
 ```
+
 ```{r}
 ggplot(oil, aes(x = Year, y = ImportYear, fill = Edibleoil)) +
     geom_bar(stat = "identity", position = "stack") +

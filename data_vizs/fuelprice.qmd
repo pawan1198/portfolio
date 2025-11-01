@@ -1,5 +1,5 @@
 ---
-title: "Daily Fuel Price in Metro City of India"
+title: "Fuel Prices"
 description: "Fuel Prices in Metro city in India and Crude Oil International Price"
 author: "Pawan"
 date: "2025/10/30"
@@ -20,13 +20,28 @@ execute:
   eval: true
 ---
 
+Load the necessary packages
+
 ```{r}
 library(data.table)           ## Raed data table
 library(ggplot2)              ## Graphical represantation
 library(readxl)
-library(lubridate)
 library(gridExtra)
+library(stringr)              ## Work with string
+library(lubridate)            ## date
+library(scales)               ## Nice Scales for ggplot2
+library(fontawesome)          ## Icons display in ggplot2
+library(ggtext)               ## Markdown text support for ggplot2
+library(showtext)             ## Display fonts in ggplot2
+library(colorspace)           ## Lighten and Darken colours
+library(seecolor)             ## To print and view colours
+library(patchwork)            ## Combining plots
 
+```
+
+Costum the plot theme
+
+```{r}
 my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
     theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
           plot.title = element_text(size = 20, face = "bold",
@@ -45,10 +60,12 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
           )
 
 ```
+## International Fuel Price
 
-# Crude Oil International Price
+Read the data
 
 ```{r}
+
 as.data.table(read_excel("/home/pawan/fuelprices/international_price_indian_basket.xlsx",
                          sheet = "crude-oil"))->crude
 
@@ -89,6 +106,9 @@ paste("Petrol")->petrol$Fuel
 rbind(diesel, petrol)->fuel
 
 ```
+Visualizations
+
+Average Crude Oil FOB Price (Indian Basket)
 
 ```{r}
 ggplot(avgcrude, aes(x = Year, y = Price, group = 1)) +
@@ -97,6 +117,7 @@ ggplot(avgcrude, aes(x = Year, y = Price, group = 1)) +
     labs(y = "Price (Dollars per Barrel)") +
     ggtitle("Average Crude Oil FOB Price (Indian Basket)")
 ```
+Crude Oil FOB Price (Indian Basket)
 
 ```{r}
 ggplot(crude, aes(x = Date, y = value, group = 1)) +
@@ -106,6 +127,7 @@ ggplot(crude, aes(x = Date, y = value, group = 1)) +
     labs(y = "Price (Dollars per Barrel)") +
     ggtitle("Crude Oil FOB Price (Indian Basket)")
 ```
+Diesel FOB International Price
 
 ```{r}
 ggplot(diesel, aes(x = Date, y = value, group = 1)) +
@@ -116,6 +138,7 @@ ggplot(diesel, aes(x = Date, y = value, group = 1)) +
     ggtitle("Diesel FOB International Price")->p1
 p1
 ```
+Petrol FOB International Price
 
 ```{r}
 ggplot(petrol, aes(x = Date, y = value, group = 1)) +
@@ -130,6 +153,7 @@ p2
 ```{r}
 grid.arrange(p1, p2)
 ```
+Disesl and Petrol FOB International Price
 
 ```{r}
 ggplot(fuel, aes(x = Date, y = value, group = 1)) +
@@ -139,11 +163,12 @@ ggplot(fuel, aes(x = Date, y = value, group = 1)) +
     labs(y = "Price (Dollars per Barrel)") +
     ggtitle("Disesl and Petrol FOB International Price")->p
 p
-ggsave("fuel-international-price.png", width = 15, height = 8)
 ```
+Import of Crude oil and Petroleum Products
 
 ```{r}
-as.data.table(read_excel("/home/pawan/fuelprices/IMPORT_EXPORT.xlsx", sheet = "PT_IMPORT_H"))->t
+as.data.table(read_excel("/home/pawan/fuelprices/IMPORT_EXPORT.xlsx",
+                         sheet = "PT_IMPORT_H"))->t
 melt(t, id = "IMPORT_EXPORT")->t
 
 t[IMPORT_EXPORT %in% c("CRUDE OIL", "TOTAL PRODUCT IMPORT")]->imp
@@ -157,9 +182,10 @@ ggplot(imp, aes(x = variable, y = value, fill = IMPORT_EXPORT)) +
          y = "Qty (000 Metric Tonnes)") +
     ggtitle("Import of Crude oil and Petroleum Products")
 
-ggsave("import-crude-and-petroleum.png", width = 15, height = 8)
+##ggsave("import-crude-and-petroleum.png", width = 15, height = 8)
 
 ```
+Crude Oil Price
 
 ```{r}
 fread("/home/pawan/fuelprices/eia-oil-prices.csv")->t
@@ -171,31 +197,11 @@ ggplot(t, aes(x = Date, y = RBRTE, group = 1)) +
     labs(y = "Price (Dollars per Barrel)") +
     scale_x_date(date_labels = "%Y", date_breaks = "2 years")->p
 p
-
-## ggsave("/data/sserdatabank/fuelprices/brent-crude-oil-price.png",width=3200,height=1800,unit="px")
 ```
 
-```{r}
+## Fuel Price in Metro Cities of India
 
-bg_col <- "white"
-library(stringr)              ## Work with string
-library(lubridate)            ## date
-library(scales)               ## Nice Scales for ggplot2
-library(fontawesome)          ## Icons display in ggplot2
-library(ggtext)               ## Markdown text support for ggplot2
-library(showtext)             ## Display fonts in ggplot2
-library(colorspace)           ## Lighten and Darken colours
-library(seecolor)             ## To print and view colours
-library(patchwork)            ## Combining plots
-
-
-text_col <- "#6F008DFF"
-text_hil <- text_col
-
-bts <- 50
-line = "grey80"
-```
-
+Load Data
 ```{r}
 fread("/home/pawan/fuelprices/india_retail_fuelprices.csv")->t
 as.Date(t$Date, format = "%d/%m/%y")->t$Date
@@ -219,19 +225,22 @@ ggplot(t1, aes(x = Date, y = value, color = Fuel)) +
     geom_line(linewidth = 0.6) +
     facet_wrap(~variable) +
     my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years")->p
+    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
+    labs(y = "Price (Rs./Litre)") +
+    ggtitle("Fuel Price in Metro City")->p
 
 p
 ```
+Petrol Price
 
 ```{r}
 ## Petrol Price
 ggplot(petrol, aes(x = Date, y = value, group = 1)) +
-    geom_line(size = 1.5) +
+    geom_line(linewidth = 1.5) +
     facet_wrap(~variable) +
     geom_text(data = petrol1, aes(x = Date, y = value,
                                   label = sprintf("%0.2f", value)),
-              color = text_col,
+              color = "red",
               vjust = -0.4,
               hjust = 0.9,
               size = 3*4) +
@@ -240,8 +249,8 @@ ggplot(petrol, aes(x = Date, y = value, group = 1)) +
     labs(y = "Price (Rs./Litre)") +
     ggtitle("Pertol Price")->p1
 p1
-ggsave("petrol-price.png", width = 15, height = 8)
 ```
+Diesel Price
 
 ```{r}
 ## Diesel Price
@@ -250,7 +259,7 @@ ggplot(diesel, aes(x = Date, y = value, group = 1)) +
     facet_wrap(~variable) +
     geom_text(data = diesel1, aes(x = Date, y = value,
                                   label = sprintf("%0.2f", value)),
-              color = text_col,
+              color = "red",
               vjust = -0.4,
               hjust = 1,
               size = 3*4) +
@@ -259,7 +268,6 @@ ggplot(diesel, aes(x = Date, y = value, group = 1)) +
     labs(y = "Price (Rs./Litre)") +
     ggtitle("Diesel Price")->p2
 p2
-ggsave("diesel-price.png", width = 15, height = 8)
 ```
 
 ```{r}
@@ -267,8 +275,9 @@ cowplot::plot_grid(p1,
                    p2 + theme(axis.text.y = element_blank(),
                               axis.ticks.y = element_blank(),
                               axis.title.y = element_blank()))
-ggsave("fuel-price.png", width = 15, height = 8)
+## ggsave("fuel-price.png", width = 15, height = 8)
 ```
+Daily Fuel Price in different City
 
 ```{r}
 ## Delhi Petrol Diesel Daily Price

@@ -25,6 +25,9 @@
 <li><p>Wheat stocks fluctuated significantly, dropping to 7.5 lakh tonnes (Apr 2024) and rising to 34 lakh tonnes (Feb 2025).</p></li>
 <li><p>Rice stocks steadily increased from 21.1 lakh tonnes (Mar 2023) to 34 lakh tonnes (Feb 2025).</p></li>
 </ul>
+<section id="lets-visualized-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="lets-visualized-the-data">Let’s visualized the data</h3>
+<p>Load necessary packages</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -46,230 +49,238 @@ font-style: inherit;">library</span>(scales)</span>
 <span id="cb1-6"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(ggforce)</span>
-<span id="cb1-7"></span>
-<span id="cb1-8"><span class="fu" style="color: #4758AB;
+<span id="cb1-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gt)</span></code></pre></div></div>
+</details>
+</div>
+<p>Read the data and cleaning</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">fread</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"~/stocks/stocksall.csv"</span>,<span class="at" style="color: #657422;
+font-style: inherit;">"~/stocks/stocksall.csv"</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">sep=</span><span class="st" style="color: #20794D;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">","</span>,<span class="at" style="color: #657422;
+font-style: inherit;">","</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">header=</span>T)<span class="ot" style="color: #003B4F;
+font-style: inherit;">header =</span> T)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>stocksall</span>
-<span id="cb1-9"><span class="fu" style="color: #4758AB;
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">unique</span>(stocksall)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>stocksall</span>
-<span id="cb1-10"><span class="fu" style="color: #4758AB;
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">fread</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"~/stocks/pdsold.csv"</span>,<span class="at" style="color: #657422;
+font-style: inherit;">"~/stocks/pdsold.csv"</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">sep=</span><span class="st" style="color: #20794D;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">","</span>,<span class="at" style="color: #657422;
+font-style: inherit;">","</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">header=</span>T)<span class="ot" style="color: #003B4F;
+font-style: inherit;">header =</span> T)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>oldstocks</span>
-<span id="cb1-11">oldstocks[,coarsegrains<span class="sc" style="color: #5E5E5E;
+<span id="cb2-4">oldstocks[,coarsegrains <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span><span class="er" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">=</span>stocks_total<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">=</span> stocks_total<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>stocks_rice<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>stocks_wheat]</span>
-<span id="cb1-12"><span class="fu" style="color: #4758AB;
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">melt</span>(stocksall,<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">id=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">id =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Year"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Year"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Commodity"</span>))<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb1-13"><span class="fu" style="color: #4758AB;
+<span id="cb2-6"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as.Date</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">01</span>,t<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">01</span>, t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>variable,t<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">$</span>variable, t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Year,<span class="at" style="color: #657422;
+font-style: inherit;">$</span>Year, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">sep=</span><span class="st" style="color: #20794D;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"-"</span>),<span class="st" style="color: #20794D;
+font-style: inherit;">"-"</span>), <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"%d-%b-%Y"</span>)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Date</span>
-<span id="cb1-14"><span class="fu" style="color: #4758AB;
+<span id="cb2-7"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">factor</span>(t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Commodity,<span class="at" style="color: #657422;
+font-style: inherit;">$</span>Commodity, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">levels=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">levels =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Rice"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Rice"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Wheat"</span>,</span>
-<span id="cb1-15">                            <span class="st" style="color: #20794D;
+<span id="cb2-8">                               <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Unmilled Paddy"</span>,</span>
-<span id="cb1-16">                            <span class="st" style="color: #20794D;
+<span id="cb2-9">                               <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Coarsegrain"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Coarsegrain"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Total"</span>))<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Commodity</span>
-<span id="cb1-17"><span class="fu" style="color: #4758AB;
+<span id="cb2-10"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">separate</span>(oldstocks,<span class="at" style="color: #657422;
+font-style: inherit;">separate</span>(oldstocks, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">col=</span>Year,<span class="at" style="color: #657422;
+font-style: inherit;">col =</span> Year, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">sep=</span><span class="st" style="color: #20794D;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"-"</span>,<span class="at" style="color: #657422;
+font-style: inherit;">"-"</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">into=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">into =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"v1"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"v1"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"year"</span>))<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>oldstocks</span>
-<span id="cb1-18"><span class="fu" style="color: #4758AB;
+<span id="cb2-11"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as.Date</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"01"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"01"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"04"</span>,oldstocks<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">"04"</span>, oldstocks<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>year,<span class="at" style="color: #657422;
+font-style: inherit;">$</span>year, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">sep=</span><span class="st" style="color: #20794D;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"-"</span>),<span class="st" style="color: #20794D;
+font-style: inherit;">"-"</span>), <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"%d-%m-%y"</span>)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>oldstocks<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Date</span>
-<span id="cb1-19"><span class="fu" style="color: #4758AB;
+<span id="cb2-12"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">setDT</span>(oldstocks)</span>
-<span id="cb1-20">oldstocks[Date<span class="sc" style="color: #5E5E5E;
+<span id="cb2-13">oldstocks[Date<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">&lt;</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"01-01-2003"</span>,<span class="at" style="color: #657422;
+font-style: inherit;">"01-01-2003"</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">format=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"%d-%m-%Y"</span>)</span>
-<span id="cb1-21">         ,.(Date,<span class="at" style="color: #657422;
+<span id="cb2-14">         ,.(Date, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">Rice=</span>stocks_rice,<span class="at" style="color: #657422;
+font-style: inherit;">Rice =</span> stocks_rice, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">Wheat=</span>stocks_wheat,</span>
-<span id="cb1-22">            <span class="at" style="color: #657422;
+font-style: inherit;">Wheat =</span> stocks_wheat,</span>
+<span id="cb2-15">            <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">Coarsegrain=</span>coarsegrains)]<span class="ot" style="color: #003B4F;
+font-style: inherit;">Coarsegrain =</span> coarsegrains)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>oldstocks</span>
-<span id="cb1-23"><span class="fu" style="color: #4758AB;
+<span id="cb2-16"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">melt</span>(oldstocks,<span class="at" style="color: #657422;
+font-style: inherit;">melt</span>(oldstocks, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">id=</span><span class="st" style="color: #20794D;
+font-style: inherit;">id =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Date"</span>)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1</span>
-<span id="cb1-24">t1<span class="sc" style="color: #5E5E5E;
+<span id="cb2-17">t1<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>value<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">$</span>value <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">10</span><span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>value</span>
-<span id="cb1-25"><span class="fu" style="color: #4758AB;
+<span id="cb2-18"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">names</span>(t1)[<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">names</span>(t1)<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">names</span>(t1) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">==</span><span class="st" style="color: #20794D;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"variable"</span>]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Commodity"</span></span>
-<span id="cb1-26">t[Commodity<span class="sc" style="color: #5E5E5E;
+<span id="cb2-19">t[Commodity <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Total"</span>,.(Date,Commodity,value)]<span class="ot" style="color: #003B4F;
+font-style: inherit;">"Total"</span>,.(Date, Commodity, value)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb1-27">t[<span class="sc" style="color: #5E5E5E;
+<span id="cb2-20">t[<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.na</span>(value)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb1-28">t1[<span class="sc" style="color: #5E5E5E;
+<span id="cb2-21">t1[<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.na</span>(value)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1</span>
-<span id="cb1-29"><span class="fu" style="color: #4758AB;
+<span id="cb2-22"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">rbind</span>(t,t1)<span class="ot" style="color: #003B4F;
+font-style: inherit;">rbind</span>(t, t1)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1</span>
-<span id="cb1-30"><span class="fu" style="color: #4758AB;
+<span id="cb2-23"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as.numeric</span>(t1<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -282,116 +293,70 @@ background-color: null;
 font-style: inherit;">-&gt;</span>t1<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>value</span>
-<span id="cb1-31">t1[<span class="sc" style="color: #5E5E5E;
+<span id="cb2-24">t1[<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.na</span>(value)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1</span>
-<span id="cb1-32">t1[,.(Commodity,<span class="at" style="color: #657422;
+<span id="cb2-25">t1[,.(Commodity, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">value=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cumsum</span>(value)),.(Date)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1</span>
-<span id="cb1-33"><span class="fu" style="color: #4758AB;
+<span id="cb2-26"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">factor</span>(t1<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Commodity,<span class="at" style="color: #657422;
+font-style: inherit;">$</span>Commodity, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">levels=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">levels =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">rev</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Rice"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Rice"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Wheat"</span>,</span>
-<span id="cb1-34">                                 <span class="st" style="color: #20794D;
+<span id="cb2-27">                                    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Unmilled Paddy"</span>,</span>
-<span id="cb1-35">                                 <span class="st" style="color: #20794D;
+<span id="cb2-28">                                    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Coarsegrain"</span>)))<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Commodity</span>
-<span id="cb1-36">t1[<span class="fu" style="color: #4758AB;
+<span id="cb2-29">t1[<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">order</span>(Commodity,Date)]<span class="ot" style="color: #003B4F;
+font-style: inherit;">order</span>(Commodity, Date)]<span class="ot" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">-&gt;</span>t1</span>
-<span id="cb1-37"></span>
-<span id="cb1-38"><span class="fu" style="color: #4758AB;
+font-style: inherit;">-&gt;</span>t1</span></code></pre></div></div>
+</details>
+</div>
+<p>Custom theme for plots</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">my_theme <span class="ot" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">ggplot</span>(t1,<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x=</span>Date,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymax=</span>value,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ymin=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-39">p<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_ribbon</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill=</span>Commodity))<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-40">p<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Million tonnes"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-41">p<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_bw</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">base_family=</span><span class="st" style="color: #20794D;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">"Minion Pro"</span>)<span class="ot" style="color: #003B4F;
+font-style: inherit;">16</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-42">p<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">+</span>  <span class="do" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date_breaks=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2 year"</span>,</span>
-<span id="cb1-43">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"%Y"</span>)<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-44">p<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+font-style: italic;">## Start with theme_bw and increase base size</span></span>
+<span id="cb3-2">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -399,34 +364,107 @@ font-style: inherit;">text =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"serif"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Set font family and color</span></span>
+<span id="cb3-3">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold"</span>,</span>
+<span id="cb3-4">                                    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Center and style title</span></span>
+<span id="cb3-5">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">18</span>),</span>
+<span id="cb3-6">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">14</span>),</span>
-<span id="cb1-45">          <span class="at" style="color: #657422;
+<span id="cb3-7">          <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">legend.position=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.4</span>,<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.9</span>),</span>
-<span id="cb1-46">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.direction =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"horizontal"</span>,</span>
-<span id="cb1-47">          <span class="at" style="color: #657422;
+font-style: inherit;">"bottom"</span>,</span>
+<span id="cb3-8">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">legend.title =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">element_blank</span>(),</span>
-<span id="cb1-48">          <span class="at" style="color: #657422;
+font-style: inherit;">element_blank</span>(),  <span class="do" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">panel.grid.minor =</span> <span class="fu" style="color: #4758AB;
+font-style: italic;">## Remove legend title</span></span>
+<span id="cb3-9">          <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">element_blank</span>(),</span>
-<span id="cb1-49">          <span class="at" style="color: #657422;
+font-style: inherit;">panel.grid.major =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#EEEEEE"</span>), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Lighter grid lines</span></span>
+<span id="cb3-10">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.border =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Remove panel border</span></span>
+<span id="cb3-11">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Add axis lines</span></span>
+<span id="cb3-12">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -434,31 +472,93 @@ font-style: inherit;">element_text</span>(<span class="at" style="color: #657422
 background-color: null;
 font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">90</span>,<span class="at" style="color: #657422;
+font-style: inherit;">90</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">vjust=</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">1</span>,<span class="at" style="color: #657422;
+font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+font-style: inherit;">hjust=</span><span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">1</span>,<span class="at" style="color: #657422;
+font-style: inherit;">1</span>),</span>
+<span id="cb3-13">          <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">10</span>))<span class="ot" style="color: #003B4F;
+font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-50"></span>
-<span id="cb1-51">p<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">"#F2F2F2"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>) <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Style facet strips (if used)</span></span>
+<span id="cb3-14">          )</span></code></pre></div></div>
+</details>
+</div>
+<p>Visualization</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(t1, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Date, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ymax =</span> value, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ymin =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_ribbon</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Commodity)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Million tonnes"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_breaks =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1 year"</span>,</span>
+<span id="cb4-5">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%Y"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-6">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-7">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggtitle</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Foodgrain Stocks"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"Foodgrain Stocks"</span>,</span>
+<span id="cb4-8">                   <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">" "</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -470,13 +570,10 @@ font-style: inherit;">max</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">year</span>(t1<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Date))))<span class="ot" style="color: #003B4F;
+font-style: inherit;">$</span>Date)))) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-52"></span>
-<span id="cb1-53">p<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">+</span></span>
+<span id="cb4-9">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_zoom</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -495,68 +592,69 @@ background-color: null;
 font-style: inherit;">$</span>Date))))<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>p</span>
-<span id="cb1-54">p</span></code></pre></div></div>
+<span id="cb4-10">p</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/stocks_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/stocks_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Table of Last 24 Months Foodgrain Stocks</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">melt</span>(stocksall,<span class="at" style="color: #657422;
+font-style: inherit;">melt</span>(stocksall, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">id=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">id =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Year"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Year"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Commodity"</span>))<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb2-2"><span class="fu" style="color: #4758AB;
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">01</span>,t<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">01</span>, t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>variable,t<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">$</span>variable, t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Year,<span class="at" style="color: #657422;
+font-style: inherit;">$</span>Year, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">sep=</span><span class="st" style="color: #20794D;
+font-style: inherit;">sep =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"-"</span>)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Date</span>
-<span id="cb2-3"><span class="fu" style="color: #4758AB;
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as.Date</span>(t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Date,<span class="st" style="color: #20794D;
+font-style: inherit;">$</span>Date, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"%d-%b-%Y"</span>)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Date</span>
-<span id="cb2-4">t[<span class="sc" style="color: #5E5E5E;
+<span id="cb5-4">t[<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.na</span>(value)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb2-5"><span class="fu" style="color: #4758AB;
+<span id="cb5-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as.numeric</span>(t<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -569,122 +667,756 @@ background-color: null;
 font-style: inherit;">-&gt;</span>t<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>value</span>
-<span id="cb2-6"><span class="fu" style="color: #4758AB;
+<span id="cb5-6"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">factor</span>(t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Commodity,<span class="at" style="color: #657422;
+font-style: inherit;">$</span>Commodity, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">levels=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">levels =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Wheat"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Wheat"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Rice"</span>,</span>
-<span id="cb2-7">                             <span class="st" style="color: #20794D;
+<span id="cb5-7">                               <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Unmilled Paddy"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Unmilled Paddy"</span>,</span>
+<span id="cb5-8">                               <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Coarsegrain"</span>,<span class="st" style="color: #20794D;
+font-style: inherit;">"Coarsegrain"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Total"</span>)</span>
-<span id="cb2-8">       )<span class="ot" style="color: #003B4F;
+font-style: inherit;">"Total"</span>))<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Commodity</span>
-<span id="cb2-9">t[Commodity<span class="sc" style="color: #5E5E5E;
+<span id="cb5-9">t[Commodity <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+font-style: inherit;">!=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Total"</span>,.(value,Commodity,Date)]<span class="ot" style="color: #003B4F;
+font-style: inherit;">"Total"</span>,.(value, Commodity, Date)]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb2-10">t[,.(<span class="at" style="color: #657422;
+<span id="cb5-10">t[,.(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">value=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sum</span>(value),</span>
-<span id="cb2-11">     <span class="at" style="color: #657422;
+<span id="cb5-11">     <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">Commodity=</span><span class="st" style="color: #20794D;
+font-style: inherit;">Commodity =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Total"</span>),Date]<span class="ot" style="color: #003B4F;
+font-style: inherit;">"Total"</span>), Date]<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t1</span>
-<span id="cb2-12"><span class="fu" style="color: #4758AB;
+<span id="cb5-12"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">rbind</span>(t,t1)<span class="ot" style="color: #003B4F;
+font-style: inherit;">rbind</span>(t, t1)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb2-13">t[,value<span class="sc" style="color: #5E5E5E;
+<span id="cb5-13">t[,value <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span><span class="er" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">=</span><span class="fu" style="color: #4758AB;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">round</span>(value,<span class="dv" style="color: #AD0000;
+font-style: inherit;">round</span>(value, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>)]</span>
-<span id="cb2-14"><span class="fu" style="color: #4758AB;
+<span id="cb5-14"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">dcast</span>(t,Date<span class="sc" style="color: #5E5E5E;
+font-style: inherit;">dcast</span>(t, Date<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">~</span>Commodity,sum)<span class="ot" style="color: #003B4F;
+font-style: inherit;">~</span>Commodity, sum)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t</span>
-<span id="cb2-15"><span class="fu" style="color: #4758AB;
+<span id="cb5-15"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">format</span>(t<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>Date,<span class="st" style="color: #20794D;
+font-style: inherit;">$</span>Date, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"%b-%Y"</span>)<span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">-&gt;</span>t<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>Date</span>
-<span id="cb2-16"><span class="fu" style="color: #4758AB;
+<span id="cb5-16"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">tail</span>(t,<span class="at" style="color: #657422;
+font-style: inherit;">gt</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">n=</span><span class="dv" style="color: #AD0000;
+font-style: inherit;">tail</span>(t, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">24</span>)</span></code></pre></div></div>
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">24</span>))</span></code></pre></div></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>        Date Wheat  Rice Unmilled Paddy Coarsegrain Total
-      &lt;char&gt; &lt;num&gt; &lt;num&gt;          &lt;num&gt;       &lt;num&gt; &lt;num&gt;
- 1: Apr-2023   8.3  24.9           27.6         0.4  61.3
- 2: May-2023  29.0  26.5           22.7         0.5  78.7
- 3: Jun-2023  31.4  26.2           22.7         0.4  80.7
- 4: Jul-2023  30.1  25.3           23.3         0.4  79.2
- 5: Aug-2023  28.0  24.3           19.6         0.4  72.3
- 6: Sep-2023  26.0  23.3           16.1         0.3  65.7
- 7: Oct-2023  24.0  22.2           13.8         0.2  60.3
- 8: Nov-2023  21.9  20.0           26.3         0.2  68.4
- 9: Dec-2023  19.2  18.4           37.6         0.2  75.4
-10: Jan-2024  16.4  18.2           50.0         0.2  84.7
-11: Feb-2024  13.3  21.0           54.7         0.4  89.4
-12: Mar-2024   9.7  26.3           47.3         0.4  83.7
-13: Apr-2024   7.5  30.2           34.3         0.4  72.4
-14: May-2024  26.0  31.9           28.3         0.5  86.7
-15: Jun-2024  29.9  32.5           26.8         0.4  89.6
-16: Jul-2024  28.3  32.6           23.7         0.6  85.2
-17: Aug-2024  26.8  32.8           19.0         0.6  79.2
-18: Sep-2024  25.1  32.3           14.8         0.4  72.6
-19: Oct-2024  23.8  31.1           11.4         0.2  66.4
-20: Nov-2024  22.3  29.7           21.5         0.3  73.7
-21: Dec-2024  20.6  28.0           35.1         0.2  84.0
-22: Jan-2025  18.4  29.1           47.6         0.2  95.3
-23: Feb-2025  16.2  34.0           50.1         0.2 100.5
-24: Mar-2025  16.2  34.0           50.1         0.2 100.5
-        Date Wheat  Rice Unmilled Paddy Coarsegrain Total</code></pre>
+<div class="cell-output-display">
+<div id="ppuphihghu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ppuphihghu table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ppuphihghu thead, #ppuphihghu tbody, #ppuphihghu tfoot, #ppuphihghu tr, #ppuphihghu td, #ppuphihghu th {
+  border-style: none;
+}
+
+#ppuphihghu p {
+  margin: 0;
+  padding: 0;
+}
+
+#ppuphihghu .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ppuphihghu .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ppuphihghu .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ppuphihghu .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ppuphihghu .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ppuphihghu .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ppuphihghu .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ppuphihghu .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ppuphihghu .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ppuphihghu .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ppuphihghu .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ppuphihghu .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ppuphihghu .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ppuphihghu .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ppuphihghu .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppuphihghu .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ppuphihghu .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ppuphihghu .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ppuphihghu .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppuphihghu .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ppuphihghu .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppuphihghu .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ppuphihghu .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppuphihghu .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppuphihghu .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppuphihghu .gt_left {
+  text-align: left;
+}
+
+#ppuphihghu .gt_center {
+  text-align: center;
+}
+
+#ppuphihghu .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ppuphihghu .gt_font_normal {
+  font-weight: normal;
+}
+
+#ppuphihghu .gt_font_bold {
+  font-weight: bold;
+}
+
+#ppuphihghu .gt_font_italic {
+  font-style: italic;
+}
+
+#ppuphihghu .gt_super {
+  font-size: 65%;
+}
+
+#ppuphihghu .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ppuphihghu .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ppuphihghu .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ppuphihghu .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ppuphihghu .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ppuphihghu .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ppuphihghu .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ppuphihghu .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ppuphihghu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Date" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Date</th>
+<th id="Wheat" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Wheat</th>
+<th id="Rice" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Rice</th>
+<th id="Unmilled-Paddy" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Unmilled Paddy</th>
+<th id="Coarsegrain" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Coarsegrain</th>
+<th id="Total" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Apr-2023</td>
+<td class="gt_row gt_right" headers="Wheat">8.3</td>
+<td class="gt_row gt_right" headers="Rice">24.9</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">27.6</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">61.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">May-2023</td>
+<td class="gt_row gt_right" headers="Wheat">29.0</td>
+<td class="gt_row gt_right" headers="Rice">26.5</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">22.7</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.5</td>
+<td class="gt_row gt_right" headers="Total">78.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Jun-2023</td>
+<td class="gt_row gt_right" headers="Wheat">31.4</td>
+<td class="gt_row gt_right" headers="Rice">26.2</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">22.7</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">80.7</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Jul-2023</td>
+<td class="gt_row gt_right" headers="Wheat">30.1</td>
+<td class="gt_row gt_right" headers="Rice">25.3</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">23.3</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">79.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Aug-2023</td>
+<td class="gt_row gt_right" headers="Wheat">28.0</td>
+<td class="gt_row gt_right" headers="Rice">24.3</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">19.6</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">72.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Sep-2023</td>
+<td class="gt_row gt_right" headers="Wheat">26.0</td>
+<td class="gt_row gt_right" headers="Rice">23.3</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">16.1</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.3</td>
+<td class="gt_row gt_right" headers="Total">65.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Oct-2023</td>
+<td class="gt_row gt_right" headers="Wheat">24.0</td>
+<td class="gt_row gt_right" headers="Rice">22.2</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">13.8</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">60.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Nov-2023</td>
+<td class="gt_row gt_right" headers="Wheat">21.9</td>
+<td class="gt_row gt_right" headers="Rice">20.0</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">26.3</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">68.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Dec-2023</td>
+<td class="gt_row gt_right" headers="Wheat">19.2</td>
+<td class="gt_row gt_right" headers="Rice">18.4</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">37.6</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">75.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Jan-2024</td>
+<td class="gt_row gt_right" headers="Wheat">16.4</td>
+<td class="gt_row gt_right" headers="Rice">18.2</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">50.0</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">84.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Feb-2024</td>
+<td class="gt_row gt_right" headers="Wheat">13.3</td>
+<td class="gt_row gt_right" headers="Rice">21.0</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">54.7</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">89.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Mar-2024</td>
+<td class="gt_row gt_right" headers="Wheat">9.7</td>
+<td class="gt_row gt_right" headers="Rice">26.3</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">47.3</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">83.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Apr-2024</td>
+<td class="gt_row gt_right" headers="Wheat">7.5</td>
+<td class="gt_row gt_right" headers="Rice">30.2</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">34.3</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">72.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">May-2024</td>
+<td class="gt_row gt_right" headers="Wheat">26.0</td>
+<td class="gt_row gt_right" headers="Rice">31.9</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">28.3</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.5</td>
+<td class="gt_row gt_right" headers="Total">86.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Jun-2024</td>
+<td class="gt_row gt_right" headers="Wheat">29.9</td>
+<td class="gt_row gt_right" headers="Rice">32.5</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">26.8</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">89.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Jul-2024</td>
+<td class="gt_row gt_right" headers="Wheat">28.3</td>
+<td class="gt_row gt_right" headers="Rice">32.6</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">23.7</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.6</td>
+<td class="gt_row gt_right" headers="Total">85.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Aug-2024</td>
+<td class="gt_row gt_right" headers="Wheat">26.8</td>
+<td class="gt_row gt_right" headers="Rice">32.8</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">19.0</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.6</td>
+<td class="gt_row gt_right" headers="Total">79.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Sep-2024</td>
+<td class="gt_row gt_right" headers="Wheat">25.1</td>
+<td class="gt_row gt_right" headers="Rice">32.3</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">14.8</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.4</td>
+<td class="gt_row gt_right" headers="Total">72.6</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Oct-2024</td>
+<td class="gt_row gt_right" headers="Wheat">23.8</td>
+<td class="gt_row gt_right" headers="Rice">31.1</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">11.4</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">66.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Nov-2024</td>
+<td class="gt_row gt_right" headers="Wheat">22.3</td>
+<td class="gt_row gt_right" headers="Rice">29.7</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">21.5</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.3</td>
+<td class="gt_row gt_right" headers="Total">73.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Dec-2024</td>
+<td class="gt_row gt_right" headers="Wheat">20.6</td>
+<td class="gt_row gt_right" headers="Rice">28.0</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">35.1</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">84.0</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Jan-2025</td>
+<td class="gt_row gt_right" headers="Wheat">18.4</td>
+<td class="gt_row gt_right" headers="Rice">29.1</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">47.6</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">95.3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Date">Feb-2025</td>
+<td class="gt_row gt_right" headers="Wheat">16.2</td>
+<td class="gt_row gt_right" headers="Rice">34.0</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">50.1</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">100.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Date">Mar-2025</td>
+<td class="gt_row gt_right" headers="Wheat">16.2</td>
+<td class="gt_row gt_right" headers="Rice">34.0</td>
+<td class="gt_row gt_right" headers="Unmilled Paddy">50.1</td>
+<td class="gt_row gt_right" headers="Coarsegrain">0.2</td>
+<td class="gt_row gt_right" headers="Total">100.5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
 </div>
 </div>
 
 
+</section>
 
  ]]></description>
   <category>Food</category>

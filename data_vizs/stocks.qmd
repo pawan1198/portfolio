@@ -1,0 +1,99 @@
+---
+title: "Foodgrain Stock"
+description: ""
+author: "Pawan"
+date: last-modified
+categories:
+  - "Food"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
++ Total foodgrain stocks peaked at 100.5 lakh tonnes (Feb 2025), driven by unmilled paddy (50.1 lakh tonnes).
+
++ Wheat stocks fluctuated significantly, dropping to 7.5 lakh tonnes (Apr 2024) and rising to 34 lakh tonnes (Feb 2025).
+
++ Rice stocks steadily increased from 21.1 lakh tonnes (Mar 2023) to 34 lakh tonnes (Feb 2025).
+```{r}
+library(data.table)
+library(ggplot2)
+library(tidyverse)
+library(tidyr)
+library(scales)
+library(ggforce)
+
+fread("~/stocks/stocksall.csv",sep=",",header=T)->stocksall
+unique(stocksall)->stocksall
+fread("~/stocks/pdsold.csv",sep=",",header=T)->oldstocks
+oldstocks[,coarsegrains:=stocks_total-stocks_rice-stocks_wheat]
+melt(stocksall,id=c("Year","Commodity"))->t
+as.Date(paste(01,t$variable,t$Year,sep="-"),"%d-%b-%Y")->t$Date
+factor(t$Commodity,levels=c("Rice","Wheat",
+                            "Unmilled Paddy",
+                            "Coarsegrain","Total"))->t$Commodity
+separate(oldstocks,col=Year,sep="-",into=c("v1","year"))->oldstocks
+as.Date(paste("01","04",oldstocks$year,sep="-"),"%d-%m-%y")->oldstocks$Date
+setDT(oldstocks)
+oldstocks[Date<as.Date("01-01-2003",format="%d-%m-%Y")
+         ,.(Date,Rice=stocks_rice,Wheat=stocks_wheat,
+            Coarsegrain=coarsegrains)]->oldstocks
+melt(oldstocks,id="Date")->t1
+t1$value*10->t1$value
+names(t1)[names(t1)=="variable"]<-"Commodity"
+t[Commodity!="Total",.(Date,Commodity,value)]->t
+t[!is.na(value)]->t
+t1[!is.na(value)]->t1
+rbind(t,t1)->t1
+as.numeric(t1$value)/10->t1$value
+t1[!is.na(value)]->t1
+t1[,.(Commodity,value=cumsum(value)),.(Date)]->t1
+factor(t1$Commodity,levels=rev(c("Rice","Wheat",
+                                 "Unmilled Paddy",
+                                 "Coarsegrain")))->t1$Commodity
+t1[order(Commodity,Date)]->t1
+
+ggplot(t1,aes(x=Date,ymax=value,ymin=0))->p
+p+geom_ribbon(aes(fill=Commodity))->p
+p+scale_y_continuous("Million tonnes")->p
+p+theme_bw(base_family="Minion Pro")->p
+p+scale_x_date(date_breaks="2 year",
+               date_labels = "%Y")->p
+p+theme(text = element_text(size=14),
+          legend.position=c(0.4,0.9),
+          legend.direction = "horizontal",
+          legend.title = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.text.x = element_text(angle = 90,vjust=1,hjust = 1,size=10))->p
+
+p+ggtitle(paste0("Foodgrain Stocks", " ", "1972", "-", max(year(t1$Date))))->p
+
+p+facet_zoom(xlim = c(as.Date("2018-01-01"), as.Date(max(t1$Date))))->p
+p
+```
+```{r}
+melt(stocksall,id=c("Year","Commodity"))->t
+paste(01,t$variable,t$Year,sep="-")->t$Date
+as.Date(t$Date,"%d-%b-%Y")->t$Date
+t[!is.na(value)]->t
+as.numeric(t$value)/10->t$value
+factor(t$Commodity,levels=c("Wheat","Rice",
+                             "Unmilled Paddy","Coarsegrain","Total")
+       )->t$Commodity
+t[Commodity!="Total",.(value,Commodity,Date)]->t
+t[,.(value=sum(value),
+     Commodity="Total"),Date]->t1
+rbind(t,t1)->t
+t[,value:=round(value,1)]
+dcast(t,Date~Commodity,sum)->t
+format(t$Date,"%b-%Y")->t$Date
+tail(t,n=24)
+```

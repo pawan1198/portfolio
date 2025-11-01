@@ -18,14 +18,14 @@ execute:
   warning: false
   eval: true
 ---
-
+## Key Points
 + Total foodgrain stocks peaked at 100.5 lakh tonnes (Feb 2025), driven by unmilled paddy (50.1 lakh tonnes).
 
 + Wheat stocks fluctuated significantly, dropping to 7.5 lakh tonnes (Apr 2024) and rising to 34 lakh tonnes (Feb 2025).
 
 + Rice stocks steadily increased from 21.1 lakh tonnes (Mar 2023) to 34 lakh tonnes (Feb 2025).
 
-### Let's visualized the data
+## Let's visualized the data
 Load necessary packages
 ```{r}
 library(data.table)

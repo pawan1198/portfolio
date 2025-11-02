@@ -1,0 +1,323 @@
+---
+title: "PLFS"
+description: ""
+author: "Pawan"
+date: "2025/11/02"
+date-modified: last-modified
+categories:
+  - "Fuel"
+  - "Prices"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+```{r}
+
+library(data.table)
+library(readr)
+library(tidyverse)
+library(readxl)
+library(gt)
+options(digits=3)
+
+## Read Data
+fvhh1819 <- readRDS("/home/pawan/plfsdata/PLFS-18-19/data/hhfv201819.rds")
+fvpp1819 <- readRDS("/home/pawan/plfsdata/PLFS-18-19/data/perfv201819.rds")
+fvhh1920 <- readRDS("/home/pawan/plfsdata/PLFS-19-20/HHV1_2019_20.rds")
+fvpp1920 <- readRDS("/home/pawan/plfsdata/PLFS-19-20/PERV1_2019_20.rds")
+
+as.character(fvpp1819$visit)->fvpp1819$visit
+as.character(fvpp1819$quarter)->fvpp1819$quarter
+as.integer(fvpp1819$hhd_no)->fvpp1819$hhd_no
+
+names(fvpp1819)[names(fvpp1819) == "42_status_code"] <- "status_code_sub"
+names(fvpp1819)[names(fvpp1819) == "42_nic_code"] <- "nic_code_sub"
+names(fvpp1819)[names(fvpp1819) == "42_nco_code"] <- "nco_code_sub"
+
+as.numeric(fvpp1819$status_code)->fvpp1819$status_code
+as.numeric(fvpp1819$status_code_sub)->fvpp1819$status_code_sub
+
+
+ifelse(fvpp1819$status_code==11,11,
+ifelse(fvpp1819$status_code==12,12,
+ifelse(fvpp1819$status_code==21,21,
+ifelse(fvpp1819$status_code==31,31,
+ifelse(fvpp1819$status_code==41,41,
+ifelse(fvpp1819$status_code==51,51,NA))))))->fvpp1819$upa_code
+
+fvpp1819[!is.na(upa_code),upsa_code:=upa_code]
+fvpp1819[is.na(upsa_code)&status_code_sub<=51,upsa_code:=status_code_sub]
+fvpp1819[is.na(upsa_code),upsa_code:=9999]
+
+ifelse(fvpp1819$status_code==11,fvpp1819$nic_code,
+ifelse(fvpp1819$status_code==12,fvpp1819$nic_code,
+ifelse(fvpp1819$status_code==21,fvpp1819$nic_code,
+ifelse(fvpp1819$status_code==31,fvpp1819$nic_code,
+ifelse(fvpp1819$status_code==41,fvpp1819$nic_code,
+ifelse(fvpp1819$status_code==51,fvpp1819$nic_code,
+ifelse(fvpp1819$status_code_sub==11,fvpp1819$nic_code_sub,
+ifelse(fvpp1819$status_code_sub==12,fvpp1819$nic_code_sub,
+ifelse(fvpp1819$status_code_sub==21,fvpp1819$nic_code_sub,
+ifelse(fvpp1819$status_code_sub==31,fvpp1819$nic_code_sub,
+ifelse(fvpp1819$status_code_sub==41,fvpp1819$nic_code_sub,
+ifelse(fvpp1819$status_code_sub==51,fvpp1819$nic_code_sub,9999))))))))))))->fvpp1819$upsa_nic
+
+substr(x=fvpp1819$upsa_nic,start=1,stop=2)->fvpp1819$upsa_nic
+as.numeric(fvpp1819$upsa_nic)->fvpp1819$upsa_nic
+
+ifelse(fvpp1819$upsa_nic<=3,"Agriculture",
+ifelse(fvpp1819$upsa_nic>=10&fvpp1819$upsa_nic<=33,"Manufacturing",
+ifelse(fvpp1819$upsa_nic>=41&fvpp1819$upsa_nic<=43,"Construction",
+ifelse(fvpp1819$upsa_nic>=45&fvpp1819$upsa_nic<=99,"Services","Others"))))->fvpp1819$upsa_nic_main
+
+factor(fvpp1819$upsa_nic_main,levels=c("Agriculture","Construction",
+                                       "Manufacturing","Services","Others"))->fvpp1819$upsa_nic_main
+
+fvpp1819$upsa_nic_detail<-"Others"
+
+ifelse(fvpp1819$upsa_nic==1,
+ifelse(fvpp1819$upa==11&fvpp1819$upa_nic==1,"Self-employed",
+ifelse(fvpp1819$upa==12&fvpp1819$upa_nic==1,"Self-employed",
+ifelse(fvpp1819$upa==21&fvpp1819$upa_nic==1,"Self-employed",
+ifelse(fvpp1819$upa==31&fvpp1819$upa_nic==1,"Long-term worker",
+ifelse(fvpp1819$upa==41&fvpp1819$upa_nic==1,"Casual worker",
+ifelse(fvpp1819$upa==51&fvpp1819$upa_nic==1,"Casual worker",
+ifelse(fvpp1819$usa==11&fvpp1819$usa_nic==1,"Self-employed",
+ifelse(fvpp1819$usa==12&fvpp1819$usa_nic==1,"Self-employed",
+ifelse(fvpp1819$usa==21&fvpp1819$usa_nic==1,"Self-employed",
+ifelse(fvpp1819$usa==31&fvpp1819$usa_nic==1,"Long-term worker",
+ifelse(fvpp1819$usa==41&fvpp1819$usa_nic==1,"Casual worker",
+ifelse(fvpp1819$usa==51&fvpp1819$usa_nic==1,"Casual worker",
+       fvpp1819$upsa_nic_detail)))))))))))),fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+
+ifelse(fvpp1819$upsa_nic==10,"Manufacture of food products & beverages",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+ifelse(fvpp1819$upsa_nic==11,"Manufacture of food products & beverages",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+ifelse(fvpp1819$upsa_nic==12,"Manufacture of tobacco products",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+ifelse(fvpp1819$upsa_nic==13,"Manufacture of textile & apparel",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+ifelse(fvpp1819$upsa_nic==14,"Manufacture of textile & apparel",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+ifelse(fvpp1819$upsa_nic==47,"Retail trade except motor vehicle",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+ifelse(fvpp1819$upsa_nic==85,"Education",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+ifelse(fvpp1819$upsa_nic==86,"Health care",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+ifelse(fvpp1819$upsa_nic==41,"Construction",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+ifelse(fvpp1819$upsa_nic==42,"Construction",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+ifelse(fvpp1819$upsa_nic==43,"Construction",
+       fvpp1819$upsa_nic_detail)->fvpp1819$upsa_nic_detail
+
+factor(fvpp1819$upsa_nic_detail,levels=c("Self-employed",
+                                         "Long-term worker",
+                                         "Casual worker",
+                                         "Construction",
+                                         "Manufacture of food products & beverages",
+                                         "Manufacture of tobacco products",
+                                         "Manufacture of textile & apparel",
+                                         "Retail trade except motor vehicle",
+                                         "Education",
+                                         "Health care"))->fvpp1819$upsa_nic_detail
+
+
+fvpp1819[age>=15,.(upsa_code,sector,sex,weight,upsa_nic_main,upsa_nic,upsa_nic_detail)]->t
+ifelse(t$upsa_code!=9999,"Worker","Non-worker")->t$Worker
+reshape2::melt(t,id=c("Worker","sector","sex"),m="weight")->t
+reshape2::dcast(t,sex+sector~Worker,sum,margins=c("sector","sex","Worker"))->t5
+round(t5$Worker*100/t5[,5],2)->t5$Worker
+
+t5[c(1:6),c(2,1,4)]->t5
+names(t5)[3] <- "2018-19"
+
+
+as.character(fvpp1920$visit)->fvpp1920$visit
+as.character(fvpp1920$quarter)->fvpp1920$quarter
+as.integer(fvpp1920$hhd_no)->fvpp1920$hhd_no
+
+names(fvpp1920)[names(fvpp1920) == "X42_status_code"] <- "status_code_sub"
+names(fvpp1920)[names(fvpp1920) == "X42_nic_code"] <- "nic_code_sub"
+names(fvpp1920)[names(fvpp1920) == "X42_nco_code"] <- "nco_code_sub"
+
+as.numeric(fvpp1920$status_code)->fvpp1920$status_code
+as.numeric(fvpp1920$status_code_sub)->fvpp1920$status_code_sub
+
+
+ifelse(fvpp1920$status_code==11,11,
+ifelse(fvpp1920$status_code==12,12,
+ifelse(fvpp1920$status_code==21,21,
+ifelse(fvpp1920$status_code==31,31,
+ifelse(fvpp1920$status_code==41,41,
+ifelse(fvpp1920$status_code==51,51,NA))))))->fvpp1920$upa_code
+
+fvpp1920[!is.na(upa_code),upsa_code:=upa_code]
+fvpp1920[is.na(upsa_code)&status_code_sub<=51,upsa_code:=status_code_sub]
+fvpp1920[is.na(upsa_code),upsa_code:=9999]
+
+ifelse(fvpp1920$status_code==11,fvpp1920$nic_code,
+ifelse(fvpp1920$status_code==12,fvpp1920$nic_code,
+ifelse(fvpp1920$status_code==21,fvpp1920$nic_code,
+ifelse(fvpp1920$status_code==31,fvpp1920$nic_code,
+ifelse(fvpp1920$status_code==41,fvpp1920$nic_code,
+ifelse(fvpp1920$status_code==51,fvpp1920$nic_code,
+ifelse(fvpp1920$status_code_sub==11,fvpp1920$nic_code_sub,
+ifelse(fvpp1920$status_code_sub==12,fvpp1920$nic_code_sub,
+ifelse(fvpp1920$status_code_sub==21,fvpp1920$nic_code_sub,
+ifelse(fvpp1920$status_code_sub==31,fvpp1920$nic_code_sub,
+ifelse(fvpp1920$status_code_sub==41,fvpp1920$nic_code_sub,
+ifelse(fvpp1920$status_code_sub==51,fvpp1920$nic_code_sub,9999))))))))))))->fvpp1920$upsa_nic
+
+substr(x=fvpp1920$upsa_nic,start=1,stop=2)->fvpp1920$upsa_nic
+as.numeric(fvpp1920$upsa_nic)->fvpp1920$upsa_nic
+
+ifelse(fvpp1920$upsa_nic<=3,"Agriculture",
+ifelse(fvpp1920$upsa_nic>=10&fvpp1920$upsa_nic<=33,"Manufacturing",
+ifelse(fvpp1920$upsa_nic>=41&fvpp1920$upsa_nic<=43,"Construction",
+ifelse(fvpp1920$upsa_nic>=45&fvpp1920$upsa_nic<=99,"Services","Others"))))->fvpp1920$upsa_nic_main
+
+factor(fvpp1920$upsa_nic_main,levels=c("Agriculture","Construction",
+                                       "Manufacturing","Services","Others"))->fvpp1920$upsa_nic_main
+
+fvpp1920$upsa_nic_detail<-"Others"
+
+ifelse(fvpp1920$upsa_nic==1,
+ifelse(fvpp1920$upa==11&fvpp1920$upa_nic==1,"Self-employed",
+ifelse(fvpp1920$upa==12&fvpp1920$upa_nic==1,"Self-employed",
+ifelse(fvpp1920$upa==21&fvpp1920$upa_nic==1,"Self-employed",
+ifelse(fvpp1920$upa==31&fvpp1920$upa_nic==1,"Long-term worker",
+ifelse(fvpp1920$upa==41&fvpp1920$upa_nic==1,"Casual worker",
+ifelse(fvpp1920$upa==51&fvpp1920$upa_nic==1,"Casual worker",
+ifelse(fvpp1920$usa==11&fvpp1920$usa_nic==1,"Self-employed",
+ifelse(fvpp1920$usa==12&fvpp1920$usa_nic==1,"Self-employed",
+ifelse(fvpp1920$usa==21&fvpp1920$usa_nic==1,"Self-employed",
+ifelse(fvpp1920$usa==31&fvpp1920$usa_nic==1,"Long-term worker",
+ifelse(fvpp1920$usa==41&fvpp1920$usa_nic==1,"Casual worker",
+ifelse(fvpp1920$usa==51&fvpp1920$usa_nic==1,"Casual worker",
+       fvpp1920$upsa_nic_detail)))))))))))),fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+
+ifelse(fvpp1920$upsa_nic==10,"Manufacture of food products & beverages",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+ifelse(fvpp1920$upsa_nic==11,"Manufacture of food products & beverages",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+ifelse(fvpp1920$upsa_nic==12,"Manufacture of tobacco products",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+ifelse(fvpp1920$upsa_nic==13,"Manufacture of textile & apparel",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+ifelse(fvpp1920$upsa_nic==14,"Manufacture of textile & apparel",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+ifelse(fvpp1920$upsa_nic==47,"Retail trade except motor vehicle",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+ifelse(fvpp1920$upsa_nic==85,"Education",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+ifelse(fvpp1920$upsa_nic==86,"Health care",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+ifelse(fvpp1920$upsa_nic==41,"Construction",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+ifelse(fvpp1920$upsa_nic==42,"Construction",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+ifelse(fvpp1920$upsa_nic==43,"Construction",
+       fvpp1920$upsa_nic_detail)->fvpp1920$upsa_nic_detail
+
+factor(fvpp1920$upsa_nic_detail,levels=c("Self-employed",
+                                         "Long-term worker",
+                                         "Casual worker",
+                                         "Construction",
+                                         "Manufacture of food products & beverages",
+                                         "Manufacture of tobacco products",
+                                         "Manufacture of textile & apparel",
+                                         "Retail trade except motor vehicle",
+                                         "Education",
+                                         "Health care"))->fvpp1920$upsa_nic_detail
+fvpp1920[age>=15,.(upsa_code,sector,sex,weight,upsa_nic_main,upsa_nic,upsa_nic_detail)]->t
+ifelse(t$upsa_code!=9999,"Worker","Non-worker")->t$Worker
+reshape2::melt(t,id=c("Worker","sector","sex"),m="weight")->t
+reshape2::dcast(t,sex+sector~Worker,sum,margins=c("sector","sex","Worker"))->t6
+round(t6$Worker*100/t6[,5],2)->t6$Worker
+
+t6[c(1:6),c(2,1,4)]->t6
+names(t6)[3] <- "2019-20"
+
+merge(t5,t6,by=c("sex","sector"))->t
+levels(t$sector)<-c("Rural","Urban","Total")
+##levels(t$sex)<-c("Men","Women")
+gt(t)
+
+## fvhh1819[,UID:=paste(schedule,quarter,
+##                      visit,sector,state,district,
+##                      nss_region,stratum,sub_stratum,sub_sample,
+##                      fod_sub_region,fsu,sample_sg_no,
+##                      second_stage_stratum, hhd_no)]
+
+```
+```{r}
+## Calculate LFPR, WFPR, and UR for 2018-19
+names(fvpp1819)[names(fvpp1819) == "42_status_code"] <- "status_code_sub"
+names(fvpp1819)[names(fvpp1819) == "42_nic_code"] <- "nic_code_sub"
+names(fvpp1819)[names(fvpp1819) == "42_nco_code"] <- "nco_code_sub"
+
+fvpp1819[(age >= 15) & (status_code %in% c(11,12,21,31,41,42,51,81) |
+                        status_code_sub %in% c(11,12,21,31,41,42,51,81))] -> lf1819
+
+fvpp1819[(age >= 15) & (status_code %in% c(11,12,21,31,41,42,51) |
+                        status_code_sub %in% c(11,12,21,31,41,42,51))] -> wf1819
+
+lf1819[,.(LFPR = round((sum(weight)/fvpp1819[(age >= 15),sum(weight)])*100,1))]->l1
+
+wf1819[,.(WFPR = round((sum(weight)/fvpp1819[(age >= 15),sum(weight)])*100,1))]->w1
+
+lf1819[status_code %in% c(81) & is.na(status_code_sub)
+      ,.(Unemployment_Rate=round((sum(weight)/lf1819[,sum(weight)])*100,1))]->ur1
+
+
+cbind(l1, w1, ur1)->a1
+
+## Calculate LFPR, WFPR, and UR for 2019-20
+names(fvpp1920)[names(fvpp1920) == "X42_status_code"] <- "status_code_sub"
+names(fvpp1920)[names(fvpp1920) == "X42_nic_code"] <- "nic_code_sub"
+names(fvpp1920)[names(fvpp1920) == "X42_nco_code"] <- "nco_code_sub"
+
+fvpp1920[(age >= 15) & (status_code %in% c(11,12,21,31,41,42,51,81) |
+                        status_code_sub %in% c(11,12,21,31,41,42,51,81))] -> lf1920
+fvpp1920[(age >= 15) & (status_code %in% c(11,12,21,31,41,42,51) |
+                        status_code_sub %in% c(11,12,21,31,41,42,51))] -> wf1920
+
+lf1920[,.(LFPR = round((sum(weight)/fvpp1920[(age >= 15),sum(weight)])*100,1))]->l2
+
+wf1920[,.(WFPR = round((sum(weight)/fvpp1920[(age >= 15),sum(weight)])*100,1))]->w2
+
+lf1920[status_code %in% c(81) & is.na(status_code_sub)
+      ,.(Unemployment_Rate=round((sum(weight)/lf1920[,sum(weight)])*100,1))]->ur2
+
+
+cbind(l2, w2, ur2)->a2
+rbind(a1, a2)->e1
+gt(e1)
+##cbind(Year, e1)
+```

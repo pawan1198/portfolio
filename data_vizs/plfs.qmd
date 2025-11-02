@@ -35,6 +35,9 @@ fvpp1819 <- readRDS("/home/pawan/plfsdata/PLFS-18-19/data/perfv201819.rds")
 fvhh1920 <- readRDS("/home/pawan/plfsdata/PLFS-19-20/HHV1_2019_20.rds")
 fvpp1920 <- readRDS("/home/pawan/plfsdata/PLFS-19-20/PERV1_2019_20.rds")
 
+fvhh2122 <- readRDS("/home/pawan/plfsdata/PLFS-21-22/HHV1_2021_22.rds")
+fvpp2122 <- readRDS("/home/pawan/plfsdata/PLFS-21-22/PERV1_2021_22.rds")
+
 as.character(fvpp1819$visit)->fvpp1819$visit
 as.character(fvpp1819$quarter)->fvpp1819$quarter
 as.integer(fvpp1819$hhd_no)->fvpp1819$hhd_no
@@ -297,6 +300,7 @@ lf1819[status_code %in% c(81) & is.na(status_code_sub)
 
 
 cbind(l1, w1, ur1)->a1
+a1$Year<-"2018-19"
 
 ## Calculate LFPR, WFPR, and UR for 2019-20
 names(fvpp1920)[names(fvpp1920) == "X42_status_code"] <- "status_code_sub"
@@ -317,7 +321,50 @@ lf1920[status_code %in% c(81) & is.na(status_code_sub)
 
 
 cbind(l2, w2, ur2)->a2
-rbind(a1, a2)->e1
+a2$Year<-"2019-20"
+
+## Calculate LFPR, WFPR, and UR for 2019-20
+names(fvpp1920)[names(fvpp1920) == "X42_status_code"] <- "status_code_sub"
+names(fvpp1920)[names(fvpp1920) == "X42_nic_code"] <- "nic_code_sub"
+names(fvpp1920)[names(fvpp1920) == "X42_nco_code"] <- "nco_code_sub"
+
+fvpp1920[(age >= 15) & (status_code %in% c(11,12,21,31,41,42,51,81) |
+                        status_code_sub %in% c(11,12,21,31,41,42,51,81))] -> lf1920
+fvpp1920[(age >= 15) & (status_code %in% c(11,12,21,31,41,42,51) |
+                        status_code_sub %in% c(11,12,21,31,41,42,51))] -> wf1920
+
+lf1920[,.(LFPR = round((sum(weight)/fvpp1920[(age >= 15),sum(weight)])*100,1))]->l2
+
+wf1920[,.(WFPR = round((sum(weight)/fvpp1920[(age >= 15),sum(weight)])*100,1))]->w2
+
+lf1920[status_code %in% c(81) & is.na(status_code_sub)
+      ,.(Unemployment_Rate=round((sum(weight)/lf1920[,sum(weight)])*100,1))]->ur2
+
+
+## Calculate LFPR, WFPR, and UR for 2021-22
+names(fvpp2122)[names(fvpp2122) == "Status.Code...32"] <- "Status_Code"
+names(fvpp2122)[names(fvpp2122) == "Industry.Code..NIC....33"] <- "NIC_Code"
+names(fvpp2122)[names(fvpp2122) == "Occupation.Code..NCO....34"] <- "NCO_Code"
+
+names(fvpp2122)[names(fvpp2122) == "Status.Code...45"] <- "Status_Code_Sub"
+names(fvpp2122)[names(fvpp2122) == "Industry.Code..NIC....46"] <- "NIC_Code_Sub"
+names(fvpp2122)[names(fvpp2122) == "Occupation.Code..NCO....47"] <- "NCO_Code_Sub"
+
+fvpp2122[(Age >= 15) & (Status_Code %in% c(11,12,21,31,41,42,51,81) |
+                        Status_Code_Sub %in% c(11,12,21,31,41,42,51,81))] -> lf2122
+fvpp2122[(Age >= 15) & (Status_Code %in% c(11,12,21,31,41,42,51) |
+                        Status_Code_Sub %in% c(11,12,21,31,41,42,51))] -> wf2122
+
+lf2122[,.(LFPR = round((sum(weight)/fvpp2122[(Age >= 15),sum(weight)])*100,1))]->l3
+
+wf2122[,.(WFPR = round((sum(weight)/fvpp2122[(Age >= 15),sum(weight)])*100,1))]->w3
+
+lf2122[Status_Code %in% c(81) & is.na(Status_Code_Sub)
+      ,.(Unemployment_Rate=round((sum(weight)/lf2122[,sum(weight)])*100,1))]->ur3
+
+
+cbind(l3, w3, ur3)->a3
+a3$Year<-"2021-22"
+rbind(a1, a2, a3)->e1
 gt(e1)
-##cbind(Year, e1)
 ```

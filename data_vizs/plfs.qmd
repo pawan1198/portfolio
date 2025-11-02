@@ -5,8 +5,8 @@ author: "Pawan"
 date: "2025/11/02"
 date-modified: last-modified
 categories:
-  - "Fuel"
-  - "Prices"
+  - "PLFS"
+  - "NSS"
 # image: "thumbnails/health_map_hy.png"
 format:
   html:

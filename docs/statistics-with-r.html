@@ -8,7 +8,7 @@
 
 <meta name="author" content="Pawan">
 
-<title>Blog – Portfolio</title>
+<title>Statistics With R – Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -74,7 +74,7 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-blog .list');
+    const listingTargetEl = window.document.querySelector('#listing-statistics-with-r .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
@@ -83,11 +83,11 @@ ul.task-list li input[type="checkbox"] {
     const options = {
       valueNames: ['listing-image','listing-title','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-blog'] = new List('listing-blog', options);
+    window['quarto-listings']['listing-statistics-with-r'] = new List('listing-statistics-with-r', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -132,7 +132,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="Portfolio" href="blog.xml" data-external="1"></head>
+<link rel="alternate" type="application/rss+xml" title="Portfolio" href="statistics-with-r.xml" data-external="1"></head>
 
 <body class="nav-fixed quarto-light">
 
@@ -162,11 +162,11 @@ window.Quarto = {
 <span class="menu-text">Data Visualizations</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./statistics-with-r.html"> 
+    <a class="nav-link active" href="./statistics-with-r.html" aria-current="page"> 
 <span class="menu-text">Statistics With R</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./blog.html" aria-current="page"> 
+    <a class="nav-link" href="./blog.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
@@ -191,13 +191,13 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RGF0YSUyMFZpeg==">Data Viz <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2dwbG90Mg==">ggplot2 <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UiUyMFByb2dyYW1taW5n">R Programming <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(0)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Blog</h1>
+<h1 class="title">Statistics With R</h1>
 </div>
 
 
@@ -224,11 +224,11 @@ window.Quarto = {
 
 
 
-<div class="quarto-listing quarto-listing-container-grid" id="listing-blog">
+<div class="quarto-listing quarto-listing-container-grid" id="listing-statistics-with-r">
 <div class="listing-actions-group">
    <div class="input-group input-group-sm quarto-listing-sort">
     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-blog-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-blog'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+    <select id="listing-statistics-with-r-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-statistics-with-r'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
       <option value="" disabled="" selected="" hidden="">Order By</option>
       <option value="index" data-direction="asc">Default</option>
       <option value="listing-date-sort" data-direction="asc">
@@ -244,28 +244,7 @@ window.Quarto = {
   </div>
 </div>
 <div class="list grid quarto-listing-cols-4">
-<div class="g-col-1" data-index="0" data-categories="RGF0YSUyMFZpeiUyQ2dncGxvdDI=" data-listing-file-modified-sort="1761820957453" data-listing-reading-time-sort="8" data-listing-word-count-sort="1555">
-<a href="./blog/combine-plot.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Combining plots in ggplot2
-</h5>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="RGF0YSUyMFZpeiUyQ2dncGxvdDIlMkNSJTIwUHJvZ3JhbW1pbmc=" data-listing-file-modified-sort="1761821005683" data-listing-reading-time-sort="7" data-listing-word-count-sort="1268">
-<a href="./blog/why-R.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-The Advantages of R for Statistical Analysis
-</h5>
-</div>
-</div></a>
-</div>
+
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
 </div></main> <!-- /main -->
@@ -674,4 +653,4 @@ The Advantages of R for Statistical Analysis
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/pawan1198/portfolio/edit/main/blog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pawan1198/portfolio/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/pawan1198/portfolio/edit/main/statistics-with-r.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pawan1198/portfolio/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

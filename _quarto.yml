@@ -16,6 +16,8 @@ website:
         text: "Home"
       - href: data_vizs.qmd
         text: "Data Visualizations"
+      - href: statistics-with-r.qmd
+        text: "Statistics With R"
       - href: blog.qmd
         text: "Blog"
       - href: about.qmd

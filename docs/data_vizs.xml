@@ -9,7 +9,7 @@
 <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.html</link>
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.xml" rel="self" type="application/rss+xml"/>
 <description>Pawan</description>
-<generator>quarto-1.8.25</generator>
+<generator>quarto-1.8.26</generator>
 <lastBuildDate>Sat, 01 Nov 2025 18:30:00 GMT</lastBuildDate>
 <item>
   <title>PLFS</title>
@@ -9430,7 +9430,7 @@ font-style: inherit;">"Petrolium Imports"</span>)</span></code></pre></div></div
   <pubDate>Tue, 28 Oct 2025 18:30:00 GMT</pubDate>
 </item>
 <item>
-  <title>Annually Edible Oils Import by India</title>
+  <title>Edible Oils Import by India</title>
   <dc:creator>Pawan </dc:creator>
   <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil.html</link>
   <description><![CDATA[ 
@@ -9438,6 +9438,8 @@ font-style: inherit;">"Petrolium Imports"</span>)</span></code></pre></div></div
 
 
 
+<section id="annually-april-to-march-edible-oils-import-by-india" class="level1">
+<h1>Annually (April to March) Edible Oils Import by India</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -9452,14 +9454,17 @@ background-color: null;
 font-style: inherit;">library</span>(gridExtra)</span>
 <span id="cb1-4"><span class="fu" style="color: #4758AB;
 background-color: null;
+font-style: inherit;">library</span>(gt)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
 font-style: inherit;">library</span>(ggthemes) <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## For more themes</span></span>
-<span id="cb1-5"></span>
-<span id="cb1-6"><span class="do" style="color: #5E5E5E;
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Custom theme for plots</span></span>
-<span id="cb1-7">my_theme <span class="ot" style="color: #003B4F;
+<span id="cb1-8">my_theme <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9472,7 +9477,7 @@ background-color: null;
 font-style: inherit;">+</span>  <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Start with theme_bw and increase base size</span></span>
-<span id="cb1-8">    <span class="fu" style="color: #4758AB;
+<span id="cb1-9">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -9489,7 +9494,7 @@ background-color: null;
 font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Set font family and color</span></span>
-<span id="cb1-9">          <span class="at" style="color: #657422;
+<span id="cb1-10">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9502,7 +9507,7 @@ background-color: null;
 font-style: inherit;">face =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bold"</span>,</span>
-<span id="cb1-10">                                    <span class="at" style="color: #657422;
+<span id="cb1-11">                                    <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">hjust =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
@@ -9521,7 +9526,7 @@ background-color: null;
 font-style: inherit;">0</span>)), <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Center and style title</span></span>
-<span id="cb1-11">          <span class="at" style="color: #657422;
+<span id="cb1-12">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.title =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9530,7 +9535,7 @@ background-color: null;
 font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">18</span>),</span>
-<span id="cb1-12">          <span class="at" style="color: #657422;
+<span id="cb1-13">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9539,19 +9544,19 @@ background-color: null;
 font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">14</span>),</span>
-<span id="cb1-13">          <span class="at" style="color: #657422;
+<span id="cb1-14">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"bottom"</span>,</span>
-<span id="cb1-14">          <span class="at" style="color: #657422;
+<span id="cb1-15">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">legend.title =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">element_blank</span>(),  <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Remove legend title</span></span>
-<span id="cb1-15">          <span class="at" style="color: #657422;
+<span id="cb1-16">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">panel.grid.major =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9562,14 +9567,14 @@ background-color: null;
 font-style: inherit;">"#EEEEEE"</span>), <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Lighter grid lines</span></span>
-<span id="cb1-16">          <span class="at" style="color: #657422;
+<span id="cb1-17">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">panel.border =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">element_blank</span>(), <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Remove panel border</span></span>
-<span id="cb1-17">          <span class="at" style="color: #657422;
+<span id="cb1-18">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9580,7 +9585,7 @@ background-color: null;
 font-style: inherit;">"#333333"</span>), <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Add axis lines</span></span>
-<span id="cb1-18">          <span class="at" style="color: #657422;
+<span id="cb1-19">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9597,7 +9602,7 @@ background-color: null;
 font-style: inherit;">hjust=</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>),</span>
-<span id="cb1-19">          <span class="at" style="color: #657422;
+<span id="cb1-20">          <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -9612,7 +9617,7 @@ background-color: null;
 font-style: inherit;">NA</span>) <span class="do" style="color: #5E5E5E;
 background-color: null;
 font-style: italic;">## Style facet strips (if used)</span></span>
-<span id="cb1-20">          )</span></code></pre></div></div>
+<span id="cb1-21">          )</span></code></pre></div></div>
 </details>
 </div>
 <div class="cell">
@@ -10026,8 +10031,1750 @@ background-color: null;
 font-style: inherit;">8</span>)</span></code></pre></div></div>
 </details>
 </div>
+</section>
+<section id="compile-india-imported-edible-oil" class="level1">
+<h1>Compile India Imported Edible Oil</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/edibleoils/palmoil_importqty.rds"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>palmoil</span>
+<span id="cb5-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/edibleoils/soybeanoil_importqty.rds"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>soybeanoil</span>
+<span id="cb5-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">readRDS</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/edibleoils/sunfloweroil_importqty.rds"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>sunfloweroil</span>
+<span id="cb5-4"></span>
+<span id="cb5-5"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Data Cleaning</span></span>
+<span id="cb5-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>,palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>ImportMonth)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>ImportMonth</span>
+<span id="cb5-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>,soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>ImportMonth)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>ImportMonth</span>
+<span id="cb5-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>,sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>ImportMonth)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>ImportMonth</span>
+<span id="cb5-9"></span>
+<span id="cb5-10"><span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Change Calender Year to Oil Year (Nov to Oct)</span></span>
+<span id="cb5-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">match</span>(palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month,month.abb)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month</span>
+<span id="cb5-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>((palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year),<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-"</span>,(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)),</span>
+<span id="cb5-13">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>((<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-"</span>,(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year))))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>palmoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Fin_Year</span>
+<span id="cb5-14"></span>
+<span id="cb5-15"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">match</span>(soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month,month.abb)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month</span>
+<span id="cb5-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>((soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year),<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-"</span>,(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)),</span>
+<span id="cb5-17">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>((<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-"</span>,(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year))))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>soybeanoil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Fin_Year</span>
+<span id="cb5-18"></span>
+<span id="cb5-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">match</span>(sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month,month.abb)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month</span>
+<span id="cb5-20"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Month)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>((sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year),<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-"</span>,(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)),</span>
+<span id="cb5-21">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>((<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>),<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"-"</span>,(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Year))))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>sunfloweroil<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Fin_Year</span>
+<span id="cb5-22"></span>
+<span id="cb5-23">palmoil[Country<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(ImportMonth), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>))</span>
+<span id="cb5-24">        ,.(Country,Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table1</span>
+<span id="cb5-25"></span>
+<span id="cb5-26">soybeanoil[Country<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(ImportMonth), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>))</span>
+<span id="cb5-27">         ,.(Country,Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table2</span>
+<span id="cb5-28"></span>
+<span id="cb5-29">sunfloweroil[Country<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span>,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(ImportMonth), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>))</span>
+<span id="cb5-30">           ,.(Country,Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table3</span>
+<span id="cb5-31"></span>
+<span id="cb5-32"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(table1<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"INDONESIA"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"MALAYSIA"</span>),</span>
+<span id="cb5-33">       table1<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Other Countries"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table1<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country</span>
+<span id="cb5-34"></span>
+<span id="cb5-35"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(table2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ARGENTINA"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"BRAZIL"</span>),</span>
+<span id="cb5-36">       table2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Other Countries"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country</span>
+<span id="cb5-37"></span>
+<span id="cb5-38"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(table3<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"UKRAINE"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"RUSSIA"</span>),</span>
+<span id="cb5-39">       table3<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Other Countries"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table3<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>Country</span>
+<span id="cb5-40"></span>
+<span id="cb5-41">table1[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Country,Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table1</span>
+<span id="cb5-42">table2[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Country,Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table2</span>
+<span id="cb5-43">table3[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Import=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import)),.(Country,Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table3</span>
+<span id="cb5-44"></span>
+<span id="cb5-45">table1[Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2010-2011"</span>,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Share=</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(Import<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import))),</span>
+<span id="cb5-46">                               Country,Import),.(Fin_Year)][Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-2025"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table1</span>
+<span id="cb5-47"></span>
+<span id="cb5-48">table2[Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2010-2011"</span>,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Share=</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(Import<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import))),</span>
+<span id="cb5-49">                               Country,Import),.(Fin_Year)][Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-2025"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table2</span>
+<span id="cb5-50"></span>
+<span id="cb5-51">table3[Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2010-2011"</span>,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Share=</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(Import<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(Import))),</span>
+<span id="cb5-52">                               Country,Import),.(Fin_Year)][Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-2025"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table3</span></code></pre></div></div>
+</details>
+</div>
+<section id="palm-oil" class="level2">
+<h2 class="anchored" data-anchor-id="palm-oil">Palm Oil</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(table1, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Import, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Country)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stack"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Import,</span>
+<span id="cb6-4">                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Share<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(Share, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%"</span>))),</span>
+<span id="cb6-5">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">position_stack</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set2"</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="do" style="color: #5E5E5E;
+background-color: null;
+font-style: italic;">## Set bar color</span></span>
+<span id="cb6-7">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Palm Oil Import"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p1</span>
+<span id="cb6-11">p1</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="soybean-oil" class="level2">
+<h2 class="anchored" data-anchor-id="soybean-oil">Soybean Oil</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(table2, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Import, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Country)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stack"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Import,</span>
+<span id="cb7-4">                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Share<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(Share, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%"</span>))),</span>
+<span id="cb7-5">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">position_stack</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set2"</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-7">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Soybean Oil Import"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p2</span>
+<span id="cb7-11">p2</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sunflower-oil" class="level2">
+<h2 class="anchored" data-anchor-id="sunflower-oil">Sunflower Oil</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(table3, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Import, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Country)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stack"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Import,</span>
+<span id="cb8-4">                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Share<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(Share, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%"</span>))),</span>
+<span id="cb8-5">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">position_stack</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set2"</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-7">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sunflower Oil Import"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p3</span>
+<span id="cb8-11">p3</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="total-of-edible-oils" class="level2">
+<h2 class="anchored" data-anchor-id="total-of-edible-oils">Total of Edible Oils</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">palmoil[Country <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span> ,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Palmoil =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(ImportMonth), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>))</span>
+<span id="cb9-2">        ,.(Country, Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table4</span>
+<span id="cb9-3"></span>
+<span id="cb9-4">soybeanoil[Country <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span> ,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Soybeanoil =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(ImportMonth), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>))</span>
+<span id="cb9-5">         ,.(Country, Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table5</span>
+<span id="cb9-6"></span>
+<span id="cb9-7">sunfloweroil[Country <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Total"</span> ,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Sunfloweroil =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(ImportMonth), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>))</span>
+<span id="cb9-8">           ,.(Country, Fin_Year)]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>table6</span>
+<span id="cb9-9"></span>
+<span id="cb9-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">merge</span>(table4, table5, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Country"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fin_Year"</span>))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t1</span>
+<span id="cb9-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">merge</span>(t1, table6, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Country"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fin_Year"</span>))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t1</span>
+<span id="cb9-12"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">melt</span>(t1, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Country"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fin_Year"</span>))<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t1</span>
+<span id="cb9-13"></span>
+<span id="cb9-14">t1[Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2010-2011"</span>,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Share=</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(value<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(value))),</span>
+<span id="cb9-15">                           variable,value),.(Fin_Year)][Fin_Year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-2025"</span>]<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t1</span>
+<span id="cb9-16"></span>
+<span id="cb9-17"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gt</span>(t1[,.(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">EdibeOil=</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div id="qnjwtabgsk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qnjwtabgsk table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#qnjwtabgsk thead, #qnjwtabgsk tbody, #qnjwtabgsk tfoot, #qnjwtabgsk tr, #qnjwtabgsk td, #qnjwtabgsk th {
+  border-style: none;
+}
+
+#qnjwtabgsk p {
+  margin: 0;
+  padding: 0;
+}
+
+#qnjwtabgsk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#qnjwtabgsk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qnjwtabgsk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qnjwtabgsk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qnjwtabgsk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qnjwtabgsk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qnjwtabgsk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qnjwtabgsk .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qnjwtabgsk .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#qnjwtabgsk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#qnjwtabgsk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qnjwtabgsk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qnjwtabgsk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qnjwtabgsk .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qnjwtabgsk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qnjwtabgsk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#qnjwtabgsk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#qnjwtabgsk .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#qnjwtabgsk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qnjwtabgsk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#qnjwtabgsk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qnjwtabgsk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qnjwtabgsk .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qnjwtabgsk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qnjwtabgsk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qnjwtabgsk .gt_left {
+  text-align: left;
+}
+
+#qnjwtabgsk .gt_center {
+  text-align: center;
+}
+
+#qnjwtabgsk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qnjwtabgsk .gt_font_normal {
+  font-weight: normal;
+}
+
+#qnjwtabgsk .gt_font_bold {
+  font-weight: bold;
+}
+
+#qnjwtabgsk .gt_font_italic {
+  font-style: italic;
+}
+
+#qnjwtabgsk .gt_super {
+  font-size: 65%;
+}
+
+#qnjwtabgsk .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#qnjwtabgsk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#qnjwtabgsk .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#qnjwtabgsk .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#qnjwtabgsk .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#qnjwtabgsk .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#qnjwtabgsk .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#qnjwtabgsk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#qnjwtabgsk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Fin_Year" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Fin_Year</th>
+<th id="EdibeOil" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">EdibeOil</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="Fin_Year">2010-2011</td>
+<td class="gt_row gt_right" headers="EdibeOil">6786377</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Fin_Year">2011-2012</td>
+<td class="gt_row gt_right" headers="EdibeOil">9107348</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Fin_Year">2012-2013</td>
+<td class="gt_row gt_right" headers="EdibeOil">9625774</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Fin_Year">2013-2014</td>
+<td class="gt_row gt_right" headers="EdibeOil">10571314</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Fin_Year">2014-2015</td>
+<td class="gt_row gt_right" headers="EdibeOil">13039668</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Fin_Year">2015-2016</td>
+<td class="gt_row gt_right" headers="EdibeOil">13276920</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Fin_Year">2016-2017</td>
+<td class="gt_row gt_right" headers="EdibeOil">14143552</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Fin_Year">2017-2018</td>
+<td class="gt_row gt_right" headers="EdibeOil">13359830</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Fin_Year">2018-2019</td>
+<td class="gt_row gt_right" headers="EdibeOil">14468990</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Fin_Year">2019-2020</td>
+<td class="gt_row gt_right" headers="EdibeOil">12529725</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Fin_Year">2020-2021</td>
+<td class="gt_row gt_right" headers="EdibeOil">12792087</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Fin_Year">2021-2022</td>
+<td class="gt_row gt_right" headers="EdibeOil">13288180</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="Fin_Year">2022-2023</td>
+<td class="gt_row gt_right" headers="EdibeOil">15609676</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="Fin_Year">2023-2024</td>
+<td class="gt_row gt_right" headers="EdibeOil">7882940</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(t1, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> value, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> variable)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stack"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Fin_Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> value,</span>
+<span id="cb10-4">                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(Share<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(Share, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%"</span>))),</span>
+<span id="cb10-5">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">position_stack</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Set2"</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-7">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>comma) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Quantity (Tonns)"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb10-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Edible Oil Imports By India"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p4</span>
+<span id="cb10-11">p4</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="india-edible-oil-culativation-and-production" class="level1">
+<h1>India Edible Oil Culativation and Production</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fread</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/home/pawan/edibleoils/oil_aval.csv"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>t</span>
+<span id="cb11-2"></span>
+<span id="cb11-3">t[,Domestic_Share<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(Domestic_Availability<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>Total_Availability_LMT))]</span>
+<span id="cb11-4">t[,Import_Share<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(Imports<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>Total_Availability_LMT))]</span>
+<span id="cb11-5"></span>
+<span id="cb11-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(t, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> Domestic_Share)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#5F9EA0"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(Domestic_Share, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%"</span>)),</span>
+<span id="cb11-9">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">position_stack</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vjust =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-10">    my_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-11">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ylim</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">60</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"% Self Sufficiency"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb11-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggtitle</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"% Self Sufficiency"</span>)<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-&gt;</span>p5</span>
+<span id="cb11-14">p5</span></code></pre></div></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 
  ]]></description>
   <category>Trade</category>

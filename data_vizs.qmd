@@ -6,7 +6,7 @@ listing:
   contents: data_vizs
   exclude: 
     title: "Template"
-  sort: "date desc"
+  sort: "date aesc"
   type: grid
   image-align: left
   categories: numbered

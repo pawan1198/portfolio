@@ -1,5 +1,5 @@
 ---
-title: "Annually Edible Oils Import by India"
+title: "Edible Oils Import by India"
 description: ""
 author: "Pawan"
 date: "2025/10/28"
@@ -19,10 +19,13 @@ execute:
   eval: true
 ---
 
+# Annually (April to March) Edible Oils Import by India 
+
 ```{r}
 library(data.table)
 library(ggplot2)
 library(gridExtra)
+library(gt)
 library(ggthemes) ## For more themes
 
 ## Custom theme for plots
@@ -85,4 +88,155 @@ ggplot(oil, aes(x = Year, y = ImportYear, fill = Edibleoil)) +
     ggtitle("Edible Oil Import")->p5
 p5
 ggsave("annual-edibleoil-import.png", width = 12, height = 8)
+```
+
+# Compile India Imported Edible Oil
+
+``` {r}
+readRDS("/home/pawan/edibleoils/palmoil_importqty.rds")->palmoil
+readRDS("/home/pawan/edibleoils/soybeanoil_importqty.rds")->soybeanoil
+readRDS("/home/pawan/edibleoils/sunfloweroil_importqty.rds")->sunfloweroil
+
+## Data Cleaning
+gsub(",","",palmoil$ImportMonth)->palmoil$ImportMonth
+gsub(",","",soybeanoil$ImportMonth)->soybeanoil$ImportMonth
+gsub(",","",sunfloweroil$ImportMonth)->sunfloweroil$ImportMonth
+
+## Change Calender Year to Oil Year (Nov to Oct)
+match(palmoil$Month,month.abb)->palmoil$Month
+ifelse(as.numeric(palmoil$Month)>10, paste0((palmoil$Year),"-",(as.numeric(palmoil$Year)+1)),
+       paste0((as.numeric(palmoil$Year)-1),"-",(as.numeric(palmoil$Year))))->palmoil$Fin_Year
+
+match(soybeanoil$Month,month.abb)->soybeanoil$Month
+ifelse(as.numeric(soybeanoil$Month)>10, paste0((soybeanoil$Year),"-",(as.numeric(soybeanoil$Year)+1)),
+       paste0((as.numeric(soybeanoil$Year)-1),"-",(as.numeric(soybeanoil$Year))))->soybeanoil$Fin_Year
+
+match(sunfloweroil$Month,month.abb)->sunfloweroil$Month
+ifelse(as.numeric(sunfloweroil$Month)>10, paste0((sunfloweroil$Year),"-",(as.numeric(sunfloweroil$Year)+1)),
+       paste0((as.numeric(sunfloweroil$Year)-1),"-",(as.numeric(sunfloweroil$Year))))->sunfloweroil$Fin_Year
+
+palmoil[Country!="Total",.(Import = sum(as.numeric(ImportMonth), na.rm=TRUE))
+        ,.(Country,Fin_Year)]->table1
+
+soybeanoil[Country!="Total",.(Import = sum(as.numeric(ImportMonth), na.rm=TRUE))
+         ,.(Country,Fin_Year)]->table2
+
+sunfloweroil[Country!="Total",.(Import = sum(as.numeric(ImportMonth), na.rm=TRUE))
+           ,.(Country,Fin_Year)]->table3
+
+ifelse(table1$Country %in% c("INDONESIA", "MALAYSIA"),
+       table1$Country, "Other Countries")->table1$Country
+
+ifelse(table2$Country %in% c("ARGENTINA", "BRAZIL"),
+       table2$Country, "Other Countries")->table2$Country
+
+ifelse(table3$Country %in% c("UKRAINE", "RUSSIA"),
+       table3$Country, "Other Countries")->table3$Country
+
+table1[,.(Import=sum(Import)),.(Country,Fin_Year)]->table1
+table2[,.(Import=sum(Import)),.(Country,Fin_Year)]->table2
+table3[,.(Import=sum(Import)),.(Country,Fin_Year)]->table3
+
+table1[Fin_Year>="2010-2011",.(Share=(round(Import*100/sum(Import))),
+                               Country,Import),.(Fin_Year)][Fin_Year!="2024-2025"]->table1
+
+table2[Fin_Year>="2010-2011",.(Share=(round(Import*100/sum(Import))),
+                               Country,Import),.(Fin_Year)][Fin_Year!="2024-2025"]->table2
+
+table3[Fin_Year>="2010-2011",.(Share=(round(Import*100/sum(Import))),
+                               Country,Import),.(Fin_Year)][Fin_Year!="2024-2025"]->table3
+```
+
+## Palm Oil
+```{r}
+ggplot(table1, aes(x = Fin_Year, y = Import, fill = Country)) +
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(x = Fin_Year, y = Import,
+                  label = ifelse(Share<5, "", paste0(Share, "%"))),
+              position = position_stack(vjust = 0.5), size = 5, color = "black") +
+    scale_fill_brewer(palette="Set2")+ ## Set bar color
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Tonns)") +
+    ggtitle("Palm Oil Import")->p1
+p1
+```
+## Soybean Oil
+```{r}
+ggplot(table2, aes(x = Fin_Year, y = Import, fill = Country)) +
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(x = Fin_Year, y = Import,
+                  label = ifelse(Share<5, "", paste0(Share, "%"))),
+              position = position_stack(vjust = 0.5), size = 5, color = "black") +
+    scale_fill_brewer(palette="Set2")+
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Tonns)") +
+    ggtitle("Soybean Oil Import")->p2
+p2
+```
+
+## Sunflower Oil
+```{r}
+ggplot(table3, aes(x = Fin_Year, y = Import, fill = Country)) +
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(x = Fin_Year, y = Import,
+                  label = ifelse(Share<5, "", paste0(Share, "%"))),
+              position = position_stack(vjust = 0.5), size = 5, color = "black") +
+    scale_fill_brewer(palette="Set2")+
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Tonns)") +
+    ggtitle("Sunflower Oil Import")->p3
+p3
+```
+
+## Total of Edible Oils
+```{r}
+palmoil[Country == "Total" ,.(Palmoil = sum(as.numeric(ImportMonth), na.rm=TRUE))
+        ,.(Country, Fin_Year)]->table4
+
+soybeanoil[Country == "Total" ,.(Soybeanoil = sum(as.numeric(ImportMonth), na.rm=TRUE))
+         ,.(Country, Fin_Year)]->table5
+
+sunfloweroil[Country == "Total" ,.(Sunfloweroil = sum(as.numeric(ImportMonth), na.rm=TRUE))
+           ,.(Country, Fin_Year)]->table6
+
+merge(table4, table5, by = c("Country", "Fin_Year"))->t1
+merge(t1, table6, by = c("Country", "Fin_Year"))->t1
+melt(t1, id = c("Country", "Fin_Year"))->t1
+
+t1[Fin_Year>="2010-2011",.(Share=(round(value*100/sum(value))),
+                           variable,value),.(Fin_Year)][Fin_Year!="2024-2025"]->t1
+
+gt(t1[,.(EdibeOil=(sum(value))),.(Fin_Year)])
+
+ggplot(t1, aes(x = Fin_Year, y = value, fill = variable)) +
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(x = Fin_Year, y = value,
+                  label = ifelse(Share<5, "", paste0(Share, "%"))),
+              position = position_stack(vjust = 0.5), size = 5, color = "black") +
+    scale_fill_brewer(palette="Set2")+
+    my_theme +
+    scale_y_continuous(labels = scales::comma) +
+    labs(y = "Quantity (Tonns)") +
+    ggtitle("Edible Oil Imports By India")->p4
+p4
+```
+# India Edible Oil Culativation and Production
+```{r}
+fread("/home/pawan/edibleoils/oil_aval.csv")->t
+
+t[,Domestic_Share:=(round(Domestic_Availability*100/Total_Availability_LMT))]
+t[,Import_Share:=(round(Imports*100/Total_Availability_LMT))]
+
+ggplot(t, aes(x = Year, y = Domestic_Share)) +
+    geom_bar(stat = "identity", fill = "#5F9EA0") +
+    geom_text(aes(label = paste0(Domestic_Share, "%")),
+               position = position_stack(vjust = 0.5), size = 5, color = "black") +
+    my_theme +
+    ylim(0, 60) +
+    labs(y = "% Self Sufficiency") +
+    ggtitle("% Self Sufficiency")->p5
+p5
 ```

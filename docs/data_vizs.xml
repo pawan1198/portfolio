@@ -10865,8 +10865,8 @@ font-style: inherit;">-&gt;</span>p3</span>
 </div>
 </div>
 </section>
-<section id="total-of-edible-oils" class="level2">
-<h2 class="anchored" data-anchor-id="total-of-edible-oils">Total of Edible Oils</h2>
+<section id="total-of-edible-oils-oil-year-from-nov-to-oct" class="level2">
+<h2 class="anchored" data-anchor-id="total-of-edible-oils-oil-year-from-nov-to-oct">Total of Edible Oils (Oil year from Nov to Oct)</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -11001,23 +11001,23 @@ background-color: null;
 font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
-<div id="qnjwtabgsk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qnjwtabgsk table {
+<div id="ebzvdgwzva" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ebzvdgwzva table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#qnjwtabgsk thead, #qnjwtabgsk tbody, #qnjwtabgsk tfoot, #qnjwtabgsk tr, #qnjwtabgsk td, #qnjwtabgsk th {
+#ebzvdgwzva thead, #ebzvdgwzva tbody, #ebzvdgwzva tfoot, #ebzvdgwzva tr, #ebzvdgwzva td, #ebzvdgwzva th {
   border-style: none;
 }
 
-#qnjwtabgsk p {
+#ebzvdgwzva p {
   margin: 0;
   padding: 0;
 }
 
-#qnjwtabgsk .gt_table {
+#ebzvdgwzva .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -11043,12 +11043,12 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-left-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_caption {
+#ebzvdgwzva .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#qnjwtabgsk .gt_title {
+#ebzvdgwzva .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -11060,7 +11060,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-width: 0;
 }
 
-#qnjwtabgsk .gt_subtitle {
+#ebzvdgwzva .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -11072,7 +11072,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-top-width: 0;
 }
 
-#qnjwtabgsk .gt_heading {
+#ebzvdgwzva .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -11084,13 +11084,13 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_bottom_border {
+#ebzvdgwzva .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_col_headings {
+#ebzvdgwzva .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -11105,7 +11105,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_col_heading {
+#ebzvdgwzva .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -11125,7 +11125,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   overflow-x: hidden;
 }
 
-#qnjwtabgsk .gt_column_spanner_outer {
+#ebzvdgwzva .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -11137,15 +11137,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 4px;
 }
 
-#qnjwtabgsk .gt_column_spanner_outer:first-child {
+#ebzvdgwzva .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qnjwtabgsk .gt_column_spanner_outer:last-child {
+#ebzvdgwzva .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qnjwtabgsk .gt_column_spanner {
+#ebzvdgwzva .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -11157,11 +11157,11 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   width: 100%;
 }
 
-#qnjwtabgsk .gt_spanner_row {
+#ebzvdgwzva .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#qnjwtabgsk .gt_group_heading {
+#ebzvdgwzva .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -11187,7 +11187,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   text-align: left;
 }
 
-#qnjwtabgsk .gt_empty_group_heading {
+#ebzvdgwzva .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -11202,15 +11202,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   vertical-align: middle;
 }
 
-#qnjwtabgsk .gt_from_md > :first-child {
+#ebzvdgwzva .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qnjwtabgsk .gt_from_md > :last-child {
+#ebzvdgwzva .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qnjwtabgsk .gt_row {
+#ebzvdgwzva .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -11229,7 +11229,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   overflow-x: hidden;
 }
 
-#qnjwtabgsk .gt_stub {
+#ebzvdgwzva .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -11242,7 +11242,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#qnjwtabgsk .gt_stub_row_group {
+#ebzvdgwzva .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -11256,15 +11256,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   vertical-align: top;
 }
 
-#qnjwtabgsk .gt_row_group_first td {
+#ebzvdgwzva .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qnjwtabgsk .gt_row_group_first th {
+#ebzvdgwzva .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#qnjwtabgsk .gt_summary_row {
+#ebzvdgwzva .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -11274,16 +11274,16 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#qnjwtabgsk .gt_first_summary_row {
+#ebzvdgwzva .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_first_summary_row.thick {
+#ebzvdgwzva .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qnjwtabgsk .gt_last_summary_row {
+#ebzvdgwzva .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -11293,7 +11293,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_grand_summary_row {
+#ebzvdgwzva .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -11303,7 +11303,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#qnjwtabgsk .gt_first_grand_summary_row {
+#ebzvdgwzva .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -11313,7 +11313,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-top-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_last_grand_summary_row_top {
+#ebzvdgwzva .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -11323,11 +11323,11 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_striped {
+#ebzvdgwzva .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qnjwtabgsk .gt_table_body {
+#ebzvdgwzva .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -11336,7 +11336,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_footnotes {
+#ebzvdgwzva .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -11350,7 +11350,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_footnote {
+#ebzvdgwzva .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -11359,7 +11359,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#qnjwtabgsk .gt_sourcenotes {
+#ebzvdgwzva .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -11373,7 +11373,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#qnjwtabgsk .gt_sourcenote {
+#ebzvdgwzva .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -11381,72 +11381,72 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#qnjwtabgsk .gt_left {
+#ebzvdgwzva .gt_left {
   text-align: left;
 }
 
-#qnjwtabgsk .gt_center {
+#ebzvdgwzva .gt_center {
   text-align: center;
 }
 
-#qnjwtabgsk .gt_right {
+#ebzvdgwzva .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qnjwtabgsk .gt_font_normal {
+#ebzvdgwzva .gt_font_normal {
   font-weight: normal;
 }
 
-#qnjwtabgsk .gt_font_bold {
+#ebzvdgwzva .gt_font_bold {
   font-weight: bold;
 }
 
-#qnjwtabgsk .gt_font_italic {
+#ebzvdgwzva .gt_font_italic {
   font-style: italic;
 }
 
-#qnjwtabgsk .gt_super {
+#ebzvdgwzva .gt_super {
   font-size: 65%;
 }
 
-#qnjwtabgsk .gt_footnote_marks {
+#ebzvdgwzva .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#qnjwtabgsk .gt_asterisk {
+#ebzvdgwzva .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qnjwtabgsk .gt_indent_1 {
+#ebzvdgwzva .gt_indent_1 {
   text-indent: 5px;
 }
 
-#qnjwtabgsk .gt_indent_2 {
+#ebzvdgwzva .gt_indent_2 {
   text-indent: 10px;
 }
 
-#qnjwtabgsk .gt_indent_3 {
+#ebzvdgwzva .gt_indent_3 {
   text-indent: 15px;
 }
 
-#qnjwtabgsk .gt_indent_4 {
+#ebzvdgwzva .gt_indent_4 {
   text-indent: 20px;
 }
 
-#qnjwtabgsk .gt_indent_5 {
+#ebzvdgwzva .gt_indent_5 {
   text-indent: 25px;
 }
 
-#qnjwtabgsk .katex-display {
+#ebzvdgwzva .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#qnjwtabgsk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ebzvdgwzva div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

@@ -191,7 +191,7 @@ ggplot(table3, aes(x = Fin_Year, y = Import, fill = Country)) +
 p3
 ```
 
-## Total of Edible Oils
+## Total of Edible Oils (Oil year from Nov to Oct)
 ```{r}
 palmoil[Country == "Total" ,.(Palmoil = sum(as.numeric(ImportMonth), na.rm=TRUE))
         ,.(Country, Fin_Year)]->table4

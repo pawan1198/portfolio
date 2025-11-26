@@ -17,7 +17,7 @@ listing:
   feed: true
   fields: [image,title, date]
   sort-ui: [date, title]
-  page-size: 20
+  page-size: 30
 ---
 
 ::: {#data_vizs}

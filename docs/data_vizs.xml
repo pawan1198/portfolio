@@ -11387,8 +11387,8 @@ font-style: inherit;">"Petrolium Imports"</span>)</span></code></pre></div></div
 
 
 
-<section id="annually-april-to-march-edible-oils-import-by-india" class="level1">
-<h1>Annually (April to March) Edible Oils Import by India</h1>
+<p>India, one of the world’s largest consumers and importers of edible oils, has seen significant evolution in its import basket over the last decade. An analysis of import data from the financial year (from Nov to Oct) 2010-2011 through 2023-2024 reveals a dynamic volume growth, shifting consumer preferences, and geopolitical influences on sourcing.</p>
+<p>The data clearly indicates a robust long-term growth trend in the total quantity of edible oil imported by India, with quantities often exceeding 15,000,000 tonnes in recent years. # Annually (April to March) Edible Oils Import by India</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -11980,7 +11980,6 @@ background-color: null;
 font-style: inherit;">8</span>)</span></code></pre></div></div>
 </details>
 </div>
-</section>
 <section id="compile-india-imported-edible-oil" class="level1">
 <h1>Compile India Imported Edible Oil</h1>
 <div class="cell">
@@ -12448,6 +12447,7 @@ font-style: inherit;">-&gt;</span>table3</span></code></pre></div></div>
 </div>
 <section id="palm-oil" class="level2">
 <h2 class="anchored" data-anchor-id="palm-oil">Palm Oil</h2>
+<p>Palm oil remains the single largest imported oil, but its proportional share has decreased. It accounted for a high of 79% of total imports in 2010-2011, but this share has trended downwards, settling at 56% in 2023-2024. India maintains a near-exclusive on its Southeast Asian neighbours for palm oil, with Indonesia and Malaysia consistently dominating the supply chain. While the proportional distribution between the two varies year-to-year—with Malaysia often holding the slight edge in the mid-period (e.g., 71% in 2013-2014)—the combined share of these two nations routinely exceeds 90%, highlighting a concentrated supply risk.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -12572,6 +12572,7 @@ font-style: inherit;">-&gt;</span>p1</span>
 </section>
 <section id="soybean-oil" class="level2">
 <h2 class="anchored" data-anchor-id="soybean-oil">Soybean Oil</h2>
+<p>Soybean oil has maintained a volatile but stable proportion, fluctuating between 15% and 30% over the period. The import of soybean oil is heavily dictated by South American supply, with Argentina acting as the primary source. Argentina consistently provided over 70% of India’s soybean oil needs for much of the period. Brazil plays a significant, though secondary, role, with its share showing an upward trend in certain recent financial years.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -12694,6 +12695,7 @@ font-style: inherit;">-&gt;</span>p2</span>
 </section>
 <section id="sunflower-oil" class="level2">
 <h2 class="anchored" data-anchor-id="sunflower-oil">Sunflower Oil</h2>
+<p>The most striking trend is the increasing reliance on sunflower oil. For the better part of the decade (2010-2011 to 2020-2021), sunflower oil constituted a minor share, typically between 6% and 14%. However, in the latest period (2023-2024), its share has surged to a high of 22%, indicating a significant structural shift in consumer demand and import policy favouring softer oils.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -12950,23 +12952,23 @@ background-color: null;
 font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
-<div id="ebzvdgwzva" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ebzvdgwzva table {
+<div id="yspixfeztu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yspixfeztu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ebzvdgwzva thead, #ebzvdgwzva tbody, #ebzvdgwzva tfoot, #ebzvdgwzva tr, #ebzvdgwzva td, #ebzvdgwzva th {
+#yspixfeztu thead, #yspixfeztu tbody, #yspixfeztu tfoot, #yspixfeztu tr, #yspixfeztu td, #yspixfeztu th {
   border-style: none;
 }
 
-#ebzvdgwzva p {
+#yspixfeztu p {
   margin: 0;
   padding: 0;
 }
 
-#ebzvdgwzva .gt_table {
+#yspixfeztu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -12992,12 +12994,12 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-left-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_caption {
+#yspixfeztu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ebzvdgwzva .gt_title {
+#yspixfeztu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -13009,7 +13011,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-width: 0;
 }
 
-#ebzvdgwzva .gt_subtitle {
+#yspixfeztu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -13021,7 +13023,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-top-width: 0;
 }
 
-#ebzvdgwzva .gt_heading {
+#yspixfeztu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -13033,13 +13035,13 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_bottom_border {
+#yspixfeztu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_col_headings {
+#yspixfeztu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -13054,7 +13056,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_col_heading {
+#yspixfeztu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -13074,7 +13076,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   overflow-x: hidden;
 }
 
-#ebzvdgwzva .gt_column_spanner_outer {
+#yspixfeztu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -13086,15 +13088,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 4px;
 }
 
-#ebzvdgwzva .gt_column_spanner_outer:first-child {
+#yspixfeztu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ebzvdgwzva .gt_column_spanner_outer:last-child {
+#yspixfeztu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ebzvdgwzva .gt_column_spanner {
+#yspixfeztu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -13106,11 +13108,11 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   width: 100%;
 }
 
-#ebzvdgwzva .gt_spanner_row {
+#yspixfeztu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ebzvdgwzva .gt_group_heading {
+#yspixfeztu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13136,7 +13138,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   text-align: left;
 }
 
-#ebzvdgwzva .gt_empty_group_heading {
+#yspixfeztu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -13151,15 +13153,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   vertical-align: middle;
 }
 
-#ebzvdgwzva .gt_from_md > :first-child {
+#yspixfeztu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ebzvdgwzva .gt_from_md > :last-child {
+#yspixfeztu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ebzvdgwzva .gt_row {
+#yspixfeztu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13178,7 +13180,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   overflow-x: hidden;
 }
 
-#ebzvdgwzva .gt_stub {
+#yspixfeztu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -13191,7 +13193,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ebzvdgwzva .gt_stub_row_group {
+#yspixfeztu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -13205,15 +13207,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   vertical-align: top;
 }
 
-#ebzvdgwzva .gt_row_group_first td {
+#yspixfeztu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ebzvdgwzva .gt_row_group_first th {
+#yspixfeztu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ebzvdgwzva .gt_summary_row {
+#yspixfeztu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -13223,16 +13225,16 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ebzvdgwzva .gt_first_summary_row {
+#yspixfeztu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_first_summary_row.thick {
+#yspixfeztu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ebzvdgwzva .gt_last_summary_row {
+#yspixfeztu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13242,7 +13244,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_grand_summary_row {
+#yspixfeztu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -13252,7 +13254,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ebzvdgwzva .gt_first_grand_summary_row {
+#yspixfeztu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13262,7 +13264,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-top-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_last_grand_summary_row_top {
+#yspixfeztu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13272,11 +13274,11 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_striped {
+#yspixfeztu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ebzvdgwzva .gt_table_body {
+#yspixfeztu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -13285,7 +13287,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_footnotes {
+#yspixfeztu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -13299,7 +13301,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_footnote {
+#yspixfeztu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -13308,7 +13310,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ebzvdgwzva .gt_sourcenotes {
+#yspixfeztu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -13322,7 +13324,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ebzvdgwzva .gt_sourcenote {
+#yspixfeztu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -13330,72 +13332,72 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ebzvdgwzva .gt_left {
+#yspixfeztu .gt_left {
   text-align: left;
 }
 
-#ebzvdgwzva .gt_center {
+#yspixfeztu .gt_center {
   text-align: center;
 }
 
-#ebzvdgwzva .gt_right {
+#yspixfeztu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ebzvdgwzva .gt_font_normal {
+#yspixfeztu .gt_font_normal {
   font-weight: normal;
 }
 
-#ebzvdgwzva .gt_font_bold {
+#yspixfeztu .gt_font_bold {
   font-weight: bold;
 }
 
-#ebzvdgwzva .gt_font_italic {
+#yspixfeztu .gt_font_italic {
   font-style: italic;
 }
 
-#ebzvdgwzva .gt_super {
+#yspixfeztu .gt_super {
   font-size: 65%;
 }
 
-#ebzvdgwzva .gt_footnote_marks {
+#yspixfeztu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ebzvdgwzva .gt_asterisk {
+#yspixfeztu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ebzvdgwzva .gt_indent_1 {
+#yspixfeztu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ebzvdgwzva .gt_indent_2 {
+#yspixfeztu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ebzvdgwzva .gt_indent_3 {
+#yspixfeztu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ebzvdgwzva .gt_indent_4 {
+#yspixfeztu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ebzvdgwzva .gt_indent_5 {
+#yspixfeztu .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ebzvdgwzva .katex-display {
+#yspixfeztu .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ebzvdgwzva div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#yspixfeztu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -13727,6 +13729,7 @@ font-style: inherit;">-&gt;</span>p5</span>
 
  ]]></description>
   <category>Trade</category>
+  <category>Edible Oils</category>
   <guid>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/edibleoil.html</guid>
   <pubDate>Mon, 27 Oct 2025 18:30:00 GMT</pubDate>
 </item>

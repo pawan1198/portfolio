@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -74,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-3c129233fa41f8075c1908222fcaba9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -117,8 +117,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Portfolio</span>
     </a>
@@ -136,6 +134,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link" href="../data_vizs.html"> 
 <span class="menu-text">Data Visualizations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../statistics-with-r.html"> 
+<span class="menu-text">Statistics With R</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../blog.html"> 
@@ -206,7 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">November 1, 2025</p>
+      <p class="date-modified">November 26, 2025</p>
     </div>
   </div>
     
@@ -276,245 +278,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>qty[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Export)),.(Year, HSCode2)]<span class="ot">-&gt;</span>hscode2</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>hscode2[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Qty)),.(HSCode2)]<span class="ot">-&gt;</span>a</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>a[, Share <span class="sc">:</span><span class="er">=</span> <span class="fu">round</span>(Qty<span class="sc">*</span><span class="dv">100</span><span class="sc">/</span>(<span class="fu">sum</span>(a<span class="sc">$</span>Qty)),<span class="dv">2</span>)][<span class="fu">order</span>(Share)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    HSCode2          Qty Share
-      &lt;num&gt;        &lt;num&gt; &lt;num&gt;
- 1:       1     57386.01  0.00
- 2:      43      5854.14  0.00
- 3:      45     18059.74  0.00
- 4:      46    172331.36  0.00
- 5:      65    106770.22  0.00
- 6:      66     21892.15  0.00
- 7:      67     83606.20  0.00
- 8:      80    158712.90  0.00
- 9:      81     99503.36  0.00
-10:      88    151253.43  0.00
-11:      89       272.58  0.00
-12:      92    141410.24  0.00
-13:      93     96216.58  0.00
-14:      99         0.00  0.00
-15:      18    408822.89  0.01
-16:      37    384881.26  0.01
-17:      47    198465.10  0.01
-18:      50    570319.77  0.01
-19:      51    419656.74  0.01
-20:      75    214353.15  0.01
-21:      86    202509.95  0.01
-22:      91    343247.84  0.01
-23:      98    300749.51  0.01
-24:       6    685362.74  0.02
-25:       5   1046260.29  0.03
-26:      36   1017258.02  0.03
-27:      41   1130457.78  0.03
-28:      14   1593237.80  0.04
-29:      16   1349979.59  0.04
-30:      58   1463885.18  0.04
-31:      60   1423811.29  0.04
-32:      35   1997244.81  0.05
-33:      97   1843448.56  0.05
-34:      44   2389352.56  0.06
-35:      78   2328337.80  0.06
-36:      56   2523293.29  0.07
-37:      94   3142096.61  0.08
-38:      83   3589717.35  0.09
-39:      21   3874862.38  0.10
-40:      59   4286776.32  0.11
-41:      22   4466206.17  0.12
-42:      31   4517466.78  0.12
-43:      33   4453885.91  0.12
-44:      57   4525781.90  0.12
-45:      64   4388485.46  0.12
-46:      79   4518806.71  0.12
-47:      24   5692707.51  0.15
-48:      19   6066888.36  0.16
-49:      34   6058425.85  0.16
-50:      95   6831130.69  0.18
-51:      69   7388098.29  0.19
-52:      74   7445222.51  0.20
-53:      82   8533886.81  0.22
-54:      13   8833219.84  0.23
-55:      42   8869994.13  0.23
-56:      70   8710743.58  0.23
-57:      30   9202345.03  0.24
-58:      20   9410197.68  0.25
-59:      49  12268144.88  0.32
-60:      11  13811909.37  0.36
-61:      32  13828177.60  0.36
-62:      15  15555901.75  0.41
-63:       4  17582034.85  0.46
-64:      53  18942390.17  0.50
-65:       3  21869681.60  0.57
-66:      87  21924832.97  0.57
-67:       8  22260569.64  0.58
-68:      55  22166164.28  0.58
-69:       2  22383882.17  0.59
-70:      84  23221827.79  0.61
-71:      40  24917098.01  0.65
-72:      38  25144722.14  0.66
-73:      12  25557876.07  0.67
-74:      63  27160873.41  0.71
-75:      48  28024570.74  0.73
-76:      76  28986020.42  0.76
-77:      71  29500489.72  0.77
-78:       9  29619992.49  0.78
-79:      62  32160782.14  0.84
-80:      54  32763337.09  0.86
-81:      61  46094554.16  1.21
-82:      68  47308999.08  1.24
-83:       7  60446992.73  1.58
-84:      90  62888329.34  1.65
-85:      39  66282101.26  1.74
-86:      28  69128102.86  1.81
-87:      73  74871272.42  1.96
-88:      52  82459600.99  2.16
-89:      29  91920137.68  2.41
-90:      17  96911207.17  2.54
-91:      85  97459997.91  2.55
-92:      96 124708411.45  3.27
-93:      23 127625217.05  3.34
-94:      72 247501238.48  6.49
-95:      10 328288525.47  8.60
-96:      26 356321890.63  9.34
-97:      27 495448743.58 12.98
-98:      25 670751324.83 17.58
-    HSCode2          Qty Share</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Import Data Cleaning</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>musd[,HSCode4 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">4</span>)]</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>musd[,HSCode6 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">6</span>)]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>musd[,HSCode2 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">2</span>)]</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>mqty[,HSCode2 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">2</span>)]</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>mqty[,HSCode4 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">4</span>)]</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>mqty[,HSCode6 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">6</span>)]</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, mqty<span class="sc">$</span>Import))<span class="ot">-&gt;</span>mqty<span class="sc">$</span>Import</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(<span class="fu">is.na</span>(mqty<span class="sc">$</span>Import), <span class="dv">0</span>, mqty<span class="sc">$</span>Import)<span class="ot">-&gt;</span>mqty<span class="sc">$</span>Import</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, musd<span class="sc">$</span>Import))<span class="ot">-&gt;</span>musd<span class="sc">$</span>Import</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(<span class="fu">is.na</span>(musd<span class="sc">$</span>Import), <span class="dv">0</span>, musd<span class="sc">$</span>Import)<span class="ot">-&gt;</span>musd<span class="sc">$</span>Import</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>mqty[,.(<span class="at">Import_Qty =</span> <span class="fu">sum</span>(Import)),.(Year)]<span class="ot">-&gt;</span>importqty</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>musd[,.(<span class="at">Import_USD =</span> <span class="fu">sum</span>(Import)),.(Year)]<span class="ot">-&gt;</span>importusd</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>mqty[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year, HSCode2)]<span class="ot">-&gt;</span>hscode21</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>hscode21[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Qty)),.(HSCode2)]<span class="ot">-&gt;</span>b</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>b[, Share <span class="sc">:</span><span class="er">=</span> <span class="fu">round</span>(Qty<span class="sc">*</span><span class="dv">100</span><span class="sc">/</span>(<span class="fu">sum</span>(b<span class="sc">$</span>Qty)),<span class="dv">2</span>)][<span class="fu">order</span>(Share)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>    HSCode2          Qty Share
-     &lt;char&gt;        &lt;num&gt; &lt;num&gt;
- 1:      01 3.584730e+03  0.00
- 2:      02 1.033574e+04  0.00
- 3:      04 5.056488e+05  0.00
- 4:      05 1.440119e+05  0.00
- 5:      06 1.281618e+05  0.00
- 6:      16 2.182949e+04  0.00
- 7:      24 1.240792e+05  0.00
- 8:      30 2.869202e+05  0.00
- 9:      36 1.150939e+04  0.00
-10:      43 5.144310e+04  0.00
-11:      45 6.401317e+04  0.00
-12:      46 2.777328e+04  0.00
-13:      57 3.751304e+05  0.00
-14:      65 1.078908e+05  0.00
-15:      67 1.324753e+05  0.00
-16:      80 2.260796e+05  0.00
-17:      88 6.922053e+04  0.00
-18:      89 7.684720e+03  0.00
-19:      92 1.778048e+05  0.00
-20:      93 2.967135e+05  0.00
-21:      97 6.913320e+03  0.00
-22:      99 0.000000e+00  0.00
-23:      03 6.368178e+05  0.01
-24:      11 1.445115e+06  0.01
-25:      13 1.463007e+06  0.01
-26:      14 1.085953e+06  0.01
-27:      18 1.292217e+06  0.01
-28:      19 9.736307e+05  0.01
-29:      20 1.041778e+06  0.01
-30:      21 1.203420e+06  0.01
-31:      49 1.254153e+06  0.01
-32:      50 7.604266e+05  0.01
-33:      58 9.811175e+05  0.01
-34:      66 5.429846e+05  0.01
-35:      75 1.052377e+06  0.01
-36:      81 1.321740e+06  0.01
-37:      86 8.840297e+05  0.01
-38:      33 1.785591e+06  0.02
-39:      35 2.065950e+06  0.02
-40:      37 2.472297e+06  0.02
-41:      41 2.037341e+06  0.02
-42:      42 2.640793e+06  0.02
-43:      51 2.464337e+06  0.02
-44:      56 1.632632e+06  0.02
-45:      62 1.925560e+06  0.02
-46:      69 2.560533e+06  0.02
-47:      60 3.253739e+06  0.03
-48:      64 3.552718e+06  0.03
-49:      82 2.713851e+06  0.03
-50:      83 4.631210e+06  0.04
-51:      09 5.409774e+06  0.05
-52:      61 5.552442e+06  0.05
-53:      79 5.165851e+06  0.05
-54:      91 4.867880e+06  0.05
-55:      53 6.249523e+06  0.06
-56:      78 6.587412e+06  0.06
-57:      98 6.757452e+06  0.06
-58:      12 7.721081e+06  0.07
-59:      34 7.790692e+06  0.07
-60:      55 7.759872e+06  0.07
-61:      32 9.054527e+06  0.08
-62:      22 9.725604e+06  0.09
-63:      68 9.890219e+06  0.09
-64:      70 1.046068e+07  0.10
-65:      23 1.157155e+07  0.11
-66:      44 1.207241e+07  0.11
-67:      52 1.257919e+07  0.12
-68:      74 1.295066e+07  0.12
-69:      94 1.423236e+07  0.13
-70:      63 1.505935e+07  0.14
-71:      87 1.519237e+07  0.14
-72:      10 2.502074e+07  0.23
-73:      54 2.995820e+07  0.28
-74:      17 3.151585e+07  0.30
-75:      71 3.176260e+07  0.30
-76:      73 3.162889e+07  0.30
-77:      76 3.173169e+07  0.30
-78:      95 3.315395e+07  0.31
-79:      38 3.866092e+07  0.36
-80:      08 3.951892e+07  0.37
-81:      84 4.985482e+07  0.47
-82:      48 5.381667e+07  0.50
-83:      40 5.439581e+07  0.51
-84:      07 8.342665e+07  0.78
-85:      90 8.414214e+07  0.79
-86:      47 1.116978e+08  1.05
-87:      39 1.328582e+08  1.25
-88:      26 1.414729e+08  1.33
-89:      96 1.429565e+08  1.34
-90:      28 2.323163e+08  2.18
-91:      29 2.318574e+08  2.18
-92:      15 2.568370e+08  2.41
-93:      59 2.912324e+08  2.73
-94:      72 3.184954e+08  2.99
-95:      31 3.751674e+08  3.52
-96:      25 7.684029e+08  7.21
-97:      27 2.514609e+09 23.60
-98:      85 4.271295e+09 40.08
-    HSCode2          Qty Share</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Net Trade Tarde Balance</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(exportqty, importqty, <span class="at">by =</span> <span class="st">"Year"</span>)<span class="ot">-&gt;</span>trade</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(trade, exportusd, <span class="at">by =</span> <span class="st">"Year"</span>)<span class="ot">-&gt;</span>trade</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(trade, importusd, <span class="at">by =</span> <span class="st">"Year"</span>)<span class="ot">-&gt;</span>trade</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>trade[, Trade_Balance <span class="sc">:</span><span class="er">=</span> (Export_USD <span class="sc">-</span> Import_USD)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="do">##a[, Share := round(Qty*100/(sum(a$Qty)),2)][order(Share)]</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Import Data Cleaning</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>musd[,HSCode4 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">4</span>)]</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>musd[,HSCode6 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">6</span>)]</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>musd[,HSCode2 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">2</span>)]</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>mqty[,HSCode2 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">2</span>)]</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>mqty[,HSCode4 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">4</span>)]</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>mqty[,HSCode6 <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(HSCode, <span class="dv">1</span>, <span class="dv">6</span>)]</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, mqty<span class="sc">$</span>Import))<span class="ot">-&gt;</span>mqty<span class="sc">$</span>Import</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(<span class="fu">is.na</span>(mqty<span class="sc">$</span>Import), <span class="dv">0</span>, mqty<span class="sc">$</span>Import)<span class="ot">-&gt;</span>mqty<span class="sc">$</span>Import</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, musd<span class="sc">$</span>Import))<span class="ot">-&gt;</span>musd<span class="sc">$</span>Import</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(<span class="fu">is.na</span>(musd<span class="sc">$</span>Import), <span class="dv">0</span>, musd<span class="sc">$</span>Import)<span class="ot">-&gt;</span>musd<span class="sc">$</span>Import</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>mqty[,.(<span class="at">Import_Qty =</span> <span class="fu">sum</span>(Import)),.(Year)]<span class="ot">-&gt;</span>importqty</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>musd[,.(<span class="at">Import_USD =</span> <span class="fu">sum</span>(Import)),.(Year)]<span class="ot">-&gt;</span>importusd</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>mqty[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year, HSCode2)]<span class="ot">-&gt;</span>hscode21</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>hscode21[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Qty)),.(HSCode2)]<span class="ot">-&gt;</span>b</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="do">##b[, Share := round(Qty*100/(sum(b$Qty)),2)][order(Share)]</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="do">## Net Trade Tarde Balance</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(exportqty, importqty, <span class="at">by =</span> <span class="st">"Year"</span>)<span class="ot">-&gt;</span>trade</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(trade, exportusd, <span class="at">by =</span> <span class="st">"Year"</span>)<span class="ot">-&gt;</span>trade</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(trade, importusd, <span class="at">by =</span> <span class="st">"Year"</span>)<span class="ot">-&gt;</span>trade</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>trade[, Trade_Balance <span class="sc">:</span><span class="er">=</span> (Export_USD <span class="sc">-</span> Import_USD)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="trade-statistics" class="level1">
@@ -522,13 +315,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trade, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Export_USD, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"US $ Million"</span>) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Net Exports By India"</span>)<span class="ot">-&gt;</span>p1</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>p1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trade, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Export_USD, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"US $ Million"</span>) <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Net Exports By India"</span>)<span class="ot">-&gt;</span>p1</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>p1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -539,13 +332,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trade, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Import_USD, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"US $ Million"</span>) <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Net Imports By India"</span>)<span class="ot">-&gt;</span>p2</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trade, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Import_USD, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"US $ Million"</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Net Imports By India"</span>)<span class="ot">-&gt;</span>p2</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -556,7 +349,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(p1, p2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -569,13 +362,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Trade Balance</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trade, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Trade_Balance, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"US $ Million"</span>) <span class="sc">+</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Trade Balance"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Trade Balance</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trade, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Trade_Balance, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"US $ Million"</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Trade Balance"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -591,21 +384,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>qty[HSCode2 <span class="sc">==</span> <span class="st">"10"</span>]<span class="ot">-&gt;</span>t0</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(t0<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"1006"</span>, <span class="st">"Rice"</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(t0<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"1001"</span>, <span class="st">"Wheat"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(t0<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"1005"</span>, <span class="st">"Maize"</span>, <span class="st">"Other Ceraeals"</span>)))<span class="ot">-&gt;</span>t0<span class="sc">$</span>Commodity4</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>t0[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Export)),.(Year, Commodity4)]<span class="ot">-&gt;</span>t0</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">factor</span>(t0<span class="sc">$</span>Commodity4, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Other Ceraeals"</span>, <span class="st">"Maize"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"Wheat"</span>, <span class="st">"Rice"</span>))<span class="ot">-&gt;</span>t0<span class="sc">$</span>Commodity4</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(t0, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty)) <span class="sc">+</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Commodity4), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Cereals Exports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>qty[HSCode2 <span class="sc">==</span> <span class="st">"10"</span>]<span class="ot">-&gt;</span>t0</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(t0<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"1006"</span>, <span class="st">"Rice"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(t0<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"1001"</span>, <span class="st">"Wheat"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(t0<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"1005"</span>, <span class="st">"Maize"</span>, <span class="st">"Other Ceraeals"</span>)))<span class="ot">-&gt;</span>t0<span class="sc">$</span>Commodity4</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>t0[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Export)),.(Year, Commodity4)]<span class="ot">-&gt;</span>t0</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">factor</span>(t0<span class="sc">$</span>Commodity4, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Other Ceraeals"</span>, <span class="st">"Maize"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"Wheat"</span>, <span class="st">"Rice"</span>))<span class="ot">-&gt;</span>t0<span class="sc">$</span>Commodity4</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(t0, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Commodity4), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Cereals Exports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -621,19 +414,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mqty[HSCode2 <span class="sc">==</span> <span class="st">"31"</span>]<span class="ot">-&gt;</span>f</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(f<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"3102"</span>, <span class="st">"Nitrogenous Fertilizer"</span>,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(f<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"3104"</span>, <span class="st">"Potassic Fertilizer"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(f<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"3105"</span>, <span class="st">"DAP and NPK"</span>, <span class="st">"Other Chemical Fertilizer"</span>)))<span class="ot">-&gt;</span>f<span class="sc">$</span>Commodity4</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>f[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year, Commodity4)]<span class="ot">-&gt;</span>f</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty)) <span class="sc">+</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Commodity4), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis</span>(<span class="at">discrete =</span> T, <span class="at">option =</span> <span class="st">"E"</span>) <span class="sc">+</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_ipsum</span>() <span class="sc">+</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Fertilizer Imports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mqty[HSCode2 <span class="sc">==</span> <span class="st">"31"</span>]<span class="ot">-&gt;</span>f</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(f<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"3102"</span>, <span class="st">"Nitrogenous Fertilizer"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(f<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"3104"</span>, <span class="st">"Potassic Fertilizer"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(f<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"3105"</span>, <span class="st">"DAP and NPK"</span>, <span class="st">"Other Chemical Fertilizer"</span>)))<span class="ot">-&gt;</span>f<span class="sc">$</span>Commodity4</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>f[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year, Commodity4)]<span class="ot">-&gt;</span>f</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(f, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty)) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Commodity4), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis</span>(<span class="at">discrete =</span> T, <span class="at">option =</span> <span class="st">"E"</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_ipsum</span>() <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Fertilizer Imports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -649,15 +442,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mqty[HSCode2 <span class="sc">==</span> <span class="st">"15"</span>]<span class="ot">-&gt;</span>h1</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>h1[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year)]<span class="ot">-&gt;</span>h1</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(h1, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Vegetable Fats and Edible Oils Imports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mqty[HSCode2 <span class="sc">==</span> <span class="st">"15"</span>]<span class="ot">-&gt;</span>h1</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>h1[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year)]<span class="ot">-&gt;</span>h1</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(h1, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Vegetable Fats and Edible Oils Imports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -673,18 +466,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mqty[HSCode2 <span class="sc">==</span> <span class="st">"27"</span>]<span class="ot">-&gt;</span>h2</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(h2<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"2701"</span>, <span class="st">"Coal"</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(h2<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"2709"</span>, <span class="st">"Petrolium Oils"</span>,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(h2<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"2711"</span>, <span class="st">"Petrolium Gases"</span>, <span class="st">"Other Petrolium"</span>)))<span class="ot">-&gt;</span>h2<span class="sc">$</span>Commodity4</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>h2[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year, Commodity4)]<span class="ot">-&gt;</span>h2</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(h2, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty)) <span class="sc">+</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Commodity4), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Petrolium Imports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mqty[HSCode2 <span class="sc">==</span> <span class="st">"27"</span>]<span class="ot">-&gt;</span>h2</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(h2<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"2701"</span>, <span class="st">"Coal"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(h2<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"2709"</span>, <span class="st">"Petrolium Oils"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(h2<span class="sc">$</span>HSCode4 <span class="sc">==</span> <span class="st">"2711"</span>, <span class="st">"Petrolium Gases"</span>, <span class="st">"Other Petrolium"</span>)))<span class="ot">-&gt;</span>h2<span class="sc">$</span>Commodity4</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>h2[,.(<span class="at">Qty =</span> <span class="fu">sum</span>(Import)),.(Year, Commodity4)]<span class="ot">-&gt;</span>h2</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(h2, <span class="fu">aes</span>(<span class="at">x =</span> Year, <span class="at">y =</span> Qty)) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Commodity4), <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    my_theme <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Quantity (Thousands Tonns)"</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Petrolium Imports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>

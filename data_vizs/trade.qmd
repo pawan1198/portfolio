@@ -17,6 +17,10 @@ execute:
   message: false
   warning: false
   eval: true
+  fig-width: 14
+  fig-height: 10
+  out-width: "50%"
+  fig-align: "center"
 ---
 
 ```{r}

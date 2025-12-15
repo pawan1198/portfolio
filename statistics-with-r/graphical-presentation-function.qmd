@@ -18,3 +18,10 @@ execute:
   warning: false
   eval: true
 ---
+In the beginning of the session, we first start with the problems on cardinality
+of functions, then we illustrate the method of plotting a graph of a given step
+function. Thereafter, we shall illustrate the method of creating line plots,
+graphs of convex functions, concave functions and planes, with the help of
+some suitable problems. Lastly, we illustrate the methods of creating graphs of
+gamma and beta functions.
+Different functions such as 'plot()', 'abline()', 'curve()', 'text()', 'outer()', 'persp()' and many others are discussed in this session to create different plots/graphs.

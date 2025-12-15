@@ -9,7 +9,25 @@
 <link>https://pawan1198.github.io/portfolio/data_vizs.html/statistics-with-r.html</link>
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/statistics-with-r.xml" rel="self" type="application/rss+xml"/>
 <description>Pawan</description>
-<generator>quarto-1.8.25</generator>
-<lastBuildDate>Mon, 03 Nov 2025 15:25:27 GMT</lastBuildDate>
+<generator>quarto-1.8.26</generator>
+<lastBuildDate>Sun, 14 Dec 2025 18:30:00 GMT</lastBuildDate>
+<item>
+  <title>Graphical Presentation of Some Functions Using R</title>
+  <dc:creator>Pawan </dc:creator>
+  <link>https://pawan1198.github.io/portfolio/data_vizs.html/statistics-with-r/graphical-presentation-function.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>In the beginning of the session, we first start with the problems on cardinality of functions, then we illustrate the method of plotting a graph of a given step function. Thereafter, we shall illustrate the method of creating line plots, graphs of convex functions, concave functions and planes, with the help of some suitable problems. Lastly, we illustrate the methods of creating graphs of gamma and beta functions. Different functions such as ‘plot()’, ‘abline()’, ‘curve()’, ‘text()’, ‘outer()’, ‘persp()’ and many others are discussed in this session to create different plots/graphs.</p>
+
+
+
+ ]]></description>
+  <category></category>
+  <guid>https://pawan1198.github.io/portfolio/data_vizs.html/statistics-with-r/graphical-presentation-function.html</guid>
+  <pubDate>Sun, 14 Dec 2025 18:30:00 GMT</pubDate>
+</item>
 </channel>
 </rss>

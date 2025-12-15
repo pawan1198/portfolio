@@ -20,6 +20,8 @@
   },
   {
     "listing": "/statistics-with-r.html",
-    "items": []
+    "items": [
+      "/statistics-with-r/graphical-presentation-function.html"
+    ]
   }
 ]

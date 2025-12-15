@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/index.html</loc>
-    <lastmod>2025-11-26T16:21:19.116Z</lastmod>
+    <lastmod>2025-12-15T15:07:28.115Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.html</loc>
@@ -55,5 +55,9 @@
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/fertilizer.html</loc>
     <lastmod>2025-11-26T13:46:06.309Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/data_vizs.html/statistics-with-r/graphical-presentation-function.html</loc>
+    <lastmod>2025-12-15T15:07:19.493Z</lastmod>
   </url>
 </urlset>

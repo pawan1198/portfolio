@@ -60,7 +60,7 @@
     "href": "data_vizs.html",
     "title": "Data Visualizations",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n\n\n\n\n\n\n\n\nFertilizer Statistics\n\n\n\nNovember 26, 2025\n\n\n\n\n\n\n\n\n\n\n\nPLFS\n\n\n\nNovember 2, 2025\n\n\n\n\n\n\n\n\n\n\n\nFoodgrain Stock\n\n\n\nNovember 1, 2025\n\n\n\n\n\n\n\n\n\n\n\nFuel Prices\n\n\n\nOctober 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nPublic Procurement\n\n\n\nOctober 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nTrade Statistics\n\n\n\nOctober 29, 2025\n\n\n\n\n\n\n\n\n\n\n\nEdible Oils Import by India\n\n\n\nOctober 28, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n\n\n\n\n\n\n\n\nComprehensive Trade Analysis: Methodology, Code, and Insights\n\n\n\nDecember 19, 2025\n\n\n\n\n\n\n\n\n\n\n\nFertilizer Statistics\n\n\n\nNovember 26, 2025\n\n\n\n\n\n\n\n\n\n\n\nPLFS\n\n\n\nNovember 2, 2025\n\n\n\n\n\n\n\n\n\n\n\nFoodgrain Stock\n\n\n\nNovember 1, 2025\n\n\n\n\n\n\n\n\n\n\n\nFuel Prices\n\n\n\nOctober 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nPublic Procurement\n\n\n\nOctober 30, 2025\n\n\n\n\n\n\n\n\n\n\n\nTrade Statistics\n\n\n\nOctober 29, 2025\n\n\n\n\n\n\n\n\n\n\n\nEdible Oils Import by India\n\n\n\nOctober 28, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "data_vizs/edibleoil.html",
@@ -285,5 +285,54 @@
     "title": "Graphical Presentation of Some Functions Using R",
     "section": "",
     "text": "In the beginning of the session, we first start with the problems on cardinality of functions, then we illustrate the method of plotting a graph of a given step function. Thereafter, we shall illustrate the method of creating line plots, graphs of convex functions, concave functions and planes, with the help of some suitable problems. Lastly, we illustrate the methods of creating graphs of gamma and beta functions. Different functions such as ‘plot()’, ‘abline()’, ‘curve()’, ‘text()’, ‘outer()’, ‘persp()’ and many others are discussed in this session to create different plots/graphs."
+  },
+  {
+    "objectID": "data_vizs/trade1.html",
+    "href": "data_vizs/trade1.html",
+    "title": "Comprehensive Trade Analysis: Methodology, Code, and Insights",
+    "section": "",
+    "text": "Here the Trade analysis involves systematically examining India trade data to identify patterns, trends, and economic relationships with their trade partners. Proper trade analysis requires data cleaning, appropriate statistical methods, and effective visualization. Here we provided the R code to analyze India’s trade data but it’s may contains several errors and methodological issues that need correction for meaningful analysis."
+  },
+  {
+    "objectID": "data_vizs/trade1.html#data-loading",
+    "href": "data_vizs/trade1.html#data-loading",
+    "title": "Comprehensive Trade Analysis: Methodology, Code, and Insights",
+    "section": "Data Loading",
+    "text": "Data Loading\nThe original code loads trade data from RDS files and an Excel file containing HS code classifications.\n\n\nCode\n# Corrected and improved data loading and library\nlibrary(data.table)\nlibrary(ggplot2)\nlibrary(gridExtra)\nlibrary(readxl)\nlibrary(viridis)\nlibrary(hrbrthemes)\nlibrary(dplyr)\n\n## Load data with error handling\nusd_exports &lt;- as.data.table(readRDS(\"/home/pawan/trade/totaltrade/total_exportsusd.rds\"))\nqty_exports &lt;- as.data.table(readRDS(\"/home/pawan/trade/totaltrade/total_exportsqty.rds\"))\nusd_imports &lt;- as.data.table(readRDS(\"/home/pawan/trade/totaltrade/total_importsusd.rds\"))\nqty_imports &lt;- as.data.table(readRDS(\"/home/pawan/trade/totaltrade/total_importsqty.rds\"))\n\n## Load HS code classification\nhs_classification &lt;- as.data.table(read_excel(\"/home/pawan/trade/totaltrade/two-digit.xlsx\"))"
+  },
+  {
+    "objectID": "data_vizs/trade1.html#visualization-theme",
+    "href": "data_vizs/trade1.html#visualization-theme",
+    "title": "Comprehensive Trade Analysis: Methodology, Code, and Insights",
+    "section": "Visualization Theme",
+    "text": "Visualization Theme\n\n\nCode\n## Improved visualization theme\nmy_theme &lt;- theme_minimal(base_size = 14) +\n  theme(\n    text = element_text(family = \"Arial\", color = \"#2c3e50\"),\n    plot.title = element_text(size = 18, face = \"bold\", hjust = 0.5, \n                             margin = margin(15, 0, 15, 0)),\n    plot.subtitle = element_text(size = 12, hjust = 0.5, color = \"#7f8c8d\"),\n    axis.title = element_text(size = 14, face = \"bold\"),\n    axis.title.y = element_text(margin = margin(0, 15, 0, 0)),\n    axis.title.x = element_text(margin = margin(15, 0, 0, 0)),\n    axis.text = element_text(size = 11),\n    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),\n    legend.position = \"bottom\",\n    legend.title = element_blank(),\n    legend.text = element_text(size = 11),\n    panel.grid.major = element_line(color = \"#ecf0f1\", linewidth = 0.5),\n    panel.grid.minor = element_blank(),\n    panel.border = element_rect(color = \"#bdc3c7\", fill = NA, linewidth = 0.5),\n    plot.background = element_rect(fill = \"white\", color = NA),\n    plot.margin = unit(c(1, 1, 1, 1), \"cm\"),\n    strip.background = element_rect(fill = \"#f8f9fa\", color = \"#dee2e6\"),\n    strip.text = element_text(face = \"bold\", size = 12)\n  )"
+  },
+  {
+    "objectID": "data_vizs/trade1.html#data-cleaning-and-standardization",
+    "href": "data_vizs/trade1.html#data-cleaning-and-standardization",
+    "title": "Comprehensive Trade Analysis: Methodology, Code, and Insights",
+    "section": "Data Cleaning and Standardization",
+    "text": "Data Cleaning and Standardization\nThe original data cleaning had several issues, including incorrect variable names and improper type conversions:\n\n\nCode\n## Standardized data cleaning function\nclean_trade_data &lt;- function(dt, value_col, is_import = FALSE) {\n  ## Create HS codes\n  dt[, `:=`(\n    HSCode2 = substr(HSCode, 1, 2),\n    HSCode4 = substr(HSCode, 1, 4),\n    HSCode6 = substr(HSCode, 1, 6)\n  )]\n  \n  ## Clean numeric values (remove commas, dots, convert to numeric)\n  dt[, (value_col) := as.numeric(gsub(\"[.,]\", \"\", get(value_col)))]\n  dt[is.na(get(value_col)), (value_col) := 0]\n  \n  return(dt)\n}\n\n## Apply cleaning to all datasets\nusd_exports &lt;- clean_trade_data(usd_exports, \"Export\")\nqty_exports &lt;- clean_trade_data(qty_exports, \"Export\")\nusd_imports &lt;- clean_trade_data(usd_imports, \"Import\")\nqty_imports &lt;- clean_trade_data(qty_imports, \"Import\")"
+  },
+  {
+    "objectID": "data_vizs/trade1.html#comprehensive-trade-balance-analysis",
+    "href": "data_vizs/trade1.html#comprehensive-trade-balance-analysis",
+    "title": "Comprehensive Trade Analysis: Methodology, Code, and Insights",
+    "section": "Comprehensive Trade Balance Analysis",
+    "text": "Comprehensive Trade Balance Analysis\nThe original trade balance calculation was overly simplistic. Improved version:\n\n\nCode\n## Calculate comprehensive trade statistics\ncalculate_trade_metrics &lt;- function(usd_exports, usd_imports, qty_exports, qty_imports) {\n  \n  ## Aggregate by year\n  export_usd_agg &lt;- usd_exports[, .(Export_USD = sum(Export, na.rm = TRUE)), by = Year]\n  import_usd_agg &lt;- usd_imports[, .(Import_USD = sum(Import, na.rm = TRUE)), by = Year]\n  export_qty_agg &lt;- qty_exports[, .(Export_Qty = sum(Export, na.rm = TRUE)), by = Year]\n  import_qty_agg &lt;- qty_imports[, .(Import_Qty = sum(Import, na.rm = TRUE)), by = Year]\n  \n  ## Merge all metrics\n  trade_balance &lt;- export_usd_agg[import_usd_agg, on = \"Year\"]\n  trade_balance[export_qty_agg, on = \"Year\", Export_Qty := i.Export_Qty]\n  trade_balance[import_qty_agg, on = \"Year\", Import_Qty := i.Import_Qty]\n  \n  ## Calculate derived metrics\n  trade_balance[, `:=`(\n    Trade_Balance_USD = Export_USD - Import_USD,\n    Trade_Balance_Qty = Export_Qty - Import_Qty,\n    Trade_Volume_USD = Export_USD + Import_USD,\n    Trade_Volume_Qty = Export_Qty + Import_Qty,\n    Export_Coverage_Ratio = Export_USD / Import_USD * 100,\n    Yearly_Growth_Export = (Export_USD / shift(Export_USD) - 1) * 100,\n    Yearly_Growth_Import = (Import_USD / shift(Import_USD) - 1) * 100\n  )]\n  \n  return(trade_balance)\n}\n\ntrade_metrics &lt;- calculate_trade_metrics(usd_exports, usd_imports, qty_exports, qty_imports)"
+  },
+  {
+    "objectID": "data_vizs/trade1.html#sectoral-analysis-with-proper-categorization",
+    "href": "data_vizs/trade1.html#sectoral-analysis-with-proper-categorization",
+    "title": "Comprehensive Trade Analysis: Methodology, Code, and Insights",
+    "section": "Sectoral Analysis with Proper Categorization",
+    "text": "Sectoral Analysis with Proper Categorization\nThe original sectoral analysis had incorrect HS code mappings and missing categories:\n\n\nCode\n## Enhanced sectoral analysis function\nanalyze_sector &lt;- function(qty_data, hs_code, sector_name, is_import = FALSE) {\n  value_col &lt;- ifelse(is_import, \"Import\", \"Export\")\n  \n  sector_data &lt;- qty_data[HSCode2 == hs_code]\n  \n  ## Create proper commodity classification\n  sector_data[, Commodity := case_when(\n    HSCode4 == \"1006\" ~ \"Rice\",\n    HSCode4 == \"1001\" ~ \"Wheat\",\n    HSCode4 == \"1005\" ~ \"Maize\",\n    HSCode4 == \"1008\" ~ \"Buckwheat & Millet\",\n    HSCode4 == \"1007\" ~ \"Grain Sorghum\",\n    TRUE ~ \"Other Cereals\"\n  )]\n  \n  ## Aggregate by year and commodity\n  agg_data &lt;- sector_data[, .(Quantity = sum(get(value_col), na.rm = TRUE)), \n                          by = .(Year, Commodity)]\n  \n  ## Calculate shares\n  agg_data[, Share := Quantity / sum(Quantity) * 100, by = Year]\n  \n  return(list(data = agg_data, sector = sector_name))\n}\n\n## Analyze key sectors\ncereals_export &lt;- analyze_sector(qty_exports, \"10\", \"Cereals Exports\")\nfertilizer_import &lt;- analyze_sector(qty_imports, \"31\", \"Fertilizer Imports\", TRUE)\npetroleum_import &lt;- analyze_sector(qty_imports, \"27\", \"Petroleum Imports\", TRUE)"
+  },
+  {
+    "objectID": "data_vizs/trade1.html#advanced-visualization-functions",
+    "href": "data_vizs/trade1.html#advanced-visualization-functions",
+    "title": "Comprehensive Trade Analysis: Methodology, Code, and Insights",
+    "section": "Advanced Visualization Functions",
+    "text": "Advanced Visualization Functions\n\n\nCode\n## Function for trade balance visualization\nplot_trade_balance &lt;- function(trade_data) {\n  p &lt;- ggplot(trade_data, aes(x = Year, group = 1)) +\n    geom_line(aes(y = Export_USD, color = \"Exports\"), linewidth = 1.2) +\n    geom_line(aes(y = Import_USD, color = \"Imports\"), linewidth = 1.2) +\n    geom_area(aes(y = Trade_Balance_USD, fill = \"Trade Balance\"), alpha = 0.3) +\n    geom_hline(yintercept = 0, linetype = \"dashed\", color = \"gray50\") +\n    scale_color_manual(values = c(\"Exports\" = \"#2ecc71\", \"Imports\" = \"#e74c3c\")) +\n    scale_fill_manual(values = c(\"Trade Balance\" = \"#3498db\")) +\n    my_theme +\n    labs(\n      title = \"India's Trade Balance Analysis\",\n      subtitle = \"Exports, Imports, and Trade Balance (USD Millions)\",\n      y = \"USD Millions\",\n      x = \"Year\",\n      color = \"Trade Flow\",\n      fill = \"Balance\"\n    ) +\n    scale_y_continuous(labels = scales::dollar_format(scale = 1e-6, suffix = \"M\")) +\n    theme(legend.position = \"bottom\", legend.box = \"horizontal\")\n  \n  return(p)\n}\n\n## Function for sectoral analysis visualization\nplot_sector_composition &lt;- function(sector_data, title) {\n  p &lt;- ggplot(sector_data$data, aes(x = Year, y = Quantity, fill = Commodity)) +\n    geom_bar(stat = \"identity\", position = \"stack\") +\n    my_theme +\n    scale_fill_viridis_d(option = \"C\") +\n    labs(\n      title = paste(\"Composition of\", sector_data$sector),\n      subtitle = \"Quantity in Metric Tons\",\n      y = \"Quantity (Metric Tons)\",\n      x = \"Year\",\n      fill = \"Commodity\"\n    ) +\n    scale_y_continuous(labels = scales::comma_format()) +\n    theme(\n      legend.position = \"bottom\",\n      legend.background = element_rect(fill = \"white\", color = \"gray80\")\n    )\n  \n  return(p)\n}\n\nplot_trade_balance(trade_metrics)\n\n\n\n\n\n\n\n\n\nCode\nplot_sector_composition(cereals_export)"
   }
 ]

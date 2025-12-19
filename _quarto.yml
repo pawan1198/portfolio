@@ -36,7 +36,7 @@ format:
     theme: litera
        - superhero
     css: styles.css
-    toc: true
+    toc: true   
 
 editor: visual
 

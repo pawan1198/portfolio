@@ -19,11 +19,12 @@ execute:
   warning: false
   eval: true
 ---
+
 India, one of the world's largest consumers and importers of edible oils, has seen significant evolution in its import basket over the last decade. An analysis of import data from the financial year (from Nov to Oct) 2010-2011 through 2023-2024 reveals a dynamic volume growth, shifting consumer preferences, and geopolitical influences on sourcing.
 
-The data clearly indicates a robust long-term growth trend in the total quantity of edible oil imported by India, with quantities often exceeding 15,000,000 tonnes in recent years.  
+The data clearly indicates a robust long-term growth trend in the total quantity of edible oil imported by India, with quantities often exceeding 15,000,000 tonnes in recent years.
 
-# Annually (April to March) Edible Oils Import by India 
+# Annually (April to March) Edible Oils Import by India
 
 ```{r}
 library(data.table)
@@ -96,7 +97,7 @@ ggsave("annual-edibleoil-import.png", width = 12, height = 8)
 
 # Compile India Imported Edible Oil
 
-``` {r}
+```{r}
 readRDS("/home/pawan/edibleoils/palmoil_importqty.rds")->palmoil
 readRDS("/home/pawan/edibleoils/soybeanoil_importqty.rds")->soybeanoil
 readRDS("/home/pawan/edibleoils/sunfloweroil_importqty.rds")->sunfloweroil
@@ -152,8 +153,10 @@ table3[Fin_Year>="2010-2011",.(Share=(round(Import*100/sum(Import))),
 ```
 
 ## Palm Oil
-Palm oil remains the single largest imported oil, but its proportional share has decreased. It accounted for a high of 79% of total imports in 2010-2011, but this share has trended downwards, settling at 56% in 2023-2024.  
+
+Palm oil remains the single largest imported oil, but its proportional share has decreased. It accounted for a high of 79% of total imports in 2010-2011, but this share has trended downwards, settling at 56% in 2023-2024.\
 India maintains a near-exclusive on its Southeast Asian neighbours for palm oil, with Indonesia and Malaysia consistently dominating the supply chain. While the proportional distribution between the two varies year-to-year—with Malaysia often holding the slight edge in the mid-period (e.g., 71% in 2013-2014)—the combined share of these two nations routinely exceeds 90%, highlighting a concentrated supply risk.
+
 ```{r}
 ggplot(table1, aes(x = Fin_Year, y = Import, fill = Country)) +
     geom_bar(stat = "identity", position = "stack") +
@@ -167,9 +170,12 @@ ggplot(table1, aes(x = Fin_Year, y = Import, fill = Country)) +
     ggtitle("Palm Oil Import")->p1
 p1
 ```
+
 ## Soybean Oil
-Soybean oil has maintained a volatile but stable proportion, fluctuating between 15% and 30% over the period.  
+
+Soybean oil has maintained a volatile but stable proportion, fluctuating between 15% and 30% over the period.\
 The import of soybean oil is heavily dictated by South American supply, with Argentina acting as the primary source. Argentina consistently provided over 70% of India’s soybean oil needs for much of the period. Brazil plays a significant, though secondary, role, with its share showing an upward trend in certain recent financial years.
+
 ```{r}
 ggplot(table2, aes(x = Fin_Year, y = Import, fill = Country)) +
     geom_bar(stat = "identity", position = "stack") +
@@ -185,7 +191,9 @@ p2
 ```
 
 ## Sunflower Oil
+
 The most striking trend is the increasing reliance on sunflower oil. For the better part of the decade (2010-2011 to 2020-2021), sunflower oil constituted a minor share, typically between 6% and 14%. However, in the latest period (2023-2024), its share has surged to a high of 22%, indicating a significant structural shift in consumer demand and import policy favouring softer oils.
+
 ```{r}
 ggplot(table3, aes(x = Fin_Year, y = Import, fill = Country)) +
     geom_bar(stat = "identity", position = "stack") +
@@ -201,6 +209,7 @@ p3
 ```
 
 ## Total of Edible Oils (Oil year from Nov to Oct)
+
 ```{r}
 palmoil[Country == "Total" ,.(Palmoil = sum(as.numeric(ImportMonth), na.rm=TRUE))
         ,.(Country, Fin_Year)]->table4
@@ -232,7 +241,9 @@ ggplot(t1, aes(x = Fin_Year, y = value, fill = variable)) +
     ggtitle("Edible Oil Imports By India")->p4
 p4
 ```
+
 # India Edible Oil Culativation and Production
+
 ```{r}
 fread("/home/pawan/edibleoils/oil_aval.csv")->t
 

@@ -134,6 +134,7 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
 ```
 
 # Urea Import
+
 ```{r}
   ggplot(t1, aes(x = Year, y = Qty, fill = Country)) +
       geom_bar(stat = "identity", position = "stack") +
@@ -148,6 +149,7 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
 ```
 
 # DAP Import
+
 ```{r}
   ggplot(t2, aes(x = Year, y = Qty, fill = Country)) +
       geom_bar(stat = "identity", position = "stack") +
@@ -159,9 +161,10 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
       ggtitle("DAP Imports") +
       labs(y = "Qty (Million Tonnes)")->p2
   p2
-```    
+```
 
 # Rock Phosphate Import
+
 ```{r}
    ggplot(t3, aes(x = Year, y = Qty, fill = Country)) +
       geom_bar(stat = "identity", position = "stack") +
@@ -173,9 +176,10 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
       ggtitle("Rock Phosphate Imports") +
       labs(y = "Qty (Million Tonnes)")->p3
   p3
-```  
+```
 
 # Phosphoric Acid Imports
+
 ```{r}
   ggplot(t4, aes(x = Year, y = Qty, fill = Country)) +
       geom_bar(stat = "identity", position = "stack") +
@@ -187,10 +191,10 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
       ggtitle("Phosphoric Acid Imports") +
       labs(y = "Qty (Million Tonnes)")->p4
   p4
-```  
-
+```
 
 # MOP Imports
+
 ```{r}
 ggplot(t5, aes(x = Year, y = Qty, fill = Country)) +
     geom_bar(stat = "identity", position = "stack") +
@@ -204,8 +208,8 @@ ggplot(t5, aes(x = Year, y = Qty, fill = Country)) +
 p5
 ```
 
-
 # International Fertilizer Price
+
 ```{r}
   fread("/home/pawan/fertilizer/international_fert_price.csv")->price
   paste("20", price$Year, sep = "")->price$Year
@@ -272,4 +276,3 @@ ggplot(t, aes(x = Year, y = Qty, color = Fertilizer)) +
 
 p
 ```
-

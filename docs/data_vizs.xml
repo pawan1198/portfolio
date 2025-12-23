@@ -14193,23 +14193,23 @@ background-color: null;
 font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div></div>
 </details>
 <div class="cell-output-display">
-<div id="ypvvydszvx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ypvvydszvx table {
+<div id="dwcpmlxxgf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dwcpmlxxgf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ypvvydszvx thead, #ypvvydszvx tbody, #ypvvydszvx tfoot, #ypvvydszvx tr, #ypvvydszvx td, #ypvvydszvx th {
+#dwcpmlxxgf thead, #dwcpmlxxgf tbody, #dwcpmlxxgf tfoot, #dwcpmlxxgf tr, #dwcpmlxxgf td, #dwcpmlxxgf th {
   border-style: none;
 }
 
-#ypvvydszvx p {
+#dwcpmlxxgf p {
   margin: 0;
   padding: 0;
 }
 
-#ypvvydszvx .gt_table {
+#dwcpmlxxgf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -14235,12 +14235,12 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-left-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_caption {
+#dwcpmlxxgf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ypvvydszvx .gt_title {
+#dwcpmlxxgf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -14252,7 +14252,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-width: 0;
 }
 
-#ypvvydszvx .gt_subtitle {
+#dwcpmlxxgf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -14264,7 +14264,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-top-width: 0;
 }
 
-#ypvvydszvx .gt_heading {
+#dwcpmlxxgf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -14276,13 +14276,13 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_bottom_border {
+#dwcpmlxxgf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_col_headings {
+#dwcpmlxxgf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -14297,7 +14297,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_col_heading {
+#dwcpmlxxgf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -14317,7 +14317,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   overflow-x: hidden;
 }
 
-#ypvvydszvx .gt_column_spanner_outer {
+#dwcpmlxxgf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -14329,15 +14329,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 4px;
 }
 
-#ypvvydszvx .gt_column_spanner_outer:first-child {
+#dwcpmlxxgf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ypvvydszvx .gt_column_spanner_outer:last-child {
+#dwcpmlxxgf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ypvvydszvx .gt_column_spanner {
+#dwcpmlxxgf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -14349,11 +14349,11 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   width: 100%;
 }
 
-#ypvvydszvx .gt_spanner_row {
+#dwcpmlxxgf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ypvvydszvx .gt_group_heading {
+#dwcpmlxxgf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -14379,7 +14379,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   text-align: left;
 }
 
-#ypvvydszvx .gt_empty_group_heading {
+#dwcpmlxxgf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -14394,15 +14394,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   vertical-align: middle;
 }
 
-#ypvvydszvx .gt_from_md > :first-child {
+#dwcpmlxxgf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ypvvydszvx .gt_from_md > :last-child {
+#dwcpmlxxgf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ypvvydszvx .gt_row {
+#dwcpmlxxgf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -14421,7 +14421,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   overflow-x: hidden;
 }
 
-#ypvvydszvx .gt_stub {
+#dwcpmlxxgf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -14434,7 +14434,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ypvvydszvx .gt_stub_row_group {
+#dwcpmlxxgf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -14448,15 +14448,15 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   vertical-align: top;
 }
 
-#ypvvydszvx .gt_row_group_first td {
+#dwcpmlxxgf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ypvvydszvx .gt_row_group_first th {
+#dwcpmlxxgf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ypvvydszvx .gt_summary_row {
+#dwcpmlxxgf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -14466,16 +14466,16 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ypvvydszvx .gt_first_summary_row {
+#dwcpmlxxgf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_first_summary_row.thick {
+#dwcpmlxxgf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ypvvydszvx .gt_last_summary_row {
+#dwcpmlxxgf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -14485,7 +14485,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_grand_summary_row {
+#dwcpmlxxgf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -14495,7 +14495,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ypvvydszvx .gt_first_grand_summary_row {
+#dwcpmlxxgf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -14505,7 +14505,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-top-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_last_grand_summary_row_top {
+#dwcpmlxxgf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -14515,11 +14515,11 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_striped {
+#dwcpmlxxgf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ypvvydszvx .gt_table_body {
+#dwcpmlxxgf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -14528,7 +14528,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-bottom-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_footnotes {
+#dwcpmlxxgf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -14542,7 +14542,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_footnote {
+#dwcpmlxxgf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -14551,7 +14551,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ypvvydszvx .gt_sourcenotes {
+#dwcpmlxxgf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -14565,7 +14565,7 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   border-right-color: #D3D3D3;
 }
 
-#ypvvydszvx .gt_sourcenote {
+#dwcpmlxxgf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -14573,72 +14573,72 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
   padding-right: 5px;
 }
 
-#ypvvydszvx .gt_left {
+#dwcpmlxxgf .gt_left {
   text-align: left;
 }
 
-#ypvvydszvx .gt_center {
+#dwcpmlxxgf .gt_center {
   text-align: center;
 }
 
-#ypvvydszvx .gt_right {
+#dwcpmlxxgf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ypvvydszvx .gt_font_normal {
+#dwcpmlxxgf .gt_font_normal {
   font-weight: normal;
 }
 
-#ypvvydszvx .gt_font_bold {
+#dwcpmlxxgf .gt_font_bold {
   font-weight: bold;
 }
 
-#ypvvydszvx .gt_font_italic {
+#dwcpmlxxgf .gt_font_italic {
   font-style: italic;
 }
 
-#ypvvydszvx .gt_super {
+#dwcpmlxxgf .gt_super {
   font-size: 65%;
 }
 
-#ypvvydszvx .gt_footnote_marks {
+#dwcpmlxxgf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ypvvydszvx .gt_asterisk {
+#dwcpmlxxgf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ypvvydszvx .gt_indent_1 {
+#dwcpmlxxgf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ypvvydszvx .gt_indent_2 {
+#dwcpmlxxgf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ypvvydszvx .gt_indent_3 {
+#dwcpmlxxgf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ypvvydszvx .gt_indent_4 {
+#dwcpmlxxgf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ypvvydszvx .gt_indent_5 {
+#dwcpmlxxgf .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ypvvydszvx .katex-display {
+#dwcpmlxxgf .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ypvvydszvx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dwcpmlxxgf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -14653,59 +14653,59 @@ font-style: inherit;">sum</span>(value))),.(Fin_Year)])</span></code></pre></div
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_right" headers="Fin_Year">2010-2011</td>
-<td class="gt_row gt_right" headers="EdibeOil">6786377</td>
+<td class="gt_row gt_right" headers="EdibeOil">7200810</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Fin_Year">2011-2012</td>
-<td class="gt_row gt_right" headers="EdibeOil">9107348</td>
+<td class="gt_row gt_right" headers="EdibeOil">9703219</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Fin_Year">2012-2013</td>
-<td class="gt_row gt_right" headers="EdibeOil">9625774</td>
+<td class="gt_row gt_right" headers="EdibeOil">10351294</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Fin_Year">2013-2014</td>
-<td class="gt_row gt_right" headers="EdibeOil">10571314</td>
+<td class="gt_row gt_right" headers="EdibeOil">11397056</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Fin_Year">2014-2015</td>
-<td class="gt_row gt_right" headers="EdibeOil">13039668</td>
+<td class="gt_row gt_right" headers="EdibeOil">13818424</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Fin_Year">2015-2016</td>
-<td class="gt_row gt_right" headers="EdibeOil">13276920</td>
+<td class="gt_row gt_right" headers="EdibeOil">14310720</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Fin_Year">2016-2017</td>
-<td class="gt_row gt_right" headers="EdibeOil">14143552</td>
+<td class="gt_row gt_right" headers="EdibeOil">14897076</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Fin_Year">2017-2018</td>
-<td class="gt_row gt_right" headers="EdibeOil">13359830</td>
+<td class="gt_row gt_right" headers="EdibeOil">14030226</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Fin_Year">2018-2019</td>
-<td class="gt_row gt_right" headers="EdibeOil">14468990</td>
+<td class="gt_row gt_right" headers="EdibeOil">15345150</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Fin_Year">2019-2020</td>
-<td class="gt_row gt_right" headers="EdibeOil">12529725</td>
+<td class="gt_row gt_right" headers="EdibeOil">13317101</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Fin_Year">2020-2021</td>
-<td class="gt_row gt_right" headers="EdibeOil">12792087</td>
+<td class="gt_row gt_right" headers="EdibeOil">13563657</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Fin_Year">2021-2022</td>
-<td class="gt_row gt_right" headers="EdibeOil">13288180</td>
+<td class="gt_row gt_right" headers="EdibeOil">13897542</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="Fin_Year">2022-2023</td>
-<td class="gt_row gt_right" headers="EdibeOil">15609676</td>
+<td class="gt_row gt_right" headers="EdibeOil">16720932</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="Fin_Year">2023-2024</td>
-<td class="gt_row gt_right" headers="EdibeOil">7882940</td>
+<td class="gt_row gt_right" headers="EdibeOil">16040413</td>
 </tr>
 </tbody>
 </table>

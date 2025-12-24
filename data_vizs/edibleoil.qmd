@@ -325,10 +325,10 @@ total_oil_long <- total_oil_long[Fin_Year >= "2010-2011" & Fin_Year != "2024-202
 
 # Create summary table
 summary_table <- total_oil_long[, .(Total_EdibleOil = sum(Quantity)), by = Fin_Year]
-print(gt(summary_table) %>%
+gt(summary_table) %>%
         tab_header(title = "Total Edible Oil Imports by India") %>%
         fmt_number(columns = Total_EdibleOil, decimals = 0) %>%
-        cols_label(Fin_Year = "Financial Year", Total_EdibleOil = "Total Imports (Tonnes)"))
+        cols_label(Fin_Year = "Oil Year", Total_EdibleOil = "Total Imports (Tonnes)")
 
 # Interactive total oil plot
 p4_interactive <- create_interactive_stackchart(

@@ -6,7 +6,7 @@ listing:
   contents: data_vizs
   exclude: 
     title: "Template"
-  sort: "date aesc"
+  sort: "date-modified"
   type: grid
   image-align: left
   categories: numbered
@@ -15,7 +15,7 @@ listing:
   table-hover: true
   date-format: "long"
   feed: true
-  fields: [image,title, date]
+  fields: [image,title, date-modified]
   sort-ui: [date, title]
   page-size: 30
 ---

@@ -2,13 +2,13 @@
   {
     "listing": "/data_vizs.html",
     "items": [
-      "/data_vizs/trade1.html",
-      "/data_vizs/fertilizer.html",
-      "/data_vizs/plfs.html",
-      "/data_vizs/stocks.html",
       "/data_vizs/fuelprice.html",
-      "/data_vizs/procurement.html",
       "/data_vizs/trade.html",
+      "/data_vizs/trade1.html",
+      "/data_vizs/plfs.html",
+      "/data_vizs/procurement.html",
+      "/data_vizs/stocks.html",
+      "/data_vizs/fertilizer.html",
       "/data_vizs/edibleoil.html"
     ]
   },

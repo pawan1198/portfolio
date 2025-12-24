@@ -1,26 +1,248 @@
-:root{ --bg:#fff; --surface:#f7f7fb; --text:#0b1220; --muted:#6b7280; --accent:#6c5ce7; --shadow: 0 6px 18px rgba(11,18,32,0.06); --glass: rgba(255,255,255,0.6); --radius:12px; --transition:200ms; font-size:16px; } [data-theme="dark"]{ --bg:#0b1220; --surface:#0f1724; --text:#e6eef8; --muted:#9aa6bf; --accent:#7c5cff; --glass: rgba(0,0,0,0.45); --shadow: 0 10px 30px rgba(2,6,23,0.6); }
+/* styles.css */
 
-*{box-sizing:border-box} html,body{height:100%} body{ margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,var(--bg),var(--surface)); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; line-height:1.5; }
+/* ===== INTERACTIVE ELEMENTS ===== */
 
-.container{max-width:1100px;margin:0 auto;padding:1.8rem}
+/* 1. Hover effects for navigation */
+.navbar-nav .nav-link {
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0;
+    margin: 0 0.75rem;
+}
 
-.site-header{ position:sticky;top:0;z-index:60; backdrop-filter: blur(6px); background:var(--glass); border-bottom:1px solid rgba(0,0,0,0.04); } .header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 0} .brand{font-weight:700;color:var(--text);text-decoration:none} .main-nav ul{list-style:none;margin:0;padding:0;display:flex;gap:1rem} .main-nav a{color:var(--muted);text-decoration:none;padding:.35rem .5rem;border-radius:8px} .main-nav a:hover, .main-nav a:focus{color:var(--text);background:transparent}
+.navbar-nav .nav-link:hover {
+    color: #4dabf7 !important;
+    transform: translateY(-2px);
+}
 
-.header-controls{display:flex;gap:.5rem;align-items:center} .menu-toggle{display:none;background:none;border:0;font-size:1.25rem} #theme-toggle{background:transparent;border:0;font-size:1.1rem;cursor:pointer}
+.navbar-nav .nav-link.active {
+    font-weight: 600;
+    color: #339af0 !important;
+}
 
-.hero{padding:4rem 0} .hero-inner{display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:center} .hero-copy h1{font-size:2.1rem;margin:0 0 .25rem} .hero-copy .tagline{color:var(--muted);margin:0 0 .75rem} .type-line{color:var(--accent);font-weight:600;margin-bottom:1rem} .hero-media img{width:100%;height:auto;border-radius:var(--radius);box-shadow:var(--shadow);display:block}
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #339af0;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
 
-.section{padding:3rem 0} .about-grid{display:grid;grid-template-columns:1fr 320px;gap:1.5rem} .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem} .skill h4{margin:.25rem 0} .progress{background:linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));height:10px;border-radius:8px;overflow:hidden} .progress span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#00a3ff);transition:width 800ms cubic-bezier(.2,.9,.2,1)}
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+    width: 100%;
+}
 
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:1rem} .project-card{background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column} .project-card img{width:100%;height:160px;object-fit:cover;display:block} .project-body{padding:1rem;flex:1;display:flex;flex-direction:column;justify-content:space-between} .card-actions{display:flex;gap:.5rem;align-items:center} .view-btn{background:var(--accent);color:white;border:0;padding:.45rem .6rem;border-radius:8px;cursor:pointer} .btn, .link{display:inline-block;padding:.6rem .9rem;border-radius:8px;text-decoration:none} .btn{background:var(--accent);color:#fff;border:0} .btn-outline{background:transparent;border:1px solid rgba(0,0,0,0.06)} .muted{color:var(--muted);margin:0 .15rem .6rem 0}
+/* 2. Interactive profile image */
+img[src*="pawan-iamge.png"] {
+    max-width: 250px;
+    border-radius: 50%;
+    border: 4px solid #e9ecef;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    display: block;
+    margin: 2rem auto;
+}
 
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:2rem;z-index:120} .modal[aria-hidden="false"]{display:flex} .modal-backdrop{position:absolute;inset:0;background:rgba(2,6,23,0.5)} .modal-content{position:relative;z-index:130;background:var(--surface);border-radius:12px;max-width:900px;width:100%;max-height:90vh;overflow:auto;box-shadow:var(--shadow);padding:1rem} .modal-body img{width:100%;border-radius:8px;margin-bottom:.8rem} .modal-close{position:absolute;right:.6rem;top:.6rem;border:0;background:transparent;font-size:1.1rem;cursor:pointer}
+img[src*="pawan-iamge.png"]:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #339af0;
+}
 
-.contact-grid{display:grid;grid-template-columns:1fr 320px;gap:1.25rem} .contact-form label{display:block;margin-bottom:.75rem} .contact-form input,.contact-form textarea{width:100%;padding:.6rem;border-radius:8px;border:1px solid rgba(0,0,0,0.08);background:transparent;color:var(--text)} .contact-form button{margin-top:.5rem}
+/* 3. Button-like interactive elements */
+.navbar-toggler {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
 
-.site-footer{padding:1.5rem 0;color:var(--muted);text-align:center;font-size:.95rem;border-top:1px solid rgba(0,0,0,0.04);background:transparent}
+.navbar-toggler:hover {
+    border-color: #4dabf7;
+    transform: rotate(90deg);
+}
 
-@media (max-width:900px){ .hero-inner{grid-template-columns:1fr; padding-bottom:1rem} .about-grid{grid-template-columns:1fr} .contact-grid{grid-template-columns:1fr} .main-nav{display:none} .menu-toggle{display:block} .project-card img{height:180px} }
+/* 4. Interactive text content */
+.content p {
+    line-height: 1.7;
+    transition: color 0.3s ease;
+}
 
-/* small utilities */ .link{color:var(--accent)} .filters{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap} .filter-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:.4rem .6rem;border-radius:8px;cursor:pointer} .filter-btn.active{background:var(--accent);color:#fff;border-color:transparent} .hidden{display:none}
+.content p:hover {
+    color: #495057;
+}
 
+/* 5. Search bar interactive effects */
+#quarto-search input {
+    transition: all 0.3s ease;
+    border: 2px solid #dee2e6;
+}
+
+#quarto-search input:focus {
+    border-color: #339af0;
+    box-shadow: 0 0 0 0.2rem rgba(51, 154, 240, 0.25);
+    transform: scale(1.02);
+}
+
+/* 6. Footer interactive links */
+.footer a {
+    color: #6c757d;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.footer a:hover {
+    color: #339af0;
+    background-color: rgba(51, 154, 240, 0.1);
+    transform: translateY(-2px);
+}
+
+/* 7. Smooth scrolling for anchor links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 8. Table of contents (if present) sidebar interaction */
+.sidebar {
+    transition: transform 0.3s ease;
+}
+
+/* 9. Code block interactive effect */
+code {
+    transition: background-color 0.3s ease;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+}
+
+code:hover {
+    background-color: #f8f9fa;
+}
+
+/* 10. Tooltip enhancement */
+.tippy-box {
+    transition: all 0.2s ease;
+}
+
+.tippy-box:hover {
+    transform: translateY(-2px);
+}
+
+/* 11. Active state for dropdowns (if any) */
+.dropdown-item:active {
+    background-color: #339af0;
+    transform: scale(0.98);
+}
+
+/* 12. Animation for page load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quarto-title-block,
+.content > * {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.content > *:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.content > *:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* 13. Reader mode toggle interactive effect */
+.quarto-reader-toggle {
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+.quarto-reader-toggle:hover {
+    background-color: rgba(51, 154, 240, 0.1);
+    transform: scale(1.1);
+}
+
+/* 14. Responsive interactive adjustments */
+@media (max-width: 768px) {
+    .navbar-nav .nav-link {
+        margin: 0.25rem 0;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+    }
+    
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(51, 154, 240, 0.1);
+        transform: translateX(5px);
+    }
+    
+    .navbar-nav .nav-link::after {
+        display: none;
+    }
+}
+
+/* 15. Focus styles for accessibility */
+a:focus,
+button:focus,
+input:focus,
+.navbar-toggler:focus {
+    outline: 2px solid #339af0;
+    outline-offset: 2px;
+}
+
+/* 16. Loading animation for search */
+#quarto-search::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #dee2e6;
+    border-top-color: #339af0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+
+#quarto-search.searching::after {
+    display: block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 17. Hover effect for navbar brand */
+.navbar-brand {
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.navbar-brand:hover {
+    color: #339af0 !important;
+    letter-spacing: 0.5px;
+}
+
+/* 18. Section highlight on scroll */
+section:target {
+    background-color: rgba(51, 154, 240, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #339af0;
+    transition: all 0.5s ease;
+}

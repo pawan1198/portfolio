@@ -5,7 +5,7 @@ author: "Pawan"
 date: "2025/10/30"
 date-modified: last-modified
 categories:
-  - "Food"
+  - "Food Economy"
 # image: "thumbnails/health_map_hy.png"
 format:
   html:
@@ -26,17 +26,83 @@ execute:
 ```{r}
 library(data.table)
 library(ggplot2)
+library(ggiraph)
 
-fread("/home/pawan/procurement/procurement.csv")->t1
-t1[,.(Total=sum(Total),FCI=sum(FCI),
-      StateAgency=sum(StateAgency)),.(Crop,MarketingSeason)]->t1
+# Read the data
+t1 <- fread("/home/pawan/procurement/procurement.csv")
 
-ggplot(t1,aes(x=MarketingSeason,y=Total,fill=Crop))->p
-p+geom_bar(stat="identity")+facet_wrap(~Crop)->p
-p+theme_bw(base_size=15)->p
-p+theme(legend.position="none",
-        axis.text.x=element_text(angle=90,vjust=0.5))->p
-p+labs(y="Qty (in LMT)")
+# Improved visualization theme
+my_theme <- theme_minimal(base_size = 14) +
+  theme(
+    text = element_text(family = "Arial", color = "#2c3e50"),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5,
+                             margin = margin(15, 0, 15, 0)),
+    plot.subtitle = element_text(size = 12, hjust = 0.5, color = "#7f8c8d"),
+    axis.title = element_text(size = 14, face = "bold"),
+    axis.title.y = element_text(margin = margin(0, 15, 0, 0)),
+    axis.title.x = element_text(margin = margin(15, 0, 0, 0)),
+    axis.text = element_text(size = 11),
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 11),
+    panel.grid.major = element_line(color = "#ecf0f1", size = 0.5),
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "#bdc3c7", fill = NA, size = 0.5),
+    plot.background = element_rect(fill = "white", color = NA),
+    plot.margin = unit(c(1, 1, 1, 1), "cm"),
+    strip.background = element_rect(fill = "#f8f9fa", color = "#dee2e6"),
+    strip.text = element_text(face = "bold", size = 12)
+  )
+
+
+# Summarize data
+t1_summary <- t1[, .(Total = sum(Total),
+                     FCI = sum(FCI),
+                     StateAgency = sum(StateAgency)),
+                 by = .(Crop, MarketingSeason)]
+
+# Create tooltip for interactivity
+t1_summary[, tooltip := paste0(
+  "Crop: ", Crop, "\n",
+  "Season: ", MarketingSeason, "\n",
+  "Total: ", round(Total, 1), " LMT\n",
+  "FCI: ", round(FCI, 1), " LMT\n",
+  "State Agencies: ", round(StateAgency, 1), " LMT"
+)]
+
+# Create interactive plot
+p <- ggplot(t1_summary,
+            aes(x = MarketingSeason,
+                y = Total,
+                fill = Crop,
+                tooltip = tooltip,
+                data_id = paste(Crop, MarketingSeason))) +
+  geom_bar_interactive(stat = "identity",
+                       width = 0.7,
+                       alpha = 0.8) +
+    facet_wrap(~Crop, scales = "free_y") +
+    my_theme +
+  labs(
+    title = "Foodgrain Procurement Trends by Crop and Marketing Season",
+    y = "Quantity (in Lakh Metric Tons - LMT)",
+    x = "Marketing Season",
+    caption = "Source: Central Food Grains Procurement Portal (Department of Food & Public Distribution) \n
+          Analysis: Pawan"
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  scale_y_continuous(labels = scales::comma)
+
+# Make it interactive with ggiraph
+girafe(ggobj = p,
+       width_svg = 12,
+       height_svg = 8,
+       options = list(
+         opts_tooltip(css = "background-color:white;color:black;padding:8px;border-radius:4px;border:1px solid #ccc;"),
+         opts_hover(css = "fill-opacity:0.9;stroke-width:2;"),
+         opts_selection(type = "single", css = "stroke:red;stroke-width:2;"),
+         opts_sizing(rescale = TRUE, width = 1)
+       ))
 ```
 
 ## Paddy Procurement

@@ -24,239 +24,351 @@ India, one of the world's largest consumers and importers of edible oils, has se
 
 The data clearly indicates a robust long-term growth trend in the total quantity of edible oil imported by India, with quantities often exceeding 15,000,000 tonnes in recent years.
 
-# Annually (April to March) Edible Oils Import by India
-
+# The code structure
 ```{r}
+## Load required libraries
 library(data.table)
 library(ggplot2)
+library(ggiraph)  ## For interactive plots
+library(scales)
 library(gridExtra)
 library(gt)
-library(ggthemes) ## For more themes
+library(ggthemes)
+library(viridis)
 
 ## Custom theme for plots
-my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
-    theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
-          plot.title = element_text(size = 20, face = "bold",
-                                    hjust = 0.5, margin = margin(10, 0, 10, 0)), ## Center and style title
-          axis.title = element_text(size = 18),
-          axis.text = element_text(size = 14),
-          legend.position = "bottom",
-          legend.title = element_blank(),  ## Remove legend title
-          panel.grid.major = element_line(color = "#EEEEEE"), ## Lighter grid lines
-          panel.border = element_blank(), ## Remove panel border
-          axis.line = element_line(color = "#333333"), ## Add axis lines
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
-          strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
-          )
-```
+my_theme <- theme_bw(base_size = 14) +
+  theme(
+    text = element_text(family = "sans", color = "#333333"),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5,
+                              margin = margin(10, 0, 10, 0)),
+    plot.caption = element_text(size = 10, color = "#666666", hjust = 0),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    panel.grid.major = element_line(color = "#EEEEEE"),
+    panel.border = element_blank(),
+    axis.line = element_line(color = "#333333"),
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    strip.background = element_rect(fill = "#F2F2F2", color = NA)
+  )
 
-```{r}
-readRDS("/home/pawan/edibleoils/palmoil_import.rds")->palm
-readRDS("/home/pawan/edibleoils/soyabean_import.rds")->soyabean
-readRDS("/home/pawan/edibleoils/sunflower_import.rds")->sunflower
+## Function to create interactive stacked bar chart
+create_interactive_stackchart <- function(data, x_var, y_var, fill_var,
+                                          label_var = NULL,
+                                          title = "",
+                                          y_lab = "Value",
+                                          caption_text = "Data source: Ministry of Commerce, India | Analysis: Pawan") {
 
-paste0("Palm Oil")->palm$Edibleoil
-paste0("Soyabean Oil")->soyabean$Edibleoil
-paste0("Sunflower Oil")->sunflower$Edibleoil
-
-paste0(as.numeric(substr(palm$Year,1,4)),"-",
-       as.numeric(substr(palm$Year,3,4))+1)->palm$Year
-paste0(as.numeric(substr(palm$LagYear,1,4)),"-",
-       as.numeric(substr(palm$LagYear,8,9)))->palm$LagYear
-
-paste0(as.numeric(substr(soyabean$Year,1,4)),"-",
-       as.numeric(substr(soyabean$Year,3,4))+1)->soyabean$Year
-paste0(as.numeric(substr(soyabean$LagYear,1,4)),"-",
-       as.numeric(substr(soyabean$LagYear,8,9)))->soyabean$LagYear
-
-paste0(as.numeric(substr(sunflower$Year,1,4)),"-",
-       as.numeric(substr(sunflower$Year,3,4))+1)->sunflower$Year
-paste0(as.numeric(substr(sunflower$LagYear,1,4)),"-",
-       as.numeric(substr(sunflower$LagYear,8,9)))->sunflower$LagYear
-
-rbind(palm,soyabean,sunflower)->edibleoil
-
-edibleoil[Country=="Total",.(Share=(round(ImportYear*100/sum(ImportYear))),
-                             Edibleoil,ImportYear),.(Year)]->oil
-```
-
-```{r}
-ggplot(oil, aes(x = Year, y = ImportYear, fill = Edibleoil)) +
-    geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(x = Year, y = ImportYear,
-                   label = ifelse(Share<5, "", paste0(Share, "%"))),
-               position = position_stack(vjust = 0.5), size = 5, color = "black") +
-    scale_fill_brewer(palette="Set2")+
+  ## Create base plot
+    p <- ggplot(data, aes(x = data[[x_var]], y = data[[y_var]],
+                          fill = data[[fill_var]])) +
+        geom_bar_interactive(
+            aes(tooltip = paste(data[[fill_var]], ": ",
+                                format(data[[y_var]], big.mark = ","),
+                                " (", ifelse(!is.null(label_var),
+                                             paste0(data[[label_var]], "%"),
+                                             ""), ")", sep = "")),
+            data_id = data[[fill_var]],
+    stat = "identity",
+    position = "stack"
+    ) +
+    scale_fill_viridis(discrete = TRUE, option = "D") +
     my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Values in US $ Million") +
-    ggtitle("Edible Oil Import")->p5
-p5
-ggsave("annual-edibleoil-import.png", width = 12, height = 8)
-```
+    scale_y_continuous(labels = comma) +
+    labs(
+      y = y_lab,
+      x = "Year",
+      title = title,
+      caption = caption_text
+    )
 
-# Compile India Imported Edible Oil
+  # Add labels if provided
+  if (!is.null(label_var)) {
+    p <- p + geom_text(
+      aes(label = ifelse(.data[[label_var]] < 5, "",
+                         paste0(data[[label_var]], "%"))),
+      position = position_stack(vjust = 0.5),
+      size = 3.5,
+      color = "white",
+      fontface = "bold"
+    )
+  }
+
+  return(p)
+}
+
+```
+# ANNUAL EDIBLE OIL IMPORT (VALUE IN USD)
 
 ```{r}
-readRDS("/home/pawan/edibleoils/palmoil_importqty.rds")->palmoil
-readRDS("/home/pawan/edibleoils/soybeanoil_importqty.rds")->soybeanoil
-readRDS("/home/pawan/edibleoils/sunfloweroil_importqty.rds")->sunfloweroil
+## Read data
+palm <- readRDS("/home/pawan/edibleoils/palmoil_import.rds")
+soyabean <- readRDS("/home/pawan/edibleoils/soyabean_import.rds")
+sunflower <- readRDS("/home/pawan/edibleoils/sunflower_import.rds")
 
-## Data Cleaning
-gsub(",","",palmoil$ImportMonth)->palmoil$ImportMonth
-gsub(",","",soybeanoil$ImportMonth)->soybeanoil$ImportMonth
-gsub(",","",sunfloweroil$ImportMonth)->sunfloweroil$ImportMonth
+## Process data
+palm$Edibleoil <- "Palm Oil"
+soyabean$Edibleoil <- "Soyabean Oil"
+sunflower$Edibleoil <- "Sunflower Oil"
 
-## Change Calender Year to Oil Year (Nov to Oct)
-match(palmoil$Month,month.abb)->palmoil$Month
-ifelse(as.numeric(palmoil$Month)>10, paste0((palmoil$Year),"-",(as.numeric(palmoil$Year)+1)),
-       paste0((as.numeric(palmoil$Year)-1),"-",(as.numeric(palmoil$Year))))->palmoil$Fin_Year
+## Format years
+format_year <- function(year_str) {
+  year_num <- as.numeric(substr(year_str, 1, 4))
+  paste0(year_num, "-", year_num + 1)
+}
 
-match(soybeanoil$Month,month.abb)->soybeanoil$Month
-ifelse(as.numeric(soybeanoil$Month)>10, paste0((soybeanoil$Year),"-",(as.numeric(soybeanoil$Year)+1)),
-       paste0((as.numeric(soybeanoil$Year)-1),"-",(as.numeric(soybeanoil$Year))))->soybeanoil$Fin_Year
+palm$Year <- format_year(palm$Year)
+soyabean$Year <- format_year(soyabean$Year)
+sunflower$Year <- format_year(sunflower$Year)
 
-match(sunfloweroil$Month,month.abb)->sunfloweroil$Month
-ifelse(as.numeric(sunfloweroil$Month)>10, paste0((sunfloweroil$Year),"-",(as.numeric(sunfloweroil$Year)+1)),
-       paste0((as.numeric(sunfloweroil$Year)-1),"-",(as.numeric(sunfloweroil$Year))))->sunfloweroil$Fin_Year
+## Combine data
+edibleoil <- rbind(palm, soyabean, sunflower)
 
-palmoil[Country!="Total",.(Import = sum(as.numeric(ImportMonth), na.rm=TRUE))
-        ,.(Country,Fin_Year)]->table1
+## Calculate shares for total country
+oil_value <- edibleoil[Country == "Total",
+                       .(ImportYear = sum(ImportYear, na.rm = TRUE)),
+                       by = .(Year, Edibleoil)]
 
-soybeanoil[Country!="Total",.(Import = sum(as.numeric(ImportMonth), na.rm=TRUE))
-         ,.(Country,Fin_Year)]->table2
+oil_value[, Total := sum(ImportYear), by = Year]
+oil_value[, Share := round((ImportYear / Total) * 100)]
 
-sunfloweroil[Country!="Total",.(Import = sum(as.numeric(ImportMonth), na.rm=TRUE))
-           ,.(Country,Fin_Year)]->table3
+## Create interactive plot
+p5_interactive <- create_interactive_stackchart(
+  data = oil_value,
+  x_var = "Year",
+  y_var = "ImportYear",
+  fill_var = "Edibleoil",
+  label_var = "Share",
+  title = "Edible Oil Import by India (Value in USD)",
+  y_lab = "Value in US $ Million",
+  caption_text = "Data source: Ministry of Commerce, India | Analysis: Pawan | Financial Year: April-March"
+)
 
-ifelse(table1$Country %in% c("INDONESIA", "MALAYSIA"),
-       table1$Country, "Other Countries")->table1$Country
+## Save interactive version
+girafe(ggobj = p5_interactive,
+       width_svg = 12,
+       height_svg = 8,
+       options = list(
+         opts_tooltip(css = "background-color:white;color:black;padding:5px;border-radius:3px;"),
+         opts_hover(css = "fill:orange;"),
+         opts_zoom(min = 0.5, max = 2)
+       ))
+## %>%
+##   girafe_save("annual-edibleoil-import-interactive.html")
 
-ifelse(table2$Country %in% c("ARGENTINA", "BRAZIL"),
-       table2$Country, "Other Countries")->table2$Country
-
-ifelse(table3$Country %in% c("UKRAINE", "RUSSIA"),
-       table3$Country, "Other Countries")->table3$Country
-
-table1[,.(Import=sum(Import)),.(Country,Fin_Year)]->table1
-table2[,.(Import=sum(Import)),.(Country,Fin_Year)]->table2
-table3[,.(Import=sum(Import)),.(Country,Fin_Year)]->table3
-
-table1[Fin_Year>="2010-2011",.(Share=(round(Import*100/sum(Import))),
-                               Country,Import),.(Fin_Year)][Fin_Year!="2024-2025"]->table1
-
-table2[Fin_Year>="2010-2011",.(Share=(round(Import*100/sum(Import))),
-                               Country,Import),.(Fin_Year)][Fin_Year!="2024-2025"]->table2
-
-table3[Fin_Year>="2010-2011",.(Share=(round(Import*100/sum(Import))),
-                               Country,Import),.(Fin_Year)][Fin_Year!="2024-2025"]->table3
 ```
 
-## Palm Oil
-
+# PALM OIL IMPORT ANALYSIS
 Palm oil remains the single largest imported oil, but its proportional share has decreased. It accounted for a high of 79% of total imports in 2010-2011, but this share has trended downwards, settling at 56% in 2023-2024.\
 India maintains a near-exclusive on its Southeast Asian neighbours for palm oil, with Indonesia and Malaysia consistently dominating the supply chain. While the proportional distribution between the two varies year-to-year—with Malaysia often holding the slight edge in the mid-period (e.g., 71% in 2013-2014)—the combined share of these two nations routinely exceeds 90%, highlighting a concentrated supply risk.
 
 ```{r}
-ggplot(table1, aes(x = Fin_Year, y = Import, fill = Country)) +
-    geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(x = Fin_Year, y = Import,
-                  label = ifelse(Share<5, "", paste0(Share, "%"))),
-              position = position_stack(vjust = 0.5), size = 5, color = "black") +
-    scale_fill_brewer(palette="Set2")+ ## Set bar color
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Tonns)") +
-    ggtitle("Palm Oil Import")->p1
-p1
-```
+## Read quantity data
+palmoil_qty <- readRDS("/home/pawan/edibleoils/palmoil_importqty.rds")
+soybeanoil_qty <- readRDS("/home/pawan/edibleoils/soybeanoil_importqty.rds")
+sunfloweroil_qty <- readRDS("/home/pawan/edibleoils/sunfloweroil_importqty.rds")
 
-## Soybean Oil
+## Data cleaning function
+clean_import_data <- function(dt) {
+  ## Remove commas from numbers
+  dt$ImportMonth <- gsub(",", "", dt$ImportMonth)
+
+  ## Convert month abbreviations to numbers
+  dt$Month_num <- match(dt$Month, month.abb)
+
+  ## Create financial year (Nov-Oct)
+  dt[, Fin_Year := ifelse(Month_num > 10,
+                          paste0(Year, "-", as.numeric(Year) + 1),
+                          paste0(as.numeric(Year) - 1, "-", Year))]
+
+  return(dt)
+}
+
+palmoil_qty <- clean_import_data(palmoil_qty)
+soybeanoil_qty <- clean_import_data(soybeanoil_qty)
+sunfloweroil_qty <- clean_import_data(sunfloweroil_qty)
+
+## Aggregate data by country and financial year
+palm_agg <- palmoil_qty[Country != "Total",
+                        .(Import = sum(as.numeric(ImportMonth), na.rm = TRUE)),
+                        by = .(Country, Fin_Year)]
+
+## Group countries
+palm_agg[, Country_Group := ifelse(Country %in% c("INDONESIA", "MALAYSIA"),
+                                   Country, "Other Countries")]
+
+## Calculate totals and shares
+palm_final <- palm_agg[, .(Import = sum(Import)), by = .(Country_Group, Fin_Year)]
+palm_final[, Total := sum(Import), by = Fin_Year]
+palm_final[, Share := round((Import / Total) * 100)]
+palm_final <- palm_final[Fin_Year >= "2010-2011" & Fin_Year != "2024-2025"]
+
+## Interactive palm oil plot
+p1_interactive <- create_interactive_stackchart(
+  data = palm_final,
+  x_var = "Fin_Year",
+  y_var = "Import",
+  fill_var = "Country_Group",
+  label_var = "Share",
+  title = "Palm Oil Import by India",
+  y_lab = "Quantity (Tonnes)",
+  caption_text = "Data source: Ministry of Commerce, India | Analysis: Pawan | Oil Year: Nov-Oct"
+)
+
+girafe(ggobj = p1_interactive,
+       width_svg = 12,
+       height_svg = 8)
+## %>%
+##   girafe_save("palm-oil-import-interactive.html")
+
+```
+# SOYBEAN OIL IMPORT ANALYSIS
 
 Soybean oil has maintained a volatile but stable proportion, fluctuating between 15% and 30% over the period.\
 The import of soybean oil is heavily dictated by South American supply, with Argentina acting as the primary source. Argentina consistently provided over 70% of India’s soybean oil needs for much of the period. Brazil plays a significant, though secondary, role, with its share showing an upward trend in certain recent financial years.
 
 ```{r}
-ggplot(table2, aes(x = Fin_Year, y = Import, fill = Country)) +
-    geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(x = Fin_Year, y = Import,
-                  label = ifelse(Share<5, "", paste0(Share, "%"))),
-              position = position_stack(vjust = 0.5), size = 5, color = "black") +
-    scale_fill_brewer(palette="Set2")+
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Tonns)") +
-    ggtitle("Soybean Oil Import")->p2
-p2
-```
+soybean_agg <- soybeanoil_qty[Country != "Total",
+                              .(Import = sum(as.numeric(ImportMonth), na.rm = TRUE)),
+                              by = .(Country, Fin_Year)]
 
-## Sunflower Oil
+soybean_agg[, Country_Group := ifelse(Country %in% c("ARGENTINA", "BRAZIL"),
+                                      Country, "Other Countries")]
+
+soybean_final <- soybean_agg[, .(Import = sum(Import)), by = .(Country_Group, Fin_Year)]
+soybean_final[, Total := sum(Import), by = Fin_Year]
+soybean_final[, Share := round((Import / Total) * 100)]
+soybean_final <- soybean_final[Fin_Year >= "2010-2011" & Fin_Year != "2024-2025"]
+
+# Interactive soybean oil plot
+p2_interactive <- create_interactive_stackchart(
+  data = soybean_final,
+  x_var = "Fin_Year",
+  y_var = "Import",
+  fill_var = "Country_Group",
+  label_var = "Share",
+  title = "Soybean Oil Import by India",
+  y_lab = "Quantity (Tonnes)",
+  caption_text = "Data source: Ministry of Commerce, India | Analysis: Pawan | Oil Year: Nov-Oct"
+)
+girafe(ggobj = p2_interactive,
+        width_svg = 12,
+        height_svg = 8) 
+        ## %>%
+                ##   girafe_save("soyabean-oil-import-interactive.html")
+ 
+```
+# SUNFLOWER OIL IMPORT ANALYSIS
 
 The most striking trend is the increasing reliance on sunflower oil. For the better part of the decade (2010-2011 to 2020-2021), sunflower oil constituted a minor share, typically between 6% and 14%. However, in the latest period (2023-2024), its share has surged to a high of 22%, indicating a significant structural shift in consumer demand and import policy favouring softer oils.
 
 ```{r}
-ggplot(table3, aes(x = Fin_Year, y = Import, fill = Country)) +
-    geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(x = Fin_Year, y = Import,
-                  label = ifelse(Share<5, "", paste0(Share, "%"))),
-              position = position_stack(vjust = 0.5), size = 5, color = "black") +
-    scale_fill_brewer(palette="Set2")+
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Tonns)") +
-    ggtitle("Sunflower Oil Import")->p3
-p3
-```
+sunflower_agg <- sunfloweroil_qty[Country != "Total",
+                                  .(Import = sum(as.numeric(ImportMonth), na.rm = TRUE)),
+                                  by = .(Country, Fin_Year)]
 
-## Total of Edible Oils (Oil year from Nov to Oct)
+sunflower_agg[, Country_Group := ifelse(Country %in% c("UKRAINE", "RUSSIA"),
+                                        Country, "Other Countries")]
+
+sunflower_final <- sunflower_agg[, .(Import = sum(Import)), by = .(Country_Group, Fin_Year)]
+sunflower_final[, Total := sum(Import), by = Fin_Year]
+sunflower_final[, Share := round((Import / Total) * 100)]
+sunflower_final <- sunflower_final[Fin_Year >= "2010-2011" & Fin_Year != "2024-2025"]
+
+# Interactive sunflower oil plot
+p3_interactive <- create_interactive_stackchart(
+  data = sunflower_final,
+  x_var = "Fin_Year",
+  y_var = "Import",
+  fill_var = "Country_Group",
+  label_var = "Share",
+  title = "Sunflower Oil Import by India",
+  y_lab = "Quantity (Tonnes)",
+  caption_text = "Data source: Ministry of Commerce, India | Analysis: Pawan | Oil Year: Nov-Oct"
+)
+girafe(ggobj = p3_interactive,
+       width_svg = 12,
+       height_svg = 8)
+## %>%
+##   girafe_save("sunflower-oil-import-interactive.html")
+
+```
+# TOTAL EDIBLE OIL IMPORTS (COMPOSITION)
 
 ```{r}
-palmoil[Country == "Total" ,.(Palmoil = sum(as.numeric(ImportMonth), na.rm=TRUE))
-        ,.(Country, Fin_Year)]->table4
+# Get total imports for each oil type
+total_palm <- palmoil_qty[Country == "Total",
+                          .(Palmoil = sum(as.numeric(ImportMonth), na.rm = TRUE)),
+                          by = Fin_Year]
 
-soybeanoil[Country == "Total" ,.(Soybeanoil = sum(as.numeric(ImportMonth), na.rm=TRUE))
-         ,.(Country, Fin_Year)]->table5
+total_soybean <- soybeanoil_qty[Country == "Total",
+                                .(Soybeanoil = sum(as.numeric(ImportMonth), na.rm = TRUE)),
+                                by = Fin_Year]
 
-sunfloweroil[Country == "Total" ,.(Sunfloweroil = sum(as.numeric(ImportMonth), na.rm=TRUE))
-           ,.(Country, Fin_Year)]->table6
+total_sunflower <- sunfloweroil_qty[Country == "Total",
+                                    .(Sunfloweroil = sum(as.numeric(ImportMonth), na.rm = TRUE)),
+                                    by = Fin_Year]
 
-merge(table4, table5, by = c("Country", "Fin_Year"))->t1
-merge(t1, table6, by = c("Country", "Fin_Year"))->t1
-melt(t1, id = c("Country", "Fin_Year"))->t1
+# Merge and reshape
+total_oil <- merge(total_palm, total_soybean, by = "Fin_Year")
+total_oil <- merge(total_oil, total_sunflower, by = "Fin_Year")
 
-t1[Fin_Year>="2010-2011",.(Share=(round(value*100/sum(value))),
-                           variable,value),.(Fin_Year)][Fin_Year!="2024-2025"]->t1
+total_oil_long <- melt(total_oil, id.vars = "Fin_Year",
+                       variable.name = "Oil_Type", value.name = "Quantity")
 
-gt(t1[,.(EdibeOil=(sum(value))),.(Fin_Year)])
+# Calculate shares
+total_oil_long[, Total := sum(Quantity), by = Fin_Year]
+total_oil_long[, Share := round((Quantity / Total) * 100)]
+total_oil_long <- total_oil_long[Fin_Year >= "2010-2011" & Fin_Year != "2024-2025"]
 
-ggplot(t1, aes(x = Fin_Year, y = value, fill = variable)) +
-    geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(x = Fin_Year, y = value,
-                  label = ifelse(Share<5, "", paste0(Share, "%"))),
-              position = position_stack(vjust = 0.5), size = 5, color = "black") +
-    scale_fill_brewer(palette="Set2")+
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Tonns)") +
-    ggtitle("Edible Oil Imports By India")->p4
-p4
+# Create summary table
+summary_table <- total_oil_long[, .(Total_EdibleOil = sum(Quantity)), by = Fin_Year]
+print(gt(summary_table) %>%
+        tab_header(title = "Total Edible Oil Imports by India") %>%
+        fmt_number(columns = Total_EdibleOil, decimals = 0) %>%
+        cols_label(Fin_Year = "Financial Year", Total_EdibleOil = "Total Imports (Tonnes)"))
+
+# Interactive total oil plot
+p4_interactive <- create_interactive_stackchart(
+  data = total_oil_long,
+  x_var = "Fin_Year",
+  y_var = "Quantity",
+  fill_var = "Oil_Type",
+  label_var = "Share",
+  title = "Edible Oil Imports Composition by India",
+  y_lab = "Quantity (Tonnes)",
+  caption_text = "Data source: Ministry of Commerce, India | Analysis: Pawan | Financial Year: Nov-Oct"
+)
+girafe(ggobj = p4_interactive,
+       width_svg = 12,
+       height_svg = 8)
+
 ```
-
-# India Edible Oil Culativation and Production
+# SELF-SUFFICIENCY ANALYSIS
 
 ```{r}
-fread("/home/pawan/edibleoils/oil_aval.csv")->t
+self_sufficiency <- fread("/home/pawan/edibleoils/oil_aval.csv")
+self_sufficiency[, Domestic_Share := round(Domestic_Availability * 100 / Total_Availability_LMT)]
 
-t[,Domestic_Share:=(round(Domestic_Availability*100/Total_Availability_LMT))]
-t[,Import_Share:=(round(Imports*100/Total_Availability_LMT))]
+# Interactive self-sufficiency plot
+p6_interactive <- ggplot(self_sufficiency,
+                         aes(x = Year, y = Domestic_Share,
+                             tooltip = paste("Year:", Year, "\n",
+                                             "Self-sufficiency:", Domestic_Share, "%"))) +
+  geom_col_interactive(fill = "#2E86AB", width = 0.7) +
+  geom_text(aes(label = paste0(Domestic_Share, "%")),
+            vjust = -0.5, size = 4, fontface = "bold") +
+  my_theme +
+  ylim(0, 60) +
+  labs(y = "% Self Sufficiency",
+       title = "India's Edible Oil Self-Sufficiency",
+       caption = "Data source: Ministry of Agriculture, India | Analysis: Pawan") +
+  theme(plot.caption = element_text(size = 10, color = "#666666"))
 
-ggplot(t, aes(x = Year, y = Domestic_Share)) +
-    geom_bar(stat = "identity", fill = "#5F9EA0") +
-    geom_text(aes(label = paste0(Domestic_Share, "%")),
-               position = position_stack(vjust = 0.5), size = 5, color = "black") +
-    my_theme +
-    ylim(0, 60) +
-    labs(y = "% Self Sufficiency") +
-    ggtitle("% Self Sufficiency")->p5
-p5
+girafe(ggobj = p6_interactive,
+       width_svg = 12,
+       height_svg = 8)
+
 ```

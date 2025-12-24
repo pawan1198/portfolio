@@ -108,7 +108,6 @@ girafe(ggobj = p,
 ## Paddy Procurement
 
 -   Paddy procurement marketing season in India begins each year on 1st October and ends on 30th September the following year.
--   The figure gives the month-wise weekly paddy procurement in India for about 3.5 years from 2018 to 2022.
 -   Overall paddy procurement has been increasing over the last 3 years.
 -   There was a fall in procurement in Oct-Dec (2021-22) over the same period in the previous year.
 -   Paddy procurement however picked up subsequently and was higher in Jan-Mar (2021-22) over the corresponding period in 2020-21.

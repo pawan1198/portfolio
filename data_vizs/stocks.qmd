@@ -5,7 +5,7 @@ author: "Pawan"
 date: "2025/11/01"
 date-modified: last-modified
 categories:
-  - "Food"
+  - "Food Economy"
 # image: "thumbnails/health_map_hy.png"
 format:
   html:
@@ -27,105 +27,196 @@ execute:
 
 -   Rice stocks steadily increased from 21.1 lakh tonnes (Mar 2023) to 34 lakh tonnes (Feb 2025).
 
-## Let's visualized the data
-
-Load necessary packages
-
 ```{r}
 library(data.table)
 library(ggplot2)
 library(tidyverse)
 library(tidyr)
 library(scales)
-library(ggforce)
-library(gt)
-```
+library(ggiraph)
+library(lubridate)
 
-Read the data and cleaning
+## Read and clean data
+stocksall <- fread("~/stocks/stocksall.csv", sep = ",", header = TRUE)
+stocksall <- unique(stocksall)
 
-```{r}
-fread("~/stocks/stocksall.csv", sep = ",", header = T)->stocksall
-unique(stocksall)->stocksall
-fread("~/stocks/pdsold.csv", sep = ",", header = T)->oldstocks
-oldstocks[,coarsegrains := stocks_total-stocks_rice-stocks_wheat]
-melt(stocksall,id = c("Year", "Commodity"))->t
-as.Date(paste(01, t$variable, t$Year, sep = "-"), "%d-%b-%Y")->t$Date
-factor(t$Commodity, levels = c("Rice", "Wheat",
-                               "Unmilled Paddy",
-                               "Coarsegrain", "Total"))->t$Commodity
-separate(oldstocks, col = Year, sep = "-", into = c("v1", "year"))->oldstocks
-as.Date(paste("01", "04", oldstocks$year, sep = "-"), "%d-%m-%y")->oldstocks$Date
+oldstocks <- fread("~/stocks/pdsold.csv", sep = ",", header = TRUE)
+oldstocks[, coarsegrains := stocks_total - stocks_rice - stocks_wheat]
+
+## Melt stocksall to long format
+t <- melt(stocksall, id = c("Year", "Commodity"))
+
+## Convert to Date
+t[, Date := as.Date(paste("01", variable, Year, sep = "-"), "%d-%b-%Y")]
+t[, Commodity := factor(Commodity, levels = c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain", "Total"))]
+
+## Process oldstocks
+oldstocks <- separate(oldstocks, col = Year, sep = "-", into = c("v1", "year"))
 setDT(oldstocks)
-oldstocks[Date<as.Date("01-01-2003", format="%d-%m-%Y")
-         ,.(Date, Rice = stocks_rice, Wheat = stocks_wheat,
-            Coarsegrain = coarsegrains)]->oldstocks
-melt(oldstocks, id = "Date")->t1
-t1$value * 10->t1$value
-names(t1)[names(t1) == "variable"]<-"Commodity"
-t[Commodity != "Total",.(Date, Commodity, value)]->t
-t[!is.na(value)]->t
-t1[!is.na(value)]->t1
-rbind(t, t1)->t1
-as.numeric(t1$value)/10->t1$value
-t1[!is.na(value)]->t1
-t1[,.(Commodity, value = cumsum(value)),.(Date)]->t1
-factor(t1$Commodity, levels = rev(c("Rice", "Wheat",
-                                    "Unmilled Paddy",
-                                    "Coarsegrain")))->t1$Commodity
-t1[order(Commodity, Date)]->t1
+oldstocks[, Date := as.Date(paste("01", "04", year, sep = "-"), "%d-%m-%y")]
+
+oldstocks <- oldstocks[Date < as.Date("2003-01-01"),
+  .(Date, Rice = stocks_rice, Wheat = stocks_wheat, Coarsegrain = coarsegrains)]
+
+t1 <- melt(oldstocks, id = "Date")
+t1[, value := value * 10]  ## Convert to lakh tonnes
+setnames(t1, "variable", "Commodity")
+
+## Filter and combine
+t_filtered <- t[Commodity != "Total", .(Date, Commodity, value)]
+t_filtered <- t_filtered[!is.na(value)]
+t1 <- t1[!is.na(value)]
+
+combined <- rbind(t_filtered, t1)
+combined[, value := as.numeric(value) / 10]  ## Convert to million tonnes
+combined <- combined[!is.na(value)]
+
+## Create stacked data for area plot
+stacked_data <- combined[order(Commodity, Date)]
+stacked_data[, Commodity := factor(Commodity,
+                                   levels = rev(c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain")))]
+
+## Calculate cumulative sum for stacking
+setorder(stacked_data, Date, Commodity)
+stacked_data[, cum_value := cumsum(value), by = Date]
+
+## Create tooltip for interactivity
+stacked_data[, tooltip := paste0(
+  "Date: ", format(Date, "%b %Y"), "\n",
+  "Commodity: ", Commodity, "\n",
+  "Stock: ", round(value, 1), " million tonnes\n",
+  "Percentage: ", round(value/sum(value)*100, 1), "%"
+), by = Date]
+
+## Custom theme
+my_theme <- theme_bw(base_size = 14) +
+  theme(
+    text = element_text(family = "sans", color = "#333333"),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5,
+                             margin = margin(10, 0, 10, 0)),
+    plot.subtitle = element_text(size = 12, hjust = 0.5, color = "#666666"),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 11),
+    panel.grid.major = element_line(color = "#F0F0F0", linewidth = 0.5),
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "#CCCCCC", fill = NA, linewidth = 0.8),
+    axis.line = element_line(color = "#333333", linewidth = 0.5),
+    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+    plot.caption = element_text(size = 10, color = "#666666", hjust = 0)
+  )
 ```
 
-Custom theme for plots
-
+## Create interactive stacked area plot
 ```{r}
-my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
-    theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
-          plot.title = element_text(size = 20, face = "bold",
-                                    hjust = 0.5, margin = margin(10, 0, 10, 0)), ## Center and style title
-          axis.title = element_text(size = 18),
-          axis.text = element_text(size = 14),
-          legend.position = "bottom",
-          legend.title = element_blank(),  ## Remove legend title
-          panel.grid.major = element_line(color = "#EEEEEE"), ## Lighter grid lines
-          panel.border = element_blank(), ## Remove panel border
-          axis.line = element_line(color = "#333333"), ## Add axis lines
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
-          strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
-          )
+p <- ggplot(stacked_data,
+           aes(x = Date, y = value, fill = Commodity, group = Commodity,
+               tooltip = tooltip, data_id = paste(Date, Commodity))) +
+  geom_area_interactive(alpha = 0.8, color = "white", linewidth = 0.3) +
+  scale_fill_manual(values = c("#4E79A7", "#F28E2B", "#E15759", "#76B7B2")) +
+  scale_y_continuous(
+    "Stocks (Million Tonnes)",
+    labels = scales::comma,
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+  scale_x_date(
+    date_breaks = "2 years",
+    date_labels = "%Y",
+    expand = expansion(mult = c(0.01, 0.01))
+  ) +
+  labs(
+    title = "Foodgrain Stock Holdings (1972-2025)",
+    subtitle = "Interactive Area Chart - Hover over areas for detailed breakdown",
+    x = "Year",
+    caption = "Source: Food Corporation of India | Note: 1 million tonnes = 10 lakh tonnes"
+  ) +
+  my_theme
+
+## Create zoomed version for recent years
+recent_data <- stacked_data[Date >= as.Date("2018-01-01")]
+
+p_recent <- ggplot(recent_data,
+                  aes(x = Date, y = value, fill = Commodity, group = Commodity,
+                      tooltip = tooltip, data_id = paste(Date, Commodity))) +
+  geom_area_interactive(alpha = 0.8, color = "white", linewidth = 0.3) +
+  geom_vline_interactive(aes(xintercept = as.Date("2023-04-01"),
+                           tooltip = "Start of 2023-24 procurement year"),
+                       linetype = "dashed", alpha = 0.5, color = "#333333") +
+  scale_fill_manual(values = c("#4E79A7", "#F28E2B", "#E15759", "#76B7B2")) +
+  scale_y_continuous(
+    "Stocks (Million Tonnes)",
+    labels = scales::comma,
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%b %Y",
+    expand = expansion(mult = c(0.01, 0.01))
+  ) +
+  labs(
+    title = "Recent Foodgrain Stock Trends (2018-2025)",
+    subtitle = "Interactive view with seasonal patterns and procurement cycles",
+    x = "Month-Year",
+    caption = "Vertical dashed line marks beginning of 2023-24 procurement year"
+  ) +
+  my_theme +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10))
+
+## Make interactive
+full_interactive <- girafe(
+  ggobj = p,
+  width_svg = 14,
+  height_svg = 8,
+  options = list(
+    opts_tooltip(css = "background-color:white;color:black;padding:10px;
+                  border-radius:5px;border:1px solid #ddd;font-size:12px;"),
+    opts_hover(css = "stroke-width:2;stroke:#333;"),
+    opts_selection(type = "single", css = "stroke:#E15759;stroke-width:2;"),
+    opts_sizing(rescale = TRUE, width = 1)
+  )
+)
+
+recent_interactive <- girafe(
+  ggobj = p_recent,
+  width_svg = 12,
+  height_svg = 7,
+  options = list(
+    opts_tooltip(css = "background-color:white;color:black;padding:10px;
+                  border-radius:5px;border:1px solid #ddd;font-size:12px;"),
+    opts_hover(css = "stroke-width:2;stroke:#333;"),
+    opts_selection(type = "single", css = "stroke:#E15759;stroke-width:2;"),
+    opts_sizing(rescale = TRUE, width = 1)
+  )
+)
+
+## Display both interactive plots
+full_interactive
+recent_interactive
 ```
 
-Visualization
-
+## Create interactive table for last 24 months (using DT package)
 ```{r}
-ggplot(t1, aes(x = Date, ymax = value, ymin = 0)) +
-    geom_ribbon(aes(fill = Commodity)) +
-    scale_y_continuous("Million tonnes") +
-    scale_x_date(date_breaks = "1 year",
-                 date_labels = "%Y") +
-    my_theme +
-    ggtitle(paste0("Foodgrain Stocks",
-                   " ", "1972", "-", max(year(t1$Date)))) +
-    facet_zoom(xlim = c(as.Date("2018-01-01"), as.Date(max(t1$Date))))->p
-p
-```
+library(DT)
 
-Table of Last 24 Months Foodgrain Stocks
+last_24_months <- combined[Date >= as.Date("2023-04-01") & Commodity != "Total"]
+last_24_wide <- dcast(last_24_months, Date ~ Commodity, value.var = "value", fun.aggregate = sum)
+last_24_wide[, Total := rowSums(.SD, na.rm = TRUE), .SDcols = c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain")]
+last_24_wide[, Date := format(Date, "%b-%Y")]
 
-```{r}
-melt(stocksall, id = c("Year", "Commodity"))->t
-paste(01, t$variable, t$Year, sep = "-")->t$Date
-as.Date(t$Date, "%d-%b-%Y")->t$Date
-t[!is.na(value)]->t
-as.numeric(t$value)/10->t$value
-factor(t$Commodity, levels = c("Wheat", "Rice",
-                               "Unmilled Paddy",
-                               "Coarsegrain", "Total"))->t$Commodity
-t[Commodity != "Total",.(value, Commodity, Date)]->t
-t[,.(value = sum(value),
-     Commodity = "Total"), Date]->t1
-rbind(t, t1)->t
-t[,value := round(value, 1)]
-dcast(t, Date~Commodity, sum)->t
-format(t$Date, "%b-%Y")->t$Date
-gt(tail(t, n = 24))
+datatable(last_24_wide,
+          rownames = FALSE,
+          options = list(
+            pageLength = 12,
+            dom = 'Bfrtip',
+            buttons = c('copy', 'csv', 'excel'),
+            scrollX = TRUE
+          ),
+          caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: center; font-size: 16px; font-weight: bold;',
+            'Last 24 Months Foodgrain Stock Position (Million Tonnes)'
+          )) %>%
+  formatRound(columns = c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain", "Total"), digits = 1)
+
 ```

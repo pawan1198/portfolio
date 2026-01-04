@@ -16,7 +16,7 @@ listing:
   table-hover: true
   date-format: "long"
   feed: true
-  fields: [image,title, data, date-modified, categories]
+  fields: [image,title, date-modified, categories]
   sort-ui: [date, title, categories]
   filter-ui: [categories, date]
   page-size: 60

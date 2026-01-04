@@ -1,0 +1,251 @@
+---
+title: "Foodprice"
+description: ""
+author: "Pawan"
+date: "2025/11/01"
+date-modified: last-modified
+categories:
+  - "Food Economy"
+# image: "thumbnails/health_map_hy.png"
+format:
+  html:
+    code-fold: true
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+```{r}
+library(data.table)
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(arrow)
+library(ggiraph)  # Add ggiraph for interactive plots
+
+open_dataset("~/foodprices/retailprices/parquetfilesnew/")->retail
+as.data.table(select(retail,c(states,date,commodity,price,commodity_group)))->retail
+
+open_dataset("~/foodprices/wholesaleprices/parquetfilesnew/")->wholesale
+as.data.table(select(wholesale,c(states,date,commodity,price,commodity_group)))->wholesale
+
+wholesale$Type<-"Wholesale"
+wholesale$price/100->wholesale$price
+retail$Type<-"Retail"
+
+rbind(retail,wholesale)->combinedprice
+
+# Clean data
+ifelse(is.na(combinedprice$price),0,combinedprice$price)->combinedprice$price
+gsub(" @","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
+gsub("- ","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
+gsub("Packed","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
+gsub("()","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
+gsub("*","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
+gsub("/ ","-",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
+gsub("/","-",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
+
+copy(combinedprice)->t
+
+combinedprice[states!="Maximum Price"]->combinedprice
+combinedprice[states!="Minimum Price"]->combinedprice
+combinedprice[states!="Modal Price"]->combinedprice
+combinedprice[states!="Average Price"]->combinedprice
+
+combinedprice[price>0]->combinedprice
+
+
+# Modified theme for interactive plots
+my_theme <- theme_bw(base_size = 14) +  # Slightly smaller base size for interactive
+  theme(
+    text = element_text(family = "sans-serif", color = "#333333"),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5,
+                              margin = margin(10, 0, 10, 0)),
+    axis.title = element_text(size = 16),
+    axis.text = element_text(size = 12),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    panel.grid.major = element_line(color = "#EEEEEE"),
+    panel.border = element_blank(),
+    axis.line = element_line(color = "#333333"),
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1),  # Reduced angle
+    strip.background = element_rect(fill = "#F2F2F2", color = NA)
+  )
+
+### Function to create interactive plots
+create_interactive_plot <- function(data, title = "", nrow = NULL) {
+  if (nrow(data) == 0) return(NULL)
+
+  p <- ggplot(data, aes(x = date, y = price, colour = commodity,
+                       tooltip = paste0(commodity, "\n",
+                                       "Date: ", format(date, "%b %Y"), "\n",
+                                       "Price: ₹", round(price, 2), "\n",
+                                       "Type: ", Type),
+                       data_id = commodity)) +
+    geom_smooth_interactive(method = "gam", se = FALSE, size = 1.2,
+                           aes(hover_css = "stroke-width:3;fill-opacity:0.8;")) +
+    my_theme +
+    facet_wrap(~commodity, nrow = nrow) +
+    scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+    labs(title = title, x = "Date", y = "Price (₹)") +
+    scale_color_viridis_d(begin = 0.2, end = 0.8) +
+    theme(legend.position = "none")  # Remove legend since we have tooltips
+
+  # Make interactive
+  girafe(
+    ggobj = p,
+    options = list(
+      opts_tooltip(
+        css = "background-color:white;color:black;padding:5px;border-radius:3px;
+               border:1px solid #ddd;font-family:sans-serif;font-size:12px;",
+        use_fill = TRUE
+      ),
+      opts_hover_inv(css = "opacity:0.3;"),
+      opts_hover(css = "stroke-width:2.5;"),
+      opts_selection(
+        type = "single",
+        css = "stroke:red;stroke-width:3;",
+        only_shiny = FALSE
+      ),
+      opts_zoom(min = 1, max = 5),
+      opts_toolbar(position = "topright"),
+      opts_sizing(rescale = TRUE, width = 1)
+    ),
+    width_svg = ifelse(is.null(nrow), 10, 8),
+    height_svg = ifelse(is.null(nrow), 6, ifelse(nrow == 1, 4, 6))
+  )
+}
+
+```
+
+### Cereals Retail Price (Interactive)
+
+```{r}
+combinedprice[commodity_group=="Cereals" & Type=="Retail"] -> r1
+g1 <- create_interactive_plot(r1, "Retail Cereals Prices Over Time", nrow = 1)
+g1
+```
+
+### Cereals Wholesale Price (Interactive)
+```{r}
+combinedprice[commodity_group=="Cereals" & Type=="Wholesale"] -> w1 
+g2 <- create_interactive_plot(w1, "Wholesale Cereals Prices Over Time", nrow = 1)
+g2
+```
+### Pulses Retail Price (Interactive)
+```{r}
+combinedprice[commodity_group=="Pulses" & Type=="Retail"] -> r2 
+g3 <- create_interactive_plot(r2, "Retail Pulses Prices Over Time") 
+g3
+```
+### Pulses Wholesale Price (Interactive)
+```{r}
+combinedprice[commodity_group=="Pulses" & Type=="Wholesale"] -> w2 
+g4 <- create_interactive_plot(w2, "Wholesale Pulses Prices Over Time") 
+g4
+```
+### Edible Oil Retail Price (Interactive)
+```{r}
+combinedprice[commodity_group=="Edible oils" & Type=="Retail"] -> r3 
+g5 <- create_interactive_plot(r3, "Retail Edible Oil Prices Over Time") 
+g5
+```
+### Edible Oil Wholesale Price (Interactive)
+```{r}
+combinedprice[commodity_group=="Edible oils" & Type=="Wholesale"] -> w3 
+g6 <- create_interactive_plot(w3, "Wholesale Edible Oil Prices Over Time") 
+g6
+```
+### Vegetables Retail Price (Interactive)
+```{r}
+combinedprice[commodity_group=="Vegetables" & Type=="Retail"] -> r4 
+g7 <- create_interactive_plot(r4, "Retail Vegetable Prices Over Time") 
+g7
+```
+### Vegetables Wholesale Price (Interactive)
+```{r}
+combinedprice[commodity_group=="Vegetables" & Type=="Wholesale"] -> w4 
+g8 <- create_interactive_plot(w4, "Wholesale Vegetable Prices Over Time") 
+g8
+```
+# Function to create comparison plots (Retail vs Wholesale for each group)
+```{r}
+create_comparison_plot <- function(commodity_group_name) {
+  data <- combinedprice[commodity_group == commodity_group_name]
+
+  if (nrow(data) == 0) return(NULL)
+
+  # Calculate average price by date and type
+  avg_data <- data[, .(avg_price = mean(price, na.rm = TRUE)),
+                   by = .(date, Type, commodity_group)]
+
+  p <- ggplot(avg_data, aes(x = date, y = avg_price, color = Type,
+                           tooltip = paste0(Type, "\n",
+                                           "Date: ", format(date, "%b %Y"), "\n",
+                                           "Avg Price: ₹", round(avg_price, 2)),
+                           data_id = Type)) +
+    geom_line_interactive(size = 1.2, alpha = 0.8,
+                         aes(hover_css = "stroke-width:3;")) +
+    geom_point_interactive(size = 1.5, alpha = 0.6) +
+    my_theme +
+    labs(title = paste(commodity_group_name, "- Retail vs Wholesale"),
+         x = "Date", y = "Average Price (₹)") +
+    scale_color_manual(values = c("Retail" = "#E41A1C", "Wholesale" = "#377EB8")) +
+    scale_x_date(date_breaks = "1 year", date_labels = "%Y")
+
+  girafe(
+    ggobj = p,
+    options = list(
+      opts_tooltip(
+        css = "background-color:white;color:black;padding:5px;border-radius:3px;
+               border:1px solid #ddd;font-family:sans-serif;font-size:12px;"
+      ),
+      opts_hover_inv(css = "opacity:0.2;"),
+      opts_hover(css = "stroke-width:3;"),
+      opts_selection(type = "single", css = "stroke:gold;stroke-width:3;"),
+      opts_zoom(min = 1, max = 5)
+    ),
+    width_svg = 10,
+    height_svg = 5
+  )
+}
+```
+# Create comparison plots
+```{r}
+comp1 <- create_comparison_plot("Cereals")
+comp2 <- create_comparison_plot("Pulses")
+comp3 <- create_comparison_plot("Edible oils")
+comp4 <- create_comparison_plot("Vegetables")
+
+# Display comparison plots
+comp1
+comp2
+comp3
+comp4
+```
+
+# Function to save interactive plots as HTML
+```{r}
+save_interactive_plots <- function() {
+  plots <- list(g1, g2, g3, g4, g5, g6, g7, g8, comp1, comp2, comp3, comp4)
+  names <- c("cereals_retail", "cereals_wholesale", "pulses_retail", "pulses_wholesale",
+             "oil_retail", "oil_wholesale", "veg_retail", "veg_wholesale",
+             "compare_cereals", "compare_pulses", "compare_oil", "compare_veg")
+
+  for (i in seq_along(plots)) {
+    if (!is.null(plots[[i]])) {
+      htmlwidgets::saveWidget(plots[[i]],
+                             file = paste0("/home/pawan/foodprices/", names[i], ".html"),
+                             selfcontained = TRUE)
+    }
+  }
+  message("All interactive plots saved as HTML files")
+}
+
+# Uncomment to save plots
+# save_interactive_plots()
+```

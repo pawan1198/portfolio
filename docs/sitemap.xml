@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/index.html</loc>
-    <lastmod>2025-12-25T16:13:56.664Z</lastmod>
+    <lastmod>2025-12-30T14:53:55.882Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.html</loc>
@@ -63,5 +63,9 @@
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/trade1.html</loc>
     <lastmod>2025-12-19T08:13:30.596Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs/foodprice.html</loc>
+    <lastmod>2025-12-30T12:30:02.271Z</lastmod>
   </url>
 </urlset>

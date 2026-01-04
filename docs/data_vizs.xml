@@ -8,7 +8,7 @@
 <title>Portfolio</title>
 <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.html</link>
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.xml" rel="self" type="application/rss+xml"/>
-<description>Pawan&#39;s Data Analytics Portfolio</description>
+<description>Interactive data visualizations and analysis projects</description>
 <generator>quarto-1.8.26</generator>
 <lastBuildDate>Thu, 18 Dec 2025 18:30:00 GMT</lastBuildDate>
 <item>
@@ -10760,8 +10760,8 @@ font-style: italic;">## Style facet strips (if used)</span></span>
 <span id="cb2-16">          )</span></code></pre></div></div>
 </details>
 </div>
-<section id="international-fuel-price" class="level2">
-<h2 class="anchored" data-anchor-id="international-fuel-price">International Fuel Price</h2>
+<section id="international-fuel-price" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="international-fuel-price"><span class="header-section-number">1</span> International Fuel Price</h2>
 <p>Read the data</p>
 <div class="cell">
 <details class="code-fold">
@@ -11649,8 +11649,8 @@ font-style: inherit;">-&gt;</span>p</span>
 </div>
 </div>
 </section>
-<section id="fuel-price-in-metro-cities-of-india" class="level2">
-<h2 class="anchored" data-anchor-id="fuel-price-in-metro-cities-of-india">Fuel Price in Metro Cities of India</h2>
+<section id="fuel-price-in-metro-cities-of-india" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="fuel-price-in-metro-cities-of-india"><span class="header-section-number">2</span> Fuel Price in Metro Cities of India</h2>
 <p>Load Data</p>
 <div class="cell">
 <details class="code-fold">
@@ -12416,6 +12416,8 @@ font-style: inherit;">-&gt;</span>p</span>
 </div>
 </div>
 
+
+<!-- -->
 
 </section>
 

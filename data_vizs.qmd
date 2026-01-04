@@ -1,24 +1,23 @@
 ---
 title: "Data Visualizations"
 author: "Pawan"
+description: "Interactive data visualizations and analysis projects"
 listing:
   id: "data_vizs"
   contents: data_vizs
   exclude: 
     title: "Template"
   sort: "date-modified"
-  type: grid
-  image-align: left
-  categories: numbered
-  grid-item-border: false
+  type: table
+  image-align: right
+  categories: false  # Change this from the array to false
+  grid-item-border: true
   grid-columns: 3
   table-hover: true
   date-format: "long"
   feed: true
-  fields: [image,title, date-modified]
-  sort-ui: [date, title]
-  page-size: 50
+  fields: [image,title, data, date-modified, categories]
+  sort-ui: [date, title, categories]
+  filter-ui: [categories, date]
+  page-size: 60
 ---
-
-::: {#data_vizs}
-:::

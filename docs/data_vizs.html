@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Pawan">
+<meta name="description" content="Interactive data visualizations and analysis projects">
 
 <title>Data Visualizations – Portfolio</title>
 <style>
@@ -116,9 +117,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
 
     const options = {
-      valueNames: ['listing-image','listing-title','listing-date-modified',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
+      valueNames: ['listing-image','listing-title','listing-data','listing-date-modified','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-categories","listing-date"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -249,8 +250,8 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(9)</span></div><div class="category" data-category="RWRpYmxlJTIwT2lscw==">Edible Oils <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RmVydGlsaXplcg==">Fertilizer <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Rm9vZCUyMEVjb25vbXk=">Food Economy <span class="quarto-category-count">(3)</span></div><div class="category" data-category="RnVlbA==">Fuel <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TlNT">NSS <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UExGUw==">PLFS <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJpY2Vz">Prices <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhZGU=">Trade <span class="quarto-category-count">(4)</span></div></div></div>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -259,6 +260,11 @@ window.Quarto = {
 <div class="quarto-title-block"><div><h1 class="title">Data Visualizations</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
+<div>
+  <div class="description">
+    Interactive data visualizations and analysis projects
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -279,237 +285,244 @@ window.Quarto = {
 </header>
 
 
-<div id="listing-data_vizs" class="quarto-listing quarto-listing-container-grid">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-data_vizs-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-data_vizs'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-</div>
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="RnVlbCUyQ1ByaWNlcw==" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1761988017771" data-listing-date-modified-sort="1761988017000" data-listing-reading-time-sort="10" data-listing-word-count-sort="1888">
-<a href="./data_vizs/fuelprice.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<p class="card-img-top"><img src="data_vizs/fuelprice_files/figure-html/unnamed-chunk-4-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Fuel Prices
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-November 1, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="VHJhZGU=" data-listing-date-sort="1761676200000" data-listing-file-modified-sort="1766130546810" data-listing-date-modified-sort="1766130546000" data-listing-reading-time-sort="5" data-listing-word-count-sort="831">
-<a href="./data_vizs/trade.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<p class="card-img-top"><img src="data_vizs/trade_files/figure-html/unnamed-chunk-3-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Trade Statistics
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 19, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="VHJhZGU=" data-listing-date-sort="1766082600000" data-listing-file-modified-sort="1766132010596" data-listing-date-modified-sort="1766132010000" data-listing-reading-time-sort="6" data-listing-word-count-sort="1192">
-<a href="./data_vizs/trade1.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<p class="card-img-top"><img src="data_vizs/trade1_files/figure-html/unnamed-chunk-6-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Comprehensive Trade Analysis: Methodology, Code, and Insights
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 19, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="UExGUyUyQ05TUw==" data-listing-date-sort="1762021800000" data-listing-file-modified-sort="1766419450957" data-listing-date-modified-sort="1766419450000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1684">
-<a href="./data_vizs/plfs.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-PLFS
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 22, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="4" data-categories="VHJhZGUlMkNGZXJ0aWxpemVy" data-listing-date-sort="1764095400000" data-listing-file-modified-sort="1766419709902" data-listing-date-modified-sort="1766419709000" data-listing-reading-time-sort="11" data-listing-word-count-sort="2057">
-<a href="./data_vizs/fertilizer.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<p class="card-img-top"><img src="data_vizs/fertilizer_files/figure-html/unnamed-chunk-3-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Fertilizer Statistics
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 22, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="5" data-categories="VHJhZGUlMkNFZGlibGUlMjBPaWxz" data-listing-date-sort="1761589800000" data-listing-file-modified-sort="1766566196276" data-listing-date-modified-sort="1766566196000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2881">
-<a href="./data_vizs/edibleoil.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Edible Oils Import by India
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 24, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="6" data-categories="Rm9vZCUyMEVjb25vbXk=" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1766592853141" data-listing-date-modified-sort="1766592853000" data-listing-reading-time-sort="5" data-listing-word-count-sort="926">
-<a href="./data_vizs/procurement.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Public Procurement
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 24, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="7" data-categories="Rm9vZCUyMEVjb25vbXk=" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1766679226840" data-listing-date-modified-sort="1766679226000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1316">
-<a href="./data_vizs/stocks.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Foodgrain Stock
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 25, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="8" data-categories="Rm9vZCUyMEVjb25vbXk=" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1767163706353" data-listing-date-modified-sort="1767163706000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1443">
-<a href="./data_vizs/foodprice.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left borderless">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Foodprice
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 31, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div>
 
 
 
 <!-- -->
 
 
-</main> <!-- /main -->
+<div class="quarto-listing quarto-listing-container-table" id="listing-data_vizs">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+    <select id="listing-data_vizs-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-data_vizs'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+      <option value="" disabled="" selected="" hidden="">Order By</option>
+      <option value="index" data-direction="asc">Default</option>
+      <option value="listing-title-sort" data-direction="asc">
+        Title
+      </option>
+      <option value="listing-categories" data-direction="asc">
+        Categories
+      </option>
+    </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
+<table class="quarto-listing-table table table-hover">
+<thead>
+<tr>
+
+<th>
+ 
+</th>
+
+<th>
+<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+</th>
+
+<th>
+data
+</th>
+
+<th>
+Modified
+</th>
+
+<th>
+<a class="sort" data-sort="listing-categories" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Categories</a>
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-categories="RnVlbCUyQ1ByaWNlcw==" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1761988017771" data-listing-date-modified-sort="1761988017000" data-listing-reading-time-sort="10" data-listing-word-count-sort="1888" data-listing-title-sort="Fuel Prices" data-listing-filename-sort="fuelprice.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><p class="card-img-top"><img src="data_vizs/fuelprice_files/figure-html/unnamed-chunk-4-1.png" style="height: 40px;"  class="thumbnail-image card-img"/></p></span>
+</td>
+<td>
+<a href="./data_vizs/fuelprice.html" class="title listing-title">Fuel Prices</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">November 1, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Fuel, Prices</span>
+</td>
+
+</tr>
+
+<tr data-index="1" data-categories="VHJhZGU=" data-listing-date-sort="1761676200000" data-listing-file-modified-sort="1766130546810" data-listing-date-modified-sort="1766130546000" data-listing-reading-time-sort="5" data-listing-word-count-sort="831" data-listing-title-sort="Trade Statistics" data-listing-filename-sort="trade.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><p class="card-img-top"><img src="data_vizs/trade_files/figure-html/unnamed-chunk-3-1.png" style="height: 40px;"  class="thumbnail-image card-img"/></p></span>
+</td>
+<td>
+<a href="./data_vizs/trade.html" class="title listing-title">Trade Statistics</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 19, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Trade</span>
+</td>
+
+</tr>
+
+<tr data-index="2" data-categories="VHJhZGU=" data-listing-date-sort="1766082600000" data-listing-file-modified-sort="1766132010596" data-listing-date-modified-sort="1766132010000" data-listing-reading-time-sort="6" data-listing-word-count-sort="1192" data-listing-title-sort="Comprehensive Trade Analysis: Methodology, Code, and Insights" data-listing-filename-sort="trade1.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><p class="card-img-top"><img src="data_vizs/trade1_files/figure-html/unnamed-chunk-6-1.png" style="height: 40px;"  class="thumbnail-image card-img"/></p></span>
+</td>
+<td>
+<a href="./data_vizs/trade1.html" class="title listing-title">Comprehensive Trade Analysis: Methodology, Code, and Insights</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 19, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Trade</span>
+</td>
+
+</tr>
+
+<tr data-index="3" data-categories="UExGUyUyQ05TUw==" data-listing-date-sort="1762021800000" data-listing-file-modified-sort="1766419450957" data-listing-date-modified-sort="1766419450000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1684" data-listing-title-sort="PLFS" data-listing-filename-sort="plfs.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><div class="listing-item-img-placeholder card-img-top" style="height: 40px;">&nbsp;</div></span>
+</td>
+<td>
+<a href="./data_vizs/plfs.html" class="title listing-title">PLFS</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 22, 2025</span>
+</td>
+<td>
+<span class="listing-categories">PLFS, NSS</span>
+</td>
+
+</tr>
+
+<tr data-index="4" data-categories="VHJhZGUlMkNGZXJ0aWxpemVy" data-listing-date-sort="1764095400000" data-listing-file-modified-sort="1766419709902" data-listing-date-modified-sort="1766419709000" data-listing-reading-time-sort="11" data-listing-word-count-sort="2057" data-listing-title-sort="Fertilizer Statistics" data-listing-filename-sort="fertilizer.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><p class="card-img-top"><img src="data_vizs/fertilizer_files/figure-html/unnamed-chunk-3-1.png" style="height: 40px;"  class="thumbnail-image card-img"/></p></span>
+</td>
+<td>
+<a href="./data_vizs/fertilizer.html" class="title listing-title">Fertilizer Statistics</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 22, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Trade, Fertilizer</span>
+</td>
+
+</tr>
+
+<tr data-index="5" data-categories="VHJhZGUlMkNFZGlibGUlMjBPaWxz" data-listing-date-sort="1761589800000" data-listing-file-modified-sort="1766566196276" data-listing-date-modified-sort="1766566196000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2881" data-listing-title-sort="Edible Oils Import by India" data-listing-filename-sort="edibleoil.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><div class="listing-item-img-placeholder card-img-top" style="height: 40px;">&nbsp;</div></span>
+</td>
+<td>
+<a href="./data_vizs/edibleoil.html" class="title listing-title">Edible Oils Import by India</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 24, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Trade, Edible Oils</span>
+</td>
+
+</tr>
+
+<tr data-index="6" data-categories="Rm9vZCUyMEVjb25vbXk=" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1766592853141" data-listing-date-modified-sort="1766592853000" data-listing-reading-time-sort="5" data-listing-word-count-sort="926" data-listing-title-sort="Public Procurement" data-listing-filename-sort="procurement.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><div class="listing-item-img-placeholder card-img-top" style="height: 40px;">&nbsp;</div></span>
+</td>
+<td>
+<a href="./data_vizs/procurement.html" class="title listing-title">Public Procurement</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 24, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Food Economy</span>
+</td>
+
+</tr>
+
+<tr data-index="7" data-categories="Rm9vZCUyMEVjb25vbXk=" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1766679226840" data-listing-date-modified-sort="1766679226000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1316" data-listing-title-sort="Foodgrain Stock" data-listing-filename-sort="stocks.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><div class="listing-item-img-placeholder card-img-top" style="height: 40px;">&nbsp;</div></span>
+</td>
+<td>
+<a href="./data_vizs/stocks.html" class="title listing-title">Foodgrain Stock</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 25, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Food Economy</span>
+</td>
+
+</tr>
+
+<tr data-index="8" data-categories="Rm9vZCUyMEVjb25vbXk=" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1767163706353" data-listing-date-modified-sort="1767163706000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1443" data-listing-title-sort="Foodprice" data-listing-filename-sort="foodprice.qmd" onclick="href = this.querySelector('a').getAttribute('href');
+ if (href) { window.location=href ; return false; }">
+<td>
+<span class="listing-image"><div class="listing-item-img-placeholder card-img-top" style="height: 40px;">&nbsp;</div></span>
+</td>
+<td>
+<a href="./data_vizs/foodprice.html" class="title listing-title">Foodprice</a>
+</td>
+<td>
+<span class="listing-data">&nbsp;</span>
+</td>
+<td>
+<span class="listing-date-modified">December 31, 2025</span>
+</td>
+<td>
+<span class="listing-categories">Food Economy</span>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -964,27 +977,26 @@ December 31, 2025
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Data Visualizations"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Pawan"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">listing:</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  id: "data_vizs"</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  contents: data_vizs</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">  exclude: </span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    title: "Template"</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  sort: "date-modified"</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  type: grid</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">  image-align: left</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  categories: numbered</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">  grid-item-border: false</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">  grid-columns: 3</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">  table-hover: true</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">  date-format: "long"</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">  feed: true</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">  fields: [image,title, date-modified]</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">  sort-ui: [date, title]</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">  page-size: 50</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>::: {#data_vizs}</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Interactive data visualizations and analysis projects"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">listing:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  id: "data_vizs"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">  contents: data_vizs</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  exclude: </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    title: "Template"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  sort: "date-modified"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">  type: table</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  image-align: right</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">  categories: false  # Change this from the array to false</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">  grid-item-border: true</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">  grid-columns: 3</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">  table-hover: true</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">  date-format: "long"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">  feed: true</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">  fields: [image,title, data, date-modified, categories]</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">  sort-ui: [date, title, categories]</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">  filter-ui: [categories, date]</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">  page-size: 60</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

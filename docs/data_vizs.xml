@@ -8,7 +8,7 @@
 <title>Portfolio</title>
 <link>https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.html</link>
 <atom:link href="https://pawan1198.github.io/portfolio/data_vizs.html/data_vizs.xml" rel="self" type="application/rss+xml"/>
-<description>Pawan</description>
+<description>Pawan&#39;s Data Analytics Portfolio</description>
 <generator>quarto-1.8.26</generator>
 <lastBuildDate>Thu, 18 Dec 2025 18:30:00 GMT</lastBuildDate>
 <item>
@@ -13645,8 +13645,8 @@ background-color: null;
 font-style: inherit;">-</span> Import_USD)]</span></code></pre></div></div>
 </details>
 </div>
-<section id="trade-statistics" class="level1">
-<h1>Trade Statistics</h1>
+<section id="trade-statistics" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Trade Statistics</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -13854,8 +13854,8 @@ font-style: inherit;">"Trade Balance"</span>)</span></code></pre></div></div>
 </div>
 </div>
 </section>
-<section id="cereals-export" class="level1">
-<h1>Cereals Export</h1>
+<section id="cereals-export" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Cereals Export</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -14004,8 +14004,8 @@ font-style: inherit;">"Cereals Exports"</span>)</span></code></pre></div></div>
 </div>
 </div>
 </section>
-<section id="fertilizer-import" class="level1">
-<h1>Fertilizer Import</h1>
+<section id="fertilizer-import" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Fertilizer Import</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -14138,8 +14138,8 @@ font-style: inherit;">"Fertilizer Imports"</span>)</span></code></pre></div></di
 </div>
 </div>
 </section>
-<section id="fats-and-oil-import" class="level1">
-<h1>Fats and Oil Import</h1>
+<section id="fats-and-oil-import" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Fats and Oil Import</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -14226,8 +14226,8 @@ font-style: inherit;">"Vegetable Fats and Edible Oils Imports"</span>)</span></c
 </div>
 </div>
 </section>
-<section id="petrolium-import" class="level1">
-<h1>Petrolium Import</h1>
+<section id="petrolium-import" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Petrolium Import</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -14353,6 +14353,8 @@ font-style: inherit;">"Petrolium Imports"</span>)</span></code></pre></div></div
 </div>
 </div>
 
+
+<!-- -->
 
 </section>
 

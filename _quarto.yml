@@ -9,7 +9,7 @@ website:
   repo-url: "https://github.com/pawan1198/portfolio"
   repo-actions: [edit, issue]
   site-url: "https://pawan1198.github.io/portfolio/data_vizs.html"
-  description: "Pawan"
+  description: "Pawan's Data Analytics Portfolio"
   navbar:
     left:
       - href: index.qmd
@@ -22,21 +22,45 @@ website:
         text: "Blog"
       - href: about.qmd
         text: "About Me"
-tools:
-      - icon: rss
-        href: index.xml
-      - icon: github
+    right:
+      - icon: sun
+        text: "Toggle Theme"
         menu:
-          - text: "Source Code"
-            url:  https://github.com/pawan1198/portfolio
-          - text: "Suggestions / Feedback"
-            url:  https://github.com/pawan1198/portfolio/issues
+          - text: "Light"
+            href: javascript:toggleTheme('light')
+          - text: "Dark"
+            href: javascript:toggleTheme('dark')
+          - text: "Auto"
+            href: javascript:toggleTheme('auto')
+tools:
+  - icon: rss
+    href: index.xml
+  - icon: github
+    menu:
+      - text: "Source Code"
+        url: https://github.com/pawan1198/portfolio
+      - text: "Suggestions / Feedback"
+        url: https://github.com/pawan1198/portfolio/issues
+
 format:
   html:
-    theme: litera
-       - superhero
+    theme:
+      - litera
+      - darkly
     css: styles.css
-    toc: true   
+    toc: true
+    toc-title: "Contents"
+    toc-expand: 2
+    toc-location: left
+    number-sections: true
+    code-overflow: wrap
+    code-copy: hover
+    code-tools: true
+    fig-width: 8
+    fig-height: 5
+    fig-responsive: true
+    highlight-style: github
+    anchor-sections: true
+    anchor-sections-depth: 3
 
 editor: visual
-

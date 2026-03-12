@@ -60,6 +60,7 @@ my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base
           )
 
 ```
+
 ## International Fuel Price
 
 Read the data
@@ -106,6 +107,7 @@ paste("Petrol")->petrol$Fuel
 rbind(diesel, petrol)->fuel
 
 ```
+
 Visualizations
 
 Average Crude Oil FOB Price (Indian Basket)
@@ -117,6 +119,7 @@ ggplot(avgcrude, aes(x = Year, y = Price, group = 1)) +
     labs(y = "Price (Dollars per Barrel)") +
     ggtitle("Average Crude Oil FOB Price (Indian Basket)")
 ```
+
 Crude Oil FOB Price (Indian Basket)
 
 ```{r}
@@ -127,6 +130,7 @@ ggplot(crude, aes(x = Date, y = value, group = 1)) +
     labs(y = "Price (Dollars per Barrel)") +
     ggtitle("Crude Oil FOB Price (Indian Basket)")
 ```
+
 Diesel FOB International Price
 
 ```{r}
@@ -138,6 +142,7 @@ ggplot(diesel, aes(x = Date, y = value, group = 1)) +
     ggtitle("Diesel FOB International Price")->p1
 p1
 ```
+
 Petrol FOB International Price
 
 ```{r}
@@ -153,6 +158,7 @@ p2
 ```{r}
 grid.arrange(p1, p2)
 ```
+
 Disesl and Petrol FOB International Price
 
 ```{r}
@@ -164,6 +170,7 @@ ggplot(fuel, aes(x = Date, y = value, group = 1)) +
     ggtitle("Disesl and Petrol FOB International Price")->p
 p
 ```
+
 Import of Crude oil and Petroleum Products
 
 ```{r}
@@ -185,6 +192,7 @@ ggplot(imp, aes(x = variable, y = value, fill = IMPORT_EXPORT)) +
 ##ggsave("import-crude-and-petroleum.png", width = 15, height = 8)
 
 ```
+
 Crude Oil Price
 
 ```{r}
@@ -202,6 +210,7 @@ p
 ## Fuel Price in Metro Cities of India
 
 Load Data
+
 ```{r}
 fread("/home/pawan/fuelprices/india_retail_fuelprices.csv")->t
 as.Date(t$Date, format = "%d/%m/%y")->t$Date
@@ -231,6 +240,7 @@ ggplot(t1, aes(x = Date, y = value, color = Fuel)) +
 
 p
 ```
+
 Petrol Price
 
 ```{r}
@@ -250,6 +260,7 @@ ggplot(petrol, aes(x = Date, y = value, group = 1)) +
     ggtitle("Pertol Price")->p1
 p1
 ```
+
 Diesel Price
 
 ```{r}
@@ -277,6 +288,7 @@ cowplot::plot_grid(p1,
                               axis.title.y = element_blank()))
 ## ggsave("fuel-price.png", width = 15, height = 8)
 ```
+
 Daily Fuel Price in different City
 
 ```{r}

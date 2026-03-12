@@ -3,64 +3,78 @@ project:
   output-dir: docs
 
 website:
-  title: "Portfolio"
-  search: true
-  reader-mode: true
-  repo-url: "https://github.com/pawan1198/portfolio"
-  repo-actions: [edit, issue]
-  site-url: "https://pawan1198.github.io/portfolio/data_vizs.html"
-  description: "Pawan's Data Analytics Portfolio"
+  title: "Pawan | Data Analyst & Researcher"
+
+  description: "Portfolio of Pawan – Statistical Analyst, R Programmer, and Field Researcher"
+  
   navbar:
+    ##logo: assets/logo.svg
+    logo-alt: "Pawan Portfolio"
+    pinned: true
+    background: "#0f172a"
+    foreground: "#e2e8f0"
+    search: true
     left:
-      - href: index.qmd
-        text: "Home"
-      - href: data_vizs.qmd
-        text: "Data Visualizations"
-      - href: statistics-with-r.qmd
-        text: "Statistics With R"
-      - href: blog.qmd
-        text: "Blog"
-      - href: about.qmd
-        text: "About Me"
-    right:
-      - icon: sun
-        text: "Toggle Theme"
+      - text: "🏠 Home"
+        file: index.qmd
+      - text: "📊 Visualizations"
+        file: data_vizs.qmd
+      - text: "📈 Interactive Shiny"
+        file: shiny_app.qmd
+      - text: "📚 Statistics with R"
         menu:
-          - text: "Light"
-            href: javascript:toggleTheme('light')
-          - text: "Dark"
-            href: javascript:toggleTheme('dark')
-          - text: "Auto"
-            href: javascript:toggleTheme('auto')
-tools:
-  - icon: rss
-    href: index.xml
-  - icon: github
-    menu:
-      - text: "Source Code"
-        url: https://github.com/pawan1198/portfolio
-      - text: "Suggestions / Feedback"
-        url: https://github.com/pawan1198/portfolio/issues
+          - text: "Chapter 1: Descriptive Statistics"
+            file: stats/chapter1.qmd
+          - text: "Chapter 2: Probability & Distributions"
+            file: stats/chapter2.qmd
+          - text: "Chapter 3: Regression Analysis"
+            file: stats/chapter3.qmd
+          - text: "Chapter 4: Time Series"
+            file: stats/chapter4.qmd
+      - text: "✍️ Blog"
+        file: blog.qmd
+      - text: "👤 About"
+        file: about.qmd
+    right:
+      - icon: github
+        href: "https://github.com/pawan1198"
+        aria-label: GitHub
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/pawanjangra1198/"
+        aria-label: LinkedIn
+
+  sidebar: false
+
+  page-footer:
+    background: "#0f172a"
+    foreground: "#94a3b8"
+    left: "© 2025 Pawan Jangra · Built with Quarto & R"
+    right:
+      - icon: github
+        href: "https://github.com/pawan1198"
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/pawanjangra1198/"
 
 format:
   html:
-    theme:
-      - litera
-      - darkly
-    css: styles.css
+    theme: 
+      light: [flatly, assets/custom.scss]
+      dark: [darkly, assets/custom-dark.scss]
+    css: assets/styles.css
     toc: true
-    toc-title: "Contents"
-    toc-expand: 2
-    toc-location: left
-    number-sections: true
-    code-overflow: wrap
-    code-copy: hover
+    toc-depth: 3
+    code-fold: true
     code-tools: true
-    fig-width: 8
-    fig-height: 5
-    fig-responsive: true
-    highlight-style: github
+    code-copy: true
+    smooth-scroll: true
     anchor-sections: true
-    anchor-sections-depth: 3
+    highlight-style: github
+    fig-width: 9
+    fig-height: 6
+    fig-dpi: 150
 
-editor: visual
+execute:
+  freeze: auto
+  warning: false
+  message: false
+  echo: true

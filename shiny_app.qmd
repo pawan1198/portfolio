@@ -475,4 +475,4 @@ runCLT();
 ---
 
 > **Want Full Shiny Apps?** 
-> For server-side Shiny apps with live data, database connections, and full R computations, deploy via [shinyapps.io](https://www.shinyapps.io) and embed them here using iframes. See the [Statistics with R](stats/chapter1.html) section for code examples.
+> For server-side Shiny apps with live data, database connections, and full R computations, deploy via [shinyapps.io](https://www.shinyapps.io) and embed them here using iframes. See the [Statistics with R](statistics-with-r/chapter1.html) section for code examples.

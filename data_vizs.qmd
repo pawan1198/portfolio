@@ -8,7 +8,7 @@ listing:
   exclude: 
     title: "Template"
   sort: "date-modified"
-  type: table
+  type: grid
   image-align: right
   categories: false  # Change this from the array to false
   grid-item-border: true

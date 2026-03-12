@@ -1,21 +1,13 @@
 ---
 title: "Blog"
-author: "Pawan"
+description: "Articles on R programming, statistical analysis, survey methodology, and data storytelling."
 listing:
-  id: "blog"
   contents: blog
-  exclude: 
-    title: "Template"
   sort: "date desc"
   type: grid
-  image-align: left
-  categories: numbered
-  grid-item-border: false
-  grid-columns: 4
-  table-hover: true
-  date-format: "long"
+  grid-columns: 3
+  fields: [image, date, title, description, categories, reading-time]
+  categories: true
   feed: true
-  fields: [image,title, date]
-  sort-ui: [date, title]
-  page-size: 20
+page-layout: full
 ---

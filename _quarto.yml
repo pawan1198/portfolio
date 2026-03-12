@@ -24,13 +24,13 @@ website:
       - text: "📚 Statistics with R"
         menu:
           - text: "Chapter 1: Descriptive Statistics"
-            file: stats/chapter1.qmd
+            file: statistics-with-r/chapter1.qmd
           - text: "Chapter 2: Probability & Distributions"
-            file: stats/chapter2.qmd
+            file: statistics-with-r/chapter2.qmd
           - text: "Chapter 3: Regression Analysis"
-            file: stats/chapter3.qmd
+            file: statistics-with-r/chapter3.qmd
           - text: "Chapter 4: Time Series"
-            file: stats/chapter4.qmd
+            file: statistics-with-r/chapter4.qmd
       - text: "✍️ Blog"
         file: blog.qmd
       - text: "👤 About"

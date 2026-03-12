@@ -1,0 +1,478 @@
+---
+title: "Interactive Shiny Apps"
+description: "Explore statistical concepts interactively through embedded Shiny-style web applications."
+toc: true
+---
+
+> **Note:** These apps are built using pure JavaScript/HTML to run directly in the browser — no server required. For full Shiny apps, deploy via [shinyapps.io](https://www.shinyapps.io) and embed the iframe.
+
+---
+
+## App 1: Distribution Explorer {#dist-explorer}
+
+Interactively explore statistical distributions by adjusting parameters.
+
+```{=html}
+<div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+<div style="background:#0f172a; color:white; padding:1rem 1.5rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+  <span>📊</span> Distribution Explorer
+</div>
+<div style="padding:1.5rem; background:white;">
+
+<div style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:start;">
+
+<div>
+  <label style="display:block; font-weight:600; margin-bottom:0.5rem; font-size:0.9rem;">Distribution Type</label>
+  <select id="dist-type" style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:1rem; font-size:0.9rem;">
+    <option value="normal">Normal Distribution</option>
+    <option value="uniform">Uniform Distribution</option>
+    <option value="exponential">Exponential Distribution</option>
+    <option value="poisson">Poisson Distribution</option>
+  </select>
+
+  <label style="display:block; font-weight:600; margin-bottom:0.5rem; font-size:0.9rem;">Sample Size: <span id="n-label">500</span></label>
+  <input type="range" id="sample-n" min="50" max="5000" value="500" step="50" style="width:100%; margin-bottom:1rem;">
+
+  <div id="param-controls"></div>
+
+  <button onclick="generateDist()" style="width:100%; background:linear-gradient(135deg,#2563eb,#7c3aed); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; margin-top:0.5rem;">
+    🔄 Generate New Sample
+  </button>
+
+  <div id="dist-stats" style="margin-top:1.5rem; background:#f8fafc; border-radius:8px; padding:1rem; font-size:0.85rem; line-height:2;"></div>
+</div>
+
+<div>
+  <canvas id="dist-canvas" width="480" height="360" style="width:100%; border-radius:8px; border:1px solid #f1f5f9;"></canvas>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const distCanvas = document.getElementById('dist-canvas');
+const ctx = distCanvas.getContext('2d');
+
+function randn() {
+  let u = 0, v = 0;
+  while(u === 0) u = Math.random();
+  while(v === 0) v = Math.random();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+function generateDist() {
+  const type = document.getElementById('dist-type').value;
+  const n = +document.getElementById('sample-n').value;
+  document.getElementById('n-label').textContent = n;
+
+  let data = [];
+  let title = '';
+
+  if (type === 'normal') {
+    const mu = +(document.getElementById('mu') ? document.getElementById('mu').value : 0);
+    const sigma = +(document.getElementById('sigma') ? document.getElementById('sigma').value : 1);
+    data = Array.from({length:n}, () => mu + sigma * randn());
+    title = `Normal(μ=${mu}, σ=${sigma})`;
+  } else if (type === 'uniform') {
+    const a = +(document.getElementById('ua') ? document.getElementById('ua').value : 0);
+    const b = +(document.getElementById('ub') ? document.getElementById('ub').value : 1);
+    data = Array.from({length:n}, () => a + (b - a) * Math.random());
+    title = `Uniform(${a}, ${b})`;
+  } else if (type === 'exponential') {
+    const lambda = +(document.getElementById('lambda') ? document.getElementById('lambda').value : 1);
+    data = Array.from({length:n}, () => -Math.log(1 - Math.random()) / lambda);
+    title = `Exponential(λ=${lambda})`;
+  } else if (type === 'poisson') {
+    const lam = +(document.getElementById('plam') ? document.getElementById('plam').value : 3);
+    data = Array.from({length:n}, () => {
+      let L = Math.exp(-lam), k = 0, p = 1;
+      do { k++; p *= Math.random(); } while(p > L);
+      return k - 1;
+    });
+    title = `Poisson(λ=${lam})`;
+  }
+
+  drawHistogram(data, title);
+  showStats(data);
+}
+
+function drawHistogram(data, title) {
+  const W = distCanvas.width, H = distCanvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const bins = 40;
+  const min = Math.min(...data), max = Math.max(...data);
+  const binW = (max - min) / bins;
+  const counts = new Array(bins).fill(0);
+  data.forEach(v => {
+    let i = Math.floor((v - min) / binW);
+    if (i >= bins) i = bins - 1;
+    counts[i]++;
+  });
+
+  const maxCount = Math.max(...counts);
+  const pad = { t:50, r:20, b:50, l:50 };
+  const chartW = W - pad.l - pad.r;
+  const chartH = H - pad.t - pad.b;
+
+  // Background
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(pad.l, pad.t, chartW, chartH);
+
+  // Grid lines
+  ctx.strokeStyle = '#e2e8f0';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.t + chartH * (1 - i/5);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+chartW, y); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(Math.round(maxCount * i/5), pad.l - 5, y + 3);
+  }
+
+  // Bars with gradient
+  const bw = chartW / bins;
+  counts.forEach((c, i) => {
+    const bh = (c / maxCount) * chartH;
+    const x = pad.l + i * bw;
+    const y = pad.t + chartH - bh;
+    const grad = ctx.createLinearGradient(0, y, 0, y+bh);
+    grad.addColorStop(0, '#2563eb');
+    grad.addColorStop(1, '#7c3aed');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x+1, y, bw-2, bh);
+  });
+
+  // X axis labels
+  ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+  for (let i = 0; i <= 5; i++) {
+    const v = min + (max - min) * i / 5;
+    const x = pad.l + chartW * i / 5;
+    ctx.fillText(v.toFixed(2), x, H - 10);
+  }
+
+  // Title
+  ctx.fillStyle = '#0f172a'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(title, W/2, 25);
+}
+
+function showStats(data) {
+  const n = data.length;
+  const mean = data.reduce((a,b)=>a+b,0)/n;
+  const variance = data.reduce((a,b)=>a+(b-mean)**2,0)/(n-1);
+  const std = Math.sqrt(variance);
+  const sorted = [...data].sort((a,b)=>a-b);
+  const median = sorted[Math.floor(n/2)];
+  const q1 = sorted[Math.floor(n/4)];
+  const q3 = sorted[Math.floor(3*n/4)];
+
+  document.getElementById('dist-stats').innerHTML = `
+    <strong>Summary Statistics</strong><br>
+    n = ${n} &nbsp;|&nbsp; Mean = ${mean.toFixed(3)}<br>
+    SD = ${std.toFixed(3)} &nbsp;|&nbsp; Var = ${variance.toFixed(3)}<br>
+    Median = ${median.toFixed(3)}<br>
+    Q1 = ${q1.toFixed(3)} &nbsp;|&nbsp; Q3 = ${q3.toFixed(3)}<br>
+    Min = ${Math.min(...data).toFixed(3)} &nbsp;|&nbsp; Max = ${Math.max(...data).toFixed(3)}
+  `;
+}
+
+function updateParams() {
+  const type = document.getElementById('dist-type').value;
+  const pc = document.getElementById('param-controls');
+  if (type === 'normal') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Mean (μ): <span id="mu-v">0</span></label>
+      <input type="range" id="mu" min="-10" max="10" value="0" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('mu-v').textContent=this.value">
+      <label style="font-weight:600;font-size:0.9rem;">Std Dev (σ): <span id="sig-v">1</span></label>
+      <input type="range" id="sigma" min="0.1" max="5" value="1" step="0.1" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('sig-v').textContent=this.value">`;
+  } else if (type === 'uniform') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Min (a): <span id="ua-v">0</span></label>
+      <input type="range" id="ua" min="-10" max="10" value="0" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('ua-v').textContent=this.value">
+      <label style="font-weight:600;font-size:0.9rem;">Max (b): <span id="ub-v">10</span></label>
+      <input type="range" id="ub" min="-10" max="20" value="10" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('ub-v').textContent=this.value">`;
+  } else if (type === 'exponential') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Rate (λ): <span id="lam-v">1</span></label>
+      <input type="range" id="lambda" min="0.1" max="5" value="1" step="0.1" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('lam-v').textContent=this.value">`;
+  } else if (type === 'poisson') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Lambda (λ): <span id="plam-v">3</span></label>
+      <input type="range" id="plam" min="0.5" max="20" value="3" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('plam-v').textContent=this.value">`;
+  }
+  generateDist();
+}
+
+document.getElementById('dist-type').addEventListener('change', updateParams);
+document.getElementById('sample-n').addEventListener('input', () => {
+  document.getElementById('n-label').textContent = document.getElementById('sample-n').value;
+});
+
+updateParams();
+</script>
+```
+
+---
+
+## App 2: Regression Simulator {#regression}
+
+Interactively add data points and watch the regression line update in real time.
+
+```{=html}
+<div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+<div style="background:#0f172a; color:white; padding:1rem 1.5rem; font-weight:600;">
+  📈 Regression Simulator — Click on the chart to add points!
+</div>
+<div style="padding:1.5rem; background:white;">
+
+<div style="display:grid; grid-template-columns:3fr 1fr; gap:2rem; align-items:start;">
+<div>
+  <canvas id="reg-canvas" width="500" height="380" style="width:100%; cursor:crosshair; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc;"></canvas>
+</div>
+<div>
+  <button onclick="clearReg()" style="width:100%; background:#ef4444; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; margin-bottom:1rem;">
+    🗑️ Clear All
+  </button>
+  <button onclick="addRandomPoints()" style="width:100%; background:linear-gradient(135deg,#2563eb,#7c3aed); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; margin-bottom:1.5rem;">
+    ✨ Add 10 Points
+  </button>
+  <div id="reg-stats" style="background:#f8fafc; border-radius:8px; padding:1rem; font-size:0.85rem; line-height:2;">
+    <em>Add points to see regression results</em>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const rc = document.getElementById('reg-canvas');
+const rctx = rc.getContext('2d');
+let regPoints = [];
+
+function drawReg() {
+  const W = rc.width, H = rc.height;
+  const pad = {t:20, r:20, b:40, l:50};
+  
+  rctx.clearRect(0, 0, W, H);
+  rctx.fillStyle = '#f8fafc';
+  rctx.fillRect(0,0,W,H);
+  rctx.fillStyle = 'white';
+  rctx.fillRect(pad.l, pad.t, W-pad.l-pad.r, H-pad.t-pad.b);
+
+  // Grid
+  rctx.strokeStyle = '#e2e8f0'; rctx.lineWidth = 1;
+  for (let i=0;i<=5;i++) {
+    const x = pad.l + (W-pad.l-pad.r)*i/5;
+    const y = pad.t + (H-pad.t-pad.b)*i/5;
+    rctx.beginPath(); rctx.moveTo(x,pad.t); rctx.lineTo(x,H-pad.b); rctx.stroke();
+    rctx.beginPath(); rctx.moveTo(pad.l,y); rctx.lineTo(W-pad.r,y); rctx.stroke();
+  }
+
+  // Axes labels
+  rctx.fillStyle = '#64748b'; rctx.font = '11px sans-serif'; rctx.textAlign = 'center';
+  rctx.fillText('X', W/2, H-5);
+  rctx.save(); rctx.translate(12, H/2); rctx.rotate(-Math.PI/2);
+  rctx.fillText('Y', 0, 0); rctx.restore();
+
+  if (regPoints.length < 2) {
+    rctx.fillStyle = '#94a3b8'; rctx.font = '14px sans-serif'; rctx.textAlign = 'center';
+    rctx.fillText('Click to add data points', W/2, H/2);
+    return;
+  }
+
+  // Regression
+  const xs = regPoints.map(p=>p.x), ys = regPoints.map(p=>p.y);
+  const n = xs.length;
+  const mx = xs.reduce((a,b)=>a+b)/n, my = ys.reduce((a,b)=>a+b)/n;
+  const num = xs.reduce((a,x,i)=>a+(x-mx)*(ys[i]-my), 0);
+  const den = xs.reduce((a,x)=>a+(x-mx)**2, 0);
+  const slope = num/den, intercept = my - slope*mx;
+  const ss_res = ys.reduce((a,y,i)=>a+(y-(slope*xs[i]+intercept))**2,0);
+  const ss_tot = ys.reduce((a,y)=>a+(y-my)**2,0);
+  const r2 = 1 - ss_res/ss_tot;
+
+  // Regression line
+  const x1=0, x2=W, y1=intercept+slope*x1, y2=intercept+slope*x2;
+  rctx.beginPath();
+  rctx.strokeStyle='#2563eb'; rctx.lineWidth=2.5;
+  rctx.moveTo(x1,y1); rctx.lineTo(x2,y2); rctx.stroke();
+
+  // Points
+  regPoints.forEach(p => {
+    rctx.beginPath();
+    rctx.arc(p.x, p.y, 5, 0, Math.PI*2);
+    rctx.fillStyle='#e11d48'; rctx.fill();
+    rctx.strokeStyle='white'; rctx.lineWidth=1.5; rctx.stroke();
+  });
+
+  document.getElementById('reg-stats').innerHTML = `
+    <strong>Regression Results</strong><br>
+    n = ${n} points<br>
+    Slope = ${slope.toFixed(4)}<br>
+    Intercept = ${intercept.toFixed(4)}<br>
+    R² = ${r2.toFixed(4)}<br>
+    R = ${Math.sqrt(Math.abs(r2)).toFixed(4)}<br>
+    <br>ŷ = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}
+  `;
+}
+
+rc.addEventListener('click', (e) => {
+  const rect = rc.getBoundingClientRect();
+  const scaleX = rc.width / rect.width;
+  const scaleY = rc.height / rect.height;
+  regPoints.push({ x: (e.clientX - rect.left)*scaleX, y: (e.clientY - rect.top)*scaleY });
+  drawReg();
+});
+
+function clearReg() {
+  regPoints = [];
+  document.getElementById('reg-stats').innerHTML = '<em>Add points to see regression results</em>';
+  drawReg();
+}
+
+function addRandomPoints() {
+  const W = rc.width, H = rc.height;
+  const baseSlope = (Math.random()-0.5)*0.8;
+  for (let i=0;i<10;i++) {
+    const x = 50 + Math.random()*(W-100);
+    const y = H/2 - baseSlope*(x-W/2) + (Math.random()-0.5)*100;
+    regPoints.push({x, y});
+  }
+  drawReg();
+}
+
+drawReg();
+</script>
+```
+
+---
+
+## App 3: Central Limit Theorem Visualizer {#clt}
+
+```{=html}
+<div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+<div style="background:#0f172a; color:white; padding:1rem 1.5rem; font-weight:600;">
+  🔔 Central Limit Theorem Demonstration
+</div>
+<div style="padding:1.5rem; background:white;">
+
+<div style="margin-bottom:1.5rem; display:flex; gap:2rem; flex-wrap:wrap; align-items:center;">
+  <div>
+    <label style="font-weight:600; font-size:0.9rem;">Population Shape</label><br>
+    <select id="pop-shape" style="padding:8px 12px; border:1px solid #e2e8f0; border-radius:8px; margin-top:4px;">
+      <option value="uniform">Uniform (Skewed)</option>
+      <option value="exponential">Exponential</option>
+      <option value="bimodal">Bimodal</option>
+    </select>
+  </div>
+  <div>
+    <label style="font-weight:600; font-size:0.9rem;">Sample Size (n): <span id="clt-n">30</span></label><br>
+    <input type="range" id="clt-n-input" min="2" max="200" value="30" step="1" style="width:200px;margin-top:8px;" 
+           oninput="document.getElementById('clt-n').textContent=this.value">
+  </div>
+  <button onclick="runCLT()" style="background:linear-gradient(135deg,#2563eb,#7c3aed); color:white; border:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-weight:600; margin-top:22px;">
+    ▶ Run (1000 samples)
+  </button>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+  <div>
+    <div style="font-weight:600; text-align:center; margin-bottom:0.5rem; font-size:0.9rem; color:#64748b;">Population Distribution</div>
+    <canvas id="pop-canvas" width="320" height="200" style="width:100%; border:1px solid #e2e8f0; border-radius:8px;"></canvas>
+  </div>
+  <div>
+    <div style="font-weight:600; text-align:center; margin-bottom:0.5rem; font-size:0.9rem; color:#64748b;">Sampling Distribution of <span style="color:#7c3aed">x̄</span></div>
+    <canvas id="samp-canvas" width="320" height="200" style="width:100%; border:1px solid #e2e8f0; border-radius:8px;"></canvas>
+  </div>
+</div>
+<div id="clt-info" style="margin-top:1rem; background:#f8fafc; border-radius:8px; padding:1rem; font-size:0.85rem;"></div>
+
+</div>
+</div>
+
+<script>
+function drawMiniHist(canvasId, data, color1, color2, title) {
+  const cv = document.getElementById(canvasId);
+  const ct = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ct.clearRect(0,0,W,H);
+  ct.fillStyle='#f8fafc'; ct.fillRect(0,0,W,H);
+  ct.fillStyle='white'; ct.fillRect(30,10,W-40,H-30);
+
+  const bins=30, min=Math.min(...data), max=Math.max(...data);
+  const bw=(max-min)/bins;
+  const counts=new Array(bins).fill(0);
+  data.forEach(v=>{let i=Math.floor((v-min)/bw); if(i>=bins)i=bins-1; counts[i]++;});
+  const mc=Math.max(...counts);
+  const cw=(W-40)/bins, ch=H-40;
+
+  counts.forEach((c,i)=>{
+    const bh=(c/mc)*ch, x=30+i*cw, y=10+ch-bh;
+    const g=ct.createLinearGradient(0,y,0,y+bh);
+    g.addColorStop(0,color1); g.addColorStop(1,color2);
+    ct.fillStyle=g; ct.fillRect(x,y,cw-1,bh);
+  });
+
+  // Normal curve overlay for sampling dist
+  if (canvasId==='samp-canvas') {
+    const mean=data.reduce((a,b)=>a+b)/data.length;
+    const std=Math.sqrt(data.reduce((a,b)=>a+(b-mean)**2)/(data.length-1));
+    ct.beginPath(); ct.strokeStyle='#e11d48'; ct.lineWidth=2;
+    for(let px=0;px<=W-40;px++) {
+      const xv=min+(px/(W-40))*(max-min);
+      const dens=Math.exp(-0.5*((xv-mean)/std)**2)/(std*Math.sqrt(2*Math.PI));
+      const py=10+ch-Math.min((dens*data.length*bw/mc)*ch, ch);
+      px===0 ? ct.moveTo(30+px,py) : ct.lineTo(30+px,py);
+    }
+    ct.stroke();
+  }
+}
+
+function runCLT() {
+  const shape = document.getElementById('pop-shape').value;
+  const n = +document.getElementById('clt-n-input').value;
+  
+  // Population
+  let pop = [];
+  for(let i=0;i<5000;i++) {
+    if(shape==='uniform') pop.push(Math.random()*10);
+    else if(shape==='exponential') pop.push(-Math.log(1-Math.random())*2);
+    else pop.push(Math.random()<0.5 ? 2+randn()*0.8 : 8+randn()*0.8);
+  }
+
+  // Sampling distribution
+  let means = [];
+  for(let i=0;i<1000;i++) {
+    let sum=0;
+    for(let j=0;j<n;j++) sum+=pop[Math.floor(Math.random()*pop.length)];
+    means.push(sum/n);
+  }
+
+  drawMiniHist('pop-canvas', pop, '#f59e0b', '#d97706');
+  drawMiniHist('samp-canvas', means, '#2563eb', '#7c3aed');
+
+  const pm=pop.reduce((a,b)=>a+b)/pop.length;
+  const ps=Math.sqrt(pop.reduce((a,b)=>a+(b-pm)**2)/pop.length);
+  const mm=means.reduce((a,b)=>a+b)/means.length;
+  const ms=Math.sqrt(means.reduce((a,b)=>a+(b-mm)**2)/means.length);
+
+  document.getElementById('clt-info').innerHTML = `
+    <strong>Central Limit Theorem in Action</strong> &nbsp;|&nbsp;
+    Population: μ=${pm.toFixed(3)}, σ=${ps.toFixed(3)} &nbsp;|&nbsp;
+    Sampling Dist: x̄=${mm.toFixed(3)}, SE=${ms.toFixed(3)} &nbsp;|&nbsp;
+    Predicted SE = σ/√n = ${(ps/Math.sqrt(n)).toFixed(3)} &nbsp;|&nbsp;
+    <em style="color:#7c3aed">No matter the population shape, the sampling distribution approaches Normal! 🔔</em>
+  `;
+}
+
+runCLT();
+</script>
+```
+
+---
+
+> **Want Full Shiny Apps?** 
+> For server-side Shiny apps with live data, database connections, and full R computations, deploy via [shinyapps.io](https://www.shinyapps.io) and embed them here using iframes. See the [Statistics with R](stats/chapter1.html) section for code examples.

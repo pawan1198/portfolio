@@ -17,13 +17,20 @@
     "listing": "/blog.html",
     "items": [
       "/blog/combine-plot.html",
-      "/blog/why-R.html"
+      "/blog/why-R.html",
+      "/blog/post1.html",
+      "/blog/post2.html",
+      "/blog/post3.html"
     ]
   },
   {
     "listing": "/statistics-with-r.html",
     "items": [
-      "/statistics-with-r/graphical-presentation-function.html"
+      "/statistics-with-r/graphical-presentation-function.html",
+      "/statistics-with-r/chapter4.html",
+      "/statistics-with-r/chapter3.html",
+      "/statistics-with-r/chapter2.html",
+      "/statistics-with-r/chapter1.html"
     ]
   }
 ]

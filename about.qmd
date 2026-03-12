@@ -1,70 +1,66 @@
 ---
 title: "About Me"
-about:
-  template: jolla
-  image: ""
-  links:
-    - icon: twitter
-      text: Twitter
-      href: ""
-    - icon: github
-      text: Github
-      href: "https://github.com/pawan1198"
-    - icon: linkedin
-      text: LinkedIn
-      href: "https://www.linkedin.com/in/pawanjangra1198/"
-    - icon: envelope-at-fill
-      text: e-Mail
-      href: "mailto:pawanjangra1198@proton.me"
-sidebar: false
+description: "Learn more about Pawan Jangra — researcher, R programmer, and survey specialist."
+toc: true
 ---
 
+## Hello, I'm Pawan 👋
 
-# Skills
+I'm a **data analyst and field researcher** with over 7 years of experience in survey methodology, statistical analysis, and research coordination across India.
 
-## Data Analysis
-Proficient in Microsoft Office, R, and Python for data analysis. Also, experienced in managing and analyzing large datasets.
+My work sits at the intersection of **economics, statistics, and data science** — translating complex survey data into clear insights that inform policy and research.
 
-## Management of Virtual Platforms
-Proficient in managing virtual learning platforms, including Zoom, OBS-Studio, and YouTube streaming.
+## What I Do
 
-## Administrative and Office Management
-Efficient in managing administrative tasks such as inventory management, account maintenance, and other activities for office functioning.
+I specialize in:
 
-## Operating System Management
-Knowledge of Linux, Windows, and macOS, with expertise in troubleshooting, and software installation and updating.
+- **Survey Research** — End-to-end survey operations, from questionnaire design to data collection and analysis
+- **Statistical Programming** — R (primary), Python, and data pipeline automation
+- **Data Visualization** — Creating clear, reproducible visualizations with ggplot2, plotly, and Quarto
+- **Labour Economics** — Analysis of PLFS, NSS, and other government microdata
+- **Reproducible Research** — Building fully documented, reproducible research workflows
 
-## Survey Management and Assistance
-Experienced in coordinating and conducting field surveys.
+## Tools & Technologies
 
-# Education
+```{=html}
+<div class="skills-grid" style="margin:1.5rem 0;">
+  <div class="skill-card"><div class="skill-icon">📊</div><div class="skill-name">R / Tidyverse</div><div class="skill-bar"><div class="skill-bar-fill" style="width:93%"></div></div></div>
+  <div class="skill-card"><div class="skill-icon">🐍</div><div class="skill-name">Python / Pandas</div><div class="skill-bar"><div class="skill-bar-fill" style="width:78%"></div></div></div>
+  <div class="skill-card"><div class="skill-icon">📋</div><div class="skill-name">Quarto / RMarkdown</div><div class="skill-bar"><div class="skill-bar-fill" style="width:88%"></div></div></div>
+  <div class="skill-card"><div class="skill-icon">🗺️</div><div class="skill-name">ODK / Survey CTO</div><div class="skill-bar"><div class="skill-bar-fill" style="width:90%"></div></div></div>
+  <div class="skill-card"><div class="skill-icon">🐧</div><div class="skill-name">Linux / Bash</div><div class="skill-bar"><div class="skill-bar-fill" style="width:70%"></div></div></div>
+  <div class="skill-card"><div class="skill-icon">🌐</div><div class="skill-name">Web Scraping</div><div class="skill-bar"><div class="skill-bar-fill" style="width:72%"></div></div></div>
+</div>
+```
 
-*M.Sc. Applied Statistics*
-Indira Gandhi National Open University (IGNOU), New Delhi (Pursuing)
+## Education & Training
 
-*B.Sc. Physics*
-Kurukshetra University, Haryana (India) (2020)
+- **IDEAs Advanced Certificate Programme** on Research in Political Economy (2022–2024)
+- Ongoing self-study in econometrics, machine learning, and causal inference
 
-# Work Experience
+## Publications & Projects
 
-## Course Assistant
-*IDEAs (International Development Economics Associates) – Advanced Certificate Programme on Research in Political Economy*
+- Analysis of Union Budget allocation trends (2015–2024)
+- Periodic Labour Force Survey data processing pipeline in R
+- Health financing survey data management — OP Jindal Global University (2025)
 
--    Management of video and audio setup to facilitate a hybrid classroom environment for the IDEAs Certificate Programme lectures.
--    Participation and assistance in field surveys such as surveys of households in Madhya Pradesh (2022) and survey of textile workers in Panipat (2023).
--    Administrative responsibilities such as classroom management and accounts maintenance.
+## Get in Touch
 
-## Research Assistant
-*Society for Social and Economic Research (SSER)*
+I'm always open to research collaborations, data analysis consulting, and academic support.
 
--    Compile and analyze data from union budgets to identify expenditure trends and changes in budgetary allocations for various schemes.
--    Extraction and analysis of data from PLFS (Periodic Labour Force Surveys).
--    Data scraping from secondary sources, such as Agmarknet's food price data, FCI's procurement data, consumer price index data, and fertilizer statistics.
--    Analyze and visualize compiled data using R for research projects.
--    Participation and assistance in field surveys such as the Survey of Rural Households in Haryana (2018), the Survey of Industrial Workers in Faridabad (2019), the Survey of Farmers during Farm Protests (2021), and the Survey of Farmers in Madhya Pradesh during the Fertiliser Crisis in 2021.
--    Data entry for various primary surveys conducted by SSER.
--    Bibliography management for multiple research projects.
-
-# Projects
-
-Details about projects can be added here.
+```{=html}
+<div class="contact-grid" style="margin-top:1.5rem;">
+  <a href="https://github.com/pawan1198" class="contact-card" target="_blank">
+    <span class="contact-icon">🐙</span><strong>GitHub</strong>
+    <span style="font-size:0.8rem;color:#64748b">@pawan1198</span>
+  </a>
+  <a href="https://www.linkedin.com/in/pawanjangra1198/" class="contact-card" target="_blank">
+    <span class="contact-icon">💼</span><strong>LinkedIn</strong>
+    <span style="font-size:0.8rem;color:#64748b">pawanjangra1198</span>
+  </a>
+  <a href="mailto:pawanjangra1198@gmail.com" class="contact-card">
+    <span class="contact-icon">📧</span><strong>Email</strong>
+    <span style="font-size:0.8rem;color:#64748b">pawanjangra1198@gmail.com</span>
+  </a>
+</div>
+```

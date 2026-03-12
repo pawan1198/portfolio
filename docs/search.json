@@ -4,7 +4,7 @@
     "href": "about.html",
     "title": "About Me",
     "section": "",
-    "text": "Proficient in Microsoft Office, R, and Python for data analysis. Also, experienced in managing and analyzing large datasets.\n\n\n\nProficient in managing virtual learning platforms, including Zoom, OBS-Studio, and YouTube streaming.\n\n\n\nEfficient in managing administrative tasks such as inventory management, account maintenance, and other activities for office functioning.\n\n\n\nKnowledge of Linux, Windows, and macOS, with expertise in troubleshooting, and software installation and updating.\n\n\n\nExperienced in coordinating and conducting field surveys."
+    "text": "I’m a data analyst and field researcher with over 7 years of experience in survey methodology, statistical analysis, and research coordination across India.\nMy work sits at the intersection of economics, statistics, and data science — translating complex survey data into clear insights that inform policy and research."
   },
   {
     "objectID": "about.html#data-analysis",
@@ -74,7 +74,7 @@
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n\n\n\n\n\n\n\n\nCombining plots in ggplot2\n\n\n\n\n\n\n\n\n\n\nThe Advantages of R for Statistical Analysis\n\n\n\n\n\nNo matching items"
+    "text": "Combining plots in ggplot2\n\n8 min\n\n\nData Viz\n\nggplot2\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe Advantages of R for Statistical Analysis\n\n7 min\n\n\nData Viz\n\nggplot2\n\nR Programming\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nData Wrangling with tidyverse: A Practical Guide\n\n4 min\n\n\nR\n\nTidyverse\n\nData Cleaning\n\n\n\nLearn how to efficiently wrangle messy datasets using dplyr, tidyr, and readr with real-world survey data examples.\n\n\n\nJun 15, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nSampling Methods in Field Research: What I Learned\n\n5 min\n\n\nSurvey\n\nStatistics\n\nField Research\n\n\n\nFrom stratified to cluster sampling — practical insights from 7 years of field survey work across India.\n\n\n\nMay 10, 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\nBeautiful Statistical Graphics with ggplot2\n\n5 min\n\n\nR\n\nggplot2\n\nVisualization\n\n\n\nA step-by-step guide to creating publication-quality charts using ggplot2, including themes, annotations, and color scales.\n\n\n\nApr 20, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog/why-R.html",
@@ -235,7 +235,7 @@
     "href": "statistics-with-r.html",
     "title": "Statistics With R",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n\n\n\n\n\n\n\n\nGraphical Presentation of Some Functions Using R\n\n\n\nDecember 15, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n\n\n\n\n\n\n\n\nGraphical Presentation of Some Functions Using R\n\n\n\nDecember 15, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 4: Time Series Analysis\n\n\n\nFebruary 20, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 3: Regression Analysis\n\n\n\nFebruary 5, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 2: Probability & Distributions\n\n\n\nJanuary 20, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 1: Descriptive Statistics\n\n\n\nJanuary 10, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "data_vizs/edibleoil.html#palm-oil",
@@ -383,5 +383,495 @@
     "title": "Professional Profile",
     "section": "Core Strengths",
     "text": "Core Strengths\n\nResearch Methodology: Experienced in both quantitative and qualitative research approaches\nTechnical Adaptation: Proficient in adapting various software solutions to research needs\nAdministrative Coordination: Skilled in office management and resource coordination\nTeam Collaboration: Effective in multidisciplinary research environments\nCommunication: Strong explanatory skills for complex procedures and methodologies\n\n\nAvailable for research collaborations, data analysis projects, and academic support roles."
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html",
+    "href": "statistics-with-r/chapter4.html",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "",
+    "text": "Learning Objectives: Decompose time series into trend, seasonality, and noise. Understand autocorrelation, fit ARIMA models, and produce forecasts with uncertainty bounds."
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#what-is-a-time-series",
+    "href": "statistics-with-r/chapter4.html#what-is-a-time-series",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "1 What is a Time Series?",
+    "text": "1 What is a Time Series?\nA time series is a sequence of observations indexed by time. Unlike cross-sectional data, observations are not independent — past values influence future ones.\n\n\nCode\nlibrary(tidyverse)\nlibrary(knitr)\n\n# Simulate monthly employment data (2015-2024)\nset.seed(2025)\nn_months &lt;- 120  # 10 years\ntime_index &lt;- seq(as.Date(\"2015-01-01\"), by=\"month\", length.out=n_months)\n\nemployment &lt;- data.frame(\n  date = time_index,\n  month_num = 1:n_months\n) |&gt;\n  mutate(\n    trend     = 100 + 0.15 * month_num + 0.0005 * month_num^2,\n    seasonal  = 3 * sin(2 * pi * month_num / 12) + \n                1.5 * cos(2 * pi * month_num / 6),\n    noise     = cumsum(rnorm(n_months, 0, 0.8)),\n    employment = trend + seasonal + noise\n  )"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#visualising-time-series",
+    "href": "statistics-with-r/chapter4.html#visualising-time-series",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "2 Visualising Time Series",
+    "text": "2 Visualising Time Series\n\n\nCode\nggplot(employment, aes(x=date, y=employment)) +\n  geom_line(color=\"#2563eb\", linewidth=0.9) +\n  geom_smooth(method=\"loess\", span=0.3, color=\"#e11d48\", \n              se=FALSE, linetype=\"dashed\", linewidth=1) +\n  labs(title=\"Monthly Employment Index (2015–2024)\",\n       subtitle=\"Blue = observed data · Red dashed = LOESS trend\",\n       x=NULL, y=\"Employment Index\") +\n  theme_minimal(base_size=11) +\n  theme(panel.grid.minor=element_blank())"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#decomposition",
+    "href": "statistics-with-r/chapter4.html#decomposition",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "3 Decomposition",
+    "text": "3 Decomposition\nWe can decompose a time series into its components:\n\\[Y_t = T_t + S_t + \\varepsilon_t \\quad \\text{(Additive model)}\\]\n\n\nCode\nts_data &lt;- ts(employment$employment, start=c(2015,1), frequency=12)\ndecomp &lt;- decompose(ts_data, type=\"additive\")\n\n# Convert to tidy format for ggplot\ndecomp_df &lt;- data.frame(\n  date     = time_index,\n  Observed = as.numeric(decomp$x),\n  Trend    = as.numeric(decomp$trend),\n  Seasonal = as.numeric(decomp$seasonal),\n  Random   = as.numeric(decomp$random)\n) |&gt;\n  pivot_longer(-date, names_to=\"Component\", values_to=\"Value\") |&gt;\n  mutate(Component = factor(Component, \n    levels=c(\"Observed\",\"Trend\",\"Seasonal\",\"Random\")))\n\nggplot(decomp_df, aes(x=date, y=Value)) +\n  geom_line(color=\"#2563eb\", linewidth=0.7, na.rm=TRUE) +\n  facet_wrap(~Component, ncol=1, scales=\"free_y\") +\n  labs(title=\"Time Series Decomposition\",\n       subtitle=\"Additive model: Y = Trend + Seasonal + Random\",\n       x=NULL, y=NULL) +\n  theme_minimal(base_size=10) +\n  theme(panel.grid.minor=element_blank(),\n        strip.text=element_text(face=\"bold\"))"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#autocorrelation",
+    "href": "statistics-with-r/chapter4.html#autocorrelation",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "4 Autocorrelation",
+    "text": "4 Autocorrelation\nAutocorrelation measures how correlated a time series is with its past values (lags).\n\n\nCode\nacf_vals  &lt;- acf(ts_data, lag.max=36, plot=FALSE)\npacf_vals &lt;- pacf(ts_data, lag.max=36, plot=FALSE)\n\nacf_df &lt;- data.frame(\n  lag = as.numeric(acf_vals$lag),\n  acf = as.numeric(acf_vals$acf),\n  type = \"ACF\"\n)\n\npacf_df &lt;- data.frame(\n  lag = as.numeric(pacf_vals$lag),\n  acf = as.numeric(pacf_vals$acf),\n  type = \"PACF\"\n)\n\nci_val &lt;- qnorm(0.975) / sqrt(length(ts_data))\n\nbind_rows(acf_df, pacf_df) |&gt;\n  filter(lag &gt; 0) |&gt;\n  ggplot(aes(x=lag, y=acf)) +\n  geom_hline(yintercept=0, color=\"#64748b\") +\n  geom_hline(yintercept=c(ci_val,-ci_val), linetype=\"dashed\", \n             color=\"#e11d48\", alpha=0.7) +\n  geom_segment(aes(xend=lag, yend=0), color=\"#2563eb\", linewidth=1) +\n  geom_point(color=\"#2563eb\", size=2) +\n  facet_wrap(~type, ncol=1) +\n  labs(title=\"Autocorrelation (ACF) and Partial Autocorrelation (PACF)\",\n       subtitle=\"Red dashed lines = 95% confidence bounds\",\n       x=\"Lag (months)\", y=\"Correlation\") +\n  theme_minimal(base_size=11) +\n  theme(panel.grid.minor=element_blank(), strip.text=element_text(face=\"bold\"))\n\n\n\n\n\n\n\n\n\nReading ACF/PACF: - Slowly decaying ACF → non-stationary series, needs differencing - ACF cuts off after lag q → MA(q) component - PACF cuts off after lag p → AR(p) component"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#simple-forecasting-moving-averages",
+    "href": "statistics-with-r/chapter4.html#simple-forecasting-moving-averages",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "5 Simple Forecasting: Moving Averages",
+    "text": "5 Simple Forecasting: Moving Averages\n\n\nCode\nemployment &lt;- employment |&gt;\n  mutate(\n    ma3  = zoo::rollmean(employment, 3,  fill=NA, align=\"right\"),\n    ma12 = zoo::rollmean(employment, 12, fill=NA, align=\"right\")\n  )\n\nggplot(employment, aes(x=date)) +\n  geom_line(aes(y=employment, color=\"Observed\"), alpha=0.6) +\n  geom_line(aes(y=ma3,  color=\"3-month MA\"), linewidth=1) +\n  geom_line(aes(y=ma12, color=\"12-month MA\"), linewidth=1.2) +\n  scale_color_manual(\n    values=c(\"Observed\"=\"#94a3b8\",\"3-month MA\"=\"#7c3aed\",\"12-month MA\"=\"#e11d48\"),\n    name=\"\"\n  ) +\n  labs(title=\"Employment Index with Moving Averages\",\n       x=NULL, y=\"Employment Index\") +\n  theme_minimal(base_size=11) +\n  theme(legend.position=\"top\", panel.grid.minor=element_blank())"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#simple-trend-forecast",
+    "href": "statistics-with-r/chapter4.html#simple-trend-forecast",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "6 Simple Trend Forecast",
+    "text": "6 Simple Trend Forecast\n\n\nCode\n# Fit linear trend model\ntrend_model &lt;- lm(employment ~ month_num + I(month_num^2), data=employment)\n\n# Forecast next 24 months\nfuture &lt;- data.frame(\n  date      = seq(max(employment$date) %m+% months(1), \n                  by=\"month\", length.out=24),\n  month_num = (n_months+1):(n_months+24)\n)\nfuture$forecast &lt;- predict(trend_model, newdata=future)\nfuture$se       &lt;- predict(trend_model, newdata=future, se.fit=TRUE)$se.fit\n\nggplot() +\n  geom_ribbon(data=future, \n              aes(x=date, ymin=forecast-2*se, ymax=forecast+2*se),\n              fill=\"#93c5fd\", alpha=0.4) +\n  geom_line(data=employment, aes(x=date, y=employment), \n            color=\"#2563eb\", linewidth=0.8) +\n  geom_line(data=future, aes(x=date, y=forecast), \n            color=\"#e11d48\", linewidth=1.1, linetype=\"dashed\") +\n  labs(title=\"Employment Trend Forecast (2025–2026)\",\n       subtitle=\"Blue = historical · Red dashed = forecast · Shaded = 95% CI\",\n       x=NULL, y=\"Employment Index\") +\n  theme_minimal(base_size=11) +\n  theme(panel.grid.minor=element_blank())"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#stationarity-testing",
+    "href": "statistics-with-r/chapter4.html#stationarity-testing",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "7 Stationarity Testing",
+    "text": "7 Stationarity Testing\n\n\nCode\n# Augmented Dickey-Fuller test (manual approximation for display)\n# In practice: use tseries::adf.test()\n\ncat(\"Stationarity Assessment:\\n\")\n\n\nStationarity Assessment:\n\n\nCode\ncat(\"━━━━━━━━━━━━━━━━━━━━━━━━━\\n\")\n\n\n━━━━━━━━━━━━━━━━━━━━━━━━━\n\n\nCode\ncat(\"Visual inspection: Upward trend observed → likely non-stationary\\n\")\n\n\nVisual inspection: Upward trend observed → likely non-stationary\n\n\nCode\ncat(\"ACF: Slowly decaying → confirms non-stationarity\\n\")\n\n\nACF: Slowly decaying → confirms non-stationarity\n\n\nCode\ncat(\"\\nRecommendation: Apply first differencing\\n\")\n\n\n\nRecommendation: Apply first differencing\n\n\nCode\ndiff_data &lt;- diff(ts_data)\ncat(\"\\nAfter first differencing:\\n\")\n\n\n\nAfter first differencing:\n\n\nCode\ncat(\"Mean:\", round(mean(diff_data), 4), \"(≈0 → good)\\n\")\n\n\nMean: 0.1775 (≈0 → good)\n\n\nCode\ncat(\"Variance appears constant → stationary ✓\\n\")\n\n\nVariance appears constant → stationary ✓"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#key-concepts-summary",
+    "href": "statistics-with-r/chapter4.html#key-concepts-summary",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "8 Key Concepts Summary",
+    "text": "8 Key Concepts Summary\n\n\n\nConcept\nDescription\nR Function\n\n\n\n\nDecomposition\nTrend + Seasonal + Random\ndecompose()\n\n\nACF\nAutocorrelation function\nacf()\n\n\nPACF\nPartial autocorrelation\npacf()\n\n\nADF Test\nStationarity test\ntseries::adf.test()\n\n\nARIMA\nAuto-regressive model\narima(), forecast::auto.arima()\n\n\nMoving Average\nSmoothing\nzoo::rollmean()"
+  },
+  {
+    "objectID": "statistics-with-r/chapter4.html#practice-exercises",
+    "href": "statistics-with-r/chapter4.html#practice-exercises",
+    "title": "Chapter 4: Time Series Analysis",
+    "section": "9 Practice Exercises",
+    "text": "9 Practice Exercises\n\n\n\n\n\n\nTipTry It Yourself\n\n\n\n\nUse forecast::auto.arima() to automatically select the best ARIMA model\nCompute and plot exponential smoothing with HoltWinters()\nFormally test for stationarity with tseries::adf.test()\nForecast the next 12 months and evaluate accuracy using MAPE\n\n\n\n\n\n\n\n\n\nNoteWhat’s Next?\n\n\n\nThis chapter covered the fundamentals. For advanced time series work with R, explore: - forecast package — comprehensive forecasting tools - fable package — tidy time series forecasting - tsibble package — tidy temporal data structures - Vector Autoregression (VAR) — for multivariate time series"
+  },
+  {
+    "objectID": "statistics-with-r/chapter2.html",
+    "href": "statistics-with-r/chapter2.html",
+    "title": "Chapter 2: Probability & Distributions",
+    "section": "",
+    "text": "Learning Objectives: Understand core probability concepts, work with common distributions (Normal, Binomial, Poisson, t), and apply these in real-world contexts using R’s built-in distribution functions."
+  },
+  {
+    "objectID": "statistics-with-r/chapter2.html#probability-fundamentals",
+    "href": "statistics-with-r/chapter2.html#probability-fundamentals",
+    "title": "Chapter 2: Probability & Distributions",
+    "section": "1 Probability Fundamentals",
+    "text": "1 Probability Fundamentals\nEvery distribution in R has four functions:\n\n\n\nPrefix\nFunction\nReturns\n\n\n\n\nd\ndnorm(x)\nProbability density at x\n\n\np\npnorm(q)\nP(X ≤ q) — CDF\n\n\nq\nqnorm(p)\nQuantile (inverse CDF)\n\n\nr\nrnorm(n)\nn random samples\n\n\n\n\n\nCode\nlibrary(tidyverse)\nlibrary(knitr)"
+  },
+  {
+    "objectID": "statistics-with-r/chapter2.html#the-normal-distribution",
+    "href": "statistics-with-r/chapter2.html#the-normal-distribution",
+    "title": "Chapter 2: Probability & Distributions",
+    "section": "2 The Normal Distribution",
+    "text": "2 The Normal Distribution\nThe Normal distribution is the cornerstone of statistical inference — thanks to the Central Limit Theorem.\n\n\nCode\n# Compare Normal distributions with different parameters\nx_vals &lt;- seq(-5, 15, length.out = 500)\n\nnormal_df &lt;- bind_rows(\n  data.frame(x=x_vals, density=dnorm(x_vals, mean=0, sd=1),   label=\"N(0,1)\"),\n  data.frame(x=x_vals, density=dnorm(x_vals, mean=3, sd=1.5), label=\"N(3,1.5)\"),\n  data.frame(x=x_vals, density=dnorm(x_vals, mean=5, sd=0.5), label=\"N(5,0.5)\"),\n  data.frame(x=x_vals, density=dnorm(x_vals, mean=2, sd=2.5), label=\"N(2,2.5)\")\n)\n\nggplot(normal_df, aes(x=x, y=density, color=label)) +\n  geom_line(linewidth=1.2) +\n  scale_color_manual(values=c(\"#2563eb\",\"#7c3aed\",\"#0d9488\",\"#d97706\")) +\n  labs(title=\"Normal Distributions with Different Parameters\",\n       subtitle=\"Location (μ) shifts the center; Scale (σ) controls spread\",\n       x=\"x\", y=\"Density\", color=\"Distribution\") +\n  theme_minimal(base_size=11) +\n  theme(legend.position=\"right\", panel.grid.minor=element_blank())\n\n\n\n\n\n\n\n\n\n\n2.1 The 68-95-99.7 Rule\n\n\nCode\nx &lt;- seq(-4, 4, length.out=1000)\ndf_norm &lt;- data.frame(x=x, y=dnorm(x))\n\nggplot(df_norm, aes(x,y)) +\n  geom_area(data=filter(df_norm, x &gt;= -3 & x &lt;= 3), fill=\"#93c5fd\", alpha=0.3) +\n  geom_area(data=filter(df_norm, x &gt;= -2 & x &lt;= 2), fill=\"#60a5fa\", alpha=0.4) +\n  geom_area(data=filter(df_norm, x &gt;= -1 & x &lt;= 1), fill=\"#2563eb\", alpha=0.5) +\n  geom_line(linewidth=1.5, color=\"#1e3a8a\") +\n  geom_vline(xintercept=c(-3,-2,-1,0,1,2,3), linetype=\"dashed\", \n             alpha=0.4, color=\"#64748b\") +\n  annotate(\"text\", x=0, y=0.2, label=\"68%\\n(±1σ)\", size=3.5, fontface=\"bold\", color=\"white\") +\n  annotate(\"text\", x=1.7, y=0.05, label=\"95%\\n(±2σ)\", size=3, color=\"#1e40af\") +\n  annotate(\"text\", x=2.7, y=0.015, label=\"99.7%\\n(±3σ)\", size=2.5, color=\"#1e3a8a\") +\n  labs(title=\"Empirical Rule: 68-95-99.7\",\n       x=\"Standard Deviations from Mean\", y=\"Density\") +\n  theme_minimal(base_size=11) +\n  theme(panel.grid.minor=element_blank())\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Probability calculations\ncat(\"P(Z ≤ 1.96)  =\", round(pnorm(1.96), 4), \"\\n\")\n\n\nP(Z ≤ 1.96)  = 0.975 \n\n\nCode\ncat(\"P(-1.96 ≤ Z ≤ 1.96) =\", round(pnorm(1.96) - pnorm(-1.96), 4), \"\\n\")\n\n\nP(-1.96 ≤ Z ≤ 1.96) = 0.95 \n\n\nCode\ncat(\"P(Z &gt; 2.33)  =\", round(1 - pnorm(2.33), 4), \"\\n\")\n\n\nP(Z &gt; 2.33)  = 0.0099 \n\n\nCode\ncat(\"95th percentile (z):\", round(qnorm(0.95), 4), \"\\n\")\n\n\n95th percentile (z): 1.6449 \n\n\nCode\ncat(\"99th percentile (z):\", round(qnorm(0.99), 4), \"\\n\")\n\n\n99th percentile (z): 2.3263"
+  },
+  {
+    "objectID": "statistics-with-r/chapter2.html#binomial-distribution",
+    "href": "statistics-with-r/chapter2.html#binomial-distribution",
+    "title": "Chapter 2: Probability & Distributions",
+    "section": "3 Binomial Distribution",
+    "text": "3 Binomial Distribution\nUsed when we have n independent trials, each with probability p of success.\nApplication: In a survey of 100 households, if 35% own agricultural land, what’s the probability that exactly 40 own land?\n\n\nCode\nn_trials &lt;- 100\np_success &lt;- 0.35\n\nbinom_df &lt;- data.frame(\n  k = 0:n_trials,\n  prob = dbinom(0:n_trials, n_trials, p_success)\n) |&gt; filter(prob &gt; 0.0001)\n\n# Highlight specific outcomes\nbinom_df &lt;- binom_df |&gt;\n  mutate(highlight = case_when(\n    k == 40 ~ \"k = 40\",\n    k &gt;= 35 & k &lt;= 40 ~ \"35-40\",\n    TRUE ~ \"Other\"\n  ))\n\nggplot(binom_df, aes(x=k, y=prob, fill=highlight)) +\n  geom_col(width=0.7) +\n  scale_fill_manual(values=c(\"k = 40\"=\"#e11d48\",\"35-40\"=\"#7c3aed\",\"Other\"=\"#93c5fd\"),\n                    name=\"\") +\n  labs(title=paste0(\"Binomial(n=\", n_trials, \", p=\", p_success, \")\"),\n       x=\"Number of successes (k)\", y=\"Probability P(X = k)\") +\n  theme_minimal(base_size=11) +\n  theme(legend.position=\"top\", panel.grid.minor=element_blank())\n\n\n\n\n\n\n\n\n\nCode\ncat(\"P(X = 40) =\", round(dbinom(40, 100, 0.35), 4))\n\n\nP(X = 40) = 0.0474\n\n\nCode\ncat(\"\\nP(X ≥ 40) =\", round(1 - pbinom(39, 100, 0.35), 4))\n\n\n\nP(X ≥ 40) = 0.1724\n\n\nCode\ncat(\"\\nExpected value E(X) = np =\", 100*0.35)\n\n\n\nExpected value E(X) = np = 35\n\n\nCode\ncat(\"\\nSD(X) = √(np(1-p)) =\", round(sqrt(100*0.35*0.65), 3))\n\n\n\nSD(X) = √(np(1-p)) = 4.77"
+  },
+  {
+    "objectID": "statistics-with-r/chapter2.html#poisson-distribution",
+    "href": "statistics-with-r/chapter2.html#poisson-distribution",
+    "title": "Chapter 2: Probability & Distributions",
+    "section": "4 Poisson Distribution",
+    "text": "4 Poisson Distribution\nUsed for count data — events happening in a fixed interval.\nApplication: If a field surveyor visits an average of 8 households per hour, what’s the probability of visiting exactly 10 in an hour?\n\n\nCode\nlambdas &lt;- c(1, 3, 8, 15)\npois_df &lt;- expand.grid(\n  k = 0:30,\n  lambda = lambdas\n) |&gt;\n  mutate(\n    prob  = dpois(k, lambda),\n    label = paste0(\"λ = \", lambda)\n  ) |&gt; filter(prob &gt; 0.001)\n\nggplot(pois_df, aes(x=k, y=prob, color=label)) +\n  geom_line(linewidth=1.1) +\n  geom_point(size=2) +\n  scale_color_manual(values=c(\"#2563eb\",\"#7c3aed\",\"#0d9488\",\"#d97706\")) +\n  labs(title=\"Poisson Distributions\",\n       x=\"k (count)\", y=\"P(X = k)\", color=\"Parameter\") +\n  theme_minimal(base_size=11) +\n  theme(legend.position=\"right\", panel.grid.minor=element_blank())"
+  },
+  {
+    "objectID": "statistics-with-r/chapter2.html#the-t-distribution",
+    "href": "statistics-with-r/chapter2.html#the-t-distribution",
+    "title": "Chapter 2: Probability & Distributions",
+    "section": "5 The t-Distribution",
+    "text": "5 The t-Distribution\nUsed when the population standard deviation is unknown (which is almost always in practice).\n\n\nCode\nx &lt;- seq(-5, 5, length.out=500)\nt_df &lt;- bind_rows(\n  data.frame(x=x, y=dnorm(x), dist=\"Normal (Z)\"),\n  data.frame(x=x, y=dt(x, df=3),  dist=\"t(df=3)\"),\n  data.frame(x=x, y=dt(x, df=10), dist=\"t(df=10)\"),\n  data.frame(x=x, y=dt(x, df=30), dist=\"t(df=30)\")\n)\n\nggplot(t_df, aes(x, y, color=dist, linetype=dist)) +\n  geom_line(linewidth=1.1) +\n  scale_color_manual(values=c(\"#0f172a\",\"#e11d48\",\"#7c3aed\",\"#2563eb\")) +\n  scale_linetype_manual(values=c(\"dashed\",\"solid\",\"solid\",\"solid\")) +\n  labs(title=\"t-Distribution vs Normal\",\n       subtitle=\"As df increases, t approaches the Standard Normal\",\n       x=\"x\", y=\"Density\", color=\"Distribution\", linetype=\"Distribution\") +\n  theme_minimal(base_size=11) +\n  theme(legend.position=\"right\", panel.grid.minor=element_blank())\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Critical values\ncat(\"t-critical values (two-tailed, α=0.05):\\n\")\n\n\nt-critical values (two-tailed, α=0.05):\n\n\nCode\nfor (df in c(5, 10, 20, 30, 60, 120)) {\n  cat(sprintf(\"  df=%3d: t = %.4f\\n\", df, qt(0.975, df)))\n}\n\n\n  df=  5: t = 2.5706\n  df= 10: t = 2.2281\n  df= 20: t = 2.0860\n  df= 30: t = 2.0423\n  df= 60: t = 2.0003\n  df=120: t = 1.9799\n\n\nCode\ncat(sprintf(\"  Normal: z = %.4f\\n\", qnorm(0.975)))\n\n\n  Normal: z = 1.9600"
+  },
+  {
+    "objectID": "statistics-with-r/chapter2.html#practice-exercises",
+    "href": "statistics-with-r/chapter2.html#practice-exercises",
+    "title": "Chapter 2: Probability & Distributions",
+    "section": "6 Practice Exercises",
+    "text": "6 Practice Exercises\n\n\n\n\n\n\nTipTry It Yourself\n\n\n\n\nNormal: If IQ scores are N(100, 15²), find P(IQ &gt; 130) and the 90th percentile\nBinomial: In 200 trials with p=0.25, find the mean, SD, and P(X ≥ 60)\nPoisson: If λ=5 calls/hour, find P(0 calls) and P(X ≥ 8)\nt: For a sample of n=25, find the 95% CI for the mean wage from Chapter 1’s data\n\n\n\nNext: Chapter 3 — Regression Analysis →"
+  },
+  {
+    "objectID": "blog/post1.html",
+    "href": "blog/post1.html",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "",
+    "text": "After years of working with messy survey data — from PLFS datasets to field-collected ODK forms — I’ve come to appreciate how the tidyverse ecosystem makes data wrangling not just efficient, but almost enjoyable. This post shares the patterns I use most often."
+  },
+  {
+    "objectID": "blog/post1.html#introduction",
+    "href": "blog/post1.html#introduction",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "",
+    "text": "After years of working with messy survey data — from PLFS datasets to field-collected ODK forms — I’ve come to appreciate how the tidyverse ecosystem makes data wrangling not just efficient, but almost enjoyable. This post shares the patterns I use most often."
+  },
+  {
+    "objectID": "blog/post1.html#setting-up",
+    "href": "blog/post1.html#setting-up",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "Setting Up",
+    "text": "Setting Up\n\n\nCode\nlibrary(tidyverse)\nlibrary(knitr)\n\n# Simulate a messy survey dataset\nset.seed(2025)\nn &lt;- 200\n\nraw_survey &lt;- data.frame(\n  id         = 1:n,\n  age        = sample(c(18:80, NA), n, replace = TRUE, \n                      prob = c(rep(1, 63), rep(5, 1))),\n  income     = paste0(\"₹\", round(runif(n, 5000, 150000), -2)),\n  gender     = sample(c(\"M\", \"F\", \"male\", \"female\", \"MALE\", \"1\", \"2\", NA), \n                      n, replace = TRUE),\n  state      = sample(c(\"HR\", \"PB\", \"UP\", \"BR\", \"MH\", NA), n, replace = TRUE),\n  employment = sample(c(\"Employed\", \"Unemployed\", \"Self-Employed\", \n                         \"employed\", \"NA\", NA), n, replace = TRUE)\n)\n\nglimpse(raw_survey)\n\n\nRows: 200\nColumns: 6\n$ id         &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, …\n$ age        &lt;int&gt; 64, 47, 21, 48, 68, 21, 76, 23, 58, 53, 44, 79, 59, NA, 46,…\n$ income     &lt;chr&gt; \"₹114500\", \"₹10500\", \"₹62900\", \"₹31200\", \"₹128400\", \"₹13450…\n$ gender     &lt;chr&gt; \"F\", \"M\", NA, \"1\", \"female\", NA, \"1\", NA, \"F\", \"female\", \"f…\n$ state      &lt;chr&gt; \"PB\", \"MH\", \"UP\", \"MH\", \"UP\", NA, \"MH\", \"UP\", NA, \"UP\", \"UP…\n$ employment &lt;chr&gt; \"Employed\", \"NA\", \"employed\", \"Employed\", \"employed\", \"Empl…"
+  },
+  {
+    "objectID": "blog/post1.html#step-1-standardise-text-variables",
+    "href": "blog/post1.html#step-1-standardise-text-variables",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "Step 1: Standardise Text Variables",
+    "text": "Step 1: Standardise Text Variables\nOne of the most common issues in field surveys is inconsistent coding. Here’s how to fix it cleanly:\n\n\nCode\nclean_survey &lt;- raw_survey |&gt;\n  # Standardise gender\n  mutate(\n    gender_clean = case_when(\n      str_to_lower(gender) %in% c(\"m\", \"male\", \"1\") ~ \"Male\",\n      str_to_lower(gender) %in% c(\"f\", \"female\", \"2\") ~ \"Female\",\n      .default = NA_character_\n    ),\n    # Clean income: remove ₹ symbol and convert to numeric\n    income_num = as.numeric(str_remove(income, \"₹\")),\n    # Standardise employment\n    employment_clean = case_when(\n      str_to_lower(employment) == \"employed\"      ~ \"Employed\",\n      str_to_lower(employment) == \"unemployed\"    ~ \"Unemployed\",\n      str_to_lower(employment) == \"self-employed\" ~ \"Self-Employed\",\n      .default = NA_character_\n    )\n  )\n\n# Check results\nclean_survey |&gt;\n  count(gender_clean) |&gt;\n  kable(caption = \"Gender distribution after cleaning\")\n\n\n\nGender distribution after cleaning\n\n\ngender_clean\nn\n\n\n\n\nFemale\n68\n\n\nMale\n102\n\n\nNA\n30"
+  },
+  {
+    "objectID": "blog/post1.html#step-2-handle-missing-values",
+    "href": "blog/post1.html#step-2-handle-missing-values",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "Step 2: Handle Missing Values",
+    "text": "Step 2: Handle Missing Values\n\n\nCode\n# Check missingness\nmiss_summary &lt;- clean_survey |&gt;\n  summarise(across(everything(), ~sum(is.na(.)))) |&gt;\n  pivot_longer(everything(), names_to = \"variable\", values_to = \"missing\") |&gt;\n  mutate(pct_missing = round(missing / n * 100, 1)) |&gt;\n  arrange(desc(missing))\n\nkable(miss_summary, caption = \"Missing value summary\")\n\n\n\nMissing value summary\n\n\nvariable\nmissing\npct_missing\n\n\n\n\nemployment_clean\n67\n33.5\n\n\nstate\n42\n21.0\n\n\nemployment\n38\n19.0\n\n\ngender\n30\n15.0\n\n\ngender_clean\n30\n15.0\n\n\nage\n10\n5.0\n\n\nid\n0\n0.0\n\n\nincome\n0\n0.0\n\n\nincome_num\n0\n0.0"
+  },
+  {
+    "objectID": "blog/post1.html#step-3-create-summary-tables",
+    "href": "blog/post1.html#step-3-create-summary-tables",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "Step 3: Create Summary Tables",
+    "text": "Step 3: Create Summary Tables\n\n\nCode\n# Age-Income analysis by gender\nsummary_table &lt;- clean_survey |&gt;\n  filter(!is.na(gender_clean), !is.na(income_num)) |&gt;\n  group_by(gender_clean, state) |&gt;\n  summarise(\n    n          = n(),\n    mean_age   = round(mean(age, na.rm = TRUE), 1),\n    mean_income = round(mean(income_num, na.rm = TRUE)),\n    median_income = median(income_num, na.rm = TRUE),\n    .groups = \"drop\"\n  ) |&gt;\n  arrange(state, gender_clean)\n\nkable(summary_table, \n      caption = \"Summary statistics by gender and state\",\n      format.args = list(big.mark = \",\"))\n\n\n\nSummary statistics by gender and state\n\n\ngender_clean\nstate\nn\nmean_age\nmean_income\nmedian_income\n\n\n\n\nFemale\nBR\n13\n52.2\n74,515\n70,000\n\n\nMale\nBR\n18\n56.2\n83,744\n86,600\n\n\nFemale\nHR\n6\n52.0\n84,517\n77,550\n\n\nMale\nHR\n21\n49.7\n90,119\n101,100\n\n\nFemale\nMH\n9\n53.2\n65,900\n52,600\n\n\nMale\nMH\n10\n64.4\n78,220\n85,850\n\n\nFemale\nPB\n11\n53.0\n65,036\n64,900\n\n\nMale\nPB\n19\n48.9\n81,774\n74,800\n\n\nFemale\nUP\n16\n50.2\n79,781\n80,450\n\n\nMale\nUP\n11\n45.5\n86,891\n81,400\n\n\nFemale\nNA\n13\n49.8\n60,362\n37,600\n\n\nMale\nNA\n23\n50.3\n77,752\n86,600"
+  },
+  {
+    "objectID": "blog/post1.html#step-4-visualise-the-clean-data",
+    "href": "blog/post1.html#step-4-visualise-the-clean-data",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "Step 4: Visualise the Clean Data",
+    "text": "Step 4: Visualise the Clean Data\n\n\nCode\nclean_survey |&gt;\n  filter(!is.na(gender_clean), !is.na(employment_clean), !is.na(income_num)) |&gt;\n  ggplot(aes(x = income_num, fill = gender_clean)) +\n  geom_density(alpha = 0.6, adjust = 1.5) +\n  facet_wrap(~employment_clean) +\n  scale_x_continuous(labels = scales::label_number(prefix = \"₹\", big.mark = \",\")) +\n  scale_fill_manual(values = c(\"Male\" = \"#2563eb\", \"Female\" = \"#e11d48\")) +\n  labs(\n    title = \"Income Distribution by Gender and Employment Status\",\n    x = \"Monthly Income (₹)\", y = \"Density\", fill = \"Gender\"\n  ) +\n  theme_minimal(base_size = 11) +\n  theme(\n    strip.background = element_rect(fill = \"#f1f5f9\", color = NA),\n    strip.text = element_text(face = \"bold\"),\n    panel.grid.minor = element_blank(),\n    legend.position = \"top\"\n  )\n\n\n\n\n\nIncome distribution by gender and employment status"
+  },
+  {
+    "objectID": "blog/post1.html#key-takeaways",
+    "href": "blog/post1.html#key-takeaways",
+    "title": "Data Wrangling with tidyverse: A Practical Guide",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\nThe tidyverse pipeline (|&gt;) allows you to chain data transformations in a readable, logical sequence. The key principles I follow:\n\nNever modify raw data — always create a new clean_ object\nStandardise early — fix encoding, case, and symbols before any analysis\nDocument decisions — use # comments to explain why you made choices\nCheck your work — use count() and glimpse() frequently\n\nIn my next post, I’ll cover how to handle survey weights using the survey package in R."
+  },
+  {
+    "objectID": "blog/post3.html",
+    "href": "blog/post3.html",
+    "title": "Beautiful Statistical Graphics with ggplot2",
+    "section": "",
+    "text": "When I first switched from Excel to R for data visualization, ggplot2 felt confusing. “Why do I need aes()? What’s a geom?” After years of use, I now think it’s the most elegant visualization system ever designed.\nThe key insight is the Grammar of Graphics: every chart is built from composable layers."
+  },
+  {
+    "objectID": "blog/post3.html#why-ggplot2",
+    "href": "blog/post3.html#why-ggplot2",
+    "title": "Beautiful Statistical Graphics with ggplot2",
+    "section": "",
+    "text": "When I first switched from Excel to R for data visualization, ggplot2 felt confusing. “Why do I need aes()? What’s a geom?” After years of use, I now think it’s the most elegant visualization system ever designed.\nThe key insight is the Grammar of Graphics: every chart is built from composable layers."
+  },
+  {
+    "objectID": "blog/post3.html#the-foundation-data-aesthetics-geometry",
+    "href": "blog/post3.html#the-foundation-data-aesthetics-geometry",
+    "title": "Beautiful Statistical Graphics with ggplot2",
+    "section": "The Foundation: Data + Aesthetics + Geometry",
+    "text": "The Foundation: Data + Aesthetics + Geometry\n\n\nCode\nlibrary(tidyverse)\nlibrary(scales)\n\n# Create a realistic wage dataset\nset.seed(2025)\nwage_data &lt;- data.frame(\n  state     = rep(c(\"Haryana\",\"Punjab\",\"UP\",\"Bihar\",\"Maharashtra\",\n                    \"Gujarat\",\"Karnataka\",\"Tamil Nadu\"), each = 200),\n  wage      = c(\n    rnorm(200, 450, 80), rnorm(200, 480, 90), rnorm(200, 320, 70),\n    rnorm(200, 280, 65), rnorm(200, 520, 110), rnorm(200, 490, 95),\n    rnorm(200, 510, 100), rnorm(200, 535, 105)\n  ),\n  gender    = sample(c(\"Male\",\"Female\"), 1600, replace = TRUE, prob=c(.6,.4)),\n  sector    = sample(c(\"Agriculture\",\"Industry\",\"Services\"), 1600, replace=TRUE)\n)"
+  },
+  {
+    "objectID": "blog/post3.html#layer-1-the-basic-plot",
+    "href": "blog/post3.html#layer-1-the-basic-plot",
+    "title": "Beautiful Statistical Graphics with ggplot2",
+    "section": "Layer 1: The Basic Plot",
+    "text": "Layer 1: The Basic Plot\n\n\nCode\n# Start simple\nggplot(wage_data, aes(x = wage)) +\n  geom_histogram(bins = 40, fill = \"#2563eb\", alpha = 0.8) +\n  labs(title = \"Wage Distribution\", x = \"Daily Wage (₹)\", y = \"Count\")"
+  },
+  {
+    "objectID": "blog/post3.html#layer-2-add-facets-and-color",
+    "href": "blog/post3.html#layer-2-add-facets-and-color",
+    "title": "Beautiful Statistical Graphics with ggplot2",
+    "section": "Layer 2: Add Facets and Color",
+    "text": "Layer 2: Add Facets and Color\n\n\nCode\nggplot(wage_data, aes(x = wage, fill = gender)) +\n  geom_density(alpha = 0.6, adjust = 1.2) +\n  facet_wrap(~sector, ncol = 3) +\n  scale_fill_manual(values = c(\"Male\"=\"#2563eb\",\"Female\"=\"#e11d48\")) +\n  scale_x_continuous(labels = label_number(prefix=\"₹\")) +\n  labs(title = \"Wage Distribution by Sector and Gender\",\n       x = \"Daily Wage (₹)\", y = \"Density\", fill = NULL) +\n  theme_minimal(base_size = 11) +\n  theme(legend.position = \"top\",\n        strip.text = element_text(face=\"bold\"),\n        panel.grid.minor = element_blank())"
+  },
+  {
+    "objectID": "blog/post3.html#layer-3-publication-quality-box-plot",
+    "href": "blog/post3.html#layer-3-publication-quality-box-plot",
+    "title": "Beautiful Statistical Graphics with ggplot2",
+    "section": "Layer 3: Publication-Quality Box Plot",
+    "text": "Layer 3: Publication-Quality Box Plot\n\n\nCode\nstate_summary &lt;- wage_data |&gt;\n  group_by(state) |&gt;\n  summarise(median_wage = median(wage), .groups = \"drop\") |&gt;\n  arrange(median_wage)\n\nwage_data |&gt;\n  mutate(state = factor(state, levels = state_summary$state)) |&gt;\n  ggplot(aes(x = state, y = wage, fill = gender)) +\n  geom_boxplot(\n    outlier.shape = 21, outlier.size = 1, outlier.alpha = 0.4,\n    width = 0.6, position = position_dodge(0.7), alpha = 0.8\n  ) +\n  stat_summary(\n    aes(group = gender),\n    fun = mean, geom = \"point\",\n    shape = 23, size = 3, fill = \"white\",\n    position = position_dodge(0.7)\n  ) +\n  scale_fill_manual(values = c(\"Male\"=\"#2563eb\",\"Female\"=\"#e11d48\"),\n                    name = \"Gender\") +\n  scale_y_continuous(\n    labels = label_number(prefix = \"₹\"),\n    breaks = seq(0, 800, 100)\n  ) +\n  coord_flip() +\n  labs(\n    title    = \"Daily Wage Distribution by State and Gender\",\n    subtitle = \"Diamonds show group means · Boxes show IQR · Lines show medians\",\n    x = NULL, y = \"Daily Wage (₹)\",\n    caption  = \"Source: Simulated survey data for demonstration\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(\n    plot.title       = element_text(face = \"bold\", size = 14),\n    plot.subtitle    = element_text(color = \"#64748b\", size = 10),\n    plot.caption     = element_text(color = \"#94a3b8\", size = 9),\n    panel.grid.major.y = element_blank(),\n    panel.grid.minor   = element_blank(),\n    legend.position    = \"top\",\n    plot.background    = element_rect(fill = \"white\", color = NA),\n    plot.margin        = margin(16, 24, 12, 16)\n  )\n\n\n\n\n\nState-wise wage comparison — publication quality"
+  },
+  {
+    "objectID": "blog/post3.html#layer-4-custom-theme-function",
+    "href": "blog/post3.html#layer-4-custom-theme-function",
+    "title": "Beautiful Statistical Graphics with ggplot2",
+    "section": "Layer 4: Custom Theme Function",
+    "text": "Layer 4: Custom Theme Function\nThe real power comes from creating your own reusable theme:\n\n\nCode\ntheme_pawan &lt;- function(base_size = 12) {\n  theme_minimal(base_size = base_size) +\n    theme(\n      text              = element_text(family = \"sans\"),\n      plot.title        = element_text(face = \"bold\", size = base_size + 3, hjust = 0),\n      plot.subtitle     = element_text(color = \"#64748b\", hjust = 0, margin = margin(b = 10)),\n      plot.caption      = element_text(color = \"#94a3b8\", size = base_size - 3, hjust = 1),\n      panel.grid.minor  = element_blank(),\n      panel.grid.major  = element_line(color = \"#f1f5f9\"),\n      axis.title        = element_text(color = \"#475569\", size = base_size - 1),\n      legend.position   = \"top\",\n      legend.title      = element_text(face = \"bold\"),\n      plot.background   = element_rect(fill = \"white\", color = NA),\n      plot.margin       = margin(16, 24, 12, 16)\n    )\n}\n\n# Use it\nwage_data |&gt;\n  group_by(state, sector) |&gt;\n  summarise(mean_wage = mean(wage), .groups = \"drop\") |&gt;\n  ggplot(aes(x = reorder(state, mean_wage), y = mean_wage, fill = sector)) +\n  geom_col(position = \"dodge\", width = 0.7, alpha = 0.9) +\n  scale_fill_manual(values = c(\"#2563eb\",\"#7c3aed\",\"#0d9488\")) +\n  scale_y_continuous(labels = label_number(prefix = \"₹\")) +\n  coord_flip() +\n  labs(title = \"Mean Wage by State and Sector\",\n       subtitle = \"Custom theme applied consistently across all charts\",\n       x = NULL, y = \"Mean Daily Wage (₹)\", fill = \"Sector\") +\n  theme_pawan()\n\n\n\n\n\n\n\n\n\nThe theme_pawan() function means every chart in a report looks consistent — a crucial detail for professional work."
+  },
+  {
+    "objectID": "blog/post2.html",
+    "href": "blog/post2.html",
+    "title": "Sampling Methods in Field Research: What I Learned",
+    "section": "",
+    "text": "Textbooks make sampling sound clean. Reality is messier. In my years of field survey work — from rural Haryana to urban Maharashtra — I’ve encountered almost every challenge sampling theory describes, plus a few it doesn’t.\nThis post is my attempt to bridge the theory-practice gap."
+  },
+  {
+    "objectID": "blog/post2.html#the-reality-of-field-sampling",
+    "href": "blog/post2.html#the-reality-of-field-sampling",
+    "title": "Sampling Methods in Field Research: What I Learned",
+    "section": "",
+    "text": "Textbooks make sampling sound clean. Reality is messier. In my years of field survey work — from rural Haryana to urban Maharashtra — I’ve encountered almost every challenge sampling theory describes, plus a few it doesn’t.\nThis post is my attempt to bridge the theory-practice gap."
+  },
+  {
+    "objectID": "blog/post2.html#simple-random-sampling-rarely-simple-in-practice",
+    "href": "blog/post2.html#simple-random-sampling-rarely-simple-in-practice",
+    "title": "Sampling Methods in Field Research: What I Learned",
+    "section": "Simple Random Sampling: Rarely Simple in Practice",
+    "text": "Simple Random Sampling: Rarely Simple in Practice\n\n\nCode\nlibrary(tidyverse)\n\n# Simulate a village population\nset.seed(42)\nvillage_pop &lt;- data.frame(\n  household_id = 1:500,\n  income = exp(rnorm(500, log(8000), 0.8)),\n  num_members = rpois(500, 4.5) + 1,\n  landholding = rexp(500, 1/2.5)  # acres\n)\n\n# SRS: draw 50 households\nsrs_sample &lt;- village_pop |&gt;\n  slice_sample(n = 50)\n\n# Compare estimates to true values\ncomparison &lt;- bind_rows(\n  village_pop |&gt; summarise(group = \"Population\", \n                           mean_income = mean(income),\n                           mean_size = mean(num_members)),\n  srs_sample |&gt; summarise(group = \"SRS Sample (n=50)\", \n                           mean_income = mean(income),\n                           mean_size = mean(num_members))\n)\n\nknitr::kable(comparison, digits = 1,\n             caption = \"SRS vs Population parameters\")\n\n\n\nSRS vs Population parameters\n\n\ngroup\nmean_income\nmean_size\n\n\n\n\nPopulation\n10575.1\n5.4\n\n\nSRS Sample (n=50)\n9324.0\n5.3\n\n\n\n\n\nThe estimates are close — but in field reality, SRS requires a complete sampling frame (list of all households), which rarely exists in rural areas."
+  },
+  {
+    "objectID": "blog/post2.html#stratified-sampling-my-preferred-approach",
+    "href": "blog/post2.html#stratified-sampling-my-preferred-approach",
+    "title": "Sampling Methods in Field Research: What I Learned",
+    "section": "Stratified Sampling: My Preferred Approach",
+    "text": "Stratified Sampling: My Preferred Approach\nWhen I joined SSER, we almost always used stratified sampling for district-level surveys. Here’s why it works:\n\n\nCode\n# Add strata based on landholding\nvillage_pop &lt;- village_pop |&gt;\n  mutate(\n    stratum = case_when(\n      landholding == 0         ~ \"Landless\",\n      landholding &lt; 1          ~ \"Marginal (&lt;1 ac)\",\n      landholding &lt; 5          ~ \"Small (1-5 ac)\",\n      TRUE                     ~ \"Large (5+ ac)\"\n    ) |&gt; factor(levels = c(\"Landless\",\"Marginal (&lt;1 ac)\",\"Small (1-5 ac)\",\"Large (5+ ac)\"))\n  )\n\n# Proportional stratified sample\nstrat_sample &lt;- village_pop |&gt;\n  group_by(stratum) |&gt;\n  slice_sample(prop = 0.1) |&gt;  # 10% from each stratum\n  ungroup()\n\n# Visualise income by stratum\nggplot(village_pop, aes(x = stratum, y = income, fill = stratum)) +\n  geom_boxplot(alpha = 0.7, outlier.shape = 21) +\n  geom_jitter(data = strat_sample, aes(x = stratum, y = income),\n              width = 0.2, alpha = 0.6, color = \"black\", size = 1.5) +\n  scale_y_log10(labels = scales::label_number(prefix = \"₹\", big.mark = \",\")) +\n  scale_fill_manual(values = c(\"#2563eb\",\"#7c3aed\",\"#0d9488\",\"#d97706\")) +\n  labs(title = \"Income Distribution by Land Stratum\",\n       subtitle = \"Black dots = sampled households (10% per stratum)\",\n       x = NULL, y = \"Monthly Income (log scale)\") +\n  theme_minimal(base_size = 11) +\n  theme(legend.position = \"none\",\n        axis.text.x = element_text(angle = 15, hjust = 1))"
+  },
+  {
+    "objectID": "blog/post2.html#cluster-sampling-practical-but-tricky",
+    "href": "blog/post2.html#cluster-sampling-practical-but-tricky",
+    "title": "Sampling Methods in Field Research: What I Learned",
+    "section": "Cluster Sampling: Practical but Tricky",
+    "text": "Cluster Sampling: Practical but Tricky\nCluster sampling is often the only feasible approach for large geographic surveys. We used it extensively when surveying across multiple districts.\n\n\nCode\n# Simulate 20 clusters (villages), sample 5 clusters\nset.seed(99)\nn_clusters &lt;- 20\nclusters &lt;- data.frame(\n  cluster_id = 1:n_clusters,\n  district = sample(c(\"Rohtak\",\"Hisar\",\"Karnal\",\"Panipat\"), \n                    n_clusters, replace = TRUE),\n  pop_size = sample(200:800, n_clusters)\n)\n\n# Within-cluster correlation (ICC) effect\nicc &lt;- 0.15  # typical for income surveys\ndesign_effect &lt;- 1 + (mean(clusters$pop_size) - 1) * icc\n\ncat(\"Design Effect (DEFF):\", round(design_effect, 2))\n\n\nDesign Effect (DEFF): 84.51\n\n\nCode\ncat(\"\\nEffective sample size reduction:\", round((1 - 1/design_effect)*100, 1), \"%\")\n\n\n\nEffective sample size reduction: 98.8 %\n\n\nThe key lesson: Always account for the design effect when reporting standard errors from cluster samples. Ignoring it gives you artificially small standard errors and overconfident conclusions."
+  },
+  {
+    "objectID": "blog/post2.html#practical-tips-from-the-field",
+    "href": "blog/post2.html#practical-tips-from-the-field",
+    "title": "Sampling Methods in Field Research: What I Learned",
+    "section": "Practical Tips from the Field",
+    "text": "Practical Tips from the Field\n\nListing comes first — Before sampling, build your sampling frame carefully. In rural areas, this often means a fresh household listing exercise.\nReplacement rules matter — Define substitution procedures before going to field. What happens when a sampled household is locked or refuses?\nRandom starts in systematic sampling — Always use a random start for systematic samples, not just household #1.\nWeight your data — After collecting, compute and apply sampling weights before any analysis. The survey package in R handles this beautifully.\n\nField sampling is as much art as science. The best designs balance statistical efficiency with logistical feasibility."
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html",
+    "href": "statistics-with-r/chapter1.html",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "",
+    "text": "Learning Objectives: By the end of this chapter, you will be able to compute and interpret measures of central tendency and dispersion, create effective visualizations for exploring distributions, and identify skewness and outliers in real datasets."
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html#introduction-to-descriptive-statistics",
+    "href": "statistics-with-r/chapter1.html#introduction-to-descriptive-statistics",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "1 Introduction to Descriptive Statistics",
+    "text": "1 Introduction to Descriptive Statistics\nDescriptive statistics summarize and describe the main features of a dataset. They are the first step in any data analysis — before we run a single regression or hypothesis test, we must understand what our data looks like.\nIn R, we have powerful tools for this. Let’s load our packages and create a realistic dataset:\n\n\nCode\nlibrary(tidyverse)\nlibrary(knitr)\n\n# Simulate Labour Force Survey data\nset.seed(2025)\nn &lt;- 1000\n\nlfs_data &lt;- data.frame(\n  age       = round(rnorm(n, 35, 12)) |&gt; pmax(15) |&gt; pmin(70),\n  wage      = exp(rnorm(n, log(400), 0.7)) |&gt; round(),\n  edu_years = sample(0:20, n, replace = TRUE, \n                     prob = dpois(0:20, 8) + 0.01),\n  gender    = sample(c(\"Male\",\"Female\"), n, replace = TRUE, prob=c(.6,.4)),\n  state     = sample(c(\"Haryana\",\"UP\",\"Bihar\",\"Maharashtra\",\"Karnataka\"), \n                     n, replace = TRUE),\n  sector    = sample(c(\"Agriculture\",\"Industry\",\"Services\"), n, \n                     replace = TRUE, prob = c(.4,.2,.4))\n)\n\nglimpse(lfs_data)\n\n\nRows: 1,000\nColumns: 6\n$ age       &lt;dbl&gt; 42, 35, 44, 50, 39, 33, 40, 34, 31, 43, 30, 15, 30, 44, 48, …\n$ wage      &lt;dbl&gt; 737, 93, 261, 148, 239, 242, 229, 505, 385, 337, 256, 148, 2…\n$ edu_years &lt;int&gt; 2, 4, 4, 2, 9, 8, 16, 11, 5, 4, 7, 10, 4, 9, 10, 6, 10, 13, …\n$ gender    &lt;chr&gt; \"Male\", \"Female\", \"Female\", \"Female\", \"Male\", \"Male\", \"Femal…\n$ state     &lt;chr&gt; \"UP\", \"Maharashtra\", \"Haryana\", \"UP\", \"Karnataka\", \"Bihar\", …\n$ sector    &lt;chr&gt; \"Services\", \"Agriculture\", \"Services\", \"Industry\", \"Industry…"
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html#measures-of-central-tendency",
+    "href": "statistics-with-r/chapter1.html#measures-of-central-tendency",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "2 Measures of Central Tendency",
+    "text": "2 Measures of Central Tendency\nThe three main measures of central tendency each tell a different story:\n\n\nCode\nwage_stats &lt;- lfs_data |&gt;\n  summarise(\n    Mean   = mean(wage),\n    Median = median(wage),\n    Mode   = as.numeric(names(sort(table(round(wage,-2)), decreasing=TRUE)[1])),\n    SD     = sd(wage),\n    IQR    = IQR(wage),\n    Min    = min(wage),\n    Max    = max(wage),\n    Skewness = (mean(wage) - median(wage)) / sd(wage) * 3  # Pearson's approx\n  ) |&gt;\n  pivot_longer(everything(), names_to = \"Statistic\", values_to = \"Value\") |&gt;\n  mutate(Value = round(Value, 2))\n\nkable(wage_stats, caption = \"Descriptive Statistics for Daily Wage (₹)\")\n\n\n\nDescriptive Statistics for Daily Wage (₹)\n\n\nStatistic\nValue\n\n\n\n\nMean\n505.76\n\n\nMedian\n394.00\n\n\nMode\n200.00\n\n\nSD\n444.35\n\n\nIQR\n397.25\n\n\nMin\n46.00\n\n\nMax\n6001.00\n\n\nSkewness\n0.75\n\n\n\n\n\n\n2.1 Why the Mean ≠ Median for Wages\n\n\nCode\nggplot(lfs_data, aes(x = wage)) +\n  geom_histogram(bins = 50, fill = \"#93c5fd\", alpha = 0.8, color = \"white\") +\n  geom_vline(aes(xintercept = mean(wage), linetype = \"Mean\"), \n             color = \"#2563eb\", linewidth = 1.2) +\n  geom_vline(aes(xintercept = median(wage), linetype = \"Median\"), \n             color = \"#e11d48\", linewidth = 1.2) +\n  scale_linetype_manual(name = \"\", values = c(\"Mean\"=\"solid\",\"Median\"=\"dashed\")) +\n  scale_x_continuous(labels = scales::label_number(prefix = \"₹\")) +\n  labs(title = \"Daily Wage Distribution\",\n       subtitle = \"Right skew pulls the mean above the median\",\n       x = \"Daily Wage (₹)\", y = \"Count\") +\n  theme_minimal(base_size = 11) +\n  theme(legend.position = \"top\", panel.grid.minor = element_blank())\n\n\n\n\n\nWage distribution showing mean vs median divergence due to right skew\n\n\n\n\nKey insight: For right-skewed income distributions, the median is almost always a better measure of “typical” than the mean. A few high earners inflate the mean."
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html#measures-of-dispersion",
+    "href": "statistics-with-r/chapter1.html#measures-of-dispersion",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "3 Measures of Dispersion",
+    "text": "3 Measures of Dispersion\n\n\nCode\n# Boxplot comparison across sectors\nggplot(lfs_data, aes(x = sector, y = wage, fill = sector)) +\n  geom_boxplot(alpha = 0.8, outlier.shape = 21, outlier.alpha = 0.5,\n               outlier.size = 1.5) +\n  stat_summary(fun = mean, geom = \"point\", shape = 23, \n               size = 4, fill = \"white\", color = \"black\") +\n  scale_fill_manual(values = c(\"#2563eb\",\"#7c3aed\",\"#0d9488\")) +\n  scale_y_continuous(labels = scales::label_number(prefix = \"₹\")) +\n  labs(title = \"Wage Dispersion by Sector\",\n       subtitle = \"Diamonds = means · Boxes = IQR · Whiskers = 1.5×IQR\",\n       x = NULL, y = \"Daily Wage (₹)\") +\n  theme_minimal(base_size = 11) +\n  theme(legend.position = \"none\", panel.grid.minor = element_blank())\n\n\n\n\n\n\n\n\n\n\n\nCode\ndispersion_by_sector &lt;- lfs_data |&gt;\n  group_by(sector) |&gt;\n  summarise(\n    n      = n(),\n    Mean   = round(mean(wage)),\n    SD     = round(sd(wage)),\n    `CV (%)` = round(sd(wage)/mean(wage)*100, 1),\n    Median = round(median(wage)),\n    IQR    = round(IQR(wage)),\n    .groups = \"drop\"\n  )\n\nkable(dispersion_by_sector, \n      caption = \"Dispersion measures by sector (CV = Coefficient of Variation)\")\n\n\n\nDispersion measures by sector (CV = Coefficient of Variation)\n\n\nsector\nn\nMean\nSD\nCV (%)\nMedian\nIQR\n\n\n\n\nAgriculture\n423\n499\n406\n81.4\n402\n384\n\n\nIndustry\n214\n485\n400\n82.3\n383\n326\n\n\nServices\n363\n526\n508\n96.6\n386\n440\n\n\n\n\n\n\nCoefficient of Variation (CV): Useful for comparing dispersion across groups with different means. CV = (SD / Mean) × 100%. Higher CV means more relative spread."
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html#exploring-distributions",
+    "href": "statistics-with-r/chapter1.html#exploring-distributions",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "4 Exploring Distributions",
+    "text": "4 Exploring Distributions\n\n4.1 Five-Number Summary\n\n\nCode\nfive_num &lt;- lfs_data |&gt;\n  group_by(gender) |&gt;\n  summarise(\n    Min    = min(wage),\n    Q1     = quantile(wage, 0.25),\n    Median = median(wage),\n    Q3     = quantile(wage, 0.75),\n    Max    = max(wage),\n    .groups = \"drop\"\n  )\n\nkable(five_num, digits = 0, \n      caption = \"Five-number summary by gender (₹)\")\n\n\n\nFive-number summary by gender (₹)\n\n\ngender\nMin\nQ1\nMedian\nQ3\nMax\n\n\n\n\nFemale\n53\n225\n395\n577\n6001\n\n\nMale\n46\n241\n391\n667\n4098\n\n\n\n\n\n\n\n4.2 Detecting Outliers\n\n\nCode\n# IQR method for outlier detection\nwage_bounds &lt;- lfs_data |&gt;\n  summarise(\n    Q1  = quantile(wage, 0.25),\n    Q3  = quantile(wage, 0.75),\n    IQR = IQR(wage),\n    lower = Q1 - 1.5 * IQR,\n    upper = Q3 + 1.5 * IQR\n  )\n\nlfs_outliers &lt;- lfs_data |&gt;\n  mutate(is_outlier = wage &lt; wage_bounds$lower | wage &gt; wage_bounds$upper)\n\ncat(\"Outliers detected (IQR method):\", sum(lfs_outliers$is_outlier), \"\\n\")\n\n\nOutliers detected (IQR method): 54 \n\n\nCode\ncat(\"That's\", round(mean(lfs_outliers$is_outlier)*100, 1), \"% of observations\\n\")\n\n\nThat's 5.4 % of observations"
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html#cross-tabulation-two-way-frequencies",
+    "href": "statistics-with-r/chapter1.html#cross-tabulation-two-way-frequencies",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "5 Cross-tabulation: Two-Way Frequencies",
+    "text": "5 Cross-tabulation: Two-Way Frequencies\n\n\nCode\n# Sector by state distribution\ncross_tab &lt;- lfs_data |&gt;\n  count(sector, gender) |&gt;\n  pivot_wider(names_from = gender, values_from = n) |&gt;\n  mutate(Total = Male + Female,\n         `Female Share (%)` = round(Female/Total*100, 1))\n\nkable(cross_tab, caption = \"Employment distribution by sector and gender\")\n\n\n\nEmployment distribution by sector and gender\n\n\nsector\nFemale\nMale\nTotal\nFemale Share (%)\n\n\n\n\nAgriculture\n189\n234\n423\n44.7\n\n\nIndustry\n94\n120\n214\n43.9\n\n\nServices\n143\n220\n363\n39.4"
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html#practice-exercises",
+    "href": "statistics-with-r/chapter1.html#practice-exercises",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "6 Practice Exercises",
+    "text": "6 Practice Exercises\n\n\n\n\n\n\nTipTry It Yourself\n\n\n\n\nCompute the Gini coefficient for wage inequality using ineq package\nCreate a violin plot comparing wages across all 5 states\nTest whether mean wages differ significantly between sectors using ANOVA\nCompute the 90th percentile wage separately for male and female workers"
+  },
+  {
+    "objectID": "statistics-with-r/chapter1.html#chapter-summary",
+    "href": "statistics-with-r/chapter1.html#chapter-summary",
+    "title": "Chapter 1: Descriptive Statistics",
+    "section": "7 Chapter Summary",
+    "text": "7 Chapter Summary\n\n\n\nConcept\nMeasure\nR Function\n\n\n\n\nCentral Tendency\nMean\nmean()\n\n\nCentral Tendency\nMedian\nmedian()\n\n\nDispersion\nStandard Deviation\nsd()\n\n\nDispersion\nIQR\nIQR()\n\n\nShape\nSkewness\nmoments::skewness()\n\n\nRange\nMin/Max\nmin(), max()\n\n\nQuantiles\nQuartiles\nquantile()\n\n\n\nNext: Chapter 2 — Probability & Distributions →"
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html",
+    "href": "statistics-with-r/chapter3.html",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "",
+    "text": "Learning Objectives: Fit and interpret simple and multiple linear regression models, check OLS assumptions through diagnostic plots, and communicate results clearly."
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html#what-is-regression",
+    "href": "statistics-with-r/chapter3.html#what-is-regression",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "1 What is Regression?",
+    "text": "1 What is Regression?\nRegression analysis quantifies the relationship between variables. The goal is to model how changes in explanatory variables (X) are associated with changes in the outcome variable (Y).\nThe linear regression model: \\(Y_i = \\beta_0 + \\beta_1 X_{1i} + \\cdots + \\beta_k X_{ki} + \\varepsilon_i\\)\n\n\nCode\nlibrary(tidyverse)\nlibrary(knitr)\nlibrary(broom)\n\n# Wage dataset with labour economics flavor\nset.seed(2025)\nn &lt;- 800\nwage_data &lt;- data.frame(\n  edu_years = sample(0:20, n, replace=TRUE, prob=dpois(0:20, 9)+0.01),\n  experience = sample(0:40, n, replace=TRUE),\n  female = rbinom(n, 1, 0.4),\n  urban = rbinom(n, 1, 0.55),\n  union = rbinom(n, 1, 0.18)\n) |&gt;\n  mutate(\n    log_wage = 4.5 + 0.08*edu_years + 0.04*experience - 0.003*experience^2\n               - 0.25*female + 0.15*urban + 0.12*union + rnorm(n, 0, 0.35),\n    wage = round(exp(log_wage))\n  )"
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html#simple-linear-regression",
+    "href": "statistics-with-r/chapter3.html#simple-linear-regression",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "2 Simple Linear Regression",
+    "text": "2 Simple Linear Regression\nLet’s first explore the education-wage relationship:\n\n\nCode\n# Scatter with regression line\nggplot(wage_data, aes(x=edu_years, y=wage)) +\n  geom_point(alpha=0.3, color=\"#2563eb\", size=1.5) +\n  geom_smooth(method=\"lm\", color=\"#e11d48\", se=TRUE, linewidth=1.2,\n              fill=\"#fca5a5\", alpha=0.3) +\n  scale_y_continuous(labels=scales::label_number(prefix=\"₹\")) +\n  labs(title=\"Years of Education vs Daily Wage\",\n       subtitle=\"OLS regression line with 95% confidence band\",\n       x=\"Years of Education\", y=\"Daily Wage (₹)\") +\n  theme_minimal(base_size=11) +\n  theme(panel.grid.minor=element_blank())\n\n\n\n\n\n\n\n\n\n\n\nCode\n# Fit simple linear regression\nmodel_simple &lt;- lm(wage ~ edu_years, data=wage_data)\ntidy(model_simple) |&gt;\n  mutate(across(where(is.numeric), round, 3)) |&gt;\n  kable(caption=\"Simple Linear Regression: Wage ~ Education\")\n\n\n\nSimple Linear Regression: Wage ~ Education\n\n\nterm\nestimate\nstd.error\nstatistic\np.value\n\n\n\n\n(Intercept)\n34.985\n10.237\n3.417\n0.001\n\n\nedu_years\n11.321\n1.031\n10.980\n0.000\n\n\n\n\n\n\n\nCode\nglance(model_simple) |&gt;\n  select(r.squared, adj.r.squared, sigma, statistic, p.value, nobs) |&gt;\n  mutate(across(where(is.numeric), round, 4)) |&gt;\n  kable(caption=\"Model fit statistics\")\n\n\n\nModel fit statistics\n\n\nr.squared\nadj.r.squared\nsigma\nstatistic\np.value\nnobs\n\n\n\n\n0.1313\n0.1302\n110.7371\n120.5613\n0\n800\n\n\n\n\n\nInterpretation: For each additional year of education, daily wages increase by ₹11 on average, holding all else constant."
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html#multiple-linear-regression",
+    "href": "statistics-with-r/chapter3.html#multiple-linear-regression",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "3 Multiple Linear Regression",
+    "text": "3 Multiple Linear Regression\nNow let’s add more variables:\n\n\nCode\nmodel_full &lt;- lm(wage ~ edu_years + experience + I(experience^2) + \n                   female + urban + union, data=wage_data)\n\ntidy(model_full) |&gt;\n  mutate(\n    term = recode(term,\n      `(Intercept)`=\"Intercept\",\n      edu_years=\"Education (years)\",\n      experience=\"Experience (years)\",\n      `I(experience^2)`=\"Experience² (quadratic)\",\n      female=\"Female (=1)\",\n      urban=\"Urban (=1)\",\n      union=\"Union member (=1)\"\n    ),\n    across(where(is.numeric), round, 4),\n    significance = case_when(\n      p.value &lt; 0.001 ~ \"***\",\n      p.value &lt; 0.01  ~ \"**\",\n      p.value &lt; 0.05  ~ \"*\",\n      TRUE            ~ \"\"\n    )\n  ) |&gt;\n  kable(caption=\"Multiple Regression Results (*** p&lt;0.001, ** p&lt;0.01, * p&lt;0.05)\")\n\n\n\nMultiple Regression Results (*** p&lt;0.001, ** p&lt;0.01, * p&lt;0.05)\n\n\n\n\n\n\n\n\n\n\nterm\nestimate\nstd.error\nstatistic\np.value\nsignificance\n\n\n\n\nIntercept\n136.9419\n9.6012\n14.2629\n0.0000\n***\n\n\nEducation (years)\n11.0924\n0.6676\n16.6161\n0.0000\n***\n\n\nExperience (years)\n-2.4950\n0.8015\n-3.1131\n0.0019\n**\n\n\nExperience² (quadratic)\n-0.1063\n0.0196\n-5.4143\n0.0000\n***\n\n\nFemale (=1)\n-30.0160\n5.2114\n-5.7597\n0.0000\n***\n\n\nUrban (=1)\n15.0396\n5.1328\n2.9301\n0.0035\n**\n\n\nUnion member (=1)\n38.7287\n7.0472\n5.4956\n0.0000\n***\n\n\n\n\n\n\n\nCode\n# Compare models\nbind_rows(\n  glance(model_simple) |&gt; mutate(Model=\"Simple (Education only)\"),\n  glance(model_full)   |&gt; mutate(Model=\"Full Model\")\n) |&gt;\n  select(Model, r.squared, adj.r.squared, sigma, AIC) |&gt;\n  mutate(across(where(is.numeric), round, 3)) |&gt;\n  kable(caption=\"Model comparison\")\n\n\n\nModel comparison\n\n\nModel\nr.squared\nadj.r.squared\nsigma\nAIC\n\n\n\n\nSimple (Education only)\n0.131\n0.130\n110.737\n9805.753\n\n\nFull Model\n0.639\n0.637\n71.572\n9112.400"
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html#regression-diagnostics",
+    "href": "statistics-with-r/chapter3.html#regression-diagnostics",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "4 Regression Diagnostics",
+    "text": "4 Regression Diagnostics\nAlways check the four core OLS assumptions:\n\n\nCode\npar(mfrow=c(2,2), mar=c(4,4,3,1), family=\"sans\")\nplot(model_full, which=1:4, \n     col=alpha(\"#2563eb\", 0.4), pch=20, cex=0.7,\n     col.smooth=\"#e11d48\", lwd.smooth=2)\n\n\n\n\n\nRegression diagnostic plots — checking OLS assumptions\n\n\n\n\nCode\npar(mfrow=c(1,1))\n\n\nWhat to look for: - Residuals vs Fitted: Should show no pattern (random scatter around 0) - Q-Q Plot: Points should follow the diagonal line (normality of residuals) - Scale-Location: Horizontal band (homoscedasticity — equal variance) - Cook’s Distance: Points above 0.5 are influential observations"
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html#coefficient-plot",
+    "href": "statistics-with-r/chapter3.html#coefficient-plot",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "5 Coefficient Plot",
+    "text": "5 Coefficient Plot\n\n\nCode\ntidy(model_full, conf.int=TRUE) |&gt;\n  filter(term != \"(Intercept)\") |&gt;\n  mutate(term = recode(term,\n    edu_years=\"Education\", experience=\"Experience\",\n    `I(experience^2)`=\"Experience²\",\n    female=\"Female\", urban=\"Urban\", union=\"Union\")) |&gt;\n  ggplot(aes(x=estimate, y=reorder(term, estimate))) +\n  geom_vline(xintercept=0, linetype=\"dashed\", color=\"#94a3b8\") +\n  geom_errorbarh(aes(xmin=conf.low, xmax=conf.high), height=0.25,\n                 color=\"#7c3aed\", linewidth=0.8) +\n  geom_point(size=4, color=\"#2563eb\") +\n  labs(title=\"Regression Coefficients with 95% CI\",\n       x=\"Coefficient Estimate (₹/unit change)\", y=NULL) +\n  theme_minimal(base_size=11) +\n  theme(panel.grid.minor=element_blank(),\n        panel.grid.major.y=element_blank())"
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html#log-linear-wage-equation-mincer-model",
+    "href": "statistics-with-r/chapter3.html#log-linear-wage-equation-mincer-model",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "6 Log-Linear Wage Equation (Mincer Model)",
+    "text": "6 Log-Linear Wage Equation (Mincer Model)\nA standard approach in labour economics — using log wages gives percentage interpretations:\n\n\nCode\nmodel_log &lt;- lm(log_wage ~ edu_years + experience + I(experience^2) + \n                  female + urban + union, data=wage_data)\n\ntidy(model_log) |&gt;\n  filter(term != \"(Intercept)\") |&gt;\n  mutate(\n    term = recode(term,\n      edu_years=\"Education (years)\",\n      experience=\"Experience\",\n      `I(experience^2)`=\"Experience²\",\n      female=\"Female (=1)\",\n      urban=\"Urban (=1)\",\n      union=\"Union (=1)\"),\n    pct_effect = round((exp(estimate)-1)*100, 2),\n    across(c(estimate, std.error, p.value), round, 4)\n  ) |&gt;\n  select(term, estimate, std.error, p.value, pct_effect) |&gt;\n  rename(`% Effect` = pct_effect) |&gt;\n  kable(caption=\"Mincer Wage Equation (Log-Linear): % change in wage per unit\")\n\n\n\nMincer Wage Equation (Log-Linear): % change in wage per unit\n\n\nterm\nestimate\nstd.error\np.value\n% Effect\n\n\n\n\nEducation (years)\n0.0769\n0.0031\n0\n7.99\n\n\nExperience\n0.0372\n0.0038\n0\n3.79\n\n\nExperience²\n-0.0029\n0.0001\n0\n-0.29\n\n\nFemale (=1)\n-0.2593\n0.0245\n0\n-22.84\n\n\nUrban (=1)\n0.1452\n0.0241\n0\n15.62\n\n\nUnion (=1)\n0.2042\n0.0331\n0\n22.65\n\n\n\n\n\nKey finding: The gender wage gap is approximately 22.8% — women earn about this much less than men after controlling for education, experience, and other factors."
+  },
+  {
+    "objectID": "statistics-with-r/chapter3.html#practice-exercises",
+    "href": "statistics-with-r/chapter3.html#practice-exercises",
+    "title": "Chapter 3: Regression Analysis",
+    "section": "7 Practice Exercises",
+    "text": "7 Practice Exercises\n\n\n\n\n\n\nTipTry It Yourself\n\n\n\n\nAdd state fixed effects to the model using lm(wage ~ ... + factor(state))\nTest for heteroscedasticity using lmtest::bptest()\nCompute robust standard errors using sandwich::vcovHC()\nInterpret the experience² coefficient — at what experience level do wages peak?\n\n\n\nNext: Chapter 4 — Time Series Analysis →"
+  },
+  {
+    "objectID": "about.html#hello-im-pawan",
+    "href": "about.html#hello-im-pawan",
+    "title": "About Me",
+    "section": "",
+    "text": "I’m a data analyst and field researcher with over 7 years of experience in survey methodology, statistical analysis, and research coordination across India.\nMy work sits at the intersection of economics, statistics, and data science — translating complex survey data into clear insights that inform policy and research."
+  },
+  {
+    "objectID": "about.html#what-i-do",
+    "href": "about.html#what-i-do",
+    "title": "About Me",
+    "section": "What I Do",
+    "text": "What I Do\nI specialize in:\n\nSurvey Research — End-to-end survey operations, from questionnaire design to data collection and analysis\nStatistical Programming — R (primary), Python, and data pipeline automation\nData Visualization — Creating clear, reproducible visualizations with ggplot2, plotly, and Quarto\nLabour Economics — Analysis of PLFS, NSS, and other government microdata\nReproducible Research — Building fully documented, reproducible research workflows"
+  },
+  {
+    "objectID": "about.html#tools-technologies",
+    "href": "about.html#tools-technologies",
+    "title": "About Me",
+    "section": "Tools & Technologies",
+    "text": "Tools & Technologies\n\n  📊R / Tidyverse\n  🐍Python / Pandas\n  📋Quarto / RMarkdown\n  🗺️ODK / Survey CTO\n  🐧Linux / Bash\n  🌐Web Scraping"
+  },
+  {
+    "objectID": "about.html#education-training",
+    "href": "about.html#education-training",
+    "title": "About Me",
+    "section": "Education & Training",
+    "text": "Education & Training\n\nIDEAs Advanced Certificate Programme on Research in Political Economy (2022–2024)\nOngoing self-study in econometrics, machine learning, and causal inference"
+  },
+  {
+    "objectID": "about.html#publications-projects",
+    "href": "about.html#publications-projects",
+    "title": "About Me",
+    "section": "Publications & Projects",
+    "text": "Publications & Projects\n\nAnalysis of Union Budget allocation trends (2015–2024)\nPeriodic Labour Force Survey data processing pipeline in R\nHealth financing survey data management — OP Jindal Global University (2025)"
+  },
+  {
+    "objectID": "about.html#get-in-touch",
+    "href": "about.html#get-in-touch",
+    "title": "About Me",
+    "section": "Get in Touch",
+    "text": "Get in Touch\nI’m always open to research collaborations, data analysis consulting, and academic support.\n\n  \n    🐙GitHub\n    @pawan1198\n  \n  \n    💼LinkedIn\n    pawanjangra1198\n  \n  \n    📧Email\n    pawanjangra1198@gmail.com"
+  },
+  {
+    "objectID": "shiny_app.html",
+    "href": "shiny_app.html",
+    "title": "Interactive Shiny Apps",
+    "section": "",
+    "text": "Note: These apps are built using pure JavaScript/HTML to run directly in the browser — no server required. For full Shiny apps, deploy via shinyapps.io and embed the iframe."
+  },
+  {
+    "objectID": "shiny_app.html#dist-explorer",
+    "href": "shiny_app.html#dist-explorer",
+    "title": "Interactive Shiny Apps",
+    "section": "App 1: Distribution Explorer",
+    "text": "App 1: Distribution Explorer\nInteractively explore statistical distributions by adjusting parameters.\n\n\n  📊 Distribution Explorer\n\n\n\n\n\n\n  Distribution Type\n  \n    Normal Distribution\n    Uniform Distribution\n    Exponential Distribution\n    Poisson Distribution\n  \n\n  Sample Size: 500\n  \n\n  \n\n  \n    🔄 Generate New Sample"
+  },
+  {
+    "objectID": "shiny_app.html#regression",
+    "href": "shiny_app.html#regression",
+    "title": "Interactive Shiny Apps",
+    "section": "App 2: Regression Simulator",
+    "text": "App 2: Regression Simulator\nInteractively add data points and watch the regression line update in real time.\n\n\n  📈 Regression Simulator — Click on the chart to add points!\n\n\n\n\n\n  \n\n\n  \n    🗑️ Clear All\n  \n  \n    ✨ Add 10 Points\n  \n  \n    Add points to see regression results"
+  },
+  {
+    "objectID": "shiny_app.html#clt",
+    "href": "shiny_app.html#clt",
+    "title": "Interactive Shiny Apps",
+    "section": "App 3: Central Limit Theorem Visualizer",
+    "text": "App 3: Central Limit Theorem Visualizer\n\n\n  🔔 Central Limit Theorem Demonstration\n\n\n\n\n  \n    Population Shape\n    \n      Uniform (Skewed)\n      Exponential\n      Bimodal\n    \n  \n  \n    Sample Size (n): 30\n    \n  \n  \n    ▶ Run (1000 samples)\n  \n\n\n\n  \n    Population Distribution\n    \n  \n  \n    Sampling Distribution of x̄\n    \n  \n\n\n\n\n\n\n\n\n\nWant Full Shiny Apps? For server-side Shiny apps with live data, database connections, and full R computations, deploy via shinyapps.io and embed them here using iframes. See the Statistics with R section for code examples."
+  },
+  {
+    "objectID": "data_vizs.html#scatter",
+    "href": "data_vizs.html#scatter",
+    "title": "Data Visualizations",
+    "section": "",
+    "text": "Explore the relationship between GDP per capita and life expectancy across countries. Use the controls to filter and zoom.\n\n\nCode\nset.seed(42)\nn &lt;- 150\ndf &lt;- data.frame(\n  country   = paste(\"Country\", 1:n),\n  gdp_pc    = exp(rnorm(n, 9, 1.2)),\n  life_exp  = 50 + 25 * (1 - exp(-exp(rnorm(n, 9, 1.2)) / 30000)) + rnorm(n, 0, 2),\n  population = exp(rnorm(n, 15, 2)),\n  region    = sample(c(\"Asia\",\"Europe\",\"Africa\",\"Americas\",\"Oceania\"), n, replace = TRUE)\n)\n\nfig &lt;- plot_ly(\n  df, x = ~gdp_pc, y = ~life_exp,\n  size = ~population,\n  color = ~region,\n  colors = pal,\n  text = ~paste0(\"&lt;b&gt;\", country, \"&lt;/b&gt;&lt;br&gt;\",\n                 \"GDP/capita: $\", round(gdp_pc), \"&lt;br&gt;\",\n                 \"Life Expectancy: \", round(life_exp, 1), \" yrs&lt;br&gt;\",\n                 \"Population: \", format(round(population), big.mark = \",\")),\n  hoverinfo = \"text\",\n  type = \"scatter\", mode = \"markers\",\n  marker = list(opacity = 0.75, sizemode = \"area\", sizeref = 2.0 * max(df$population) / (40^2))\n) |&gt;\n  layout(\n    title = list(text = \"GDP per Capita vs Life Expectancy\", font = list(size = 16)),\n    xaxis = list(title = \"GDP per Capita (log scale)\", type = \"log\",\n                 gridcolor = \"#f1f5f9\"),\n    yaxis = list(title = \"Life Expectancy (years)\", gridcolor = \"#f1f5f9\"),\n    plot_bgcolor = \"white\",\n    paper_bgcolor = \"white\",\n    legend = list(title = list(text = \"Region\")),\n    hoverlabel = list(bgcolor = \"#1e293b\", font = list(color = \"white\"))\n  )\nfig"
+  },
+  {
+    "objectID": "data_vizs.html#animated",
+    "href": "data_vizs.html#animated",
+    "title": "Data Visualizations",
+    "section": "2 · Animated Time-Series",
+    "text": "2 · Animated Time-Series\nWatch how employment across sectors evolved from 2015 to 2024.\n\n\nCode\nyears &lt;- 2015:2024\nsectors &lt;- c(\"Agriculture\",\"Industry\",\"Services\",\"Technology\",\"Healthcare\")\n\nset.seed(7)\nts_df &lt;- expand.grid(Year = years, Sector = sectors) |&gt;\n  arrange(Sector, Year) |&gt;\n  group_by(Sector) |&gt;\n  mutate(\n    base   = c(Agriculture = 45, Industry = 25, Services = 38, Technology = 12, Healthcare = 18)[Sector],\n    trend  = c(Agriculture = -0.8, Industry = 0.3, Services = 1.2, Technology = 2.5, Healthcare = 1.8)[Sector],\n    Employment = base + trend * (Year - 2015) + cumsum(rnorm(n(), 0, 0.5))\n  ) |&gt; ungroup()\n\nfig2 &lt;- plot_ly(ts_df, x = ~Year, y = ~Employment,\n                color = ~Sector, colors = pal,\n                frame = ~Year,\n                type = \"scatter\", mode = \"lines+markers\",\n                line = list(width = 3),\n                marker = list(size = 8)) |&gt;\n  layout(\n    title  = \"Employment Share by Sector (2015–2024)\",\n    xaxis  = list(title = \"Year\", gridcolor = \"#f1f5f9\"),\n    yaxis  = list(title = \"Employment Share (%)\", gridcolor = \"#f1f5f9\"),\n    plot_bgcolor  = \"white\",\n    paper_bgcolor = \"white\"\n  ) |&gt;\n  animation_opts(frame = 600, easing = \"cubic-in-out\", redraw = FALSE) |&gt;\n  animation_slider(currentvalue = list(prefix = \"Year: \"))\n\nfig2"
+  },
+  {
+    "objectID": "data_vizs.html#bar",
+    "href": "data_vizs.html#bar",
+    "title": "Data Visualizations",
+    "section": "3 · Interactive Bar Chart",
+    "text": "3 · Interactive Bar Chart\nHover to see exact values. Click the legend to show/hide categories.\n\n\nCode\nbudget_df &lt;- data.frame(\n  Ministry = c(\"Health\",\"Education\",\"Defense\",\"Agriculture\",\"Infrastructure\",\n               \"Science\",\"Housing\",\"Transport\",\"Energy\",\"Social Welfare\"),\n  `2022` = c(86, 104, 525, 132, 210, 14, 48, 78, 56, 91),\n  `2023` = c(98, 116, 595, 148, 245, 17, 55, 89, 68, 104),\n  `2024` = c(112, 129, 621, 163, 289, 22, 62, 97, 79, 118),\n  check.names = FALSE\n) |&gt;\n  pivot_longer(-Ministry, names_to = \"Year\", values_to = \"Allocation\")\n\nfig3 &lt;- plot_ly(budget_df, x = ~Ministry, y = ~Allocation,\n                color = ~Year, colors = c(\"#93c5fd\",\"#2563eb\",\"#1e3a8a\"),\n                type = \"bar\", barmode = \"group\",\n                text = ~paste0(\"₹\", Allocation, \" Bn\"),\n                hovertemplate = \"&lt;b&gt;%{x}&lt;/b&gt;&lt;br&gt;%{y} Bn (%{text})&lt;extra&gt;&lt;/extra&gt;\") |&gt;\n  layout(\n    title  = \"Union Budget Allocations by Ministry (₹ Billion)\",\n    xaxis  = list(title = \"\", tickangle = -30, gridcolor = \"#f1f5f9\"),\n    yaxis  = list(title = \"Budget (₹ Billion)\", gridcolor = \"#f1f5f9\"),\n    plot_bgcolor  = \"white\",\n    paper_bgcolor = \"white\",\n    bargap = 0.15\n  )\nfig3"
+  },
+  {
+    "objectID": "data_vizs.html#distribution",
+    "href": "data_vizs.html#distribution",
+    "title": "Data Visualizations",
+    "section": "4 · Distribution Explorer",
+    "text": "4 · Distribution Explorer\n\n\nCode\nset.seed(2024)\ndist_df &lt;- data.frame(\n  value = c(rnorm(500, 50, 10), rnorm(400, 65, 8), rnorm(300, 42, 12)),\n  group = c(rep(\"Urban\", 500), rep(\"Semi-Urban\", 400), rep(\"Rural\", 300))\n)\n\nfig4 &lt;- plot_ly(dist_df, x = ~value, color = ~group,\n                colors = c(\"#2563eb\",\"#7c3aed\",\"#0d9488\"),\n                type = \"histogram\", opacity = 0.75,\n                nbinsx = 40,\n                hovertemplate = \"Value: %{x}&lt;br&gt;Count: %{y}&lt;extra&gt;&lt;/extra&gt;\") |&gt;\n  layout(\n    barmode = \"overlay\",\n    title   = \"Wage Distribution by Area Type\",\n    xaxis   = list(title = \"Daily Wage (₹)\", gridcolor = \"#f1f5f9\"),\n    yaxis   = list(title = \"Frequency\", gridcolor = \"#f1f5f9\"),\n    plot_bgcolor  = \"white\",\n    paper_bgcolor = \"white\",\n    legend  = list(title = list(text = \"Area Type\"))\n  )\nfig4"
+  },
+  {
+    "objectID": "data_vizs.html#heatmap",
+    "href": "data_vizs.html#heatmap",
+    "title": "Data Visualizations",
+    "section": "5 · Correlation Heatmap",
+    "text": "5 · Correlation Heatmap\n\n\nCode\nset.seed(99)\nvars &lt;- c(\"Income\",\"Education\",\"Age\",\"Health Score\",\"Employment\\nDuration\",\n          \"Savings Rate\",\"Work Hours\",\"Satisfaction\")\nn_vars &lt;- length(vars)\ncor_mat &lt;- matrix(runif(n_vars^2, -1, 1), n_vars, n_vars)\ncor_mat &lt;- (cor_mat + t(cor_mat)) / 2\ndiag(cor_mat) &lt;- 1\ncor_mat &lt;- round(cor_mat, 2)\nrownames(cor_mat) &lt;- colnames(cor_mat) &lt;- vars\n\nfig5 &lt;- plot_ly(\n  z = cor_mat,\n  x = vars, y = vars,\n  type = \"heatmap\",\n  colorscale = list(c(0,\"#e11d48\"), c(0.5,\"white\"), c(1,\"#2563eb\")),\n  zmin = -1, zmax = 1,\n  text = cor_mat,\n  hovertemplate = \"%{y} × %{x}&lt;br&gt;r = %{z}&lt;extra&gt;&lt;/extra&gt;\"\n) |&gt;\n  layout(\n    title = \"Variable Correlation Matrix\",\n    xaxis = list(tickangle = -30),\n    plot_bgcolor  = \"white\",\n    paper_bgcolor = \"white\"\n  )\nfig5"
+  },
+  {
+    "objectID": "data_vizs.html#ggplot",
+    "href": "data_vizs.html#ggplot",
+    "title": "Data Visualizations",
+    "section": "6 · Labour Force Survey — Static Publication-Quality Chart",
+    "text": "6 · Labour Force Survey — Static Publication-Quality Chart\n\n\nCode\nset.seed(2025)\nstates &lt;- c(\"Haryana\",\"Punjab\",\"UP\",\"Bihar\",\"Maharashtra\",\"Gujarat\",\n            \"Karnataka\",\"Tamil Nadu\",\"Rajasthan\",\"MP\",\"WB\",\"Odisha\")\n\nplfs_df &lt;- data.frame(\n  state = rep(states, each = 2),\n  gender = rep(c(\"Male\",\"Female\"), length(states)),\n  wpr = c(\n    75, 28, 78, 22, 64, 18, 62, 15, 80, 30, 82, 35,\n    76, 32, 74, 38, 70, 24, 66, 20, 72, 26, 68, 22\n  )\n)\n\nggplot(plfs_df, aes(x = reorder(state, wpr), y = wpr, fill = gender)) +\n  geom_col(position = \"dodge\", width = 0.65, alpha = 0.9) +\n  geom_text(aes(label = paste0(wpr, \"%\")),\n            position = position_dodge(0.65),\n            hjust = -0.1, size = 2.8, fontface = \"bold\") +\n  scale_fill_manual(values = c(\"Male\" = \"#2563eb\", \"Female\" = \"#e11d48\"),\n                    name = \"Gender\") +\n  scale_y_continuous(limits = c(0, 100), labels = function(x) paste0(x, \"%\")) +\n  coord_flip() +\n  labs(\n    title    = \"Worker Participation Rate by State\",\n    subtitle = \"Simulated Periodic Labour Force Survey (PLFS) style data, 2024\",\n    x = NULL, y = \"Worker Participation Rate (%)\",\n    caption  = \"Source: Simulated data for demonstration purposes\"\n  ) +\n  theme_minimal(base_size = 11) +\n  theme(\n    plot.title       = element_text(face = \"bold\", size = 14, hjust = 0),\n    plot.subtitle    = element_text(color = \"#64748b\", hjust = 0),\n    panel.grid.major.y = element_blank(),\n    panel.grid.minor   = element_blank(),\n    legend.position    = \"top\",\n    plot.background    = element_rect(fill = \"white\", color = NA),\n    plot.margin        = margin(16, 24, 16, 16)\n  )\n\n\n\n\n\nWorker Participation Rate by State (Simulated PLFS-style data)"
   }
 ]

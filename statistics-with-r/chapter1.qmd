@@ -1,0 +1,203 @@
+---
+title: "Chapter 1: Descriptive Statistics"
+description: "Measures of central tendency, dispersion, shape, and exploratory data analysis with R."
+author: "Pawan Jangra"
+date: "2025-01-10"
+toc: true
+number-sections: true
+---
+
+> **Learning Objectives:** By the end of this chapter, you will be able to compute and interpret measures of central tendency and dispersion, create effective visualizations for exploring distributions, and identify skewness and outliers in real datasets.
+
+## Introduction to Descriptive Statistics
+
+Descriptive statistics summarize and describe the **main features** of a dataset. They are the first step in any data analysis — before we run a single regression or hypothesis test, we must understand what our data looks like.
+
+In R, we have powerful tools for this. Let's load our packages and create a realistic dataset:
+
+```{r setup}
+#| message: false
+library(tidyverse)
+library(knitr)
+
+# Simulate Labour Force Survey data
+set.seed(2025)
+n <- 1000
+
+lfs_data <- data.frame(
+  age       = round(rnorm(n, 35, 12)) |> pmax(15) |> pmin(70),
+  wage      = exp(rnorm(n, log(400), 0.7)) |> round(),
+  edu_years = sample(0:20, n, replace = TRUE, 
+                     prob = dpois(0:20, 8) + 0.01),
+  gender    = sample(c("Male","Female"), n, replace = TRUE, prob=c(.6,.4)),
+  state     = sample(c("Haryana","UP","Bihar","Maharashtra","Karnataka"), 
+                     n, replace = TRUE),
+  sector    = sample(c("Agriculture","Industry","Services"), n, 
+                     replace = TRUE, prob = c(.4,.2,.4))
+)
+
+glimpse(lfs_data)
+```
+
+## Measures of Central Tendency
+
+The three main measures of central tendency each tell a different story:
+
+```{r central-tendency}
+wage_stats <- lfs_data |>
+  summarise(
+    Mean   = mean(wage),
+    Median = median(wage),
+    Mode   = as.numeric(names(sort(table(round(wage,-2)), decreasing=TRUE)[1])),
+    SD     = sd(wage),
+    IQR    = IQR(wage),
+    Min    = min(wage),
+    Max    = max(wage),
+    Skewness = (mean(wage) - median(wage)) / sd(wage) * 3  # Pearson's approx
+  ) |>
+  pivot_longer(everything(), names_to = "Statistic", values_to = "Value") |>
+  mutate(Value = round(Value, 2))
+
+kable(wage_stats, caption = "Descriptive Statistics for Daily Wage (₹)")
+```
+
+### Why the Mean ≠ Median for Wages
+
+```{r mean-vs-median}
+#| fig-height: 4
+#| fig-cap: "Wage distribution showing mean vs median divergence due to right skew"
+
+ggplot(lfs_data, aes(x = wage)) +
+  geom_histogram(bins = 50, fill = "#93c5fd", alpha = 0.8, color = "white") +
+  geom_vline(aes(xintercept = mean(wage), linetype = "Mean"), 
+             color = "#2563eb", linewidth = 1.2) +
+  geom_vline(aes(xintercept = median(wage), linetype = "Median"), 
+             color = "#e11d48", linewidth = 1.2) +
+  scale_linetype_manual(name = "", values = c("Mean"="solid","Median"="dashed")) +
+  scale_x_continuous(labels = scales::label_number(prefix = "₹")) +
+  labs(title = "Daily Wage Distribution",
+       subtitle = "Right skew pulls the mean above the median",
+       x = "Daily Wage (₹)", y = "Count") +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "top", panel.grid.minor = element_blank())
+```
+
+**Key insight:** For right-skewed income distributions, the **median** is almost always a better measure of "typical" than the mean. A few high earners inflate the mean.
+
+## Measures of Dispersion
+
+```{r dispersion}
+#| fig-height: 5
+
+# Boxplot comparison across sectors
+ggplot(lfs_data, aes(x = sector, y = wage, fill = sector)) +
+  geom_boxplot(alpha = 0.8, outlier.shape = 21, outlier.alpha = 0.5,
+               outlier.size = 1.5) +
+  stat_summary(fun = mean, geom = "point", shape = 23, 
+               size = 4, fill = "white", color = "black") +
+  scale_fill_manual(values = c("#2563eb","#7c3aed","#0d9488")) +
+  scale_y_continuous(labels = scales::label_number(prefix = "₹")) +
+  labs(title = "Wage Dispersion by Sector",
+       subtitle = "Diamonds = means · Boxes = IQR · Whiskers = 1.5×IQR",
+       x = NULL, y = "Daily Wage (₹)") +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "none", panel.grid.minor = element_blank())
+```
+
+```{r dispersion-table}
+dispersion_by_sector <- lfs_data |>
+  group_by(sector) |>
+  summarise(
+    n      = n(),
+    Mean   = round(mean(wage)),
+    SD     = round(sd(wage)),
+    `CV (%)` = round(sd(wage)/mean(wage)*100, 1),
+    Median = round(median(wage)),
+    IQR    = round(IQR(wage)),
+    .groups = "drop"
+  )
+
+kable(dispersion_by_sector, 
+      caption = "Dispersion measures by sector (CV = Coefficient of Variation)")
+```
+
+> **Coefficient of Variation (CV):** Useful for comparing dispersion across groups with different means. CV = (SD / Mean) × 100%. Higher CV means more relative spread.
+
+## Exploring Distributions
+
+### Five-Number Summary
+
+```{r five-number}
+five_num <- lfs_data |>
+  group_by(gender) |>
+  summarise(
+    Min    = min(wage),
+    Q1     = quantile(wage, 0.25),
+    Median = median(wage),
+    Q3     = quantile(wage, 0.75),
+    Max    = max(wage),
+    .groups = "drop"
+  )
+
+kable(five_num, digits = 0, 
+      caption = "Five-number summary by gender (₹)")
+```
+
+### Detecting Outliers
+
+```{r outliers}
+#| fig-height: 4
+
+# IQR method for outlier detection
+wage_bounds <- lfs_data |>
+  summarise(
+    Q1  = quantile(wage, 0.25),
+    Q3  = quantile(wage, 0.75),
+    IQR = IQR(wage),
+    lower = Q1 - 1.5 * IQR,
+    upper = Q3 + 1.5 * IQR
+  )
+
+lfs_outliers <- lfs_data |>
+  mutate(is_outlier = wage < wage_bounds$lower | wage > wage_bounds$upper)
+
+cat("Outliers detected (IQR method):", sum(lfs_outliers$is_outlier), "\n")
+cat("That's", round(mean(lfs_outliers$is_outlier)*100, 1), "% of observations\n")
+```
+
+## Cross-tabulation: Two-Way Frequencies
+
+```{r crosstab}
+# Sector by state distribution
+cross_tab <- lfs_data |>
+  count(sector, gender) |>
+  pivot_wider(names_from = gender, values_from = n) |>
+  mutate(Total = Male + Female,
+         `Female Share (%)` = round(Female/Total*100, 1))
+
+kable(cross_tab, caption = "Employment distribution by sector and gender")
+```
+
+## Practice Exercises
+
+::: {.callout-tip}
+## Try It Yourself
+1. Compute the Gini coefficient for wage inequality using `ineq` package
+2. Create a violin plot comparing wages across all 5 states
+3. Test whether mean wages differ significantly between sectors using ANOVA
+4. Compute the 90th percentile wage separately for male and female workers
+:::
+
+## Chapter Summary
+
+| Concept | Measure | R Function |
+|---------|---------|------------|
+| Central Tendency | Mean | `mean()` |
+| Central Tendency | Median | `median()` |
+| Dispersion | Standard Deviation | `sd()` |
+| Dispersion | IQR | `IQR()` |
+| Shape | Skewness | `moments::skewness()` |
+| Range | Min/Max | `min()`, `max()` |
+| Quantiles | Quartiles | `quantile()` |
+
+**Next:** [Chapter 2 — Probability & Distributions →](chapter2.html)

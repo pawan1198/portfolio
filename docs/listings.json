@@ -6,13 +6,15 @@
       "/data_vizs/fertilizer.html",
       "/data_vizs/trade1.html",
       "/data_vizs/stocks.html",
+      "/data_vizs/fertilizer2.html",
       "/data_vizs/edibleoil.html",
       "/data_vizs/trade.html",
       "/data_vizs/foodprice.html",
       "/data_vizs/foodgrain_supply_chain.html",
       "/data_vizs/procurement.html",
       "/data_vizs/plfs.html",
-      "/data_vizs/import_concentration_risk.html"
+      "/data_vizs/import_concentration_risk.html",
+      "/data_vizs/trade2.html"
     ]
   },
   {
@@ -38,12 +40,7 @@
   {
     "listing": "/article.html",
     "items": [
-      "/article/article6.html",
-      "/article/article3.html",
-      "/article/article1.html",
-      "/article/article2.html",
-      "/article/article5.html",
-      "/article/article4.html"
+      "/article/article1.html"
     ]
   }
 ]

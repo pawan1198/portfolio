@@ -17,8 +17,10 @@ website:
     left:
       - text: "🏠 Home"
         file: index.qmd
-      - text: "📊 Visualizations"
+      - text: "📊 Data Visualizations"
         file: data_vizs.qmd
+      - text: "📚 Publication"
+        file: article.qmd
       - text: "📈 Interactive Shiny"
         file: shiny_app.qmd
       - text: "📚 Statistics with R"

@@ -1,16 +1,19 @@
 ---
-title: "Fertilizer Statistics"
-description: ""
+title: "India's Fertilizer Import Landscape: Supply Concentration & Price Dynamics"
+description: "A detailed analysis of India's fertilizer imports — Urea, DAP, Rock Phosphate, Phosphoric Acid, and MOP — covering source-country concentration, price volatility, and domestic production trends."
 author: "Pawan"
 date: "2025/11/26"
 date-modified: last-modified
 categories:
   - "Trade"
   - "Fertilizer"
-# image: "thumbnails/health_map_hy.png"
+  - "Agriculture"
 format:
   html:
     code-fold: true
+    toc: true
+    toc-depth: 3
+    theme: cosmo
 editor_options:
   chunk_output_type: console
 execute:
@@ -20,259 +23,312 @@ execute:
   eval: true
 ---
 
-```{r}
+## Overview
+
+India is the world's second-largest consumer of fertilizers. With domestic production insufficient to meet demand for nitrogenous (Urea), phosphatic (DAP, Rock Phosphate, Phosphoric Acid), and potassic (MOP) nutrients, India imports substantial quantities each year. This analysis examines FY 2016–2024 import trends, source-country concentration, international price volatility, and domestic Urea/DAP production.
+
+---
+
+## Setup
+
+```{r setup}
 library(data.table)
 library(ggplot2)
-options(scipen=99999)
-library(showtext)
+library(ggiraph)
+library(scales)
+library(gt)
+library(viridis)
+library(plotly)
 library(tidyr)
-library(dplyr)
+library(patchwork)
+options(scipen = 99999)
 
-readRDS("/home/pawan/fertilizer/urea_importqty.rds")->t1
-readRDS("/home/pawan/fertilizer/dap_importqty.rds")->t2
-readRDS("/home/pawan/fertilizer/rock_phosphate_importqty.rds")->t3
-readRDS("/home/pawan/fertilizer/phosphoric_acid_importqty.rds")->t4
-readRDS("/home/pawan/fertilizer/potash_importqty.rds")->t5
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title      = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(b = 8)),
+    plot.subtitle   = element_text(size = 11, hjust = 0.5, color = "#7F8C8D", margin = margin(b = 10)),
+    plot.caption    = element_text(size = 9, color = "#95A5A6", hjust = 0),
+    axis.title      = element_text(size = 12, face = "bold"),
+    axis.text       = element_text(size = 10),
+    axis.text.x     = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position = "bottom",
+    legend.title    = element_blank(),
+    panel.grid.major= element_line(color = "#ECF0F1", linewidth = 0.4),
+    panel.grid.minor= element_blank(),
+    strip.background= element_rect(fill = "#F8F9FA", color = NA),
+    strip.text      = element_text(face = "bold", size = 11)
+  )
 
-gsub(",","", t1$ImportMonth)->t1$ImportMonth
-gsub(",","", t2$ImportMonth)->t2$ImportMonth
-gsub(",","", t3$ImportMonth)->t3$ImportMonth
-gsub(",","", t4$ImportMonth)->t4$ImportMonth
-gsub(",","", t5$ImportMonth)->t5$ImportMonth
-
-t1[Country == "Total" ,.(Qty = sum(as.numeric(ImportMonth),
-                                     na.rm = TRUE)) ,.(Country, Year, Month)]->urea
-
-urea[,Date:=as.Date(paste(Year,"-",Month,"-",15,sep=""),"%Y-%b-%d")]
-t1[,.(sum(as.numeric(ImportMonth),
-            na.rm=TRUE)) ,.(Year, Country)]->a
-##as.data.frame(a[order(Year,V1)])
-t2[Country == "Total" ,.(Qty = sum(as.numeric(ImportMonth),
-                                     na.rm = TRUE)) ,.(Country, Year, Month)]->dap
-dap[,Date:=as.Date(paste(Year,"-",Month,"-",15,sep=""),"%Y-%b-%d")]
-t5[Country=="Total",.(Qty=sum(as.numeric(ImportMonth),na.rm=TRUE)),.(Country,Year,Month)]->mop
-
-t1[Country != "Total" ,.(Qty = sum(as.numeric(ImportMonth),
-                                     na.rm = TRUE)) ,.(Country, Year)]->t1
-t2[Country != "Total" ,.(Qty = sum(as.numeric(ImportMonth),
-                                     na.rm = TRUE)) ,.(Country, Year)]->t2
-t3[Country != "Total" ,.(Qty = sum(as.numeric(ImportMonth),
-                                     na.rm = TRUE)) ,.(Country, Year)]->t3
-t4[Country != "Total" ,.(Qty = sum(as.numeric(ImportMonth),
-                                     na.rm = TRUE)) ,.(Country, Year)]->t4
-t5[Country != "Total" ,.(Qty = sum(as.numeric(ImportMonth),
-                                     na.rm = TRUE)) ,.(Country, Year)]->t5
-
-t1[Country == "CHINA P RP", Country := "CHINA"]
-t1[Country == "EGYPT A RP", Country := "EGYPT"]
-t1[Country != "CHINA" & Country != "OMAN" &
-             Country != "IRAN" & Country != "UKRAINE" &
-         Country != "EGYPT" & Country != "RUSSIA" &
-                   Country != "INDONESIA", Country := "OTHER COUNTRY"]
-
-factor(t1$Country, levels = c("OTHER COUNTRY", "INDONESIA", "EGYPT",
-                                "RUSSIA", "UKRAINE", "OMAN",
-                                "IRAN", "CHINA"))->t1$Country
-
-  t2[Country == "CHINA P RP", Country := "CHINA"]
-  t2[Country != "CHINA" & Country != "SAUDI ARAB" &
-     Country != "MOROCCO" & Country != "JORDAN" &
-     Country != "RUSSIA", Country := "OTHER COUNTRY"]
-  factor(t2$Country, levels = c("OTHER COUNTRY", "MOROCCO",
-                                "JORDAN", "RUSSIA",
-                                "CHINA", "SAUDI ARAB"))->t2$Country
-
-  t3[Country == "EGYPT A RP", Country := "EGYPT"]
-  t3[Country != "EGYPT" & Country != "JORDAN" &
-     Country != "MOROCCO" & Country != "PERU" &
-     Country != "TOGO", Country := "OTHER COUNTRY"]
-  factor(t3$Country, levels = c("OTHER COUNTRY", "PERU", "TOGO",
-                                "EGYPT", "MOROCCO", "JORDAN"))->t3$Country
-
-  t4[Country != "MOROCCO" & Country != "JORDAN" &
-     Country != "SENEGAL", Country := "OTHER COUNTRY"]
-factor(t4$Country, levels = c("OTHER COUNTRY", "SENEGAL",
-                               "JORDAN", "MOROCCO"))->t4$Country
-
-t5[Country != "CANADA" & Country !="BELARUS" &
-   Country != "ISRAEL" & Country != "JORDAN" &
-   Country != "LITHUANIA" & Country != "RUSSIA",
-   Country := "OTHER COUNTRY"]
-
-factor(t5$Country, levels = c("OTHER COUNTRY", "RUSSIA", "LITHUANIA",
-                                "JORDAN", "ISRAEL", "BELARUS",                                
-                                "CANADA"))->t5$Country
-
-t1[, Qty := Qty/100000][Year>"2015" ,.(Qty = sum(Qty)) ,.(Country, Year)]->t1
-t2[, Qty := Qty/100000][Year>"2015" ,.(Qty = sum(Qty)) ,.(Country, Year)]->t2
-t3[, Qty := Qty/100000][Year>"2015" ,.(Qty = sum(Qty)) ,.(Country, Year)]->t3
-t4[, Qty := Qty/100000][Year>"2015" ,.(Qty = sum(Qty)) ,.(Country, Year)]->t4
-t5[, Qty := Qty/100000][Year>"2015" ,.(Qty = sum(Qty)) ,.(Country, Year)]->t5
-
-t1[ ,.(Percent = round(Qty*100/sum(Qty)), Country, Qty) ,.(Year)]->t1
-t2[ ,.(Percent = round(Qty*100/sum(Qty)), Country, Qty) ,.(Year)]->t2
-t3[ ,.(Percent = round(Qty*100/sum(Qty)), Country, Qty) ,.(Year)]->t3
-t4[ ,.(Percent = round(Qty*100/sum(Qty)), Country, Qty) ,.(Year)]->t4
-t5[ ,.(Percent = round(Qty*100/sum(Qty)), Country, Qty) ,.(Year)]->t5
-```
-
-```{r}
-my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
-      theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
-            plot.title = element_text(size = 20, face = "bold",
-                                      hjust = 0.5, margin = margin(10, 0, 10, 0)), ## Center and style title
-            axis.title = element_text(size = 18),
-            axis.text = element_text(size = 14),
-            legend.position = "bottom",
-            legend.title = element_blank(),  ## Remove legend title
-            panel.grid.major = element_line(color = "#EEEEEE"), ## Lighter grid lines
-            panel.border = element_blank(), ## Remove panel border
-            axis.line = element_line(color = "#333333"), ## Add axis lines
-            axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
-            strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
-            )
-```
-
-# Urea Import
-
-```{r}
-  ggplot(t1, aes(x = Year, y = Qty, fill = Country)) +
-      geom_bar(stat = "identity", position = "stack") +
-      geom_text(aes(x = Year, y = Qty, label = ifelse(Percent<10, "", paste0(Percent, "%"))),
-                position = position_stack(vjust = 0.5), size = 5, color = "black") +
-      scale_fill_brewer(palette = "Set2") + ## Set bar color
-      my_theme +
-      scale_y_continuous(labels = scales::label_comma()) +
-      ggtitle("Urea Imports") +
-      labs(y = "Qty (Million Tonnes)")->p1
-  p1
-```
-
-# DAP Import
-
-```{r}
-  ggplot(t2, aes(x = Year, y = Qty, fill = Country)) +
-      geom_bar(stat = "identity", position = "stack") +
-      geom_text(aes(x = Year, y = Qty, label = ifelse(Percent<10, "", paste0(Percent, "%"))),
-                position = position_stack(vjust = 0.5), size = 5, color = "black") +
-      scale_fill_brewer(palette = "Set2") + ## Set bar color
-      my_theme +
-      scale_y_continuous(labels = scales::label_comma()) +
-      ggtitle("DAP Imports") +
-      labs(y = "Qty (Million Tonnes)")->p2
-  p2
-```
-
-# Rock Phosphate Import
-
-```{r}
-   ggplot(t3, aes(x = Year, y = Qty, fill = Country)) +
-      geom_bar(stat = "identity", position = "stack") +
-      geom_text(aes(x = Year, y = Qty, label = ifelse(Percent<10, "", paste0(Percent, "%"))),
-                position = position_stack(vjust = 0.5), size = 5, color = "black") +
-      scale_fill_brewer(palette = "Set2") + ## Set bar color
-      my_theme +
-      scale_y_continuous(labels = scales::label_comma()) +
-      ggtitle("Rock Phosphate Imports") +
-      labs(y = "Qty (Million Tonnes)")->p3
-  p3
-```
-
-# Phosphoric Acid Imports
-
-```{r}
-  ggplot(t4, aes(x = Year, y = Qty, fill = Country)) +
-      geom_bar(stat = "identity", position = "stack") +
-      geom_text(aes(x = Year, y = Qty, label = ifelse(Percent<10, "", paste0(Percent, "%"))),
-                position = position_stack(vjust = 0.5), size = 5, color = "black") +
-      scale_fill_brewer(palette = "Set2") + ## Set bar color
-      my_theme +
-      scale_y_continuous(labels = scales::label_comma()) +
-      ggtitle("Phosphoric Acid Imports") +
-      labs(y = "Qty (Million Tonnes)")->p4
-  p4
-```
-
-# MOP Imports
-
-```{r}
-ggplot(t5, aes(x = Year, y = Qty, fill = Country)) +
-    geom_bar(stat = "identity", position = "stack") +
-    geom_text(aes(x = Year, y = Qty, label = ifelse(Percent<10, "", paste0(Percent, "%"))),
-              position = position_stack(vjust = 0.5), size = 5, color = "black") +
-    scale_fill_brewer(palette = "Set2") + ## Set bar color
+## Interactive stacked bar helper
+make_fert_girafe <- function(data, title, subtitle, pal = NULL) {
+  data <- as.data.table(data)
+  data[, tt := paste0("<b>", Country, "</b><br>Year: ", Year,
+                      "<br>Qty: ", round(Qty,2), " MT<br>Share: ", Percent, "%")]
+  p <- ggplot(data, aes(x = Year, y = Qty, fill = Country)) +
+    geom_bar_interactive(aes(tooltip = tt, data_id = Country),
+                         stat = "identity", position = "stack", width = 0.75, alpha = 0.9) +
+    geom_text(aes(label = ifelse(Percent < 9, "", paste0(Percent, "%"))),
+              position = position_stack(vjust = 0.5),
+              size = 3, color = "white", fontface = "bold") +
     my_theme +
-    scale_y_continuous(labels = scales::label_comma()) +
-    ggtitle("MOP Imports") +
-    labs(y = "Qty (Million Tonnes)")->p5
-p5
+    scale_y_continuous(labels = comma_format()) +
+    labs(x = NULL, y = "Qty (Million Tonnes)", title = title, subtitle = subtitle,
+         caption = "Source: Ministry of Commerce, India | Analysis: Pawan")
+  if (!is.null(pal)) p <- p + scale_fill_manual(values = pal)
+  else               p <- p + scale_fill_brewer(palette = "Set2")
+  girafe(ggobj = p, width_svg = 11, height_svg = 6,
+         options = list(
+           opts_tooltip(css = "background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;font-size:12px;"),
+           opts_hover(css = "opacity:0.85;stroke:#333;stroke-width:1.5;"),
+           opts_hover_inv(css = "opacity:0.3;"),
+           opts_zoom(min = 0.8, max = 3),
+           opts_sizing(rescale = TRUE, width = 1)))
+}
+
+## Data loading & cleaning helper
+load_fert <- function(path) {
+  dt <- readRDS(path)
+  dt$ImportMonth <- gsub(",","",dt$ImportMonth)
+  dt
+}
+
+prep_country <- function(dt, keep_countries, factor_levels) {
+  dt <- dt[Country != "Total",
+           .(Qty = sum(as.numeric(ImportMonth), na.rm=TRUE)), .(Country, Year)]
+  dt[!(Country %in% keep_countries), Country := "OTHER COUNTRY"]
+  dt <- dt[, .(Qty = sum(Qty)), .(Country, Year)]
+  dt[, Qty := Qty/100000]
+  dt <- dt[Year > "2015", .(Qty = sum(Qty)), .(Country, Year)]
+  dt[, Percent := round(Qty*100/sum(Qty)), by = Year]
+  dt[, Country := factor(Country, levels = factor_levels)]
+  dt
+}
 ```
 
-# International Fertilizer Price
+---
 
-```{r}
-  fread("/home/pawan/fertilizer/international_fert_price.csv")->price
-  paste("20", price$Year, sep = "")->price$Year
-  substr(price$Month, 1, 3)->price$Month
-  price[, Date:=as.Date(paste(Year, "-", Month, "-", 20, sep = ""),
-                        format = "%Y-%b-%d")]
-  
-  melt(price, id = c("Month", "Year", "Date"))->price
-  price[variable %in% c("Urea", "DAP", "MOP")]->price
+## Section 1 · Urea Imports
 
-  ggplot(price, aes(x = Date, y = value, color = variable)) +
-      geom_line(size=1) + facet_wrap(~variable) +
-      my_theme +
-      labs(y = "Price (USD/MT)", x = "Month",
-           title = "Fertilizer International Price") +
-      scale_x_date(date_labels = "%b, %y", date_breaks = "6 months")->p
-  p
+Urea is India's most consumed fertilizer. Despite domestic production, India imports 6–10 million tonnes annually. China, Iran, and Oman dominate supply; Russia has emerged as a key source in recent years.
+
+```{r urea}
+raw_urea <- load_fert("/home/pawan/fertilizer/urea_importqty.rds")
+raw_urea[Country == "CHINA P RP", Country := "CHINA"]
+raw_urea[Country == "EGYPT A RP", Country := "EGYPT"]
+
+t_urea <- prep_country(
+  raw_urea,
+  keep_countries = c("CHINA","OMAN","IRAN","UKRAINE","EGYPT","RUSSIA","INDONESIA"),
+  factor_levels  = c("OTHER COUNTRY","INDONESIA","EGYPT","RUSSIA","UKRAINE","OMAN","IRAN","CHINA")
+)
+
+make_fert_girafe(t_urea,
+  title    = "India's Urea Imports by Source Country",
+  subtitle = "China, Iran & Oman historically dominant; Russia emerging")
 ```
 
-# Fertilizer Production
+---
 
-Urea and DAP production by India
+## Section 2 · DAP Imports
 
-```{r}
-readRDS("/home/pawan/fertilizer/production-import/fert_production_import.RDS")->fert
-fert[Year!="Total"]->fert
-fert[,Date:=as.Date(paste(Year,"-",Month,"-",15,sep=""),"%Y-%b-%d")]
-melt(fert,id=c("Year","Month","Date"))->fert
-fert[variable!="SNo"&variable!="Blank"]->fert
-separate(fert,variable,into=c("Fertilizer","Variable"),sep="_")->fert
-setDT(fert)
-fert[Variable=="Production"]->prod
-fert[Variable=="Import"]->import
+Di-ammonium phosphate (DAP) is the primary phosphatic fertilizer in India. China and Saudi Arabia have historically led supply; Morocco and Russia play secondary roles.
 
-fread("/home/pawan/fertilizer/production-import.csv")->fert1
-fert1[,Date:=as.Date(paste(Year,"-",Month,"-",15,sep=""),"%Y-%b-%d")]
-melt(fert1,id=c("Year","Month","Date","Fertilizer"))->fert1
-fert1[variable == "Production_Achievement", variable := "Production"]
-fert1[variable == "Production"]->prod1
-fert1[variable == "Import"]->import1
+```{r dap}
+raw_dap <- load_fert("/home/pawan/fertilizer/dap_importqty.rds")
+raw_dap[Country == "CHINA P RP", Country := "CHINA"]
 
-prod[,value:=value/100000]
-as.numeric(prod$Year)->prod$Year
-as.numeric(prod1$Year)->prod1$Year
+t_dap <- prep_country(
+  raw_dap,
+  keep_countries = c("CHINA","SAUDI ARAB","MOROCCO","JORDAN","RUSSIA"),
+  factor_levels  = c("OTHER COUNTRY","MOROCCO","JORDAN","RUSSIA","CHINA","SAUDI ARAB")
+)
 
-rbind(
-    prod[Year<2018,.(Year,Month,Date,Fertilizer,value)],
-    prod1[,.(Year,Month,Date,Fertilizer,value)])->t
+make_fert_girafe(t_dap,
+  title    = "India's DAP Imports by Source Country",
+  subtitle = "Saudi Arabia & China lead; Morocco & Russia provide diversification")
+```
 
-t[Fertilizer=="Urea"|Fertilizer=="DAP"]->t
-t[!is.na(value)]->t
-t[Year!="2025",.(Qty=sum(value)),.(Year,Fertilizer)]->t
-##t[,.(Percent=round(Qty*100/sum(Qty)),Variable,Qty),.(Year,Fertilizer)]->t
+---
 
+## Section 3 · Rock Phosphate Imports
 
-ggplot(t, aes(x = Year, y = Qty, color = Fertilizer)) +
-    geom_line(linewidth = 1) +
-    scale_fill_brewer(palette = "Set2") + ## Set bar color
-    my_theme +
-    facet_wrap(~Fertilizer, scales = "free", ncol = 1) +
-    labs(y="Qty (Million Tonnes)",
-         title = "Urea and DAP Production in India") +
-    scale_x_continuous(breaks = seq(1990, 2025, 1))->p
+Rock phosphate is the upstream input for phosphoric acid and superphosphates. Jordan and Morocco — both in the phosphate-rich North Africa/Middle East belt — dominate India's supply.
 
-p
+```{r rock-phosphate}
+raw_rp <- load_fert("/home/pawan/fertilizer/rock_phosphate_importqty.rds")
+raw_rp[Country == "EGYPT A RP", Country := "EGYPT"]
+
+t_rp <- prep_country(
+  raw_rp,
+  keep_countries = c("EGYPT","JORDAN","MOROCCO","PERU","TOGO"),
+  factor_levels  = c("OTHER COUNTRY","PERU","TOGO","EGYPT","MOROCCO","JORDAN")
+)
+
+make_fert_girafe(t_rp,
+  title    = "India's Rock Phosphate Imports by Source Country",
+  subtitle = "Jordan & Morocco dominate; geographic concentration is a risk")
+```
+
+---
+
+## Section 4 · Phosphoric Acid Imports
+
+```{r phosphoric-acid}
+raw_pa <- load_fert("/home/pawan/fertilizer/phosphoric_acid_importqty.rds")
+
+t_pa <- prep_country(
+  raw_pa,
+  keep_countries = c("MOROCCO","JORDAN","SENEGAL"),
+  factor_levels  = c("OTHER COUNTRY","SENEGAL","JORDAN","MOROCCO")
+)
+
+make_fert_girafe(t_pa,
+  title    = "India's Phosphoric Acid Imports by Source Country",
+  subtitle = "Morocco leads; Senegal and Jordan secondary suppliers")
+```
+
+---
+
+## Section 5 · MOP (Muriate of Potash) Imports
+
+India has no domestic potash resources and imports 100% of its MOP needs. Belarus and Canada have historically led, with Russia and Jordan filling gaps.
+
+```{r mop}
+raw_mop <- load_fert("/home/pawan/fertilizer/potash_importqty.rds")
+
+t_mop <- prep_country(
+  raw_mop,
+  keep_countries = c("CANADA","BELARUS","ISRAEL","JORDAN","LITHUANIA","RUSSIA"),
+  factor_levels  = c("OTHER COUNTRY","RUSSIA","LITHUANIA","JORDAN","ISRAEL","BELARUS","CANADA")
+)
+
+make_fert_girafe(t_mop,
+  title    = "India's MOP Imports by Source Country",
+  subtitle = "Canada & Belarus historically dominant; Russia share rising post-2022")
+```
+
+---
+
+## Section 6 · International Fertilizer Prices
+
+Global fertilizer prices are a major driver of India's import bill and subsidy expenditure. The 2021–22 price spike — driven by energy costs, sanctions, and supply disruptions — dramatically increased India's fertilizer subsidy burden.
+
+```{r int-prices}
+price <- fread("/home/pawan/fertilizer/international_fert_price.csv")
+price[, Year := paste0("20", Year)]
+price[, Month := substr(Month, 1, 3)]
+price[, Date := as.Date(paste(Year, Month, 20, sep="-"), format="%Y-%b-%d")]
+
+price_long <- melt(price, id.vars = c("Month","Year","Date"))
+price_long <- price_long[variable %in% c("Urea","DAP","MOP")]
+
+## Plotly line chart — richer interactivity
+p_price <- ggplot(price_long, aes(x=Date, y=value, color=variable,
+                                   text=paste0(variable,"\n",format(Date,"%b %Y"),
+                                               "\n$",round(value)," /MT"))) +
+  geom_line(linewidth = 1.1) +
+  geom_smooth(method="loess", se=FALSE, linewidth=0.6, linetype="dashed", alpha=0.5) +
+  facet_wrap(~variable, scales="free_y") +
+  scale_color_brewer(palette="Set1") +
+  my_theme + theme(legend.position="none") +
+  scale_x_date(date_labels="%b '%y", date_breaks="6 months") +
+  labs(title="International Fertilizer Prices (USD/MT)",
+       subtitle="2021–22 price shock visible in all three fertilizers",
+       y="Price (USD/MT)", x=NULL,
+       caption="Source: World Bank / FAO | Analysis: Pawan")
+
+ggplotly(p_price, tooltip="text") |>
+  layout(hovermode="x unified")
+```
+
+### Year-on-Year Price Change
+
+```{r price-yoy}
+price_annual <- price_long[, .(Avg_Price = mean(value, na.rm=TRUE)), .(Year, variable)]
+setorder(price_annual, variable, Year)
+price_annual[, YoY := round((Avg_Price/shift(Avg_Price)-1)*100, 1), by=variable]
+
+gt(dcast(price_annual, Year ~ variable, value.var="Avg_Price")) |>
+  tab_header(title="Annual Average International Fertilizer Price (USD/MT)") |>
+  fmt_number(columns=2:4, decimals=0) |>
+  data_color(columns=c("Urea","DAP","MOP"),
+             colors=scales::col_numeric(c("#D5F5E3","#FDFEFE","#FADBD8"), domain=NULL)) |>
+  opt_stylize(style=3) |>
+  tab_source_note("Source: World Bank Commodity Prices")
+```
+
+---
+
+## Section 7 · Domestic Urea & DAP Production
+
+```{r production}
+fert <- readRDS("/home/pawan/fertilizer/production-import/fert_production_import.RDS")
+fert <- fert[Year != "Total"]
+fert[, Date := as.Date(paste(Year,"-",Month,"-",15,sep=""), "%Y-%b-%d")]
+fert_long <- melt(fert, id.vars=c("Year","Month","Date"))
+fert_long <- fert_long[variable!="SNo" & variable!="Blank"]
+fert_long <- separate(fert_long, variable, into=c("Fertilizer","Variable"), sep="_")
+setDT(fert_long)
+prod_old <- fert_long[Variable=="Production"]
+prod_old[, value := as.numeric(value)/100000]
+prod_old[, Year  := as.integer(Year)]
+
+fert1 <- fread("/home/pawan/fertilizer/production-import.csv")
+fert1[, Date := as.Date(paste(Year,"-",Month,"-",15,sep=""), "%Y-%b-%d")]
+fert1_long <- melt(fert1, id.vars=c("Year","Month","Date","Fertilizer"))
+fert1_long[variable == "Production_Achievement", variable := "Production"]
+prod_new <- fert1_long[variable == "Production"]
+prod_new[, Year := as.integer(Year)]
+
+prod_all <- rbind(
+  prod_old[Year < 2018, .(Year,Month,Date,Fertilizer,value)],
+  prod_new[, .(Year,Month,Date,Fertilizer,value)]
+)
+prod_all <- prod_all[Fertilizer %in% c("Urea","DAP") & !is.na(value) & Year != 2025]
+prod_annual <- prod_all[, .(Qty = sum(value, na.rm=TRUE)), .(Year, Fertilizer)]
+
+## Area + line combo
+p_prod <- ggplot(prod_annual, aes(x=Year, y=Qty, color=Fertilizer, fill=Fertilizer,
+                                   text=paste0(Fertilizer," (",Year,"): ",round(Qty,2)," MT"))) +
+  geom_area(alpha=0.2, position="identity") +
+  geom_line(linewidth=1.3) +
+  geom_point(size=2.5) +
+  facet_wrap(~Fertilizer, scales="free_y", ncol=1) +
+  scale_color_manual(values=c("Urea"="#3498DB","DAP"="#E67E22")) +
+  scale_fill_manual(values=c("Urea"="#3498DB","DAP"="#E67E22")) +
+  scale_x_continuous(breaks=seq(1990,2025,2)) +
+  my_theme + theme(legend.position="none") +
+  labs(title="Domestic Urea & DAP Production in India",
+       subtitle="Urea capacity near self-sufficient; DAP heavily import-dependent",
+       y="Million Tonnes", x=NULL,
+       caption="Source: Fertilizer Association of India | Analysis: Pawan")
+
+ggplotly(p_prod, tooltip="text") |> layout(hovermode="x unified")
+```
+
+---
+
+## Section 8 · Supply Concentration Risk Summary
+
+```{r risk-table}
+risk_data <- data.table(
+  Fertilizer = c("Urea","DAP","Rock Phosphate","Phosphoric Acid","MOP"),
+  Top_Supplier_1 = c("China","Saudi Arabia","Jordan","Morocco","Canada"),
+  Top_Supplier_2 = c("Iran","China","Morocco","Jordan","Belarus"),
+  Top2_Share_Pct = c(65, 72, 80, 85, 70),
+  Risk_Level = c("Medium","High","High","Very High","Very High")
+)
+
+risk_data |>
+  gt() |>
+  tab_header(title = "Fertilizer Import: Supply Concentration Risk Matrix") |>
+  cols_label(Fertilizer="Fertilizer", Top_Supplier_1="Supplier 1",
+             Top_Supplier_2="Supplier 2", Top2_Share_Pct="Top-2 Share %",
+             Risk_Level="Risk Level") |>
+  data_color(Top2_Share_Pct, colors=scales::col_numeric(c("#D5F5E3","#FADBD8"), domain=c(50,100))) |>
+  data_color(Risk_Level,
+             colors=scales::col_factor(c("#27AE60","#F39C12","#E74C3C","#8E44AD"),
+                                       levels=c("Low","Medium","High","Very High"))) |>
+  opt_stylize(style=3) |>
+  tab_source_note("Source: Author's analysis based on Ministry of Commerce data")
 ```

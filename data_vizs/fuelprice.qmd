@@ -1,16 +1,19 @@
 ---
-title: "Fuel Prices"
-description: "Fuel Prices in Metro city in India and Crude Oil International Price"
+title: "Fuel Price Analysis: India's Retail Prices & International Crude Dynamics"
+description: "A comprehensive analysis of crude oil price trends, international petrol/diesel prices, and retail fuel prices in India's metro cities."
 author: "Pawan"
 date: "2025/10/30"
 date-modified: last-modified
 categories:
   - "Fuel"
   - "Prices"
-# image: "thumbnails/health_map_hy.png"
+  - "Energy"
 format:
   html:
     code-fold: true
+    toc: true
+    toc-depth: 3
+    theme: cosmo
 editor_options:
   chunk_output_type: console
 execute:
@@ -20,312 +23,250 @@ execute:
   eval: true
 ---
 
-Load the necessary packages
+## Overview
 
-```{r}
-library(data.table)           ## Raed data table
-library(ggplot2)              ## Graphical represantation
+India imports ~85% of its crude oil needs, making domestic fuel prices highly sensitive to global energy markets. This analysis tracks the Indian Basket crude price, international petrol/diesel FOB prices, retail prices in four metro cities, and aggregate petroleum import volumes. Key events — COVID-19 demand collapse (2020), the 2022 Russia–Ukraine war price spike, and periodic government tax adjustments — are visible in the data.
+
+---
+
+## Setup
+
+```{r setup}
+library(data.table)
+library(ggplot2)
+library(ggiraph)
+library(scales)
+library(plotly)
 library(readxl)
-library(gridExtra)
-library(stringr)              ## Work with string
-library(lubridate)            ## date
-library(scales)               ## Nice Scales for ggplot2
-library(fontawesome)          ## Icons display in ggplot2
-library(ggtext)               ## Markdown text support for ggplot2
-library(showtext)             ## Display fonts in ggplot2
-library(colorspace)           ## Lighten and Darken colours
-library(seecolor)             ## To print and view colours
-library(patchwork)            ## Combining plots
+library(lubridate)
+library(patchwork)
+library(gt)
 
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title      = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(b = 8)),
+    plot.subtitle   = element_text(size = 11, hjust = 0.5, color = "#7F8C8D"),
+    plot.caption    = element_text(size = 9, color = "#95A5A6", hjust = 0),
+    axis.title      = element_text(size = 12, face = "bold"),
+    axis.text       = element_text(size = 10),
+    axis.text.x     = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position = "bottom",
+    legend.title    = element_blank(),
+    panel.grid.major= element_line(color = "#ECF0F1", linewidth = 0.4),
+    panel.grid.minor= element_blank(),
+    strip.background= element_rect(fill = "#F8F9FA", color = NA),
+    strip.text      = element_text(face = "bold", size = 11)
+  )
 ```
 
-Costum the plot theme
+---
 
-```{r}
-my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
-    theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
-          plot.title = element_text(size = 20, face = "bold",
-                                    hjust = 0.5, margin = margin(10, 0,
-                                                                 10, 0)), ## Center and style title
-          axis.title = element_text(size = 18),
-          axis.text = element_text(size = 14),
-          legend.position = "bottom",
-          legend.title = element_blank(),  ## Remove legend title
-          panel.grid.major = element_line(color = "#EEEEEE"), ## Lighter grid lines
-          panel.border = element_blank(), ## Remove panel border
-          axis.line = element_line(color = "#333333"), ## Add axis lines
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
-          strip.background = element_rect(fill = "#F2F2F2",
-                                          color = NA) ## Style facet strips (if used)
-          )
+## Section 1 · International Crude Oil Price (Indian Basket)
 
+The Indian Basket is a weighted average of Oman, Dubai (sour crude) and Brent (sweet crude). It is the reference price used for setting domestic fuel prices.
+
+```{r crude-price}
+crude_path <- "/home/pawan/fuelprices/international_price_indian_basket.xlsx"
+
+crude <- as.data.table(read_excel(crude_path, sheet="crude-oil"))
+crude_long <- melt(crude, id=c("Year","Average","Ratio"))
+crude_long[, Month_num := as.integer(match(substr(variable,1,3), month.abb))]
+crude_long[, FY_Year   := as.integer(ifelse(Month_num > 3,
+                             substr(Year,1,4), paste0("20",substr(Year,6,7))))]
+crude_long[, Date := as.Date(paste0(FY_Year,"-",Month_num,"-20"))]
+crude_long <- crude_long[!is.na(value) & !is.na(Date)]
+
+avg_crude <- crude_long[, .(Price = mean(value, na.rm=TRUE)), by=FY_Year]
+
+## Interactive monthly chart
+p_crude_m <- ggplot(crude_long, aes(x=Date, y=value, group=1,
+                                     text=paste0(format(Date,"%b %Y"),"\n$",round(value,1),"/bbl"))) +
+  geom_line(color="#2C3E50", linewidth=0.8) +
+  geom_smooth(method="loess", se=TRUE, color="#E74C3C", fill="#FADBD8", linewidth=1, alpha=0.3) +
+  geom_vline(xintercept=as.Date("2020-03-01"), linetype="dashed", color="#3498DB", alpha=0.7) +
+  geom_vline(xintercept=as.Date("2022-02-24"), linetype="dashed", color="#E74C3C", alpha=0.7) +
+  annotate("text", x=as.Date("2020-05-01"), y=max(crude_long$value,na.rm=TRUE)*0.9,
+           label="COVID-19", color="#3498DB", size=3, hjust=0) +
+  annotate("text", x=as.Date("2022-05-01"), y=max(crude_long$value,na.rm=TRUE)*0.95,
+           label="Ukraine War", color="#E74C3C", size=3, hjust=0) +
+  my_theme +
+  scale_x_date(date_labels="%Y", date_breaks="2 years") +
+  labs(title="Indian Basket Crude Oil Price (Monthly)",
+       subtitle="Red shading = LOESS confidence interval | Key events annotated",
+       y="USD per Barrel", x=NULL,
+       caption="Source: PPAC, Ministry of Petroleum & Natural Gas")
+
+ggplotly(p_crude_m, tooltip="text") |> layout(hovermode="x unified")
 ```
 
-## International Fuel Price
+```{r crude-annual}
+p_crude_a <- ggplot(avg_crude, aes(x=FY_Year, y=Price,
+                                    text=paste0("FY",FY_Year,"\nAvg: $",round(Price,1),"/bbl"))) +
+  geom_col_interactive(aes(tooltip=paste0("FY",FY_Year,"\n$",round(Price,1),"/bbl"),
+                             data_id=FY_Year),
+                        fill="#2C3E50", alpha=0.8, width=0.7) +
+  geom_text(aes(label=paste0("$",round(Price))), vjust=-0.4, size=3.5, fontface="bold") +
+  my_theme +
+  labs(title="Annual Average Indian Basket Crude Price",
+       y="USD per Barrel", x="Financial Year",
+       caption="Source: PPAC | Analysis: Pawan")
 
-Read the data
-
-```{r}
-
-as.data.table(read_excel("/home/pawan/fuelprices/international_price_indian_basket.xlsx",
-                         sheet = "crude-oil"))->crude
-
-melt(crude, id = c("Year", "Average", "Ratio"))->crude
-as.numeric(match(substr(crude$variable, 1, 3), month.abb))->crude$variable
-as.numeric(ifelse(crude$variable>3, substr(crude$Year, 1, 4),
-                  paste0(20,substr(crude$Year, 6, 7))))->crude$Year
-
-as.Date(paste0(crude$Year, "-", crude$variable, "-", 20))->crude$Date
-crude[,.(Price = mean(value)),.(Year)]->avgcrude
-
-## Diesel Internationl Price
-
-as.data.table(read_excel("/home/pawan/fuelprices/international_price_indian_basket.xlsx",
-                         sheet = "diesel"))->diesel
-
-melt(diesel, id = c("Year", "Average"))->diesel
-as.numeric(match(substr(diesel$variable, 1, 3), month.abb))->diesel$variable
-as.numeric(ifelse(diesel$variable>3, substr(diesel$Year, 1, 4),
-                  paste0(20, substr(diesel$Year, 6, 7))))->diesel$Year
-
-as.Date(paste0(diesel$Year, "-", diesel$variable, "-", 20))->diesel$Date
-paste("Diesel")->diesel$Fuel
-
-## Pertol International Price
-as.data.table(read_excel("/home/pawan/fuelprices/international_price_indian_basket.xlsx",
-                         sheet = "petrol"))->petrol
-
-melt(petrol, id = c("Year", "Average"))->petrol
-as.numeric(match(substr(petrol$variable, 1, 3), month.abb))->petrol$variable
-as.numeric(ifelse(petrol$variable>3, substr(petrol$Year, 1, 4),
-                  paste0(20,substr(petrol$Year, 6, 7))))->petrol$Year
-
-as.Date(paste0(petrol$Year, "-", petrol$variable, "-", 20))->petrol$Date
-paste("Petrol")->petrol$Fuel
-
-## Merge Diesel and Petrol
-rbind(diesel, petrol)->fuel
-
+girafe(ggobj=p_crude_a, width_svg=11, height_svg=5,
+       options=list(opts_tooltip(css="background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;"),
+                    opts_hover(css="opacity:0.85;"),
+                    opts_sizing(rescale=TRUE,width=1)))
 ```
 
-Visualizations
+---
 
-Average Crude Oil FOB Price (Indian Basket)
+## Section 2 · International Petrol & Diesel Prices
 
-```{r}
-ggplot(avgcrude, aes(x = Year, y = Price, group = 1)) +
-    geom_line() +
-    my_theme +
-    labs(y = "Price (Dollars per Barrel)") +
-    ggtitle("Average Crude Oil FOB Price (Indian Basket)")
+```{r intl-fuel}
+diesel <- as.data.table(read_excel(crude_path, sheet="diesel"))
+petrol <- as.data.table(read_excel(crude_path, sheet="petrol"))
+
+prep_fuel <- function(dt, fuel_name) {
+  dt_long <- melt(dt, id=c("Year","Average"))
+  dt_long[, Month_num := as.integer(match(substr(variable,1,3), month.abb))]
+  dt_long[, FY_Year   := as.integer(ifelse(Month_num > 3,
+                             substr(Year,1,4), paste0("20",substr(Year,6,7))))]
+  dt_long[, Date := as.Date(paste0(FY_Year,"-",Month_num,"-20"))]
+  dt_long[, Fuel := fuel_name]
+  dt_long[!is.na(value) & !is.na(Date)]
+}
+
+diesel_l <- prep_fuel(diesel, "Diesel")
+petrol_l <- prep_fuel(petrol, "Petrol")
+fuel_intl <- rbind(diesel_l, petrol_l)
+
+p_fuel <- ggplot(fuel_intl, aes(x=Date, y=value, color=Fuel,
+                                 text=paste0(Fuel,"\n",format(Date,"%b %Y"),
+                                             "\n$",round(value,1),"/bbl"))) +
+  geom_line(linewidth=1) +
+  facet_wrap(~Fuel) +
+  scale_color_manual(values=c("Diesel"="#3498DB","Petrol"="#E74C3C")) +
+  scale_x_date(date_labels="%Y", date_breaks="2 years") +
+  my_theme + theme(legend.position="none") +
+  labs(title="International Diesel & Petrol FOB Prices",
+       subtitle="Prices track crude with a small refining-margin premium",
+       y="USD per Barrel", x=NULL,
+       caption="Source: PPAC, Ministry of Petroleum & Natural Gas")
+
+ggplotly(p_fuel, tooltip="text") |> layout(hovermode="x unified")
 ```
 
-Crude Oil FOB Price (Indian Basket)
+---
 
-```{r}
-ggplot(crude, aes(x = Date, y = value, group = 1)) +
-    geom_line() +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Dollars per Barrel)") +
-    ggtitle("Crude Oil FOB Price (Indian Basket)")
+## Section 3 · Petroleum Imports (Volume)
+
+```{r petroleum-imports}
+imp_raw <- as.data.table(read_excel("/home/pawan/fuelprices/IMPORT_EXPORT.xlsx",
+                                     sheet="PT_IMPORT_H"))
+imp_long <- melt(imp_raw, id="IMPORT_EXPORT")
+imp_sub  <- imp_long[IMPORT_EXPORT %in% c("CRUDE OIL","TOTAL PRODUCT IMPORT")]
+imp_sub[, tt := paste0(IMPORT_EXPORT,"\nYear: ",variable,
+                        "\nQty: ",format(round(value/1000,0), big.mark=",")," MMT")]
+
+p_imp <- ggplot(imp_sub, aes(x=variable, y=value/1000, fill=IMPORT_EXPORT)) +
+  geom_bar_interactive(aes(tooltip=tt, data_id=IMPORT_EXPORT),
+                        stat="identity", position="stack", width=0.75, alpha=0.9) +
+  scale_fill_manual(values=c("CRUDE OIL"="#2C3E50","TOTAL PRODUCT IMPORT"="#E67E22")) +
+  scale_y_continuous(labels=comma_format()) +
+  my_theme +
+  labs(title="India's Petroleum Import Volumes",
+       subtitle="Crude oil + refined product imports (MMT = million metric tonnes)",
+       y="Million Metric Tonnes", x="Year",
+       caption="Source: PPAC | Analysis: Pawan")
+
+girafe(ggobj=p_imp, width_svg=12, height_svg=6,
+       options=list(opts_tooltip(css="background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;"),
+                    opts_hover(css="opacity:0.85;stroke:#333;stroke-width:1.5;"),
+                    opts_sizing(rescale=TRUE,width=1)))
 ```
 
-Diesel FOB International Price
+---
 
-```{r}
-ggplot(diesel, aes(x = Date, y = value, group = 1)) +
-    geom_line() +
-    my_theme +
-    scale_x_date(date_labels = "%Y-%b", date_breaks = "3 months") +
-    labs(y = "Price (Dollars per Barrel)") +
-    ggtitle("Diesel FOB International Price")->p1
-p1
+## Section 4 · Retail Fuel Prices in Metro Cities
+
+```{r retail-prices}
+t <- fread("/home/pawan/fuelprices/india_retail_fuelprices.csv")
+t[, Date := as.Date(Date, format="%d/%m/%y")]
+
+t_long <- melt(t, id=c("Date","Fuel"))
+setnames(t_long, "variable", "City")
+
+## Faceted interactive chart — all cities, both fuels
+p_retail <- ggplot(t_long, aes(x=Date, y=value, color=Fuel,
+                                text=paste0(City,"\n",Fuel,"\n",format(Date,"%d %b %Y"),
+                                            "\n₹",round(value,2),"/L"))) +
+  geom_line(linewidth=0.7, alpha=0.85) +
+  facet_wrap(~City) +
+  scale_color_manual(values=c("Petrol"="#E74C3C","Diesel"="#3498DB")) +
+  scale_x_date(date_labels="%Y", date_breaks="2 years") +
+  scale_y_continuous(labels=function(x) paste0("₹",x)) +
+  my_theme +
+  labs(title="Retail Petrol & Diesel Prices in Indian Metro Cities",
+       subtitle="Long periods of flat prices reflect administered pricing; cuts/hikes are sudden",
+       y="Price (₹/Litre)", x=NULL,
+       caption="Source: PPAC / IOC | Analysis: Pawan")
+
+ggplotly(p_retail, tooltip="text") |> layout(hovermode="x unified")
 ```
 
-Petrol FOB International Price
+---
 
-```{r}
-ggplot(petrol, aes(x = Date, y = value, group = 1)) +
-    geom_line() +
-    my_theme +
-    scale_x_date(date_labels = "%Y-%b", date_breaks = "3 months") +
-    labs(y = "Price (Dollars per Barrel)") +
-    ggtitle("Petrol FOB International Price")->p2
-p2
+## Section 5 · Latest Prices Snapshot
+
+```{r latest-prices}
+petrol_dt <- t_long[Fuel == "Petrol"]
+diesel_dt <- t_long[Fuel == "Diesel"]
+latest_petrol <- petrol_dt[, .(Date=max(Date)), by=City]
+latest_petrol <- merge(latest_petrol, petrol_dt, by=c("City","Date"))
+latest_diesel <- diesel_dt[, .(Date=max(Date)), by=City]
+latest_diesel <- merge(latest_diesel, diesel_dt, by=c("City","Date"))
+
+snapshot <- merge(
+  latest_petrol[, .(City, Date, Petrol=round(value,2))],
+  latest_diesel[, .(City, Diesel=round(value,2))],
+  by="City"
+)
+
+snapshot |>
+  gt() |>
+  tab_header(title=paste("Latest Retail Fuel Prices —", format(max(snapshot$Date),"%d %b %Y"))) |>
+  cols_label(City="Metro City", Date="Date", Petrol="Petrol (₹/L)", Diesel="Diesel (₹/L)") |>
+  data_color(Petrol, colors=scales::col_numeric(c("#FFEEBA","#DC3545"), domain=NULL)) |>
+  data_color(Diesel, colors=scales::col_numeric(c("#CCE5FF","#0056B3"), domain=NULL)) |>
+  opt_stylize(style=3) |>
+  tab_source_note("Source: PPAC / Indian Oil Corporation")
 ```
 
-```{r}
-grid.arrange(p1, p2)
-```
+---
 
-Disesl and Petrol FOB International Price
+## Section 6 · Crude–Retail Price Correlation
 
-```{r}
-ggplot(fuel, aes(x = Date, y = value, group = 1)) +
-    geom_line() +
-    my_theme + facet_wrap(~Fuel) +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Dollars per Barrel)") +
-    ggtitle("Disesl and Petrol FOB International Price")->p
-p
-```
+```{r correlation}
+## Merge monthly crude with Delhi retail prices (as proxy)
+delhi_petrol <- t_long[City=="Delhi" & Fuel=="Petrol",
+  .(Date, Delhi_Petrol=value)]
+delhi_petrol[, Month := floor_date(Date, "month")]
+delhi_monthly <- delhi_petrol[, .(Delhi_Petrol=mean(Delhi_Petrol,na.rm=TRUE)), by=Month]
 
-Import of Crude oil and Petroleum Products
+crude_monthly <- crude_long[, .(Crude=mean(value,na.rm=TRUE)),
+  by=.(Month=floor_date(Date,"month"))]
+corr_dt <- merge(crude_monthly, delhi_monthly, by="Month")
 
-```{r}
-as.data.table(read_excel("/home/pawan/fuelprices/IMPORT_EXPORT.xlsx",
-                         sheet = "PT_IMPORT_H"))->t
-melt(t, id = "IMPORT_EXPORT")->t
+p_corr <- ggplot(corr_dt, aes(x=Crude, y=Delhi_Petrol,
+                               text=paste0(format(Month,"%b %Y"),
+                                           "\nCrude: $",round(Crude,1),"/bbl",
+                                           "\nDelhi Petrol: ₹",round(Delhi_Petrol,2),"/L"))) +
+  geom_point(alpha=0.5, color="#3498DB", size=2.5) +
+  geom_smooth(method="lm", se=TRUE, color="#E74C3C", fill="#FADBD8") +
+  my_theme +
+  labs(title="Crude Oil Price vs Delhi Petrol Retail Price",
+       subtitle="Positive correlation but government taxes/subsidies create discontinuities",
+       x="Indian Basket Crude (USD/bbl)", y="Delhi Petrol Price (₹/L)",
+       caption="Source: PPAC | Analysis: Pawan")
 
-t[IMPORT_EXPORT %in% c("CRUDE OIL", "TOTAL PRODUCT IMPORT")]->imp
-
-ggplot(imp, aes(x = variable, y = value, fill = IMPORT_EXPORT)) +
-    geom_bar(stat = "identity", position = "stack") +
-    my_theme +
-    scale_fill_brewer(palette = "Set2") +
-    scale_y_continuous(labels = scales::comma) +
-    labs(x = "Year",
-         y = "Qty (000 Metric Tonnes)") +
-    ggtitle("Import of Crude oil and Petroleum Products")
-
-##ggsave("import-crude-and-petroleum.png", width = 15, height = 8)
-
-```
-
-Crude Oil Price
-
-```{r}
-fread("/home/pawan/fuelprices/eia-oil-prices.csv")->t
-as.Date(t$Date,"%Y-%b-%d")->t$Date
-
-ggplot(t, aes(x = Date, y = RBRTE, group = 1)) +
-    geom_line() +
-    my_theme +
-    labs(y = "Price (Dollars per Barrel)") +
-    scale_x_date(date_labels = "%Y", date_breaks = "2 years")->p
-p
-```
-
-## Fuel Price in Metro Cities of India
-
-Load Data
-
-```{r}
-fread("/home/pawan/fuelprices/india_retail_fuelprices.csv")->t
-as.Date(t$Date, format = "%d/%m/%y")->t$Date
-
-melt(t, id = c("Date", "Fuel"))->t1
-
-t[Fuel == "Petrol"]->petrol
-t[Fuel == "Diesel"]->diesel
-
-melt(petrol, id = c("Date", "Fuel"))->petrol
-petrol[order(Date)]->petrol
-tail(petrol, n = 4)->petrol1
-
-melt(diesel, id = c("Date", "Fuel"))->diesel
-diesel[order(Date)]->diesel
-tail(diesel, n = 4)->diesel1
-```
-
-```{r}
-ggplot(t1, aes(x = Date, y = value, color = Fuel)) +
-    geom_line(linewidth = 0.6) +
-    facet_wrap(~variable) +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Rs./Litre)") +
-    ggtitle("Fuel Price in Metro City")->p
-
-p
-```
-
-Petrol Price
-
-```{r}
-## Petrol Price
-ggplot(petrol, aes(x = Date, y = value, group = 1)) +
-    geom_line(linewidth = 1.5) +
-    facet_wrap(~variable) +
-    geom_text(data = petrol1, aes(x = Date, y = value,
-                                  label = sprintf("%0.2f", value)),
-              color = "red",
-              vjust = -0.4,
-              hjust = 0.9,
-              size = 3*4) +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Rs./Litre)") +
-    ggtitle("Pertol Price")->p1
-p1
-```
-
-Diesel Price
-
-```{r}
-## Diesel Price
-ggplot(diesel, aes(x = Date, y = value, group = 1)) +
-    geom_line(size = 1.5) +
-    facet_wrap(~variable) +
-    geom_text(data = diesel1, aes(x = Date, y = value,
-                                  label = sprintf("%0.2f", value)),
-              color = "red",
-              vjust = -0.4,
-              hjust = 1,
-              size = 3*4) +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Rs./Litre)") +
-    ggtitle("Diesel Price")->p2
-p2
-```
-
-```{r}
-cowplot::plot_grid(p1,
-                   p2 + theme(axis.text.y = element_blank(),
-                              axis.ticks.y = element_blank(),
-                              axis.title.y = element_blank()))
-## ggsave("fuel-price.png", width = 15, height = 8)
-```
-
-Daily Fuel Price in different City
-
-```{r}
-## Delhi Petrol Diesel Daily Price
-ggplot(t, aes(x = Date, y =Delhi, group = 1)) +
-    geom_line(size = 0.8) +
-    facet_wrap(~Fuel) +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Rs./Litre)")->p
-p
-
-## Mumbai Petrol Diesel Daily Price
-ggplot(t, aes(x = Date, y = Mumbai, group = 1)) +
-    geom_line(size = 0.8) +
-    facet_wrap(~Fuel) +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Rs./Litre)")->p
-
-p
-
-## Chennai Petrol Diesel Daily Price
-ggplot(t, aes(x = Date, y = Chennai, group = 1)) +
-    geom_line(size = 0.8) +
-    facet_wrap(~Fuel) +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Rs./Litre)")->p
-p
-
-## Kolkata Petrol Diesel Daily Price
-ggplot(t, aes(x = Date, y = Kolkata, group = 1)) +
-    geom_line(size = 0.8) +
-    facet_wrap(~Fuel) +
-    my_theme +
-    scale_x_date(date_labels = "%Y", date_breaks = "1 years") +
-    labs(y = "Price (Rs./Litre)")->p
-p
+ggplotly(p_corr, tooltip="text")
 ```

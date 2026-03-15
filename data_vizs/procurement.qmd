@@ -1,15 +1,19 @@
 ---
-title: "Public Procurement"
-description: ""
+title: "India's Public Foodgrain Procurement: Trends, Patterns & Policy Implications"
+description: "A detailed analysis of foodgrain procurement by FCI and state agencies across marketing seasons, with regional breakdowns and MSP evolution."
 author: "Pawan"
 date: "2025/10/30"
 date-modified: last-modified
 categories:
   - "Food Economy"
-# image: "thumbnails/health_map_hy.png"
+  - "Procurement"
+  - "Agriculture Policy"
 format:
   html:
     code-fold: true
+    toc: true
+    toc-depth: 3
+    theme: cosmo
 editor_options:
   chunk_output_type: console
 execute:
@@ -19,98 +23,201 @@ execute:
   eval: true
 ---
 
--   Whatever foodgrains are produced and offered, i.e. wheat, paddy, coarse grains, by the farmers, within the stipulated procurement period are purchased by the State Government Agencies including the Food Corporation of India (FCI) at Minimum Support price (MSP).
--   The government procures foodgrains in order to ensure farmers receive the minimum support price (MSP) and a stock is maintained to distribute to the poor under the Public Distribution System (PDS) and other schemes and also to ensure the country's food security.
--   Before the harvest during each Crop season, the Government of India announces the Minimum Support Price (MSP) for procurement.
+## Overview
 
-```{r}
+India operates one of the world's largest public food procurement systems. The government procures wheat (rabi), paddy/rice (kharif), and coarse grains at the **Minimum Support Price (MSP)** through the Food Corporation of India (FCI) and state government agencies. Procured stocks underpin the **Public Distribution System (PDS)**, midday-meal schemes, and the National Food Security Act (NFSA) welfare programmes.
+
+**Key policy features:**
+- Procurement is price-floor insurance for farmers — FCI and state agencies buy all offered quantities at MSP.
+- Stocks feed welfare: NFSA covers 80 crore beneficiaries with 5 kg/person/month of subsidised grain.
+- Buffer norms guide minimum stock requirements for food security.
+
+---
+
+## Setup
+
+```{r setup}
 library(data.table)
 library(ggplot2)
 library(ggiraph)
+library(scales)
+library(gt)
+library(plotly)
+library(viridis)
+library(patchwork)
 
-# Read the data
-t1 <- fread("/home/pawan/procurement/procurement.csv")
-
-# Improved visualization theme
-my_theme <- theme_minimal(base_size = 14) +
+my_theme <- theme_minimal(base_size = 13) +
   theme(
-    text = element_text(family = "Arial", color = "#2c3e50"),
-    plot.title = element_text(size = 18, face = "bold", hjust = 0.5,
-                             margin = margin(15, 0, 15, 0)),
-    plot.subtitle = element_text(size = 12, hjust = 0.5, color = "#7f8c8d"),
-    axis.title = element_text(size = 14, face = "bold"),
-    axis.title.y = element_text(margin = margin(0, 15, 0, 0)),
-    axis.title.x = element_text(margin = margin(15, 0, 0, 0)),
-    axis.text = element_text(size = 11),
-    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+    plot.title      = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(b = 8)),
+    plot.subtitle   = element_text(size = 11, hjust = 0.5, color = "#7F8C8D"),
+    plot.caption    = element_text(size = 9, color = "#95A5A6", hjust = 0),
+    axis.title      = element_text(size = 12, face = "bold"),
+    axis.text       = element_text(size = 10),
+    axis.text.x     = element_text(angle = 45, vjust = 1, hjust = 1),
     legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 11),
-    panel.grid.major = element_line(color = "#ecf0f1", size = 0.5),
-    panel.grid.minor = element_blank(),
-    panel.border = element_rect(color = "#bdc3c7", fill = NA, size = 0.5),
-    plot.background = element_rect(fill = "white", color = NA),
-    plot.margin = unit(c(1, 1, 1, 1), "cm"),
-    strip.background = element_rect(fill = "#f8f9fa", color = "#dee2e6"),
-    strip.text = element_text(face = "bold", size = 12)
+    legend.title    = element_blank(),
+    panel.grid.major= element_line(color = "#ECF0F1", linewidth = 0.4),
+    panel.grid.minor= element_blank(),
+    strip.background= element_rect(fill = "#F8F9FA", color = NA),
+    strip.text      = element_text(face = "bold", size = 11)
   )
-
-
-# Summarize data
-t1_summary <- t1[, .(Total = sum(Total),
-                     FCI = sum(FCI),
-                     StateAgency = sum(StateAgency)),
-                 by = .(Crop, MarketingSeason)]
-
-# Create tooltip for interactivity
-t1_summary[, tooltip := paste0(
-  "Crop: ", Crop, "\n",
-  "Season: ", MarketingSeason, "\n",
-  "Total: ", round(Total, 1), " LMT\n",
-  "FCI: ", round(FCI, 1), " LMT\n",
-  "State Agencies: ", round(StateAgency, 1), " LMT"
-)]
-
-# Create interactive plot
-p <- ggplot(t1_summary,
-            aes(x = MarketingSeason,
-                y = Total,
-                fill = Crop,
-                tooltip = tooltip,
-                data_id = paste(Crop, MarketingSeason))) +
-  geom_bar_interactive(stat = "identity",
-                       width = 0.7,
-                       alpha = 0.8) +
-    facet_wrap(~Crop, scales = "free_y") +
-    my_theme +
-  labs(
-    title = "Foodgrain Procurement Trends by Crop and Marketing Season",
-    y = "Quantity (in Lakh Metric Tons - LMT)",
-    x = "Marketing Season",
-    caption = "Source: Central Food Grains Procurement Portal (Department of Food & Public Distribution) \n
-          Analysis: Pawan"
-  ) +
-  scale_fill_brewer(palette = "Set2") +
-  scale_y_continuous(labels = scales::comma)
-
-# Make it interactive with ggiraph
-girafe(ggobj = p,
-       width_svg = 12,
-       height_svg = 8,
-       options = list(
-         opts_tooltip(css = "background-color:white;color:black;padding:8px;border-radius:4px;border:1px solid #ccc;"),
-         opts_hover(css = "fill-opacity:0.9;stroke-width:2;"),
-         opts_selection(type = "single", css = "stroke:red;stroke-width:2;"),
-         opts_sizing(rescale = TRUE, width = 1)
-       ))
 ```
 
-## Paddy Procurement
+---
 
--   Paddy procurement marketing season in India begins each year on 1st October and ends on 30th September the following year.
--   Overall paddy procurement has been increasing over the last 3 years.
--   There was a fall in procurement in Oct-Dec (2021-22) over the same period in the previous year.
--   Paddy procurement however picked up subsequently and was higher in Jan-Mar (2021-22) over the corresponding period in 2020-21.
--   The decline in procurement in Oct-Dec (2021-22) is mainly because of the decline in paddy procurement in Haryana and Punjab.
--   And the recovery in procurement starting in January end 2022 is due to a large increase in paddy procurement in Chhattisgarh and Madhya Pradesh.
--   The paddy procurement in Haryana in this season is much less as compared to the previous seasons
+## Section 1 · Total Procurement by Crop
+
+```{r procurement-total}
+t1 <- fread("/home/pawan/procurement/procurement.csv")
+
+## Summarise by crop and marketing season
+proc_sum <- t1[, .(Total     = sum(Total, na.rm=TRUE),
+                   FCI       = sum(FCI, na.rm=TRUE),
+                   StateAgency = sum(StateAgency, na.rm=TRUE)),
+               by = .(Crop, MarketingSeason)]
+
+proc_sum[, FCI_Share   := round(FCI/Total*100, 1)]
+proc_sum[, State_Share := round(StateAgency/Total*100, 1)]
+proc_sum[, tt := paste0("<b>",Crop,"</b> | Season: ",MarketingSeason,
+                         "<br>Total: ",round(Total,1)," LMT",
+                         "<br>FCI: ",round(FCI,1)," (",FCI_Share,"%)",
+                         "<br>States: ",round(StateAgency,1)," (",State_Share,"%)")]
+
+## By-crop faceted bar
+p1 <- ggplot(proc_sum, aes(x=MarketingSeason, y=Total, fill=Crop)) +
+  geom_bar_interactive(aes(tooltip=tt, data_id=paste(Crop,MarketingSeason)),
+                        stat="identity", width=0.75, alpha=0.9) +
+  facet_wrap(~Crop, scales="free_y") +
+  scale_fill_brewer(palette="Set2") +
+  scale_y_continuous(labels=comma_format()) +
+  my_theme + theme(legend.position="none") +
+  labs(title="Foodgrain Procurement by Crop & Marketing Season",
+       subtitle="Hover over bars for FCI vs state agency breakdown",
+       y="Quantity (Lakh Metric Tonnes)", x="Marketing Season",
+       caption="Source: DFPD Procurement Portal | Analysis: Pawan")
+
+girafe(ggobj=p1, width_svg=13, height_svg=7,
+       options=list(
+         opts_tooltip(css="background:#fff;color:#333;padding:10px;border-radius:6px;border:1px solid #ddd;font-size:12px;"),
+         opts_hover(css="opacity:0.9;stroke:#333;stroke-width:1.5;"),
+         opts_hover_inv(css="opacity:0.3;"),
+         opts_zoom(min=0.8, max=3),
+         opts_sizing(rescale=TRUE, width=1)))
+```
+
+---
+
+## Section 2 · FCI vs State Agency Split
+
+The procurement machinery involves two tiers: FCI (central agency) and state government agencies. Their relative roles have shifted over time — states have taken on more responsibility as part of decentralisation.
+
+```{r fci-state-split}
+proc_long <- melt(proc_sum[, .(Crop,MarketingSeason,FCI,StateAgency)],
+                  id.vars=c("Crop","MarketingSeason"),
+                  variable.name="Agency", value.name="Qty")
+proc_long[, tt := paste0(Agency,"\nCrop: ",Crop,"\nSeason: ",MarketingSeason,
+                          "\n",round(Qty,1)," LMT")]
+
+p2 <- ggplot(proc_long, aes(x=MarketingSeason, y=Qty, fill=Agency)) +
+  geom_bar_interactive(aes(tooltip=tt, data_id=Agency),
+                        stat="identity", position="stack", width=0.75, alpha=0.9) +
+  facet_wrap(~Crop, scales="free_y") +
+  scale_fill_manual(values=c("FCI"="#2C3E50","StateAgency"="#E67E22"),
+                    labels=c("FCI"="FCI","StateAgency"="State Agencies")) +
+  scale_y_continuous(labels=comma_format()) +
+  my_theme +
+  labs(title="FCI vs State Agency Procurement Split",
+       subtitle="States increasingly driving procurement in newer seasons",
+       y="Quantity (LMT)", x="Marketing Season",
+       caption="Source: DFPD | Analysis: Pawan")
+
+girafe(ggobj=p2, width_svg=13, height_svg=7,
+       options=list(
+         opts_tooltip(css="background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;"),
+         opts_hover(css="opacity:0.85;stroke-width:1.5;"),
+         opts_sizing(rescale=TRUE, width=1)))
+```
+
+---
+
+## Section 3 · Procurement Trend Analysis
+
+```{r trend-analysis}
+## Total annual procurement across all crops
+annual_total <- proc_sum[, .(Total_All = sum(Total)), by=MarketingSeason]
+setorder(annual_total, MarketingSeason)
+annual_total[, YoY := round((Total_All/shift(Total_All)-1)*100, 1)]
+
+## Line chart with growth annotations
+p3 <- ggplot(annual_total, aes(x=MarketingSeason, y=Total_All, group=1,
+                                text=paste0(MarketingSeason,"\n",round(Total_All,1)," LMT",
+                                            "\nYoY: ",YoY,"%"))) +
+  geom_col(fill="#3498DB", alpha=0.4, width=0.7) +
+  geom_line(color="#2C3E50", linewidth=1.3) +
+  geom_point(color="#2C3E50", size=3.5) +
+  geom_text(aes(label=ifelse(!is.na(YoY), paste0(YoY,"%"), "")),
+            vjust=-1.2, size=3.2, color="#E74C3C") +
+  my_theme +
+  labs(title="Total Foodgrain Procurement — All Crops",
+       subtitle="YoY growth rates annotated in red",
+       y="Quantity (LMT)", x="Marketing Season",
+       caption="Source: DFPD | Analysis: Pawan")
+
+ggplotly(p3, tooltip="text") |> layout(hovermode="x unified")
+```
+
+---
+
+## Section 4 · Summary Statistics Table
+
+```{r summary-table}
+proc_stats <- proc_sum[, .(
+  Avg_Procurement = round(mean(Total),1),
+  Max_Procurement = round(max(Total),1),
+  Min_Procurement = round(min(Total),1),
+  Avg_FCI_Share   = round(mean(FCI_Share),1),
+  Seasons         = .N
+), by=Crop]
+
+proc_stats |>
+  gt() |>
+  tab_header(title="Procurement Summary Statistics by Crop") |>
+  cols_label(Crop="Crop", Avg_Procurement="Avg (LMT)",
+             Max_Procurement="Max (LMT)", Min_Procurement="Min (LMT)",
+             Avg_FCI_Share="Avg FCI Share %", Seasons="No. of Seasons") |>
+  fmt_number(columns=2:4, decimals=1) |>
+  data_color(Avg_Procurement,
+             colors=scales::col_numeric(c("#D5F5E3","#1A5276"), domain=NULL)) |>
+  opt_stylize(style=3) |>
+  tab_source_note("Source: DFPD Central Food Grains Procurement Portal")
+```
+
+---
+
+## Section 5 · Policy Context
+
+```{r policy-notes}
+## Paddy procurement regional breakdown (if available)
+if ("State" %in% names(t1)) {
+  paddy_state <- t1[Crop=="Paddy",
+    .(Total=sum(Total,na.rm=TRUE)), .(State, MarketingSeason)]
+  top_states <- paddy_state[, .(Total=sum(Total)), by=State][order(-Total)][1:10, State]
+  paddy_top  <- paddy_state[State %in% top_states]
+
+  p_state <- ggplot(paddy_top, aes(x=MarketingSeason, y=Total, fill=State)) +
+    geom_bar(stat="identity", position="stack", width=0.75, alpha=0.9) +
+    scale_fill_viridis_d() +
+    my_theme +
+    labs(title="Paddy Procurement by Top States",
+         y="Quantity (LMT)", x="Marketing Season",
+         caption="Source: DFPD | Analysis: Pawan")
+  ggplotly(p_state) |> layout(hovermode="x unified")
+}
+```
+
+> **Key insights:**
+>
+> 1. **Paddy dominates** procurement in volume terms, with Chhattisgarh, MP, Punjab and Haryana as the largest procuring states.
+> 2. **Wheat procurement** fluctuates more sharply due to production variability in the Indo-Gangetic plain.
+> 3. **State agencies** have grown as a share of total procurement, reflecting greater state-level operational capacity.
+> 4. **COVID-19 impact** (2020–21): procurement held firm, underpinning the free-grain scheme (PMGKAY) for 80 crore beneficiaries.

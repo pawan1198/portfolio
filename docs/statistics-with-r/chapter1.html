@@ -366,20 +366,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction-to-descriptive-statistics" id="toc-introduction-to-descriptive-statistics" class="nav-link active" data-scroll-target="#introduction-to-descriptive-statistics"><span class="header-section-number">1</span> Introduction to Descriptive Statistics</a></li>
-  <li><a href="#measures-of-central-tendency" id="toc-measures-of-central-tendency" class="nav-link" data-scroll-target="#measures-of-central-tendency"><span class="header-section-number">2</span> Measures of Central Tendency</a>
+  <li><a href="#introduction-to-descriptive-statistics" id="toc-introduction-to-descriptive-statistics" class="nav-link active" data-scroll-target="#introduction-to-descriptive-statistics">Introduction to Descriptive Statistics</a></li>
+  <li><a href="#measures-of-central-tendency" id="toc-measures-of-central-tendency" class="nav-link" data-scroll-target="#measures-of-central-tendency">Measures of Central Tendency</a>
   <ul class="collapse">
-  <li><a href="#why-the-mean-median-for-wages" id="toc-why-the-mean-median-for-wages" class="nav-link" data-scroll-target="#why-the-mean-median-for-wages"><span class="header-section-number">2.1</span> Why the Mean ≠ Median for Wages</a></li>
+  <li><a href="#why-the-mean-median-for-wages" id="toc-why-the-mean-median-for-wages" class="nav-link" data-scroll-target="#why-the-mean-median-for-wages">Why the Mean ≠ Median for Wages</a></li>
   </ul></li>
-  <li><a href="#measures-of-dispersion" id="toc-measures-of-dispersion" class="nav-link" data-scroll-target="#measures-of-dispersion"><span class="header-section-number">3</span> Measures of Dispersion</a></li>
-  <li><a href="#exploring-distributions" id="toc-exploring-distributions" class="nav-link" data-scroll-target="#exploring-distributions"><span class="header-section-number">4</span> Exploring Distributions</a>
+  <li><a href="#measures-of-dispersion" id="toc-measures-of-dispersion" class="nav-link" data-scroll-target="#measures-of-dispersion">Measures of Dispersion</a></li>
+  <li><a href="#exploring-distributions" id="toc-exploring-distributions" class="nav-link" data-scroll-target="#exploring-distributions">Exploring Distributions</a>
   <ul class="collapse">
-  <li><a href="#five-number-summary" id="toc-five-number-summary" class="nav-link" data-scroll-target="#five-number-summary"><span class="header-section-number">4.1</span> Five-Number Summary</a></li>
-  <li><a href="#detecting-outliers" id="toc-detecting-outliers" class="nav-link" data-scroll-target="#detecting-outliers"><span class="header-section-number">4.2</span> Detecting Outliers</a></li>
+  <li><a href="#five-number-summary" id="toc-five-number-summary" class="nav-link" data-scroll-target="#five-number-summary">Five-Number Summary</a></li>
+  <li><a href="#detecting-outliers" id="toc-detecting-outliers" class="nav-link" data-scroll-target="#detecting-outliers">Detecting Outliers</a></li>
   </ul></li>
-  <li><a href="#cross-tabulation-two-way-frequencies" id="toc-cross-tabulation-two-way-frequencies" class="nav-link" data-scroll-target="#cross-tabulation-two-way-frequencies"><span class="header-section-number">5</span> Cross-tabulation: Two-Way Frequencies</a></li>
-  <li><a href="#practice-exercises" id="toc-practice-exercises" class="nav-link" data-scroll-target="#practice-exercises"><span class="header-section-number">6</span> Practice Exercises</a></li>
-  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">7</span> Chapter Summary</a></li>
+  <li><a href="#cross-tabulation-two-way-frequencies" id="toc-cross-tabulation-two-way-frequencies" class="nav-link" data-scroll-target="#cross-tabulation-two-way-frequencies">Cross-tabulation: Two-Way Frequencies</a></li>
+  <li><a href="#practice-exercises" id="toc-practice-exercises" class="nav-link" data-scroll-target="#practice-exercises">Practice Exercises</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary">Chapter Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -426,8 +426,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p><strong>Learning Objectives:</strong> By the end of this chapter, you will be able to compute and interpret measures of central tendency and dispersion, create effective visualizations for exploring distributions, and identify skewness and outliers in real datasets.</p>
 </blockquote>
-<section id="introduction-to-descriptive-statistics" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction-to-descriptive-statistics"><span class="header-section-number">1</span> Introduction to Descriptive Statistics</h2>
+<section id="introduction-to-descriptive-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-descriptive-statistics">Introduction to Descriptive Statistics</h2>
 <p>Descriptive statistics summarize and describe the <strong>main features</strong> of a dataset. They are the first step in any data analysis — before we run a single regression or hypothesis test, we must understand what our data looks like.</p>
 <p>In R, we have powerful tools for this. Let’s load our packages and create a realistic dataset:</p>
 <div class="cell">
@@ -466,8 +466,8 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 </div>
 </div>
 </section>
-<section id="measures-of-central-tendency" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="measures-of-central-tendency"><span class="header-section-number">2</span> Measures of Central Tendency</h2>
+<section id="measures-of-central-tendency" class="level2">
+<h2 class="anchored" data-anchor-id="measures-of-central-tendency">Measures of Central Tendency</h2>
 <p>The three main measures of central tendency each tell a different story:</p>
 <div class="cell">
 <details class="code-fold">
@@ -534,8 +534,8 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 </table>
 </div>
 </div>
-<section id="why-the-mean-median-for-wages" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="why-the-mean-median-for-wages"><span class="header-section-number">2.1</span> Why the Mean ≠ Median for Wages</h3>
+<section id="why-the-mean-median-for-wages" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-mean-median-for-wages">Why the Mean ≠ Median for Wages</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -565,8 +565,8 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 <p><strong>Key insight:</strong> For right-skewed income distributions, the <strong>median</strong> is almost always a better measure of “typical” than the mean. A few high earners inflate the mean.</p>
 </section>
 </section>
-<section id="measures-of-dispersion" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="measures-of-dispersion"><span class="header-section-number">3</span> Measures of Dispersion</h2>
+<section id="measures-of-dispersion" class="level2">
+<h2 class="anchored" data-anchor-id="measures-of-dispersion">Measures of Dispersion</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -660,10 +660,10 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 <p><strong>Coefficient of Variation (CV):</strong> Useful for comparing dispersion across groups with different means. CV = (SD / Mean) × 100%. Higher CV means more relative spread.</p>
 </blockquote>
 </section>
-<section id="exploring-distributions" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="exploring-distributions"><span class="header-section-number">4</span> Exploring Distributions</h2>
-<section id="five-number-summary" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="five-number-summary"><span class="header-section-number">4.1</span> Five-Number Summary</h3>
+<section id="exploring-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-distributions">Exploring Distributions</h2>
+<section id="five-number-summary" class="level3">
+<h3 class="anchored" data-anchor-id="five-number-summary">Five-Number Summary</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -716,8 +716,8 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 </div>
 </div>
 </section>
-<section id="detecting-outliers" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="detecting-outliers"><span class="header-section-number">4.2</span> Detecting Outliers</h3>
+<section id="detecting-outliers" class="level3">
+<h3 class="anchored" data-anchor-id="detecting-outliers">Detecting Outliers</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -749,8 +749,8 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 </div>
 </section>
 </section>
-<section id="cross-tabulation-two-way-frequencies" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="cross-tabulation-two-way-frequencies"><span class="header-section-number">5</span> Cross-tabulation: Two-Way Frequencies</h2>
+<section id="cross-tabulation-two-way-frequencies" class="level2">
+<h2 class="anchored" data-anchor-id="cross-tabulation-two-way-frequencies">Cross-tabulation: Two-Way Frequencies</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -802,8 +802,8 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 </div>
 </div>
 </section>
-<section id="practice-exercises" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="practice-exercises"><span class="header-section-number">6</span> Practice Exercises</h2>
+<section id="practice-exercises" class="level2">
+<h2 class="anchored" data-anchor-id="practice-exercises">Practice Exercises</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -823,8 +823,8 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 </div>
 </div>
 </section>
-<section id="chapter-summary" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">7</span> Chapter Summary</h2>
+<section id="chapter-summary" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-summary">Chapter Summary</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1349,7 +1349,7 @@ $ sector    &lt;chr&gt; "Services", "Agriculture", "Services", "Industry", "Indu
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Pawan Jangra"</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2025-01-10"</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> true</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> false</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Learning Objectives:** By the end of this chapter, you will be able to compute and interpret measures of central tendency and dispersion, create effective visualizations for exploring distributions, and identify skewness and outliers in real datasets.</span></span>

@@ -4,7 +4,7 @@ description: "Measures of central tendency, dispersion, shape, and exploratory d
 author: "Pawan Jangra"
 date: "2025-01-10"
 toc: true
-number-sections: true
+number-sections: false
 ---
 
 > **Learning Objectives:** By the end of this chapter, you will be able to compute and interpret measures of central tendency and dispersion, create effective visualizations for exploring distributions, and identify skewness and outliers in real datasets.

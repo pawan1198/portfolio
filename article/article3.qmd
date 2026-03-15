@@ -1,0 +1,111 @@
+---
+title: "India's Labour Market in Transition: Insights from the Periodic Labour Force Survey"
+description: "A 2,000-word analytical article examining India's labour force participation rates, worker force participation, unemployment, and sectoral employment structure using PLFS microdata from 2018–19 through 2021–22."
+author: "Pawan"
+date: "2025/11/02"
+date-modified: last-modified
+categories:
+  - "PLFS"
+  - "Labour Economics"
+  - "Employment"
+  - "Articles"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    theme: flatly
+---
+
+## Introduction: Measuring the World's Largest Labour Force
+
+India's labour market is enormous in scale and complex in structure. With a working-age population (15 years and above) exceeding 900 million people and a labour force of approximately 550–600 million, India is home to one of the world's largest concentrations of workers. Yet for decades, the quality and frequency of labour market data available to policymakers and researchers was poor. The quinquennial Employment and Unemployment Surveys (EUS) conducted by the National Sample Survey Organisation provided infrequent, though comprehensive, labour market snapshots. The launch of the **Periodic Labour Force Survey (PLFS)** in 2017–18 — providing both annual headline estimates and quarterly urban estimates — represented a major methodological upgrade in India's statistical system.
+
+This article draws on PLFS microdata from four annual rounds (2018–19, 2019–20, 2020–21, and 2021–22) to examine the key dimensions of India's labour market: labour force participation rates (LFPR), worker force participation rates (WFPR), unemployment rates (UR), and the sectoral composition of employment. The analysis uses the Usual Principal and Subsidiary Status (UPSS) framework — which counts an individual as a worker if they worked for the majority of the reference year as their principal or subsidiary activity — and presents estimates disaggregated by sex (male and female) and sector (rural and urban).
+
+---
+
+## Understanding the PLFS Methodology
+
+Before examining the results, it is important to clarify the methodological framework. The PLFS collects data on each individual's activity during a reference year, classifying them into one of five broad activity statuses: (11–12) self-employed (own account workers and employers), (21) helper in household enterprise (unpaid family workers), (31) regular salaried/wage employees, (41–51) casual wage workers in public works and other work. Those who are seeking or available for work but not working are classified as unemployed (status code 81).
+
+The **Labour Force Participation Rate (LFPR)** is defined as the proportion of the working-age population (15+) that is either working or actively seeking employment. The **Worker Force Participation Rate (WFPR)** counts only those actually employed, excluding job-seekers. The **Unemployment Rate (UR)** is the proportion of the labour force that is unemployed — i.e., seeking but not finding work.
+
+The UPSS framework is somewhat generous in its classification of workers: a person who worked even one day in a subsidiary capacity during the reference year may be counted as a worker. This means UPSS-based labour market indicators tend to show higher WFPR and lower unemployment rates than the more stringent Current Weekly Status (CWS) or Current Daily Status (CDS) measures. The analysis here uses the UPSS framework.
+
+---
+
+## Labour Force Participation: A Low Base, Especially for Women
+
+India's LFPR, measured on the UPSS basis, stood at approximately **49–51%** across the four survey years (2018–19 to 2021–22). This figure — meaning roughly half of India's working-age population is either working or looking for work — is lower than the global average and significantly below the rates observed in East Asian economies. Understanding why such a large proportion of India's working-age population is outside the labour force is one of the central challenges for India's economic policymakers.
+
+The gender dimension of this picture is stark. India's **female LFPR** — one of the lowest in the world among large developing economies — has historically been in the 20–25% range (UPSS basis). The PLFS data from 2018–19 showed female LFPR at approximately 24–26%, with a significant rural-urban gap (rural female LFPR is typically 10–15 percentage points higher than urban female LFPR, because rural women are more likely to be classified as workers through agricultural and household enterprise activities). **Male LFPR** stands considerably higher at approximately 75–77%, though this too is below what might be expected for an economy at India's development stage.
+
+The low female LFPR in India reflects a complex interplay of factors: social norms that restrict women's mobility and constrain their participation in market work; the large share of women's time absorbed in unpaid domestic and care work (which the PLFS counts as non-work); the relatively low education and skill levels of older cohorts of women; and the lack of safe, appropriately compensated employment opportunities that would attract women into the formal labour market. The paradox is that as education levels among young Indian women have risen dramatically over the past two decades, their measured labour force participation has not risen commensurately — the "education premium" is not yet translating into employment participation in India the way it does in most other economies.
+
+---
+
+## The COVID-19 Impact: 2020–21 as a Stress Test
+
+The PLFS 2020–21 round was conducted during the year of India's most severe COVID-19 disruption, including the nationwide lockdown of March–May 2020 and the subsequent phased reopening. This round provides a unique window into the labour market impact of the pandemic.
+
+The headline indicators from 2020–21 reveal a complex picture. The aggregate LFPR and WFPR showed significant movements, but not uniformly in the direction one might expect from the severity of the economic disruption. In fact, **female LFPR in rural areas increased** during 2020–21 — a pattern observed in several COVID-affected economies, explained by the "added worker effect": when primary earners (typically male wage workers) lose employment, women enter the labour force in distress-driven work, often in agriculture or casual labour.
+
+Urban male WFPR, by contrast, fell — reflecting the severe disruption to urban services, construction, and manufacturing employment during the lockdown period. The formal regular wage employment category — which is most characteristic of urban workers — contracted sharply, while self-employment and casual wage work in rural areas expanded, as migrant workers returned to their home villages and sought agricultural and MGNREGS work.
+
+This "back to agriculture" effect during COVID is consistent with the longstanding role of India's agricultural sector as an employment absorber of last resort. When the non-farm economy contracts, displaced workers flow back into farming households — not because agricultural productivity or incomes improve, but because the implicit flexibility of family farm labour provides a safety net that India's formal social protection system cannot fully substitute.
+
+---
+
+## Unemployment: Official Rates and the Hidden Problem
+
+India's officially measured unemployment rate on the UPSS basis has historically been reported as 2–6% — a figure that frequently puzzles observers who see evidence of widespread joblessness, educated youth struggling to find work, and under-employment in the informal sector. The key to understanding this apparent paradox lies in the design of the UPSS methodology itself.
+
+Under the UPSS framework, an individual who works even occasionally in a subsidiary capacity is counted as "employed." The vast majority of India's labour force is self-employed — in family farms, petty trade, household enterprises — and virtually none of them are "unemployed" in the UPSS sense, because they can always perform some activity related to the family enterprise. The UPSS-measured unemployment rate, therefore, is best interpreted as capturing **open unemployment among educated youth in urban areas** — those who are actively seeking formal wage employment and refusing to accept casual or self-employment in the meantime.
+
+This narrow unemployment concept misses the much larger problem of **under-employment and disguised unemployment** — the situation where workers are nominally employed but at wages and productivity levels far below their potential. The casual agricultural worker who works 120 days per year in the fields is "employed" in UPSS terms; the reality of their labour market situation — low income, high work insecurity, seasonal idleness — is invisible in the headline statistic.
+
+The PLFS data for 2018–19 through 2021–22 shows unemployment rates (UPSS) in the range of 2–4%, with higher rates for educated youth (those who have completed secondary or higher education) and for urban workers. Female unemployment rates are lower than male rates in aggregate terms, partly because women are more likely to accept whatever work is available rather than holding out for formal employment.
+
+---
+
+## Sectoral Composition: The Services Revolution and Agricultural Persistence
+
+The sectoral distribution of India's workforce reveals the persistent importance of agriculture as a source of employment alongside the rapid growth of the services sector. Agriculture — including crop cultivation, animal husbandry, fishing, and forestry — typically employs 45–50% of India's total workforce on the UPSS basis, even though it contributes only 15–18% of GDP. This gap between agricultural employment share and agricultural GDP share is the classic definition of structural under-employment — too many workers chasing too little value addition.
+
+The manufacturing sector's share of employment has remained stubbornly low at approximately 11–13% of the workforce — far below what one would expect at India's income level. India has not achieved the kind of labour-intensive manufacturing expansion that drove employment transformation in China, South Korea, Taiwan, and now Bangladesh and Vietnam. The "missing middle" of India's industrial structure — the absence of a large, export-oriented labour-intensive manufacturing sector — is one of the most serious structural constraints on India's ability to absorb its 10–12 million annual labour market entrants into productive employment.
+
+The construction sector employs approximately 12–14% of the workforce — making it India's second-largest source of non-farm employment. Construction employment is highly sensitive to infrastructure investment cycles and exhibits significant seasonal variation. The COVID lockdown devastated construction employment, and the displacement of construction workers was central to the humanitarian crisis of reverse migration in 2020.
+
+Services — a broad category encompassing everything from domestic work and petty retail to IT services and banking — employ approximately 28–32% of the workforce. Within this category, the distribution is deeply bimodal: a small upper segment of high-skill, high-wage services (IT, finance, professional services) and a very large lower segment of informal, low-wage services (street vending, domestic work, transportation). The celebrated growth of India's IT and business process services sector is real and important, but it employs only 4–5 million workers — a tiny fraction of the total labour force.
+
+---
+
+## The Rural-Urban Employment Gap
+
+One of the most important dimensions of India's labour market is the rural-urban divide. Rural workers are more likely to be self-employed in agriculture, more likely to be casual wage workers, less likely to have formal employment contracts, and more likely to be paid in kind (in grain) rather than cash. Urban workers, while also substantially informal, have somewhat higher access to regular wage employment, better wage levels, and greater connectivity to the formal economy.
+
+The PLFS data shows that the **urban regular wage employment rate** — perhaps the best single indicator of "good jobs" in India — is significantly higher in urban areas (35–40% of urban workers) than in rural areas (10–12% of rural workers). This gap reflects the concentration of large enterprises, public sector employment, and services industries in urban areas.
+
+The rural-urban wage differential is substantial: urban workers earn on average 2–3 times the daily wage of rural workers, after controlling for occupation. This wage gap drives the massive rural-to-urban migration that has characterised India's urbanisation process — but the pace of urban job creation in formal sectors has not kept up with migration flows, contributing to the expansion of urban informal employment and slum growth.
+
+---
+
+## Policy Implications: What the Data Demands
+
+The PLFS data, taken together across the four survey years, points to several priority areas for labour market policy.
+
+**Women's employment is the largest underutilised resource**: Increasing female LFPR by even 10 percentage points would add approximately 60–70 million workers to the productive economy — a demographic dividend that India has not yet captured. This requires investments in women's safety in public spaces and workplaces, expansion of affordable childcare, and the design of flexible part-time work arrangements that accommodate the reality of women's domestic responsibilities.
+
+**The quality of employment matters as much as quantity**: India needs not just more jobs but better jobs — regular wage employment with social security coverage, predictable incomes, and career progression potential. The formalisation agenda — extending EPFO coverage, implementing the labour codes, and providing incentives for firms to hire on formal contracts — is central to this objective.
+
+**Skill development must be demand-driven**: India's skill development programmes have historically produced certificates without producing employable workers. The disconnect between training content and employer demand — in construction, manufacturing, healthcare, and digital services — must be closed through closer industry-government partnerships and outcome-linked funding for training providers.
+
+---
+
+## Conclusion
+
+The PLFS has been a transformative addition to India's statistical infrastructure, providing annual insights into a labour market that is simultaneously enormous, diverse, and dynamic. The data from 2018–19 through 2021–22 tells a story of structural challenges — low female participation, agricultural over-reliance, limited formal employment — alongside resilience, as the labour market absorbed the COVID shock better than many feared. The agenda for improving India's labour market outcomes is clear: more and better jobs, greater female participation, formalisation, and skill development. Executing this agenda at the scale India's demographics demand is the defining economic challenge of the coming decade.
+
+---
+
+*Data sources: Periodic Labour Force Survey (PLFS) microdata, Ministry of Statistics and Programme Implementation (MoSPI), Government of India. Analysis by Pawan.*

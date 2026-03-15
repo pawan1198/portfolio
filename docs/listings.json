@@ -40,7 +40,8 @@
   {
     "listing": "/article.html",
     "items": [
-      "/article/article1.html"
+      "/article/article1.html",
+      "/article/article2.html"
     ]
   }
 ]

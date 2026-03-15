@@ -34,5 +34,16 @@
       "/statistics-with-r/chapter2.html",
       "/statistics-with-r/chapter1.html"
     ]
+  },
+  {
+    "listing": "/article.html",
+    "items": [
+      "/article/article6.html",
+      "/article/article3.html",
+      "/article/article1.html",
+      "/article/article2.html",
+      "/article/article5.html",
+      "/article/article4.html"
+    ]
   }
 ]

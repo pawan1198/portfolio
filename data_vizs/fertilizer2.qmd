@@ -1,0 +1,384 @@
+---
+title: "India's Fertilizer Import & Production Statistics"
+description: "An interactive deep-dive into India's imports of urea, DAP, MOP, rock phosphate, and phosphoric acid — tracking source-country concentration, international prices, and domestic production trends."
+author: "Pawan"
+date: "2025/11/26"
+date-modified: last-modified
+categories:
+  - "Trade"
+  - "Fertilizer"
+  - "Agriculture"
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+## Overview {.unnumbered}
+
+India is one of the world's largest consumers and importers of chemical fertilizers. With its cultivated area of ~140 million hectares and a growing population, ensuring a steady supply of nitrogen (N), phosphorus (P), and potassium (K) is a matter of national food security. This analysis covers **urea**, **DAP** (diammonium phosphate), **MOP** (muriate of potash), **rock phosphate**, and **phosphoric acid** imports from 2016 onward — examining volumes, source diversification, international price dynamics, and domestic production capacity.
+
+---
+
+::: {.callout-tip title="Key Findings at a Glance"}
+- 🌾 **Urea dominates nitrogen supply**: India imports 6–9 million tonnes annually, with China historically the top supplier
+- 🌍 **Morocco controls phosphate chain**: Jordan, Morocco, and Saudi Arabia together supply most of India's DAP and rock phosphate
+- 💊 **MOP is the least diversified**: Belarus, Canada, and Russia account for the vast majority of potash imports
+- 📈 **Price shocks in 2021–22**: Urea, DAP, and MOP prices each more than doubled during the Russia–Ukraine commodity crisis
+- 🏭 **Domestic urea production is near capacity ceiling**: India has expanded urea manufacturing, but imports remain essential
+- ⚖️ **DAP production lags demand**: India imports 3–4 MT of DAP annually despite having some domestic capacity
+:::
+
+---
+
+## Setup
+
+```{r setup}
+library(data.table)
+library(ggplot2)
+library(ggiraph)
+library(scales)
+library(tidyr)
+library(viridis)
+
+options(scipen = 99999)
+
+## ── Unified theme ─────────────────────────────────────────────────────────
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    text             = element_text(color = "#2c3e50"),
+    plot.title       = element_text(size = 16, face = "bold", hjust = 0.5,
+                                    margin = margin(8, 0, 8, 0)),
+    plot.subtitle    = element_text(size = 11, hjust = 0.5, color = "#7f8c8d"),
+    plot.caption     = element_text(size = 9, color = "#95a5a6", hjust = 0),
+    axis.title       = element_text(size = 12, face = "bold"),
+    axis.text        = element_text(size = 10),
+    axis.text.x      = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position  = "bottom",
+    legend.title     = element_blank(),
+    legend.text      = element_text(size = 10),
+    panel.grid.major = element_line(color = "#ecf0f1", linewidth = 0.5),
+    panel.grid.minor = element_blank(),
+    strip.background = element_rect(fill = "#f8f9fa", color = NA),
+    strip.text       = element_text(face = "bold", size = 11)
+  )
+
+## ── Standard girafe options ───────────────────────────────────────────────
+std_opts <- list(
+  opts_tooltip(
+    css = paste0("background-color:#2c3e50;color:white;padding:8px 12px;",
+                 "border-radius:6px;font-size:12px;line-height:1.5;"),
+    use_fill = FALSE
+  ),
+  opts_hover(css = "fill-opacity:0.85;stroke:white;stroke-width:1.5;"),
+  opts_hover_inv(css = "opacity:0.25;"),
+  opts_zoom(min = 0.5, max = 3),
+  opts_toolbar(position = "topright"),
+  opts_sizing(rescale = TRUE, width = 1)
+)
+
+## ── Reusable interactive stacked bar ──────────────────────────────────────
+fert_bar <- function(data, title, subtitle, palette_opt = "D") {
+  data <- as.data.table(data)
+  data[, tip := paste0("<b>", Country, "</b><br>",
+                       "Year: ", Year, "<br>",
+                       "Quantity: ", round(Qty, 2), " MMT<br>",
+                       "Share: ", Percent, "%")]
+
+  p <- ggplot(data, aes(x = Year, y = Qty, fill = Country,
+                        tooltip = tip,
+                        data_id = paste(Country, Year))) +
+    geom_bar_interactive(stat = "identity", position = "stack",
+                         width = 0.75, alpha = 0.9) +
+    geom_text(
+      aes(label = ifelse(Percent >= 8, paste0(Percent, "%"), "")),
+      position = position_stack(vjust = 0.5),
+      size = 3, color = "white", fontface = "bold"
+    ) +
+    scale_fill_viridis(discrete = TRUE, option = palette_opt,
+                       begin = 0.1, end = 0.9) +
+    scale_y_continuous(labels = comma_format()) +
+    labs(title = title, subtitle = subtitle,
+         y = "Quantity (Million Metric Tonnes)",
+         x = "Year",
+         caption = "Source: Ministry of Commerce, India | Analysis: Pawan") +
+    my_theme
+
+  girafe(ggobj = p, width_svg = 11, height_svg = 6, options = std_opts)
+}
+```
+
+## Data Loading and Preparation
+
+```{r data-prep}
+## Load raw import data
+t1 <- readRDS("/home/pawan/fertilizer/urea_importqty.rds")
+t2 <- readRDS("/home/pawan/fertilizer/dap_importqty.rds")
+t3 <- readRDS("/home/pawan/fertilizer/rock_phosphate_importqty.rds")
+t4 <- readRDS("/home/pawan/fertilizer/phosphoric_acid_importqty.rds")
+t5 <- readRDS("/home/pawan/fertilizer/potash_importqty.rds")
+
+## Clean commas from quantity column
+for (d in list(t1, t2, t3, t4, t5)) {
+  d[, ImportMonth := gsub(",", "", ImportMonth)]
+}
+
+## Helper: filter to country-level, aggregate, group, and calculate shares
+prep_fert <- function(dt, major_countries, country_renames = NULL,
+                      year_cutoff = "2015") {
+  ## Rename countries if needed
+  if (!is.null(country_renames)) {
+    for (i in seq_along(country_renames)) {
+      dt[Country == names(country_renames)[i], Country := country_renames[i]]
+    }
+  }
+  out <- dt[Country != "Total",
+            .(Qty = sum(as.numeric(ImportMonth), na.rm = TRUE)),
+            by = .(Country, Year)]
+  ## Group minor countries
+  out[!Country %in% major_countries, Country := "OTHER COUNTRY"]
+  out <- out[, .(Qty = sum(Qty)), by = .(Country, Year)]
+  out[, Qty := Qty / 100000]   ## tonnes → million metric tonnes
+  out <- out[Year > year_cutoff]
+  out[, Percent := round(Qty * 100 / sum(Qty)), by = Year]
+  out
+}
+
+## ── Urea ──────────────────────────────────────────────────────────────────
+urea <- prep_fert(
+  t1,
+  major_countries  = c("CHINA", "OMAN", "IRAN", "UKRAINE", "EGYPT", "RUSSIA", "INDONESIA"),
+  country_renames  = c("CHINA P RP" = "CHINA", "EGYPT A RP" = "EGYPT")
+)
+urea[, Country := factor(Country,
+  levels = c("OTHER COUNTRY","INDONESIA","EGYPT","RUSSIA","UKRAINE","OMAN","IRAN","CHINA"))]
+
+## ── DAP ───────────────────────────────────────────────────────────────────
+dap <- prep_fert(
+  t2,
+  major_countries = c("CHINA", "SAUDI ARAB", "MOROCCO", "JORDAN", "RUSSIA"),
+  country_renames = c("CHINA P RP" = "CHINA")
+)
+dap[, Country := factor(Country,
+  levels = c("OTHER COUNTRY","MOROCCO","JORDAN","RUSSIA","CHINA","SAUDI ARAB"))]
+
+## ── Rock Phosphate ────────────────────────────────────────────────────────
+rockp <- prep_fert(
+  t3,
+  major_countries = c("EGYPT", "JORDAN", "MOROCCO", "PERU", "TOGO"),
+  country_renames = c("EGYPT A RP" = "EGYPT")
+)
+rockp[, Country := factor(Country,
+  levels = c("OTHER COUNTRY","PERU","TOGO","EGYPT","MOROCCO","JORDAN"))]
+
+## ── Phosphoric Acid ───────────────────────────────────────────────────────
+phosacid <- prep_fert(
+  t4,
+  major_countries = c("MOROCCO", "JORDAN", "SENEGAL")
+)
+phosacid[, Country := factor(Country,
+  levels = c("OTHER COUNTRY","SENEGAL","JORDAN","MOROCCO"))]
+
+## ── MOP ───────────────────────────────────────────────────────────────────
+mop <- prep_fert(
+  t5,
+  major_countries = c("CANADA","BELARUS","ISRAEL","JORDAN","LITHUANIA","RUSSIA")
+)
+mop[, Country := factor(Country,
+  levels = c("OTHER COUNTRY","RUSSIA","LITHUANIA","JORDAN","ISRAEL","BELARUS","CANADA"))]
+```
+
+---
+
+## Urea Imports {#sec-urea}
+
+Urea is the workhorse of India's nitrogen fertilizer sector. China was historically the dominant supplier, but geopolitical shifts and India's efforts to diversify have brought Oman, Iran, and Egypt into greater prominence.
+
+```{r urea-chart}
+fert_bar(urea,
+  title    = "India's Urea Imports by Source Country",
+  subtitle = "Annual import volumes 2016–2024 (Million Metric Tonnes)",
+  palette_opt = "D"
+)
+```
+
+::: {.callout-note title="Urea Supply Geography"}
+China's dominance as a urea supplier to India peaked around 2016–17. Since then, India has strategically diversified toward **Oman** (Oman India Fertiliser Company — OMIFCO, a joint venture), **Iran**, and **Russia**. This diversification provides some buffer against Chinese export restrictions, which Beijing has imposed intermittently.
+:::
+
+---
+
+## DAP Imports {#sec-dap}
+
+DAP (Di-Ammonium Phosphate) provides both nitrogen and phosphorus to crops. India's domestic DAP production covers only ~40% of demand, necessitating large-scale imports.
+
+```{r dap-chart}
+fert_bar(dap,
+  title    = "India's DAP Imports by Source Country",
+  subtitle = "Saudi Arabia and China are the primary suppliers; Morocco is rising",
+  palette_opt = "C"
+)
+```
+
+---
+
+## Rock Phosphate Imports {#sec-rock}
+
+Rock phosphate is the primary raw material for manufacturing phosphatic fertilizers domestically. Jordan and Morocco collectively control a large fraction of global reserves.
+
+```{r rock-chart}
+fert_bar(rockp,
+  title    = "India's Rock Phosphate Imports by Source Country",
+  subtitle = "Jordan and Morocco supply the bulk of India's rock phosphate needs",
+  palette_opt = "E"
+)
+```
+
+---
+
+## Phosphoric Acid Imports {#sec-phos}
+
+Phosphoric acid is a key intermediate in DAP and SSP (Single Super Phosphate) production. Morocco's dominance here makes India's fertilizer manufacturing sector highly dependent on North African phosphate geology.
+
+```{r phos-chart}
+fert_bar(phosacid,
+  title    = "India's Phosphoric Acid Imports by Source Country",
+  subtitle = "Morocco supplies the majority of India's phosphoric acid imports",
+  palette_opt = "B"
+)
+```
+
+---
+
+## MOP (Muriate of Potash) Imports {#sec-mop}
+
+India imports nearly all its potash requirement. The 2022 Belarus sanctions and Russia–Ukraine war caused a severe MOP supply squeeze globally — India had to negotiate emergency supplies directly with Canada and Russia.
+
+```{r mop-chart}
+fert_bar(mop,
+  title    = "India's MOP (Potash) Imports by Source Country",
+  subtitle = "Canada, Belarus, and Russia dominate; Belarus sanctions caused supply disruption in 2022",
+  palette_opt = "A"
+)
+```
+
+---
+
+## International Fertilizer Prices
+
+The 2021–22 commodity supercycle caused Urea, DAP, and MOP prices to spike to multi-decade highs. This dramatically increased India's fertilizer subsidy bill and led to supply disruptions.
+
+```{r intl-price}
+price <- fread("/home/pawan/fertilizer/international_fert_price.csv")
+price[, Year  := paste0("20", Year)]
+price[, Month := substr(Month, 1, 3)]
+price[, Date  := as.Date(paste0(Year, "-", Month, "-20"), format = "%Y-%b-%d")]
+
+price_long <- melt(price, id.vars = c("Month", "Year", "Date"))
+price_long  <- price_long[variable %in% c("Urea", "DAP", "MOP")]
+price_long[, tip := paste0("<b>", variable, "</b><br>",
+                           "Date: ", format(Date, "%b %Y"), "<br>",
+                           "Price: USD <b>", round(value, 0), "</b>/MT")]
+
+pp <- ggplot(price_long, aes(x = Date, y = value, color = variable,
+                              tooltip = tip, data_id = paste(variable, Date),
+                              group = variable)) +
+  geom_line_interactive(linewidth = 1.1) +
+  geom_point_interactive(size = 1.5, alpha = 0.6) +
+  facet_wrap(~ variable, scales = "free_y", ncol = 1) +
+  scale_color_viridis(discrete = TRUE, option = "D") +
+  scale_x_date(date_labels = "%b-%y", date_breaks = "6 months") +
+  labs(title   = "International Fertilizer Prices",
+       subtitle = "Monthly USD/MT prices for Urea, DAP, and MOP",
+       x = "Month", y = "Price (USD/MT)",
+       caption = "Source: World Bank / IFA | Analysis: Pawan") +
+  my_theme +
+  theme(legend.position = "none")
+
+girafe(ggobj = pp, width_svg = 11, height_svg = 9, options = std_opts)
+```
+
+::: {.callout-warning title="Price Shock Impact on India"}
+India's fertilizer subsidy expenditure crossed **₹2.5 lakh crore** in 2021–22, driven almost entirely by the global price surge. Since India offers subsidised fertilizers to farmers at controlled retail prices, global price increases are absorbed by the government — creating enormous fiscal pressure.
+:::
+
+---
+
+## Domestic Production: Urea & DAP
+
+```{r production}
+fert <- readRDS("/home/pawan/fertilizer/production-import/fert_production_import.RDS")
+fert <- fert[Year != "Total"]
+fert[, Date := as.Date(paste(Year, "-", Month, "-15", sep = ""), "%Y-%b-%d")]
+fert_long <- melt(fert, id = c("Year", "Month", "Date"))
+fert_long <- fert_long[variable != "SNo" & variable != "Blank"]
+fert_long <- separate(as.data.frame(fert_long), variable,
+                       into = c("Fertilizer", "Variable"), sep = "_")
+setDT(fert_long)
+
+fert1 <- fread("/home/pawan/fertilizer/production-import.csv")
+fert1[, Date := as.Date(paste(Year, "-", Month, "-15", sep = ""), "%Y-%b-%d")]
+fert1_long <- melt(fert1, id = c("Year", "Month", "Date", "Fertilizer"))
+fert1_long[variable == "Production_Achievement", variable := "Production"]
+
+## Combine and clean
+prod_old  <- fert_long[Variable == "Production",
+                       .(Year = as.numeric(Year), Month, Date, Fertilizer, value)]
+prod_new  <- fert1_long[variable == "Production",
+                        .(Year = as.numeric(Year), Month, Date, Fertilizer, value)]
+
+production <- rbind(prod_old[Year < 2018], prod_new)
+production <- production[Fertilizer %in% c("Urea", "DAP") & !is.na(value)]
+production[, value := value / 100000]  ## → Million Metric Tonnes
+
+annual_prod <- production[Year != 2025,
+                          .(Qty = sum(value)), by = .(Year, Fertilizer)]
+annual_prod[, tip := paste0("<b>", Fertilizer, "</b><br>",
+                            "Year: ", Year, "<br>",
+                            "Production: ", round(Qty, 2), " MMT")]
+
+pp2 <- ggplot(annual_prod, aes(x = Year, y = Qty, color = Fertilizer,
+                                tooltip = tip, data_id = paste(Fertilizer, Year),
+                                group = Fertilizer)) +
+  geom_line_interactive(linewidth = 1.3) +
+  geom_point_interactive(size = 2.5, alpha = 0.8) +
+  facet_wrap(~ Fertilizer, scales = "free_y", ncol = 1) +
+  scale_color_viridis(discrete = TRUE, option = "C") +
+  scale_x_continuous(breaks = seq(1990, 2025, 2)) +
+  labs(title   = "Urea and DAP Production in India",
+       subtitle = "Annual domestic production volumes — Million Metric Tonnes",
+       x = "Year", y = "Quantity (MMT)",
+       caption = "Source: Department of Fertilisers | Analysis: Pawan") +
+  my_theme +
+  theme(legend.position = "none")
+
+girafe(ggobj = pp2, width_svg = 11, height_svg = 7, options = std_opts)
+```
+
+---
+
+## Key Takeaways
+
+::: {.callout-important title="Summary of Findings"}
+1. **India's fertilizer import dependence is structural**: Domestic production covers demand for urea, but phosphate and potash inputs are almost entirely imported.
+
+2. **Supply concentration is a critical vulnerability**: 2–3 countries control 80–90% of each fertilizer category's supply to India. Export restrictions or geopolitical crises in any of these countries cause immediate supply and price shocks.
+
+3. **The 2021–22 global price spike** was the most severe fertilizer price event in decades, more than doubling DAP and MOP prices and pushing India's subsidy bill to record levels.
+
+4. **China's urea export restrictions** in 2021–22 forced India to diversify urea sourcing to Oman, Iran, Egypt, and Russia — a positive structural change, albeit forced.
+
+5. **Potash is the most vulnerable input**: India has zero domestic reserves of potassium and relies entirely on imports — primarily from Belarus, Canada, and Russia, all subject to geopolitical disruption risk.
+
+6. **Domestic urea capacity has grown** significantly since 2014 as several gas-based plants were revived/built, but the country still imports 6–9 MMT annually.
+:::

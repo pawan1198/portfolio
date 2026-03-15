@@ -1,0 +1,13 @@
+---
+title: "Article"
+description: "Articles on , statistical analysis, and data storytelling."
+listing:
+  contents: article
+  sort: "date desc"
+  type: grid
+  grid-columns: 3
+  fields: [image, date, title, description, categories, reading-time]
+  categories: true
+  feed: true
+page-layout: full
+---

@@ -1,0 +1,320 @@
+---
+title: "India's Trade Statistics: Exports, Imports & Sectoral Composition"
+description: "A comprehensive interactive analysis of India's merchandise trade — total flows, trade balance, cereals exports, fertilizer and petroleum imports — with HS code level decomposition."
+author: "Pawan"
+date: "2025/10/29"
+date-modified: last-modified
+categories:
+  - "Trade"
+  - "Exports"
+  - "Imports"
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+## Overview
+
+India's merchandise trade has grown dramatically over the past two decades — exports crossing USD 450 billion in recent years while imports hover around USD 700 billion, producing a persistent and growing trade deficit. This report decomposes the story through HS code level analysis: cereals (HS 10), edible oils (HS 15), fertilizers (HS 31), and petroleum products (HS 27).
+
+---
+
+## Setup
+
+```{r setup}
+library(data.table)
+library(ggplot2)
+library(ggiraph)
+library(scales)
+library(gt)
+library(plotly)
+library(viridis)
+library(readxl)
+library(patchwork)
+library(dplyr)
+
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title      = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(b = 8)),
+    plot.subtitle   = element_text(size = 11, hjust = 0.5, color = "#7F8C8D"),
+    plot.caption    = element_text(size = 9, color = "#95A5A6", hjust = 0),
+    axis.title      = element_text(size = 12, face = "bold"),
+    axis.text       = element_text(size = 10),
+    axis.text.x     = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position = "bottom",
+    legend.title    = element_blank(),
+    panel.grid.major= element_line(color = "#ECF0F1", linewidth = 0.4),
+    panel.grid.minor= element_blank(),
+    strip.background= element_rect(fill = "#F8F9FA", color = NA),
+    strip.text      = element_text(face = "bold", size = 11)
+  )
+
+## Data cleaning helper
+clean_trade <- function(dt, col) {
+  dt[, (col) := as.numeric(gsub("[,]","", get(col)))]
+  dt[is.na(get(col)), (col) := 0]
+  dt[, `:=`(HSCode2=substr(HSCode,1,2),
+             HSCode4=substr(HSCode,1,4),
+             HSCode6=substr(HSCode,1,6))]
+  dt
+}
+```
+
+---
+
+## Section 1 · Data Loading & Aggregation
+
+```{r data-load}
+usd  <- clean_trade(readRDS("/home/pawan/trade/totaltrade/total_exportsusd.rds"),  "Export")
+qty  <- clean_trade(readRDS("/home/pawan/trade/totaltrade/total_exportsqty.rds"),  "Export")
+musd <- clean_trade(readRDS("/home/pawan/trade/totaltrade/total_importsusd.rds"),  "Import")
+mqty <- clean_trade(readRDS("/home/pawan/trade/totaltrade/total_importsqty.rds"),  "Import")
+
+hs2  <- as.data.table(read_excel("/home/pawan/trade/totaltrade/two-digit.xlsx"))
+hs2[, HSCode2 := as.integer(HSCode2)]
+qty[,  HSCode2 := as.integer(HSCode2)]
+mqty[, HSCode2 := as.integer(HSCode2)]
+qty  <- merge(qty,  hs2, by="HSCode2", all.x=TRUE)
+mqty <- merge(mqty, hs2, by="HSCode2", all.x=TRUE)
+
+## Annual aggregates
+exp_usd  <- usd[,  .(Export_USD  = sum(Export,  na.rm=TRUE)/1000), by=Year]
+imp_usd  <- musd[, .(Import_USD  = sum(Import,  na.rm=TRUE)/1000), by=Year]
+exp_qty  <- qty[,  .(Export_Qty  = sum(Export,  na.rm=TRUE)), by=Year]
+imp_qty  <- mqty[, .(Import_Qty  = sum(Import,  na.rm=TRUE)), by=Year]
+
+trade <- Reduce(function(a,b) merge(a,b,by="Year"),
+                list(exp_usd, imp_usd, exp_qty, imp_qty))
+trade[, `:=`(
+  Balance_USD  = Export_USD - Import_USD,
+  Volume_USD   = Export_USD + Import_USD,
+  Coverage_Pct = round(Export_USD/Import_USD*100, 1),
+  Exp_Growth   = round((Export_USD/shift(Export_USD)-1)*100, 1),
+  Imp_Growth   = round((Import_USD/shift(Import_USD)-1)*100, 1)
+)]
+```
+
+---
+
+## Section 2 · Trade Overview: Exports, Imports & Balance
+
+```{r trade-overview}
+trade_long <- melt(trade[, .(Year,Export_USD,Import_USD)],
+                   id.vars="Year", variable.name="Flow", value.name="Billion_USD")
+trade_long[, tt := paste0(Flow,"\nYear: ",Year,"\n$",round(Billion_USD,1),"B")]
+
+p_flows <- ggplot(trade_long, aes(x=Year, y=Billion_USD, color=Flow,
+                                   text=tt, group=Flow)) +
+  geom_line_interactive(aes(tooltip=tt, data_id=Flow), linewidth=1.3) +
+  geom_point(size=2.5, alpha=0.7) +
+  geom_ribbon(data=trade, aes(x=Year, ymin=pmin(Export_USD,Import_USD),
+                               ymax=pmax(Export_USD,Import_USD),
+                               fill=ifelse(Balance_USD<0,"Deficit","Surplus")),
+              inherit.aes=FALSE, alpha=0.15) +
+  scale_color_manual(values=c("Export_USD"="#27AE60","Import_USD"="#E74C3C"),
+                     labels=c("Export_USD"="Exports","Import_USD"="Imports")) +
+  scale_fill_manual(values=c("Deficit"="#FADBD8","Surplus"="#D5F5E3")) +
+  scale_y_continuous(labels=dollar_format(suffix="B")) +
+  my_theme +
+  labs(title="India's Merchandise Trade: Exports & Imports",
+       subtitle="Shaded area shows trade deficit (red) | Hover for exact values",
+       y="USD Billion", x="Year",
+       caption="Source: DGCI&S / Ministry of Commerce | Analysis: Pawan")
+
+girafe(ggobj=p_flows, width_svg=12, height_svg=6,
+       options=list(
+         opts_tooltip(css="background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;"),
+         opts_hover(css="stroke-width:2.5;"),
+         opts_hover_inv(css="opacity:0.3;"),
+         opts_sizing(rescale=TRUE,width=1)))
+```
+
+```{r trade-balance}
+p_bal <- ggplot(trade, aes(x=Year, y=Balance_USD,
+                            fill=Balance_USD>0,
+                            text=paste0("Year: ",Year,"\nBalance: $",round(Balance_USD,1),"B"))) +
+  geom_col(width=0.75, alpha=0.85) +
+  geom_hline(yintercept=0, color="#333", linewidth=0.5) +
+  scale_fill_manual(values=c("TRUE"="#27AE60","FALSE"="#E74C3C"),
+                    labels=c("TRUE"="Surplus","FALSE"="Deficit")) +
+  scale_y_continuous(labels=dollar_format(suffix="B")) +
+  my_theme +
+  labs(title="India's Trade Balance (USD Billion)",
+       subtitle="Red = trade deficit | India has run a persistent goods-trade deficit",
+       y="Trade Balance (USD Billion)", x="Year",
+       caption="Source: DGCI&S | Analysis: Pawan")
+
+ggplotly(p_bal, tooltip="text") |> layout(hovermode="x unified")
+```
+
+---
+
+## Section 3 · Cereals Export Composition
+
+India is a major global rice exporter and an intermittent wheat exporter. The composition shifts sharply based on domestic supply and export bans/policy.
+
+```{r cereals-export}
+cer <- qty[HSCode2 == 10]
+cer[, Commodity := fcase(
+  HSCode4=="1006", "Rice",
+  HSCode4=="1001", "Wheat",
+  HSCode4=="1005", "Maize",
+  HSCode4=="1008", "Millet/Buckwheat",
+  default          = "Other Cereals"
+)]
+cer_agg <- cer[, .(Qty = sum(Export, na.rm=TRUE)), .(Year, Commodity)]
+cer_agg[, Total := sum(Qty), by=Year]
+cer_agg[, Share := round(Qty/Total*100)]
+cer_agg[, tt    := paste0("<b>",Commodity,"</b><br>Year: ",Year,
+                           "<br>Qty: ",format(Qty,big.mark=",")," K Tonnes",
+                           "<br>Share: ",Share,"%")]
+
+p_cer <- ggplot(cer_agg, aes(x=Year, y=Qty, fill=Commodity)) +
+  geom_bar_interactive(aes(tooltip=tt, data_id=Commodity),
+                        stat="identity", position="stack", width=0.75, alpha=0.9) +
+  geom_text(aes(label=ifelse(Share<7,"",paste0(Share,"%"))),
+            position=position_stack(vjust=0.5), size=2.8, color="white", fontface="bold") +
+  scale_fill_brewer(palette="Set1") +
+  scale_y_continuous(labels=comma_format()) +
+  my_theme +
+  labs(title="India's Cereal Exports by Commodity",
+       subtitle="Rice dominates; wheat exports surge in surplus years",
+       y="Quantity (000 Tonnes)", x="Year",
+       caption="Source: DGCI&S | HS Chapter 10 | Analysis: Pawan")
+
+girafe(ggobj=p_cer, width_svg=12, height_svg=6,
+       options=list(
+         opts_tooltip(css="background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;"),
+         opts_hover(css="opacity:0.85;stroke-width:1.5;"),
+         opts_hover_inv(css="opacity:0.3;"),
+         opts_sizing(rescale=TRUE,width=1)))
+```
+
+---
+
+## Section 4 · Fertilizer Imports
+
+```{r fert-imports}
+fert <- mqty[HSCode2 == 31]
+fert[, Commodity := fcase(
+  HSCode4=="3102", "Nitrogenous",
+  HSCode4=="3104", "Potassic",
+  HSCode4=="3105", "DAP & NPK",
+  default          = "Other Chemical Fert"
+)]
+fert_agg <- fert[, .(Qty = sum(Import, na.rm=TRUE)), .(Year, Commodity)]
+fert_agg[, Total := sum(Qty), by=Year]
+fert_agg[, Share := round(Qty/Total*100)]
+fert_agg[, tt    := paste0("<b>",Commodity,"</b><br>Year: ",Year,
+                            "<br>Qty: ",format(Qty,big.mark=",")," K Tonnes",
+                            "<br>Share: ",Share,"%")]
+
+p_fert <- ggplot(fert_agg, aes(x=Year, y=Qty, fill=Commodity)) +
+  geom_bar_interactive(aes(tooltip=tt, data_id=Commodity),
+                        stat="identity", position="stack", width=0.75, alpha=0.9) +
+  geom_text(aes(label=ifelse(Share<8,"",paste0(Share,"%"))),
+            position=position_stack(vjust=0.5), size=2.8, color="white", fontface="bold") +
+  scale_fill_viridis_d(option="E") +
+  scale_y_continuous(labels=comma_format()) +
+  my_theme +
+  labs(title="India's Fertilizer Imports (HS Chapter 31)",
+       subtitle="Nitrogenous (Urea) and DAP/NPK dominate volumes",
+       y="Quantity (000 Tonnes)", x="Year",
+       caption="Source: DGCI&S | HS Chapter 31 | Analysis: Pawan")
+
+girafe(ggobj=p_fert, width_svg=12, height_svg=6,
+       options=list(
+         opts_tooltip(css="background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;"),
+         opts_hover(css="opacity:0.85;stroke-width:1.5;"),
+         opts_sizing(rescale=TRUE,width=1)))
+```
+
+---
+
+## Section 5 · Edible Oil Imports (HS 15)
+
+```{r oil-imports}
+oil_imp <- mqty[HSCode2 == 15, .(Qty=sum(Import,na.rm=TRUE)), by=Year]
+
+p_oil <- ggplot(oil_imp, aes(x=Year, y=Qty, group=1,
+                               text=paste0("Year: ",Year,"\n",format(Qty,big.mark=",")," K Tonnes"))) +
+  geom_line(color="#E67E22", linewidth=1.3) +
+  geom_point(color="#E67E22", size=3) +
+  geom_area(fill="#E67E22", alpha=0.15) +
+  geom_smooth(method="lm", se=TRUE, color="#2C3E50", linetype="dashed", linewidth=0.8) +
+  scale_y_continuous(labels=comma_format()) +
+  my_theme +
+  labs(title="India's Vegetable Fats & Edible Oil Imports",
+       subtitle="Upward structural trend; dashed = linear fit",
+       y="Quantity (000 Tonnes)", x="Year",
+       caption="Source: DGCI&S | HS Chapter 15 | Analysis: Pawan")
+
+ggplotly(p_oil, tooltip="text") |> layout(hovermode="x unified")
+```
+
+---
+
+## Section 6 · Petroleum Imports (HS 27)
+
+```{r petroleum}
+petro <- mqty[HSCode2 == 27]
+petro[, Commodity := fcase(
+  HSCode4=="2701", "Coal",
+  HSCode4=="2709", "Crude Petroleum",
+  HSCode4=="2710", "Refined Products",
+  HSCode4=="2711", "Petroleum Gases",
+  default          = "Other Petroleum"
+)]
+petro_agg <- petro[, .(Qty=sum(Import,na.rm=TRUE)), .(Year, Commodity)]
+petro_agg[, Total:=sum(Qty),by=Year]
+petro_agg[, Share:=round(Qty/Total*100)]
+petro_agg[, tt:=paste0("<b>",Commodity,"</b><br>Year: ",Year,
+                        "<br>Qty: ",format(round(Qty/1000),big.mark=",")," MT<br>Share: ",Share,"%")]
+
+p_petro <- ggplot(petro_agg, aes(x=Year, y=Qty/1000, fill=Commodity)) +
+  geom_bar_interactive(aes(tooltip=tt, data_id=Commodity),
+                        stat="identity", position="stack", width=0.75, alpha=0.9) +
+  geom_text(aes(label=ifelse(Share<5,"",paste0(Share,"%"))),
+            position=position_stack(vjust=0.5), size=2.8, color="white", fontface="bold") +
+  scale_fill_brewer(palette="Set2") +
+  scale_y_continuous(labels=comma_format()) +
+  my_theme +
+  labs(title="India's Petroleum Imports (HS Chapter 27)",
+       subtitle="Crude petroleum dominates; coal and gases growing",
+       y="Quantity (Million Tonnes)", x="Year",
+       caption="Source: DGCI&S | HS Chapter 27 | Analysis: Pawan")
+
+girafe(ggobj=p_petro, width_svg=12, height_svg=6,
+       options=list(
+         opts_tooltip(css="background:#fff;color:#333;padding:8px;border-radius:5px;border:1px solid #ddd;"),
+         opts_hover(css="opacity:0.85;stroke-width:1.5;"),
+         opts_sizing(rescale=TRUE,width=1)))
+```
+
+---
+
+## Section 7 · Trade Metrics Summary Table
+
+```{r metrics-table}
+trade[, .(Year, Export_USD=round(Export_USD,1), Import_USD=round(Import_USD,1),
+           Balance_USD=round(Balance_USD,1), Coverage_Pct, Exp_Growth, Imp_Growth)] |>
+  gt() |>
+  tab_header(title="India's Annual Trade Metrics (USD Billion)") |>
+  cols_label(Year="Year", Export_USD="Exports ($B)", Import_USD="Imports ($B)",
+             Balance_USD="Balance ($B)", Coverage_Pct="Coverage %",
+             Exp_Growth="Export Growth %", Imp_Growth="Import Growth %") |>
+  data_color(Balance_USD, colors=scales::col_numeric(c("#E74C3C","#FDFEFE","#27AE60"), domain=NULL)) |>
+  data_color(Coverage_Pct, colors=scales::col_numeric(c("#FADBD8","#D5F5E3"), domain=c(50,90))) |>
+  opt_stylize(style=3) |>
+  tab_source_note("Source: DGCI&S / Ministry of Commerce")
+```

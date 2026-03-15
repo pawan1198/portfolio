@@ -1,15 +1,19 @@
 ---
-title: "Trade Statistics"
-description: ""
+title: "India's Trade Statistics: Exports, Imports & Sectoral Composition"
+description: "Interactive analysis of India's total merchandise trade — exports, imports, trade balance, and sector-level composition including cereals, fertilizers, and petroleum — using HS code classification."
 author: "Pawan"
 date: "2025/10/29"
 date-modified: last-modified
 categories:
   - "Trade"
-# image: "thumbnails/health_map_hy.png"
+  - "Economy"
 format:
   html:
     code-fold: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
 editor_options:
   chunk_output_type: console
 execute:
@@ -17,195 +21,340 @@ execute:
   message: false
   warning: false
   eval: true
-  fig-width: 14
-  fig-height: 10
-  out-width: "50%"
-  fig-align: "center"
 ---
 
-```{r}
+## Overview {.unnumbered}
+
+India's merchandise trade has grown from under USD 200 billion (2005) to over USD 1.1 trillion (2023), making it the world's 10th largest merchandise trading nation. This analysis examines **total export and import trends**, the **trade balance trajectory**, and the composition of key sectors — cereals, fertilizers, petroleum, and edible oils — using Harmonised System (HS) code classification.
+
+---
+
+::: {.callout-tip title="Key Findings at a Glance"}
+- 📈 **India's exports crossed USD 450 billion** in 2022–23, up from ~USD 170 billion a decade earlier
+- 📉 **Trade deficit is structural and widening**: typically USD 200–250 billion annually in recent years
+- 🌾 **Rice dominates cereal exports**: India is the world's largest rice exporter, accounting for ~40% of global trade
+- ⛽ **Petroleum products are India's top export category** — a testament to refinery capacity expansions
+- 🌱 **Fertilizer imports are large and import-intensive**: India imports ~$10 billion worth of fertilizers annually
+- 🔄 **Export coverage ratio has declined** from ~70% (early 2000s) to ~55% (recent years), indicating growing import dependence
+:::
+
+---
+
+## Setup
+
+```{r setup}
 library(data.table)
 library(ggplot2)
-library(gridExtra)
+library(ggiraph)
 library(readxl)
 library(viridis)
-library(hrbrthemes)
+library(scales)
 
-readRDS("/home/pawan/trade/totaltrade/total_exportsusd.rds")->usd
-readRDS("/home/pawan/trade/totaltrade/total_exportsqty.rds")->qty
-readRDS("/home/pawan/trade/totaltrade/total_importsusd.rds")->musd
-readRDS("/home/pawan/trade/totaltrade/total_importsqty.rds")->mqty
-as.data.table(read_excel("/home/pawan/trade/totaltrade/two-digit.xlsx"))->twodigit
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    text             = element_text(color = "#2c3e50"),
+    plot.title       = element_text(size = 16, face = "bold", hjust = 0.5,
+                                    margin = margin(8, 0, 8, 0)),
+    plot.subtitle    = element_text(size = 11, hjust = 0.5, color = "#7f8c8d"),
+    plot.caption     = element_text(size = 9, color = "#95a5a6", hjust = 0),
+    axis.title       = element_text(size = 12, face = "bold"),
+    axis.text        = element_text(size = 10),
+    axis.text.x      = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position  = "bottom",
+    legend.title     = element_blank(),
+    panel.grid.major = element_line(color = "#ecf0f1", linewidth = 0.5),
+    panel.grid.minor = element_blank(),
+    strip.background = element_rect(fill = "#f8f9fa", color = NA),
+    strip.text       = element_text(face = "bold")
+  )
 
-my_theme <- theme_bw(base_size = 16) +  ## Start with theme_bw and increase base size
-    theme(text = element_text(family = "serif", color = "#333333"), ## Set font family and color
-          plot.title = element_text(size = 20, face = "bold",
-                                    hjust = 0.5, margin = margin(10, 0, 10, 0)), ## Center and style title
-          axis.title = element_text(size = 18),
-          axis.text = element_text(size = 14),
-          legend.position = "bottom",
-          legend.title = element_blank(),  ## Remove legend title
-          panel.grid.major = element_line(color = "#EEEEEE"), ## Lighter grid lines
-          panel.border = element_blank(), ## Remove panel border
-          axis.line = element_line(color = "#333333"), ## Add axis lines
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
-          strip.background = element_rect(fill = "#F2F2F2", color = NA) ## Style facet strips (if used)
-          )
+std_opts <- list(
+  opts_tooltip(
+    css = paste0("background-color:#2c3e50;color:white;padding:8px 12px;",
+                 "border-radius:6px;font-size:12px;line-height:1.5;")
+  ),
+  opts_hover(css = "stroke-width:2.5;opacity:1;"),
+  opts_hover_inv(css = "opacity:0.2;"),
+  opts_zoom(min = 0.5, max = 3),
+  opts_toolbar(position = "topright"),
+  opts_sizing(rescale = TRUE, width = 1)
+)
 ```
 
-```{r}
-## Export Data Cleaning
-usd[,HSCode4 := substr(HSCode, 1, 4)]
-usd[,HSCode6 := substr(HSCode, 1, 6)]
-usd[,HSCode2 := substr(HSCode, 1, 2)]
-qty[,HSCode2 := substr(HSCode, 1, 2)]
-qty[,HSCode4 := substr(HSCode, 1, 4)]
-qty[,HSCode6 := substr(HSCode, 1, 6)]
+## Data Loading & Cleaning
 
-as.numeric(twodigit$HSCode2)->twodigit$HSCode2
-as.numeric(qty$HSCode2)->qty$HSCode2
+```{r data-load}
+usd <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_exportsusd.rds"))
+qty <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_exportsqty.rds"))
+musd <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_importsusd.rds"))
+mqty <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_importsqty.rds"))
+twodigit <- as.data.table(read_excel("/home/pawan/trade/totaltrade/two-digit.xlsx"))
 
-merge(qty,twodigit,by=c("HSCode2"),all.x=TRUE)->qty
+## Standardised cleaning function
+clean_trade <- function(dt, val_col) {
+  dt[, `:=`(HSCode2 = substr(HSCode, 1, 2),
+            HSCode4 = substr(HSCode, 1, 4),
+            HSCode6 = substr(HSCode, 1, 6))]
+  dt[, (val_col) := as.numeric(gsub(",", "", get(val_col)))]
+  dt[is.na(get(val_col)), (val_col) := 0]
+  dt
+}
 
-as.numeric(gsub(",", "", qty$Export))->qty$Export
-ifelse(is.na(qty$Export), 0, qty$Export)->qty$Export
+usd  <- clean_trade(usd,  "Export")
+qty  <- clean_trade(qty,  "Export")
+musd <- clean_trade(musd, "Import")
+mqty <- clean_trade(mqty, "Import")
 
-as.numeric(gsub(",", "", usd$Export))->usd$Export
-ifelse(is.na(usd$Export), 0, usd$Export)->usd$Export
+## Merge HS classification
+twodigit[, HSCode2 := as.numeric(HSCode2)]
+qty[,  HSCode2 := as.numeric(HSCode2)]
+mqty[, HSCode2 := as.numeric(HSCode2)]
+qty  <- merge(qty,  twodigit, by = "HSCode2", all.x = TRUE)
+mqty <- merge(mqty, twodigit, by = "HSCode2", all.x = TRUE)
 
-qty[,.(Export_Qty = sum(Export)),.(Year)]->exportqty
-usd[,.(Export_USD = sum(Export)),.(Year)]->exportusd
+## Aggregate totals
+export_usd <- usd[,  .(Export_USD = sum(Export, na.rm = TRUE)), by = Year]
+import_usd <- musd[, .(Import_USD = sum(Import, na.rm = TRUE)), by = Year]
+export_qty <- qty[,  .(Export_Qty = sum(Export, na.rm = TRUE)), by = Year]
+import_qty <- mqty[, .(Import_Qty = sum(Import, na.rm = TRUE)), by = Year]
 
-qty[,.(Qty = sum(Export)),.(Year, HSCode2)]->hscode2
-hscode2[,.(Qty = sum(Qty)),.(HSCode2)]->a
-##a[, Share := round(Qty*100/(sum(a$Qty)),2)][order(Share)]
-
-## Import Data Cleaning
-musd[,HSCode4 := substr(HSCode, 1, 4)]
-musd[,HSCode6 := substr(HSCode, 1, 6)]
-musd[,HSCode2 := substr(HSCode, 1, 2)]
-mqty[,HSCode2 := substr(HSCode, 1, 2)]
-mqty[,HSCode4 := substr(HSCode, 1, 4)]
-mqty[,HSCode6 := substr(HSCode, 1, 6)]
-
-as.numeric(gsub(",", "", mqty$Import))->mqty$Import
-ifelse(is.na(mqty$Import), 0, mqty$Import)->mqty$Import
-
-as.numeric(gsub(",", "", musd$Import))->musd$Import
-ifelse(is.na(musd$Import), 0, musd$Import)->musd$Import
-
-mqty[,.(Import_Qty = sum(Import)),.(Year)]->importqty
-musd[,.(Import_USD = sum(Import)),.(Year)]->importusd
-
-mqty[,.(Qty = sum(Import)),.(Year, HSCode2)]->hscode21
-hscode21[,.(Qty = sum(Qty)),.(HSCode2)]->b
-##b[, Share := round(Qty*100/(sum(b$Qty)),2)][order(Share)]
-
-
-## Net Trade Tarde Balance
-merge(exportqty, importqty, by = "Year")->trade
-merge(trade, exportusd, by = "Year")->trade
-merge(trade, importusd, by = "Year")->trade
-
-trade[, Trade_Balance := (Export_USD - Import_USD)]
+trade <- Reduce(function(a, b) merge(a, b, by = "Year"),
+                list(export_usd, import_usd, export_qty, import_qty))
+trade[, `:=`(
+  Trade_Balance   = Export_USD - Import_USD,
+  Trade_Volume    = Export_USD + Import_USD,
+  Export_Coverage = round(Export_USD * 100 / Import_USD, 1),
+  Export_Growth   = round((Export_USD / shift(Export_USD) - 1) * 100, 1),
+  Import_Growth   = round((Import_USD / shift(Import_USD) - 1) * 100, 1)
+)]
 ```
 
-# Trade Statistics
+---
 
-```{r}
-ggplot(trade, aes(x = Year, y = Export_USD, group = 1)) +
-    geom_line(linewidth = 1) +
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "US $ Million") +
-    ggtitle("Net Exports By India")->p1
-p1
+## Trade Balance Trend
 
-ggplot(trade, aes(x = Year, y = Import_USD, group = 1)) +
-    geom_line(linewidth = 1) +
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "US $ Million") +
-    ggtitle("Net Imports By India")->p2
-p2
-grid.arrange(p1, p2)
+```{r trade-balance}
+trade_long <- melt(trade[, .(Year, Export_USD, Import_USD)],
+                   id = "Year", variable.name = "Flow", value.name = "USD")
+trade_long[, tip := paste0("<b>", ifelse(Flow == "Export_USD", "Exports", "Imports"), "</b><br>",
+                           "Year: ", Year, "<br>",
+                           "Value: USD <b>", format(round(USD / 1000), big.mark = ","), "</b> Bn")]
+
+pt <- ggplot() +
+  ## Trade balance area
+  geom_area(data = trade, aes(x = Year, y = Trade_Balance / 1000, group = 1),
+            fill = "#e74c3c", alpha = 0.15) +
+  ## Export & import lines
+  geom_line_interactive(
+    data = trade_long,
+    aes(x = Year, y = USD / 1000, color = Flow, tooltip = tip,
+        data_id = paste(Flow, Year), group = Flow),
+    linewidth = 1.3
+  ) +
+  geom_point_interactive(
+    data = trade_long,
+    aes(x = Year, y = USD / 1000, color = Flow, tooltip = tip,
+        data_id = paste(Flow, Year)),
+    size = 2.5
+  ) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "#7f8c8d") +
+  scale_color_manual(values = c("Export_USD" = "#27ae60", "Import_USD" = "#e74c3c"),
+                     labels = c("Export_USD" = "Exports", "Import_USD" = "Imports")) +
+  scale_y_continuous(labels = label_dollar(suffix = "B", scale = 1)) +
+  labs(title   = "India's Total Merchandise Trade",
+       subtitle = "Exports, imports, and trade deficit (USD Billions)",
+       x = "Year", y = "USD Billions",
+       caption = "Source: Ministry of Commerce, India | Analysis: Pawan") +
+  my_theme
+
+girafe(ggobj = pt, width_svg = 11, height_svg = 6, options = std_opts)
 ```
 
-```{r}
-# Trade Balance
-ggplot(trade, aes(x = Year, y = Trade_Balance, group = 1)) +
-    geom_line(linewidth = 1) +
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "US $ Million") +
-    ggtitle("Trade Balance")
+### Export Coverage Ratio
+
+```{r coverage-ratio}
+trade[, tip_cov := paste0("Year: ", Year, "<br>",
+                          "Export coverage: <b>", Export_Coverage, "%</b><br>",
+                          "(Exports ÷ Imports × 100)")]
+pc <- ggplot(trade[!is.na(Export_Coverage)],
+             aes(x = Year, y = Export_Coverage, tooltip = tip_cov, data_id = Year, group = 1)) +
+  geom_col_interactive(
+    aes(fill = Export_Coverage < 60),
+    width = 0.75, alpha = 0.85
+  ) +
+  geom_hline(yintercept = 100, linetype = "dashed", color = "#27ae60", linewidth = 0.8) +
+  geom_hline(yintercept = 60,  linetype = "dotted", color = "#e74c3c",  linewidth = 0.8) +
+  scale_fill_manual(values = c("FALSE" = "#3498db", "TRUE" = "#e67e22"), guide = "none") +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  labs(title   = "Export Coverage Ratio",
+       subtitle = "How much of India's imports are covered by export earnings?",
+       x = "Year", y = "Exports as % of Imports",
+       caption = "Green dashed = 100% (balanced trade); Red dotted = 60% threshold") +
+  my_theme
+
+girafe(ggobj = pc, width_svg = 10, height_svg = 5, options = std_opts)
 ```
 
-# Cereals Export
+---
 
-```{r}
-qty[HSCode2 == "10"]->t0
-ifelse(t0$HSCode4 == "1006", "Rice",
-ifelse(t0$HSCode4 == "1001", "Wheat",
-ifelse(t0$HSCode4 == "1005", "Maize", "Other Ceraeals")))->t0$Commodity4
-t0[,.(Qty = sum(Export)),.(Year, Commodity4)]->t0
+## Cereal Exports: Composition
 
-factor(t0$Commodity4, levels = c("Other Ceraeals", "Maize",
-                                    "Wheat", "Rice"))->t0$Commodity4
-ggplot(t0, aes(x = Year, y = Qty)) +
-    geom_bar(aes(fill = Commodity4), stat = "identity") +
-    my_theme +
-    scale_fill_brewer(palette = "Set1") +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Thousands Tonns)") +
-    ggtitle("Cereals Exports")
+India is the world's largest rice exporter and a significant wheat exporter in surplus years. The 2022–23 wheat export ban reflects India's policy of managing domestic food price inflation.
+
+```{r cereals}
+cereals <- qty[HSCode2 == 10]
+cereals[, Commodity := fcase(
+  HSCode4 == "1006", "Rice",
+  HSCode4 == "1001", "Wheat",
+  HSCode4 == "1005", "Maize",
+  HSCode4 == "1007", "Grain Sorghum",
+  HSCode4 == "1008", "Millet & Buckwheat",
+  default = "Other Cereals"
+)]
+cereals_yr <- cereals[, .(Qty = sum(Export, na.rm = TRUE)), by = .(Year, Commodity)]
+cereals_yr[, Total := sum(Qty), by = Year]
+cereals_yr[, Share := round(Qty * 100 / Total)]
+cereals_yr[, Commodity := factor(Commodity,
+  levels = c("Other Cereals", "Millet & Buckwheat", "Grain Sorghum",
+             "Maize", "Wheat", "Rice"))]
+cereals_yr[, tip := paste0("<b>", Commodity, "</b><br>",
+                           "Year: ", Year, "<br>",
+                           "Qty: ", format(round(Qty), big.mark = ","), " '000T<br>",
+                           "Share: ", Share, "%")]
+
+pce <- ggplot(cereals_yr, aes(x = Year, y = Qty, fill = Commodity,
+                               tooltip = tip, data_id = paste(Commodity, Year))) +
+  geom_bar_interactive(stat = "identity", position = "stack", width = 0.75, alpha = 0.9) +
+  geom_text(aes(label = ifelse(Share >= 8, paste0(Share, "%"), "")),
+            position = position_stack(vjust = 0.5), size = 2.8,
+            color = "white", fontface = "bold") +
+  scale_fill_viridis(discrete = TRUE, option = "D") +
+  scale_y_continuous(labels = comma_format()) +
+  labs(title   = "Cereal Exports from India by Commodity",
+       subtitle = "Rice dominates; wheat exports vary by policy and domestic supply conditions",
+       x = "Year", y = "Quantity ('000 Tonnes)",
+       caption = "Source: Ministry of Commerce | Analysis: Pawan") +
+  my_theme
+
+girafe(ggobj = pce, width_svg = 11, height_svg = 6, options = std_opts)
 ```
 
-# Fertilizer Import
+---
 
-```{r}
-mqty[HSCode2 == "31"]->f
-ifelse(f$HSCode4 == "3102", "Nitrogenous Fertilizer",
-ifelse(f$HSCode4 == "3104", "Potassic Fertilizer",
-ifelse(f$HSCode4 == "3105", "DAP and NPK", "Other Chemical Fertilizer")))->f$Commodity4
-f[,.(Qty = sum(Import)),.(Year, Commodity4)]->f
-ggplot(f, aes(x = Year, y = Qty)) +
-    geom_bar(aes(fill = Commodity4), stat = "identity") +
-    scale_fill_viridis(discrete = T, option = "E") +
-    theme_ipsum() +
-    my_theme +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Thousands Tonns)") +
-    ggtitle("Fertilizer Imports")
+## Fertilizer Imports: Composition
+
+```{r fert-imports}
+fert <- mqty[HSCode2 == 31]
+fert[, Commodity := fcase(
+  HSCode4 == "3102", "Nitrogenous (Urea & Others)",
+  HSCode4 == "3104", "Potassic (MOP)",
+  HSCode4 == "3105", "DAP & NPK Compounds",
+  default = "Other Fertilizers"
+)]
+fert_yr <- fert[, .(Qty = sum(Import, na.rm = TRUE)), by = .(Year, Commodity)]
+fert_yr[, Total := sum(Qty), by = Year]
+fert_yr[, Share := round(Qty * 100 / Total)]
+fert_yr[, tip := paste0("<b>", Commodity, "</b><br>",
+                        "Year: ", Year, "<br>",
+                        "Qty: ", format(round(Qty), big.mark = ","), " '000T<br>",
+                        "Share: ", Share, "%")]
+
+pfe <- ggplot(fert_yr, aes(x = Year, y = Qty, fill = Commodity,
+                            tooltip = tip, data_id = paste(Commodity, Year))) +
+  geom_bar_interactive(stat = "identity", position = "stack", width = 0.75, alpha = 0.9) +
+  geom_text(aes(label = ifelse(Share >= 8, paste0(Share, "%"), "")),
+            position = position_stack(vjust = 0.5), size = 2.8,
+            color = "white", fontface = "bold") +
+  scale_fill_viridis(discrete = TRUE, option = "C") +
+  scale_y_continuous(labels = comma_format()) +
+  labs(title   = "Fertilizer Imports by Type",
+       subtitle = "Nitrogenous (urea-based) fertilizers dominate imports by volume",
+       x = "Year", y = "Quantity ('000 Tonnes)",
+       caption = "Source: Ministry of Commerce | Analysis: Pawan") +
+  my_theme
+
+girafe(ggobj = pfe, width_svg = 11, height_svg = 6, options = std_opts)
 ```
 
-# Fats and Oil Import
+---
 
-```{r}
-mqty[HSCode2 == "15"]->h1
-h1[,.(Qty = sum(Import)),.(Year)]->h1
-ggplot(h1, aes(x = Year, y = Qty, group = 1)) +
-    geom_line(linewidth = 1) +
-    my_theme +
-    scale_fill_brewer(palette = "Set2") +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Thousands Tonns)") +
-    ggtitle("Vegetable Fats and Edible Oils Imports")
+## Petroleum Imports: Composition
+
+```{r petroleum}
+petro <- mqty[HSCode2 == 27]
+petro[, Commodity := fcase(
+  HSCode4 == "2701", "Coal",
+  HSCode4 == "2709", "Crude Petroleum Oils",
+  HSCode4 == "2711", "Petroleum Gases (LNG/LPG)",
+  default = "Other Mineral Fuels"
+)]
+petro_yr <- petro[, .(Qty = sum(Import, na.rm = TRUE)), by = .(Year, Commodity)]
+petro_yr[, Total := sum(Qty), by = Year]
+petro_yr[, Share := round(Qty * 100 / Total)]
+petro_yr[, tip := paste0("<b>", Commodity, "</b><br>",
+                         "Year: ", Year, "<br>",
+                         "Qty: ", format(round(Qty), big.mark = ","), " '000T<br>",
+                         "Share: ", Share, "%")]
+
+ppe <- ggplot(petro_yr, aes(x = Year, y = Qty, fill = Commodity,
+                             tooltip = tip, data_id = paste(Commodity, Year))) +
+  geom_bar_interactive(stat = "identity", position = "stack", width = 0.75, alpha = 0.9) +
+  geom_text(aes(label = ifelse(Share >= 8, paste0(Share, "%"), "")),
+            position = position_stack(vjust = 0.5), size = 2.8,
+            color = "white", fontface = "bold") +
+  scale_fill_manual(values = c("Crude Petroleum Oils"    = "#e67e22",
+                               "Coal"                     = "#2c3e50",
+                               "Petroleum Gases (LNG/LPG)" = "#8e44ad",
+                               "Other Mineral Fuels"       = "#bdc3c7")) +
+  scale_y_continuous(labels = comma_format()) +
+  labs(title   = "Petroleum & Mineral Fuel Imports by Type",
+       subtitle = "Crude petroleum dominates; LNG imports rising as gas infrastructure expands",
+       x = "Year", y = "Quantity ('000 Tonnes)",
+       caption = "Source: Ministry of Commerce | Analysis: Pawan") +
+  my_theme
+
+girafe(ggobj = ppe, width_svg = 11, height_svg = 6, options = std_opts)
 ```
 
-# Petrolium Import
+---
 
-```{r}
-mqty[HSCode2 == "27"]->h2
-ifelse(h2$HSCode4 == "2701", "Coal",
-ifelse(h2$HSCode4 == "2709", "Petrolium Oils",
-ifelse(h2$HSCode4 == "2711", "Petrolium Gases", "Other Petrolium")))->h2$Commodity4
-h2[,.(Qty = sum(Import)),.(Year, Commodity4)]->h2
-ggplot(h2, aes(x = Year, y = Qty)) +
-    geom_bar(aes(fill = Commodity4), stat = "identity") +
-    my_theme +
-    scale_fill_brewer(palette = "Set2") +
-    scale_y_continuous(labels = scales::comma) +
-    labs(y = "Quantity (Thousands Tonns)") +
-    ggtitle("Petrolium Imports")
+## Edible Oils & Fats Import Volume
+
+```{r oils-fats}
+oils <- mqty[HSCode2 == 15]
+oils_yr <- oils[, .(Qty = sum(Import, na.rm = TRUE)), by = Year]
+oils_yr[, tip := paste0("Year: <b>", Year, "</b><br>",
+                        "Edible oils import: ",
+                        format(round(Qty / 1000), big.mark = ","), " '000 Tonnes")]
+
+po <- ggplot(oils_yr, aes(x = Year, y = Qty / 1000, tooltip = tip, data_id = Year, group = 1)) +
+  geom_area_interactive(fill = "#f39c12", alpha = 0.3) +
+  geom_line_interactive(linewidth = 1.2, color = "#d68910") +
+  geom_point_interactive(size = 2.5, color = "#b7770d") +
+  scale_y_continuous(labels = comma_format(suffix = " '000T")) +
+  labs(title   = "Vegetable Fats & Edible Oils Import Volume",
+       subtitle = "Annual import trend — HS Chapter 15",
+       x = "Year", y = "Quantity ('000 Tonnes)",
+       caption = "Source: Ministry of Commerce | Analysis: Pawan") +
+  my_theme
+
+girafe(ggobj = po, width_svg = 10, height_svg = 5, options = std_opts)
 ```
+
+---
+
+## Key Takeaways
+
+::: {.callout-important title="Summary of Findings"}
+1. **India's trade deficit is deep and structural**: Petroleum, fertilizers, and edible oils together account for the bulk of the import bill, and all three are heavily import-dependent by structural necessity.
+
+2. **Cereal exports are policy-sensitive**: The government alternates between encouraging exports (when there is surplus) and banning them (when domestic prices rise) — illustrating the tension between farmer welfare and consumer welfare.
+
+3. **India is the world's largest rice exporter**: Rice contributes the bulk of cereal export earnings, though the recent quality and residue concerns in some markets require attention.
+
+4. **Petroleum imports are the largest single category**: India's energy import dependence (~85% crude oil from overseas) is both an economic vulnerability and a geopolitical consideration.
+
+5. **The export coverage ratio declining** toward 55% suggests imports are growing faster than exports — a medium-term current account concern.
+
+6. **Fertilizer import dependence** reinforces the need to expand domestic production capacity and reduce over-subsidisation, which incentivises excessive fertilizer use and soil degradation.
+:::

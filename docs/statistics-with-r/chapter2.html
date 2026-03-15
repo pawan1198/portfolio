@@ -306,29 +306,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../shiny_app.html"> 
 <span class="menu-text">📈 Interactive Shiny</span></a>
   </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-statistics-with-r" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">📚 Statistics with R</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-statistics-with-r">    
-        <li>
-    <a class="dropdown-item" href="../statistics-with-r/chapter1.html">
- <span class="dropdown-text">Chapter 1: Descriptive Statistics</span></a>
+  <li class="nav-item">
+    <span class="nav-link">
+<span class="menu-text">📚 Statistics with R</span>
+    </span>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../statistics-with-r/chapter2.html">
- <span class="dropdown-text">Chapter 2: Probability &amp; Distributions</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../statistics-with-r/chapter3.html">
- <span class="dropdown-text">Chapter 3: Regression Analysis</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../statistics-with-r/chapter4.html">
- <span class="dropdown-text">Chapter 4: Time Series</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item">
     <a class="nav-link" href="../blog.html"> 
 <span class="menu-text">✍️ Blog</span></a>
@@ -366,15 +348,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#probability-fundamentals" id="toc-probability-fundamentals" class="nav-link active" data-scroll-target="#probability-fundamentals">Probability Fundamentals</a></li>
-  <li><a href="#the-normal-distribution" id="toc-the-normal-distribution" class="nav-link" data-scroll-target="#the-normal-distribution">The Normal Distribution</a>
+  <li><a href="#probability-fundamentals" id="toc-probability-fundamentals" class="nav-link active" data-scroll-target="#probability-fundamentals"><span class="header-section-number">1</span> Probability Fundamentals</a></li>
+  <li><a href="#the-normal-distribution" id="toc-the-normal-distribution" class="nav-link" data-scroll-target="#the-normal-distribution"><span class="header-section-number">2</span> The Normal Distribution</a>
   <ul class="collapse">
-  <li><a href="#the-68-95-99.7-rule" id="toc-the-68-95-99.7-rule" class="nav-link" data-scroll-target="#the-68-95-99.7-rule">The 68-95-99.7 Rule</a></li>
+  <li><a href="#the-68-95-99.7-rule" id="toc-the-68-95-99.7-rule" class="nav-link" data-scroll-target="#the-68-95-99.7-rule"><span class="header-section-number">2.1</span> The 68-95-99.7 Rule</a></li>
   </ul></li>
-  <li><a href="#binomial-distribution" id="toc-binomial-distribution" class="nav-link" data-scroll-target="#binomial-distribution">Binomial Distribution</a></li>
-  <li><a href="#poisson-distribution" id="toc-poisson-distribution" class="nav-link" data-scroll-target="#poisson-distribution">Poisson Distribution</a></li>
-  <li><a href="#the-t-distribution" id="toc-the-t-distribution" class="nav-link" data-scroll-target="#the-t-distribution">The t-Distribution</a></li>
-  <li><a href="#practice-exercises" id="toc-practice-exercises" class="nav-link" data-scroll-target="#practice-exercises">Practice Exercises</a></li>
+  <li><a href="#binomial-distribution" id="toc-binomial-distribution" class="nav-link" data-scroll-target="#binomial-distribution"><span class="header-section-number">3</span> Binomial Distribution</a></li>
+  <li><a href="#poisson-distribution" id="toc-poisson-distribution" class="nav-link" data-scroll-target="#poisson-distribution"><span class="header-section-number">4</span> Poisson Distribution</a></li>
+  <li><a href="#the-t-distribution" id="toc-the-t-distribution" class="nav-link" data-scroll-target="#the-t-distribution"><span class="header-section-number">5</span> The t-Distribution</a></li>
+  <li><a href="#practice-exercises" id="toc-practice-exercises" class="nav-link" data-scroll-target="#practice-exercises"><span class="header-section-number">6</span> Practice Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -421,8 +403,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p><strong>Learning Objectives:</strong> Understand core probability concepts, work with common distributions (Normal, Binomial, Poisson, t), and apply these in real-world contexts using R’s built-in distribution functions.</p>
 </blockquote>
-<section id="probability-fundamentals" class="level2">
-<h2 class="anchored" data-anchor-id="probability-fundamentals">Probability Fundamentals</h2>
+<section id="probability-fundamentals" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="probability-fundamentals"><span class="header-section-number">1</span> Probability Fundamentals</h2>
 <p>Every distribution in R has four functions:</p>
 <table class="caption-top table">
 <thead>
@@ -463,8 +445,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 </section>
-<section id="the-normal-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="the-normal-distribution">The Normal Distribution</h2>
+<section id="the-normal-distribution" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="the-normal-distribution"><span class="header-section-number">2</span> The Normal Distribution</h2>
 <p>The Normal distribution is the cornerstone of statistical inference — thanks to the Central Limit Theorem.</p>
 <div class="cell">
 <details class="code-fold">
@@ -496,8 +478,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="the-68-95-99.7-rule" class="level3">
-<h3 class="anchored" data-anchor-id="the-68-95-99.7-rule">The 68-95-99.7 Rule</h3>
+<section id="the-68-95-99.7-rule" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="the-68-95-99.7-rule"><span class="header-section-number">2.1</span> The 68-95-99.7 Rule</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -567,8 +549,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="binomial-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="binomial-distribution">Binomial Distribution</h2>
+<section id="binomial-distribution" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="binomial-distribution"><span class="header-section-number">3</span> Binomial Distribution</h2>
 <p>Used when we have <strong>n independent trials</strong>, each with probability <strong>p</strong> of success.</p>
 <p><strong>Application:</strong> In a survey of 100 households, if 35% own agricultural land, what’s the probability that exactly 40 own land?</p>
 <div class="cell">
@@ -639,8 +621,8 @@ SD(X) = √(np(1-p)) = 4.77</code></pre>
 </div>
 </div>
 </section>
-<section id="poisson-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="poisson-distribution">Poisson Distribution</h2>
+<section id="poisson-distribution" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="poisson-distribution"><span class="header-section-number">4</span> Poisson Distribution</h2>
 <p>Used for <strong>count data</strong> — events happening in a fixed interval.</p>
 <p><strong>Application:</strong> If a field surveyor visits an average of 8 households per hour, what’s the probability of visiting exactly 10 in an hour?</p>
 <div class="cell">
@@ -674,8 +656,8 @@ SD(X) = √(np(1-p)) = 4.77</code></pre>
 </div>
 </div>
 </section>
-<section id="the-t-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="the-t-distribution">The t-Distribution</h2>
+<section id="the-t-distribution" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="the-t-distribution"><span class="header-section-number">5</span> The t-Distribution</h2>
 <p>Used when the <strong>population standard deviation is unknown</strong> (which is almost always in practice).</p>
 <div class="cell">
 <details class="code-fold">
@@ -738,8 +720,8 @@ SD(X) = √(np(1-p)) = 4.77</code></pre>
 </div>
 </div>
 </section>
-<section id="practice-exercises" class="level2">
-<h2 class="anchored" data-anchor-id="practice-exercises">Practice Exercises</h2>
+<section id="practice-exercises" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="practice-exercises"><span class="header-section-number">6</span> Practice Exercises</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1236,7 +1218,7 @@ SD(X) = √(np(1-p)) = 4.77</code></pre>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Pawan Jangra"</span></span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2025-01-20"</span></span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="an">toc:</span><span class="co"> true</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> false</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> true</span></span>
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **Learning Objectives:** Understand core probability concepts, work with common distributions (Normal, Binomial, Poisson, t), and apply these in real-world contexts using R's built-in distribution functions.</span></span>

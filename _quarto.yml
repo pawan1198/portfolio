@@ -22,15 +22,16 @@ website:
       - text: "📈 Interactive Shiny"
         file: shiny_app.qmd
       - text: "📚 Statistics with R"
-        menu:
-          - text: "Chapter 1: Descriptive Statistics"
-            file: statistics-with-r/chapter1.qmd
-          - text: "Chapter 2: Probability & Distributions"
-            file: statistics-with-r/chapter2.qmd
-          - text: "Chapter 3: Regression Analysis"
-            file: statistics-with-r/chapter3.qmd
-          - text: "Chapter 4: Time Series"
-            file: statistics-with-r/chapter4.qmd
+        file: statistics-with-r.qmd
+        #menu:
+        #  - text: "Chapter 1: Descriptive Statistics"
+        #    file: statistics-with-r/chapter1.qmd
+        #  - text: "Chapter 2: Probability & Distributions"
+        #    file: statistics-with-r/chapter2.qmd
+        #  - text: "Chapter 3: Regression Analysis"
+        #    file: statistics-with-r/chapter3.qmd
+        #  - text: "Chapter 4: Time Series"
+        #    file: statistics-with-r/chapter4.qmd
       - text: "✍️ Blog"
         file: blog.qmd
       - text: "👤 About"

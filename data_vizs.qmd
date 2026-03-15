@@ -7,10 +7,10 @@ listing:
   contents: data_vizs
   exclude: 
     title: "Template"
-  sort: "date-modified"
+  sort: "Date"
   type: grid
   image-align: right
-  categories: false  # Change this from the array to false
+  categories: true  # Change this from the array to false
   grid-item-border: true
   grid-columns: 3
   table-hover: true

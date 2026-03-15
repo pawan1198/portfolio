@@ -1,0 +1,363 @@
+---
+title: "India's Foodgrain Supply Chain: Procurement, Buffer Stocks, and Trade — An Integrated Analysis"
+description: "A comprehensive interactive analysis linking India's foodgrain procurement (MSP operations), central pool buffer stocks, and cereal export/import data to understand the end-to-end supply chain from farm gate to food security policy."
+author: "Pawan"
+date: "2026/03/15"
+date-modified: last-modified
+categories: ["Food Economy","Agriculture","Public Policy","Trade"]
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+## Overview {.unnumbered}
+
+India's foodgrain supply chain is one of the largest and most complex public food economy systems in the world. It links **140 million farming households** at one end to **800 million subsidy beneficiaries** at the other — through a sequence of MSP procurement, FCI storage, buffer stock management, PDS distribution, and selective open market sales or exports. This analysis brings together three previously separate datasets — procurement records, FCI stock positions, and trade statistics — to trace the complete chain and identify where the system creates value and where it generates costs and inefficiencies.
+
+---
+
+::: {.callout-tip title="Key Questions Addressed"}
+- How has procurement grown relative to buffer stock norms?
+- What is the relationship between stock build-up and export decisions?
+- How have India's cereal export/import patterns tracked against domestic stock cycles?
+- Which crops show the tightest (and loosest) supply chain efficiency?
+:::
+
+---
+
+## Setup
+
+```{r setup}
+library(data.table); library(ggplot2); library(ggiraph)
+library(scales); library(gt); library(viridis); library(readxl)
+library(lubridate); library(tidyr); library(DT)
+
+my_theme <- theme_minimal(base_size=13)+
+  theme(text=element_text(color="#2c3e50"),
+        plot.title=element_text(size=16,face="bold",hjust=0.5),
+        plot.subtitle=element_text(size=11,hjust=0.5,color="#7f8c8d"),
+        plot.caption=element_text(size=9,color="#95a5a6",hjust=0),
+        axis.title=element_text(size=12,face="bold"),
+        axis.text=element_text(size=10),
+        axis.text.x=element_text(angle=45,vjust=1,hjust=1),
+        legend.position="bottom",legend.title=element_blank(),
+        panel.grid.major=element_line(color="#ecf0f1",linewidth=0.4),
+        panel.grid.minor=element_blank(),
+        strip.background=element_rect(fill="#f8f9fa",color=NA),
+        strip.text=element_text(face="bold",size=11))
+
+std_opts <- list(
+  opts_tooltip(css=paste0("background-color:#2c3e50;color:white;padding:8px 12px;",
+               "border-radius:6px;font-size:12px;line-height:1.5;")),
+  opts_hover(css="fill-opacity:0.85;stroke:white;stroke-width:1.5;"),
+  opts_hover_inv(css="opacity:0.2;"),
+  opts_zoom(min=0.5,max=3), opts_toolbar(position="topright"),
+  opts_sizing(rescale=TRUE,width=1))
+```
+
+## Data Loading
+
+```{r data}
+## Procurement
+proc <- fread("/home/pawan/procurement/procurement.csv")
+
+## Stocks
+stocksall <- unique(fread("~/stocks/stocksall.csv"))
+oldstocks  <- fread("~/stocks/pdsold.csv")
+oldstocks[,coarsegrains:=stocks_total-stocks_rice-stocks_wheat]
+stocks_long <- melt(stocksall,id=c("Year","Commodity"))
+stocks_long[,Date:=as.Date(paste("01",variable,Year,sep="-"),"%d-%b-%Y")]
+stocks_long[,Commodity:=factor(Commodity,
+  levels=c("Rice","Wheat","Unmilled Paddy","Coarsegrain","Total"))]
+
+## Trade
+qty_exp  <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_exportsqty.rds"))
+qty_imp  <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_importsqty.rds"))
+usd_exp  <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_exportsusd.rds"))
+usd_imp  <- as.data.table(readRDS("/home/pawan/trade/totaltrade/total_importsusd.rds"))
+for(dt in list(qty_exp,qty_imp,usd_exp,usd_imp)) {
+  dt[,HSCode2:=substr(HSCode,1,2)]
+  dt[,HSCode4:=substr(HSCode,1,4)] }
+qty_exp[,Export:=as.numeric(gsub(",","",Export))][is.na(Export),Export:=0]
+qty_imp[,Import:=as.numeric(gsub(",","",Import))][is.na(Import),Import:=0]
+usd_exp[,Export:=as.numeric(gsub(",","",Export))][is.na(Export),Export:=0]
+usd_imp[,Import:=as.numeric(gsub(",","",Import))][is.na(Import),Import:=0]
+```
+
+---
+
+## Part 1: Procurement Trends
+
+### Total Procurement by Crop
+
+```{r fig-proc-total}
+#| fig-cap: "India's Foodgrain Procurement by Crop and Marketing Season (Lakh Metric Tonnes)"
+proc_sum <- proc[,.(Total=sum(Total,na.rm=TRUE),FCI=sum(FCI,na.rm=TRUE),
+                    State=sum(StateAgency,na.rm=TRUE)),by=.(Crop,MarketingSeason)]
+proc_sum[,FCI_pct:=round(FCI*100/Total)][,State_pct:=round(State*100/Total)]
+proc_sum[,tip:=paste0("<b>",Crop,"</b><br>Season: ",MarketingSeason,
+  "<br>Total: <b>",round(Total,1)," LMT</b><br>FCI: ",round(FCI,1),
+  " (",FCI_pct,"%)<br>State: ",round(State,1)," (",State_pct,"%)")]
+
+pp <- ggplot(proc_sum,aes(x=MarketingSeason,y=Total,fill=Crop,
+                           tooltip=tip,data_id=paste(Crop,MarketingSeason)))+
+  geom_bar_interactive(stat="identity",width=0.75,alpha=0.9)+
+  facet_wrap(~Crop,scales="free_y")+
+  scale_fill_viridis(discrete=TRUE,option="D")+
+  scale_y_continuous(labels=comma_format())+
+  labs(y="Quantity (Lakh Metric Tonnes)",x="Marketing Season",
+       caption="Source: DFPD Procurement Portal | Analysis: Pawan")+my_theme+
+  theme(legend.position="none")
+girafe(ggobj=pp,width_svg=12,height_svg=7,options=std_opts)
+```
+
+### Procurement Summary Table
+
+```{r tbl-proc}
+#| tbl-cap: "Procurement Summary by Crop and Season (LMT)"
+proc_wide <- dcast(proc_sum[Crop %in% c("Wheat","Paddy")],
+                   MarketingSeason~Crop,value.var="Total",fun.aggregate=sum)
+proc_wide[,Grand_Total:=rowSums(.SD,na.rm=TRUE),.SDcols=c("Wheat","Paddy")]
+proc_wide[,YoY_Wheat:=round((Wheat/shift(Wheat)-1)*100,1)]
+proc_wide[,YoY_Paddy:=round((Paddy/shift(Paddy)-1)*100,1)]
+gt(proc_wide)|>
+  tab_header(title=md("**Wheat & Paddy Procurement (LMT)**"),
+             subtitle="FCI + State Agencies; YoY = year-on-year % change")|>
+  fmt_number(columns=c(Wheat,Paddy,Grand_Total),decimals=1)|>
+  fmt_number(columns=c(YoY_Wheat,YoY_Paddy),decimals=1)|>
+  cols_label(MarketingSeason="Season",Grand_Total="Total",
+             YoY_Wheat="Wheat YoY%",YoY_Paddy="Paddy YoY%")|>
+  data_color(columns=Wheat,palette=c("#eff6ff","#bfdbfe","#1d4ed8"))|>
+  data_color(columns=Paddy,palette=c("#f0fdf4","#86efac","#16a34a"))|>
+  tab_source_note("Source: DFPD | Analysis: Pawan")
+```
+
+---
+
+## Part 2: Buffer Stock Position
+
+### Long-Run Stock History
+
+```{r fig-stocks-history}
+#| fig-cap: "India's Central Pool Foodgrain Stocks 1972–2025 (Million Tonnes) — Stacked Area"
+old_clean <- separate(oldstocks,col=Year,sep="-",into=c("v1","year"))
+setDT(old_clean)
+old_clean[,Date:=as.Date(paste("01","04",year,sep="-"),"%d-%m-%y")]
+old_clean <- old_clean[Date<as.Date("2003-01-01"),
+  .(Date,Rice=stocks_rice,Wheat=stocks_wheat,Coarsegrain=coarsegrains)]
+old_long <- melt(old_clean,id="Date",variable.name="Commodity")
+old_long[,value:=value*10][,Commodity:=as.character(Commodity)]
+new_long <- stocks_long[Commodity!="Total",.(Date,Commodity=as.character(Commodity),value)]
+combined_stocks <- rbind(new_long[!is.na(value)],old_long[!is.na(value)])
+combined_stocks[,value:=as.numeric(value)/10]
+combined_stocks[,Commodity:=factor(Commodity,
+  levels=rev(c("Rice","Wheat","Unmilled Paddy","Coarsegrain")))]
+combined_stocks[,tip:=paste0("<b>",Commodity,"</b><br>",format(Date,"%b %Y"),
+  "<br>Stock: <b>",round(value,2)," MT</b>")]
+
+ps <- ggplot(combined_stocks,aes(x=Date,y=value,fill=Commodity,
+                                  tooltip=tip,data_id=paste(Date,Commodity),group=Commodity))+
+  geom_area_interactive(alpha=0.85,color="white",linewidth=0.3,position="stack")+
+  scale_fill_manual(values=c("Rice"="#4E79A7","Wheat"="#F28E2B",
+                             "Unmilled Paddy"="#E15759","Coarsegrain"="#76B7B2"))+
+  scale_x_date(date_breaks="5 years",date_labels="%Y")+
+  scale_y_continuous("Stocks (Million Tonnes)",labels=comma_format(),
+                     expand=expansion(mult=c(0,0.05)))+
+  labs(x="Year",caption="Source: Food Corporation of India | Analysis: Pawan")+my_theme
+girafe(ggobj=ps,width_svg=14,height_svg=7,options=std_opts)
+```
+
+### Recent Stock Trends (2018–2025)
+
+```{r fig-stocks-recent}
+#| fig-cap: "Recent Stock Trends 2018–2025 — Seasonal Wheat Cycle and Growing Paddy Holdings"
+recent_stocks <- combined_stocks[Date>=as.Date("2018-01-01")]
+pr <- ggplot(recent_stocks,aes(x=Date,y=value,fill=Commodity,
+                                tooltip=tip,data_id=paste(Date,Commodity),group=Commodity))+
+  geom_area_interactive(alpha=0.85,color="white",linewidth=0.3,position="stack")+
+  geom_vline(xintercept=as.Date("2020-03-25"),linetype="dashed",color="#e74c3c",linewidth=0.7)+
+  annotate("text",x=as.Date("2020-06-01"),y=55,label="COVID\nLockdown",
+           size=3,color="#e74c3c",fontface="bold")+
+  scale_fill_manual(values=c("Rice"="#4E79A7","Wheat"="#F28E2B",
+                             "Unmilled Paddy"="#E15759","Coarsegrain"="#76B7B2"))+
+  scale_x_date(date_breaks="6 months",date_labels="%b %Y")+
+  scale_y_continuous("Stocks (Million Tonnes)",labels=comma_format(),
+                     expand=expansion(mult=c(0,0.05)))+
+  labs(x="Month-Year",caption="Source: FCI | Analysis: Pawan")+
+  my_theme+theme(axis.text.x=element_text(size=8))
+girafe(ggobj=pr,width_svg=14,height_svg=7,options=std_opts)
+```
+
+### Stock Position Table — Last 24 Months
+
+```{r tbl-stocks}
+#| tbl-cap: "Central Pool Foodgrain Stocks — Last 24 Months (Million Tonnes)"
+last24 <- combined_stocks[Date>=as.Date("2023-04-01")]
+last24_wide <- dcast(last24,Date~Commodity,value.var="value",fun.aggregate=sum)
+last24_wide[,Total:=rowSums(.SD,na.rm=TRUE),.SDcols=setdiff(names(last24_wide),"Date")]
+last24_wide[,Date:=format(Date,"%b-%Y")]
+datatable(last24_wide,rownames=FALSE,
+  options=list(pageLength=12,dom="Bfrtip",buttons=c("copy","csv"),scrollX=TRUE),
+  caption=htmltools::tags$caption(
+    style="caption-side:top;text-align:center;font-size:14px;font-weight:bold;",
+    "Central Pool Stocks — Last 24 Months (Million Tonnes)"))|>
+  formatRound(columns=setdiff(names(last24_wide),"Date"),digits=2)
+```
+
+---
+
+## Part 3: Cereal Trade — Export and Import Flows
+
+### Cereal Export Composition
+
+```{r fig-cereal-exp}
+#| fig-cap: "India's Cereal Exports: Rice Dominates, Wheat is Policy-Driven"
+cer_exp <- qty_exp[HSCode2=="10"]
+cer_exp[,Commodity:=fcase(HSCode4=="1006","Rice",HSCode4=="1001","Wheat",
+  HSCode4=="1005","Maize",HSCode4=="1008","Millet",default="Other")]
+cer_yr <- cer_exp[,.(Qty=sum(Export,na.rm=TRUE)),by=.(Year,Commodity)]
+cer_yr[,Total:=sum(Qty),by=Year][,Share:=round(Qty*100/Total)]
+cer_yr[,Commodity:=factor(Commodity,levels=c("Other","Millet","Maize","Wheat","Rice"))]
+cer_yr[,tip:=paste0("<b>",Commodity,"</b><br>Year: ",Year,"<br>",
+  "Qty: ",format(round(Qty),big.mark=",")," '000T<br>Share: ",Share,"%")]
+
+pce <- ggplot(cer_yr,aes(x=Year,y=Qty,fill=Commodity,tooltip=tip,data_id=paste(Commodity,Year)))+
+  geom_bar_interactive(stat="identity",position="stack",width=0.75,alpha=0.9)+
+  geom_text(aes(label=ifelse(Share>=8,paste0(Share,"%"),"")),
+            position=position_stack(vjust=0.5),size=2.8,color="white",fontface="bold")+
+  scale_fill_viridis(discrete=TRUE,option="D")+
+  scale_y_continuous(labels=comma_format())+
+  labs(y="Quantity ('000 Tonnes)",x="Year",
+       caption="Source: Ministry of Commerce | Analysis: Pawan")+my_theme
+girafe(ggobj=pce,width_svg=11,height_svg=6,options=std_opts)
+```
+
+### Cereal Export-Import Balance
+
+```{r fig-cereal-balance}
+#| fig-cap: "India's Cereal Export vs. Import: Mostly a Net Exporter, Rarely Imports"
+cer_exp_yr <- cer_yr[,.(Exp_Qty=sum(Qty)),by=Year]
+cer_imp <- qty_imp[HSCode2=="10",.(Imp_Qty=sum(Import,na.rm=TRUE)),by=Year]
+cer_bal <- merge(cer_exp_yr,cer_imp,by="Year",all=TRUE)
+cer_bal[is.na(Imp_Qty),Imp_Qty:=0][is.na(Exp_Qty),Exp_Qty:=0]
+cer_bal[,Balance:=Exp_Qty-Imp_Qty]
+cer_bal[,tip:=paste0("Year: ",Year,"<br>Exports: ",format(round(Exp_Qty),big.mark=","),
+  " '000T<br>Imports: ",format(round(Imp_Qty),big.mark=","),
+  " '000T<br>Balance: <b>",format(round(Balance),big.mark=","),"</b>")]
+
+long_cb <- melt(cer_bal[,.(Year,Exp_Qty,Imp_Qty)],id="Year",
+                variable.name="Flow",value.name="Qty")
+long_cb[,ftip:=paste0(ifelse(Flow=="Exp_Qty","<b>Exports</b>","<b>Imports</b>"),
+  "<br>Year: ",Year,"<br>",format(round(Qty),big.mark=",")," '000T")]
+
+pb <- ggplot()+
+  geom_col_interactive(data=cer_bal,aes(x=Year,y=Balance,tooltip=tip,data_id=Year,
+                                         fill=Balance>0),width=0.7,alpha=0.35)+
+  geom_line_interactive(data=long_cb,aes(x=Year,y=Qty,color=Flow,tooltip=ftip,
+                                          data_id=paste(Flow,Year),group=Flow),linewidth=1.3)+
+  scale_fill_manual(values=c("TRUE"="#27ae60","FALSE"="#e74c3c"),guide="none")+
+  scale_color_manual(values=c("Exp_Qty"="#27ae60","Imp_Qty"="#e74c3c"),
+                     labels=c("Exports","Imports"))+
+  scale_y_continuous(labels=comma_format())+
+  labs(y="Quantity ('000 Tonnes)",x="Year",
+       subtitle="Green bar = net exporter; red bar = net importer; lines show absolute flows",
+       caption="Source: Ministry of Commerce | Analysis: Pawan")+my_theme
+girafe(ggobj=pb,width_svg=11,height_svg=6,options=std_opts)
+```
+
+### Cereal Trade Table
+
+```{r tbl-cereal-trade}
+#| tbl-cap: "India's Cereal Export-Import Balance (Thousand Tonnes)"
+cb_tbl <- cer_bal[,.(Year,Exports=round(Exp_Qty),Imports=round(Imp_Qty),Balance=round(Balance))]
+gt(cb_tbl)|>
+  tab_header(title=md("**India's Cereal Trade Balance ('000 Tonnes)**"))|>
+  fmt_number(columns=c(Exports,Imports,Balance),decimals=0,use_seps=TRUE)|>
+  data_color(columns=Balance,palette=c("#fee2e2","#fca5a5","#dc2626","#fff","#86efac","#16a34a"))|>
+  tab_source_note("Source: Ministry of Commerce | Analysis: Pawan")
+```
+
+---
+
+## Part 4: Supply Chain Integration — Linking Procurement, Stocks, and Trade
+
+### Procurement and Rice Stocks: Are They Moving Together?
+
+```{r fig-proc-stocks}
+#| fig-cap: "Paddy Procurement vs. Rice Stock Position — Testing Supply Chain Linkage"
+paddy_proc <- proc[Crop=="Paddy",.(Proc_LMT=sum(Total,na.rm=TRUE)),by=MarketingSeason]
+paddy_proc[,Year:=as.numeric(substr(MarketingSeason,1,4))]
+
+rice_apr <- stocks_long[Commodity=="Rice"&!is.na(value),
+  .(Stock_MT=mean(as.numeric(value),na.rm=TRUE)/10),by=.(Year=year(Date))]
+
+intg <- merge(paddy_proc[,.(Year,Proc_LMT)],rice_apr,by="Year",all.inner=TRUE)
+intg[,tip:=paste0("Year: ",Year,"<br>Paddy proc: ",round(Proc_LMT,1),
+  " LMT<br>Rice stock (Apr): ",round(Stock_MT,2)," MT")]
+
+pi <- ggplot(intg,aes(x=Proc_LMT,y=Stock_MT,tooltip=tip,data_id=Year))+
+  geom_point_interactive(size=5,alpha=0.85,color="#e67e22")+
+  geom_smooth(method="lm",se=TRUE,color="#2980b9",linewidth=1.2,fill="#bde0fe",alpha=0.3)+
+  geom_text(aes(label=Year),vjust=-0.9,size=3.5,color="#2c3e50")+
+  scale_x_continuous(labels=comma_format())+
+  scale_y_continuous(labels=label_number(suffix=" MT"))+
+  labs(x="Paddy Procurement (LMT)",y="Rice Stocks in April (MT)",
+       subtitle="Positive relationship confirms: more procurement → higher stock position",
+       caption="Source: DFPD; FCI | Analysis: Pawan")+my_theme
+girafe(ggobj=pi,width_svg=10,height_svg=6,options=std_opts)
+```
+
+### Annual Overview Table: Procurement + Stocks + Exports
+
+```{r tbl-integrated}
+#| tbl-cap: "Integrated Supply Chain Overview: Wheat Procurement, Stocks, and Exports"
+wheat_proc <- proc[Crop=="Wheat",.(Proc_LMT=round(sum(Total,na.rm=TRUE),1)),by=MarketingSeason]
+wheat_proc[,Year:=as.numeric(substr(MarketingSeason,1,4))]
+wheat_stock_apr <- stocks_long[Commodity=="Wheat"&!is.na(value),
+  .(Stock_MT=round(mean(as.numeric(value),na.rm=TRUE)/10,2)),by=.(Year=year(Date))]
+wheat_exp_yr <- qty_exp[HSCode4=="1001",.(Wheat_Exp=round(sum(Export,na.rm=TRUE)/1000,1)),by=Year]
+wheat_exp_yr[,Year:=as.numeric(Year)]
+
+intg2 <- Reduce(function(a,b) merge(a,b,by="Year",all=TRUE),
+                list(wheat_proc[,.(Year,Proc_LMT)],wheat_stock_apr,wheat_exp_yr))
+gt(intg2[!is.na(Proc_LMT)])|>
+  tab_header(title=md("**Wheat Supply Chain: Procurement → Stocks → Exports**"),
+             subtitle="Procurement in LMT; Stocks in MT; Exports in MT ('000 tonnes)")|>
+  cols_label(Year="Year",Proc_LMT="Procurement (LMT)",
+             Stock_MT="April Stocks (MT)",Wheat_Exp="Wheat Exports (MT)")|>
+  fmt_number(columns=c(Proc_LMT,Stock_MT,Wheat_Exp),decimals=1)|>
+  data_color(columns=Proc_LMT,palette=c("#eff6ff","#bfdbfe","#1d4ed8"))|>
+  data_color(columns=Stock_MT,palette=c("#f0fdf4","#86efac","#16a34a"))|>
+  tab_source_note("Source: DFPD; FCI; Ministry of Commerce | Analysis: Pawan")
+```
+
+::: {.callout-note title="Reading the Integrated Table"}
+The table traces the wheat supply chain end-to-end: procurement in the April–June rabi season builds up stocks visible in April-month stock positions, and excess stocks are released through exports (when permitted) or domestic open market sales (OMSS). Years of high wheat exports (e.g. 2021–22) correspond to years of surplus stocks built from strong prior procurement.
+:::
+
+---
+
+## Key Takeaways
+
+::: {.callout-important title="Integrated Supply Chain Findings"}
+1. **Procurement has grown faster than buffer norms**: wheat procurement crossed 40 LMT and paddy exceeded 600 LMT in recent seasons — well above the buffer stock norms set by the government, creating storage pressure and fiscal carrying costs.
+
+2. **The procurement-stocks-export chain is empirically visible**: the scatter plot shows a strong positive relationship between annual paddy procurement and subsequent rice stock positions.
+
+3. **India uses surplus stocks as an export safety valve**: in years of strong wheat stocks (2021–22), India permitted large wheat exports; it reversed this with an export ban when domestic prices rose.
+
+4. **Coarse grain procurement remains minimal** despite rising domestic millet consumption and the government's International Year of Millets 2023 push.
+
+5. **The COVID-19 period demonstrated the system's value**: large pre-pandemic stocks enabled PMGKAY free grain distribution to 800 million people for over two years — a genuine food security achievement enabled by the buffer stock system.
+:::

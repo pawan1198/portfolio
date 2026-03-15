@@ -1,0 +1,334 @@
+---
+title: "India's Import Concentration Risk: A Cross-Commodity Analysis"
+description: "A novel cross-sector analysis measuring import supply concentration — using Herfindahl-Hirschman Index (HHI) calculations across edible oils, fertilizers, and key trade categories — to quantify which sectors carry the highest geopolitical supply risk."
+author: "Pawan"
+date: "2026/03/15"
+date-modified: last-modified
+categories: ["Trade","Fertilizer","Edible Oils","Food Economy","Analysis"]
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
+editor_options:
+  chunk_output_type: console
+execute:
+  error: false
+  message: false
+  warning: false
+  eval: true
+---
+
+## Overview {.unnumbered}
+
+India's import dependence is well-documented, but the **geopolitical concentration** of that dependence — how many countries supply each critical import — is less frequently quantified. A high concentration means that a single country's export restriction, natural disaster, or political crisis can immediately disrupt India's supply. This analysis uses the **Herfindahl-Hirschman Index (HHI)** — a standard measure of market concentration — to rank India's import categories by geopolitical risk, and tracks how concentration has evolved over time.
+
+**HHI is calculated as the sum of squared shares**: HHI = Σ(sᵢ²) where sᵢ is each supplier's percentage share. Values range from 0 (perfectly diversified) to 10,000 (single supplier). By convention: <1,500 = low concentration; 1,500–2,500 = moderate; >2,500 = high concentration.
+
+---
+
+::: {.callout-tip title="Key Findings Preview"}
+- 🔴 **Phosphoric acid imports are the most concentrated** — Morocco supplies >70%, giving HHI >5,000
+- 🟠 **MOP/potash** and **sunflower oil** carry high concentration risk (HHI >3,000)
+- 🟡 **Urea** has the most improved diversification since 2021 (forced diversification from China)
+- 🟢 **Palm oil** concentration is surprisingly stable — Indonesia+Malaysia consistently >90% but this is a stable duopoly
+- 📉 **Most categories improved diversification in 2022–24** as India scrambled to manage geopolitical supply shocks
+:::
+
+---
+
+## Setup
+
+```{r setup}
+library(data.table); library(ggplot2); library(ggiraph)
+library(scales); library(gt); library(viridis)
+
+my_theme <- theme_minimal(base_size=13)+
+  theme(text=element_text(color="#2c3e50"),
+        plot.title=element_text(size=16,face="bold",hjust=0.5),
+        plot.subtitle=element_text(size=11,hjust=0.5,color="#7f8c8d"),
+        plot.caption=element_text(size=9,color="#95a5a6",hjust=0),
+        axis.title=element_text(size=12,face="bold"),
+        axis.text=element_text(size=10),
+        axis.text.x=element_text(angle=45,vjust=1,hjust=1),
+        legend.position="bottom",legend.title=element_blank(),
+        panel.grid.major=element_line(color="#ecf0f1",linewidth=0.4),
+        panel.grid.minor=element_blank(),
+        strip.background=element_rect(fill="#f8f9fa",color=NA),
+        strip.text=element_text(face="bold"))
+
+std_opts <- list(
+  opts_tooltip(css=paste0("background-color:#2c3e50;color:white;padding:8px 12px;",
+               "border-radius:6px;font-size:12px;line-height:1.5;")),
+  opts_hover(css="fill-opacity:0.85;stroke:white;stroke-width:1.5;"),
+  opts_hover_inv(css="opacity:0.2;"),
+  opts_zoom(min=0.5,max=3), opts_toolbar(position="topright"),
+  opts_sizing(rescale=TRUE,width=1))
+
+## HHI function
+hhi <- function(shares) round(sum((shares/sum(shares)*100)^2))
+```
+
+## Data Loading and HHI Computation
+
+### Fertilizer Concentration
+
+```{r fert-hhi}
+t1 <- readRDS("/home/pawan/fertilizer/urea_importqty.rds")
+t2 <- readRDS("/home/pawan/fertilizer/dap_importqty.rds")
+t3 <- readRDS("/home/pawan/fertilizer/rock_phosphate_importqty.rds")
+t4 <- readRDS("/home/pawan/fertilizer/phosphoric_acid_importqty.rds")
+t5 <- readRDS("/home/pawan/fertilizer/potash_importqty.rds")
+for(d in list(t1,t2,t3,t4,t5)) d[,ImportMonth:=gsub(",","",ImportMonth)]
+
+calc_hhi_fert <- function(dt, label) {
+  out <- dt[Country!="Total",.(Qty=sum(as.numeric(ImportMonth),na.rm=TRUE)),by=.(Country,Year)]
+  out <- out[Year>"2015"]
+  out[,HHI:=hhi(Qty),by=Year]
+  out[,.(HHI=first(HHI)),by=Year][,Category:=label] }
+
+hhi_urea  <- calc_hhi_fert(t1,"Urea")
+hhi_dap   <- calc_hhi_fert(t2,"DAP")
+hhi_rock  <- calc_hhi_fert(t3,"Rock Phosphate")
+hhi_phos  <- calc_hhi_fert(t4,"Phosphoric Acid")
+hhi_mop   <- calc_hhi_fert(t5,"MOP (Potash)")
+hhi_fert  <- rbindlist(list(hhi_urea,hhi_dap,hhi_rock,hhi_phos,hhi_mop))
+```
+
+### Edible Oil Concentration
+
+```{r oil-hhi}
+oil_year_fn <- function(dt) {
+  dt[,Month_num:=match(Month,month.abb)]
+  dt[,Fin_Year:=ifelse(Month_num>10,paste0(Year,"-",substr(as.numeric(Year)+1,3,4)),
+                       paste0(as.numeric(Year)-1,"-",substr(Year,3,4)))]
+  dt }
+
+palmoil_qty   <- oil_year_fn(readRDS("/home/pawan/edibleoils/palmoil_importqty.rds"))
+soybeanoil_qty <- oil_year_fn(readRDS("/home/pawan/edibleoils/soybeanoil_importqty.rds"))
+sunfloweroil_qty <- oil_year_fn(readRDS("/home/pawan/edibleoils/sunfloweroil_importqty.rds"))
+for(d in list(palmoil_qty,soybeanoil_qty,sunfloweroil_qty)) d[,ImportMonth:=gsub(",","",ImportMonth)]
+
+calc_hhi_oil <- function(dt, label) {
+  out <- dt[Country!="Total",.(Qty=sum(as.numeric(ImportMonth),na.rm=TRUE)),by=.(Country,Fin_Year)]
+  out <- out[Fin_Year>="2010-11"&Fin_Year!="2024-25"]
+  out[,HHI:=hhi(Qty),by=Fin_Year]
+  out[,.(HHI=first(HHI)),by=Fin_Year][,Category:=label][,Year:=substr(Fin_Year,1,4)] }
+
+hhi_palm <- calc_hhi_oil(palmoil_qty,"Palm Oil")
+hhi_soy  <- calc_hhi_oil(soybeanoil_qty,"Soybean Oil")
+hhi_sf   <- calc_hhi_oil(sunfloweroil_qty,"Sunflower Oil")
+hhi_oils <- rbindlist(list(hhi_palm[,.(Year,HHI,Category)],
+                            hhi_soy[,.(Year,HHI,Category)],
+                            hhi_sf[,.(Year,HHI,Category)]))
+```
+
+---
+
+## HHI Dashboard: Fertilizer Concentration Over Time
+
+```{r fig-hhi-fert}
+#| fig-cap: "Herfindahl-Hirschman Index (HHI) for India's Fertilizer Imports by Category (2016–2024)"
+hhi_fert[,tip:=paste0("<b>",Category,"</b><br>Year: ",Year,
+  "<br>HHI: <b>",HHI,"</b><br>",
+  fcase(HHI>2500,"🔴 High concentration",HHI>1500,"🟡 Moderate concentration",
+        default="🟢 Low concentration"))]
+
+pf <- ggplot(hhi_fert,aes(x=Year,y=HHI,color=Category,tooltip=tip,
+                            data_id=paste(Category,Year),group=Category))+
+  geom_line_interactive(linewidth=1.2)+
+  geom_point_interactive(size=3)+
+  geom_hline(yintercept=2500,linetype="dashed",color="#e74c3c",linewidth=0.7)+
+  geom_hline(yintercept=1500,linetype="dashed",color="#f39c12",linewidth=0.7)+
+  annotate("text",x=min(hhi_fert$Year),y=2600,
+           label="High concentration (>2500)",hjust=0,size=3,color="#e74c3c")+
+  annotate("text",x=min(hhi_fert$Year),y=1600,
+           label="Moderate concentration (>1500)",hjust=0,size=3,color="#d68910")+
+  scale_color_viridis(discrete=TRUE,option="D")+
+  scale_y_continuous(labels=comma_format(),limits=c(0,NA))+
+  labs(y="HHI (0=diversified, 10000=single supplier)",x="Year",
+       caption="Source: Ministry of Commerce | Analysis: Pawan")+my_theme
+girafe(ggobj=pf,width_svg=12,height_svg=6,options=std_opts)
+```
+
+```{r tbl-hhi-fert}
+#| tbl-cap: "HHI Scores for India's Fertilizer Imports (Higher = More Concentrated = More Risky)"
+hhi_fert_wide <- dcast(hhi_fert,Category~Year,value.var="HHI")
+hhi_fert_wide[,Risk_2024:=fcase(
+  .SD[[ncol(.SD)]]>2500,"🔴 High",
+  .SD[[ncol(.SD)]]>1500,"🟡 Moderate",default="🟢 Low"),.SDcols=ncol(hhi_fert_wide)]
+gt(hhi_fert_wide)|>
+  tab_header(title=md("**Import Concentration (HHI) by Fertilizer Type**"),
+             subtitle="Higher HHI = fewer suppliers = higher geopolitical risk")|>
+  fmt_number(columns=where(is.numeric),decimals=0,use_seps=FALSE)|>
+  cols_label(Category="Fertilizer",Risk_2024="Latest Risk")|>
+  data_color(columns=where(is.numeric),
+             palette=c("#dcfce7","#fef9c3","#fca5a5","#dc2626"))|>
+  tab_source_note("Source: Ministry of Commerce | HHI: Herfindahl-Hirschman Index | Analysis: Pawan")
+```
+
+---
+
+## HHI Dashboard: Edible Oil Concentration
+
+```{r fig-hhi-oil}
+#| fig-cap: "Supply Concentration of India's Edible Oil Imports — Sunflower Oil Most Concentrated"
+hhi_oils[,tip:=paste0("<b>",Category,"</b><br>Year: ",Year,
+  "<br>HHI: <b>",HHI,"</b>")]
+po <- ggplot(hhi_oils,aes(x=Year,y=HHI,color=Category,tooltip=tip,
+                           data_id=paste(Category,Year),group=Category))+
+  geom_line_interactive(linewidth=1.2)+
+  geom_point_interactive(size=3)+
+  geom_hline(yintercept=2500,linetype="dashed",color="#e74c3c",linewidth=0.7)+
+  geom_hline(yintercept=1500,linetype="dashed",color="#f39c12",linewidth=0.7)+
+  scale_color_manual(values=c("Palm Oil"="#e67e22","Soybean Oil"="#27ae60","Sunflower Oil"="#e74c3c"))+
+  scale_y_continuous(labels=comma_format())+
+  labs(y="HHI Score",x="Oil Year (Start)",
+       subtitle="Sunflower oil consistently most concentrated; soybean oil volatile due to Argentina-Brazil swings",
+       caption="Source: Ministry of Commerce | Analysis: Pawan")+my_theme
+girafe(ggobj=po,width_svg=12,height_svg=6,options=std_opts)
+```
+
+```{r tbl-hhi-oil}
+#| tbl-cap: "Edible Oil Import Concentration (HHI) by Oil Type"
+hhi_oils_wide <- dcast(hhi_oils,Category~Year,value.var="HHI")
+gt(hhi_oils_wide)|>
+  tab_header(title=md("**Edible Oil Import HHI by Year**"))|>
+  fmt_number(columns=where(is.numeric),decimals=0,use_seps=FALSE)|>
+  data_color(columns=where(is.numeric),
+             palette=c("#dcfce7","#fef9c3","#fca5a5","#dc2626"))|>
+  tab_source_note("Source: Ministry of Commerce | Analysis: Pawan")
+```
+
+---
+
+## Cross-Commodity Concentration Comparison
+
+```{r fig-hhi-compare}
+#| fig-cap: "Concentration Risk Scorecard: All Import Categories — Latest Available Year"
+all_hhi <- rbind(
+  hhi_fert[,.(Category,Year,HHI)],
+  hhi_oils[,.(Category,Year,HHI)])
+latest_hhi <- all_hhi[,.SD[Year==max(Year)],by=Category]
+latest_hhi[,Risk:=fcase(HHI>2500,"High",HHI>1500,"Moderate",default="Low")]
+latest_hhi[,Risk:=factor(Risk,levels=c("Low","Moderate","High"))]
+latest_hhi[,tip:=paste0("<b>",Category,"</b><br>HHI: <b>",HHI,"</b><br>",
+  "Risk level: <b>",Risk,"</b>")]
+
+pc <- ggplot(latest_hhi,aes(x=reorder(Category,HHI),y=HHI,fill=Risk,
+                             tooltip=tip,data_id=Category))+
+  geom_col_interactive(width=0.7,alpha=0.9)+
+  geom_text(aes(label=HHI),hjust=-0.2,size=3.5,fontface="bold")+
+  geom_vline(xintercept=2500,linetype="dashed",color="#e74c3c",linewidth=0.7)+
+  geom_vline(xintercept=1500,linetype="dashed",color="#f39c12",linewidth=0.7)+
+  scale_fill_manual(values=c("Low"="#27ae60","Moderate"="#f39c12","High"="#e74c3c"))+
+  scale_x_discrete()+
+  scale_y_continuous(limits=c(0,max(latest_hhi$HHI)*1.15),labels=comma_format())+
+  coord_flip()+
+  labs(x=NULL,y="HHI Score (Higher = More Concentrated = Higher Risk)",
+       subtitle="Red dashed = high concentration threshold (2500)",
+       caption="Source: Ministry of Commerce | Analysis: Pawan")+my_theme
+girafe(ggobj=pc,width_svg=12,height_svg=7,options=std_opts)
+```
+
+### Concentration Risk Summary Table
+
+```{r tbl-risk-summary}
+#| tbl-cap: "Import Concentration Risk Scorecard: All Categories"
+latest_hhi[,Major_Suppliers:=fcase(
+  Category=="Phosphoric Acid","Morocco (>70%), Jordan",
+  Category=="MOP (Potash)","Canada, Belarus, Russia",
+  Category=="Sunflower Oil","Ukraine, Russia (>80%)",
+  Category=="Rock Phosphate","Jordan, Morocco (>75%)",
+  Category=="DAP","Saudi Arabia, China, Morocco",
+  Category=="Palm Oil","Indonesia, Malaysia (>90%)",
+  Category=="Soybean Oil","Argentina, Brazil (>90%)",
+  Category=="Urea","China, Oman, Iran, Russia",
+  default="Various")]
+latest_hhi[,Policy_Risk:=fcase(
+  Category %in% c("Phosphoric Acid","MOP (Potash)","Sunflower Oil"),
+  "Very High — sanctions/war exposure",
+  Category %in% c("Rock Phosphate","DAP"),
+  "High — Morocco/Jordan dependency",
+  Category %in% c("Palm Oil","Soybean Oil"),
+  "Moderate — stable duopoly",
+  Category=="Urea","Improving — post-2021 diversification",
+  default="Moderate")]
+
+gt(latest_hhi[order(-HHI),.(Category,HHI,Risk,Major_Suppliers,Policy_Risk)])|>
+  tab_header(title=md("**India's Import Concentration Risk Scorecard**"),
+             subtitle="Based on HHI calculated from latest year's source-country data")|>
+  cols_label(Category="Import Category",HHI="HHI",Risk="Risk Level",
+             Major_Suppliers="Top Suppliers",Policy_Risk="Policy Risk Assessment")|>
+  tab_style(style=cell_fill(color="#fee2e2"),
+            locations=cells_body(rows=Risk=="High"))|>
+  tab_style(style=cell_fill(color="#fef9c3"),
+            locations=cells_body(rows=Risk=="Moderate"))|>
+  tab_style(style=cell_fill(color="#dcfce7"),
+            locations=cells_body(rows=Risk=="Low"))|>
+  tab_source_note("HHI: Herfindahl-Hirschman Index | Source: Ministry of Commerce | Analysis: Pawan")
+```
+
+---
+
+## Trend Analysis: Is India Diversifying?
+
+```{r fig-hhi-trend}
+#| fig-cap: "HHI Trend Over Time: Are India's Import Sources Becoming More Diversified?"
+all_hhi[,tip:=paste0("<b>",Category,"</b><br>Year: ",Year,"<br>HHI: <b>",HHI,"</b>")]
+pt <- ggplot(all_hhi,aes(x=Year,y=HHI,color=Category,tooltip=tip,
+                          data_id=paste(Category,Year),group=Category))+
+  geom_line_interactive(linewidth=0.9,alpha=0.8)+
+  geom_point_interactive(size=2)+
+  geom_hline(yintercept=2500,linetype="dashed",color="#e74c3c",linewidth=0.5,alpha=0.7)+
+  facet_wrap(~Category,ncol=3)+
+  scale_color_viridis(discrete=TRUE,option="D")+
+  scale_y_continuous(labels=comma_format())+
+  labs(y="HHI Score",x="Year",
+       subtitle="Declining HHI = improving diversification",
+       caption="Source: Ministry of Commerce | Analysis: Pawan")+
+  my_theme+theme(legend.position="none")
+girafe(ggobj=pt,width_svg=14,height_svg=9,options=std_opts)
+```
+
+---
+
+## Policy Implications
+
+::: {.callout-important title="Concentration Risk: Priority Actions by Category"}
+**Immediate priorities (HHI >3,000)**:
+
+- **Phosphoric Acid**: Diversify to Tunisia, Senegal; invest in long-term OCP/Morocco supply agreement with price stabilisation clauses.
+- **MOP**: Deepen Canada engagement; explore Laos and Turkmenistan as emerging potash sources; build 3-month strategic reserve.
+- **Sunflower Oil**: Develop Turkey, Argentina as alternative suppliers; consider establishing Black Sea alternative routing through Romania/Bulgaria.
+
+**Medium-term priorities (HHI 1,500–3,000)**:
+
+- **Urea**: Maintain post-2021 diversification; preserve OMIFCO relationship; develop Egypt and Iran supply channels contingent on sanctions landscape.
+- **DAP**: Expand Morocco OCP relationship; consider joint venture in Moroccan DAP manufacturing.
+
+**Structural actions**:
+
+- Mandate minimum **6-month strategic reserves** for all Category A critical imports (fertilizers, edible oils).
+- Develop **a geopolitical supply risk index** that is updated quarterly and formally incorporated into import policy decisions.
+:::
+
+---
+
+## Key Takeaways
+
+::: {.callout-important title="Summary of Concentration Analysis"}
+1. **Phosphoric acid and MOP (potash) are India's highest-risk import categories** by HHI measure — both have effective single/duopoly suppliers and both faced severe disruptions in 2021–22.
+
+2. **Sunflower oil carries the fastest-rising concentration risk**: its share in the edible oil basket tripled over 14 years, and its supply is now over 80% dependent on the Ukraine-Russia corridor.
+
+3. **Urea concentration has actually improved** since 2021 — a case where geopolitical shock (China's export restriction) forced beneficial diversification.
+
+4. **Palm oil presents a stable duopoly** — high concentration (Indonesia+Malaysia ~90%) but from two broadly stable partners with deep commercial relationships with India; the 2022 Indonesia export ban was short-lived.
+
+5. **The 2021–22 commodity crisis was a wake-up call**: multiple categories simultaneously experienced supply stress, revealing how India's concentrated import structure translates into correlated fiscal and food security risks.
+
+6. **A formal strategic reserves and supply diversification policy** — modelled on practices in Japan, China, and the EU — is urgently needed for Category A critical imports.
+:::

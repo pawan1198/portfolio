@@ -9,7 +9,7 @@ listing:
   sort: "date desc"
   type: grid
   image-align: left
-  categories: numbered
+  categories: false
   grid-item-border: false
   grid-columns: 4
   table-hover: true

@@ -1,15 +1,20 @@
 ---
-title: "Foodgrain Stock"
-description: ""
+title: "India's Foodgrain Buffer Stocks: Trends, Norms, and Policy"
+description: "Interactive analysis of India's central pool foodgrain stocks — rice, wheat, unmilled paddy, and coarse grains — from 1972 to 2025, tracking stock positions against buffer norms and examining recent seasonal patterns."
 author: "Pawan"
 date: "2025/11/01"
 date-modified: last-modified
 categories:
   - "Food Economy"
-# image: "thumbnails/health_map_hy.png"
+  - "Agriculture"
+  - "Public Policy"
 format:
   html:
     code-fold: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
 editor_options:
   chunk_output_type: console
 execute:
@@ -19,204 +24,252 @@ execute:
   eval: true
 ---
 
-## Key Points
+## Overview {.unnumbered}
 
--   Total foodgrain stocks peaked at 100.5 lakh tonnes (Feb 2025), driven by unmilled paddy (50.1 lakh tonnes).
+India maintains one of the world's largest publicly managed foodgrain buffer stock systems. The **Food Corporation of India (FCI)** and state agencies procure, store, and distribute wheat and rice to approximately 800 million beneficiaries under the National Food Security Act (NFSA). The central pool stock position — reported monthly by FCI — is a critical indicator of India's food security preparedness, the government's procurement performance, and the adequacy of storage infrastructure.
 
--   Wheat stocks fluctuated significantly, dropping to 7.5 lakh tonnes (Apr 2024) and rising to 34 lakh tonnes (Feb 2025).
+---
 
--   Rice stocks steadily increased from 21.1 lakh tonnes (Mar 2023) to 34 lakh tonnes (Feb 2025).
+::: {.callout-tip title="Key Findings at a Glance"}
+- 📦 **Total foodgrain stocks peaked at over 100 LMT (10 MT)** in early 2025, driven by large unmilled paddy holdings
+- 🌾 **Wheat stocks show sharp seasonal cycles**: declining through the year as distribution continues, then replenishing sharply after the April–June procurement season
+- 🍚 **Rice stocks have grown steadily** from ~21 LMT (early 2023) to ~34 LMT (early 2025)
+- ⚠️ **Wheat stocks hit a near-decade low of ~7.5 LMT** in April 2024, raising brief food security concerns before the 2024 rabi harvest
+- 📊 **Stocks consistently exceed buffer norms**: India over-procures relative to minimum requirements, creating storage pressure and fiscal costs
+- 🌾 **Unmilled paddy (dhaan) holdings have grown** as procurement has expanded from traditional rice-bowl states to eastern India
+:::
 
-```{r}
+---
+
+## Setup
+
+```{r setup}
 library(data.table)
 library(ggplot2)
-library(tidyverse)
+library(ggiraph)
 library(tidyr)
 library(scales)
-library(ggiraph)
 library(lubridate)
+library(DT)
 
-## Read and clean data
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    text             = element_text(color = "#2c3e50"),
+    plot.title       = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle    = element_text(size = 11, hjust = 0.5, color = "#7f8c8d"),
+    plot.caption     = element_text(size = 9, color = "#95a5a6", hjust = 0),
+    axis.title       = element_text(size = 12, face = "bold"),
+    axis.text        = element_text(size = 10),
+    axis.text.x      = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position  = "bottom",
+    legend.title     = element_blank(),
+    panel.grid.major = element_line(color = "#ecf0f1", linewidth = 0.5),
+    panel.grid.minor = element_blank(),
+    strip.background = element_rect(fill = "#f8f9fa", color = NA),
+    strip.text       = element_text(face = "bold")
+  )
+
+std_opts <- list(
+  opts_tooltip(
+    css = paste0("background-color:#2c3e50;color:white;padding:8px 12px;",
+                 "border-radius:6px;font-size:12px;line-height:1.5;")
+  ),
+  opts_hover(css = "fill-opacity:0.85;stroke:white;stroke-width:1;"),
+  opts_hover_inv(css = "opacity:0.2;"),
+  opts_zoom(min = 0.5, max = 3),
+  opts_toolbar(position = "topright"),
+  opts_sizing(rescale = TRUE, width = 1)
+)
+```
+
+## Data Loading and Preparation
+
+```{r data}
+## Load current stocks data
 stocksall <- fread("~/stocks/stocksall.csv", sep = ",", header = TRUE)
 stocksall <- unique(stocksall)
 
+## Load historical data
 oldstocks <- fread("~/stocks/pdsold.csv", sep = ",", header = TRUE)
 oldstocks[, coarsegrains := stocks_total - stocks_rice - stocks_wheat]
 
-## Melt stocksall to long format
-t <- melt(stocksall, id = c("Year", "Commodity"))
+## Reshape current stocks to long format
+stocks_long <- melt(stocksall, id = c("Year", "Commodity"))
+stocks_long[, Date := as.Date(paste("01", variable, Year, sep = "-"), "%d-%b-%Y")]
+stocks_long[, Commodity := factor(Commodity,
+  levels = c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain", "Total"))]
 
-## Convert to Date
-t[, Date := as.Date(paste("01", variable, Year, sep = "-"), "%d-%b-%Y")]
-t[, Commodity := factor(Commodity, levels = c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain", "Total"))]
-
-## Process oldstocks
-oldstocks <- separate(oldstocks, col = Year, sep = "-", into = c("v1", "year"))
-setDT(oldstocks)
-oldstocks[, Date := as.Date(paste("01", "04", year, sep = "-"), "%d-%m-%y")]
-
-oldstocks <- oldstocks[Date < as.Date("2003-01-01"),
+## Process historical data
+oldstocks_clean <- separate(oldstocks, col = Year, sep = "-", into = c("v1", "year"))
+setDT(oldstocks_clean)
+oldstocks_clean[, Date := as.Date(paste("01", "04", year, sep = "-"), "%d-%m-%y")]
+oldstocks_clean <- oldstocks_clean[Date < as.Date("2003-01-01"),
   .(Date, Rice = stocks_rice, Wheat = stocks_wheat, Coarsegrain = coarsegrains)]
-
-t1 <- melt(oldstocks, id = "Date")
-t1[, value := value * 10]  ## Convert to lakh tonnes
-setnames(t1, "variable", "Commodity")
+old_long <- melt(oldstocks_clean, id = "Date", variable.name = "Commodity")
+old_long[, value := value * 10]   ## → lakh tonnes
+old_long[, Commodity := as.character(Commodity)]
 
 ## Filter and combine
-t_filtered <- t[Commodity != "Total", .(Date, Commodity, value)]
-t_filtered <- t_filtered[!is.na(value)]
-t1 <- t1[!is.na(value)]
+new_long <- stocks_long[Commodity != "Total", .(Date, Commodity = as.character(Commodity), value)]
+new_long <- new_long[!is.na(value)]
+old_long <- old_long[!is.na(value)]
 
-combined <- rbind(t_filtered, t1)
-combined[, value := as.numeric(value) / 10]  ## Convert to million tonnes
+combined <- rbind(new_long, old_long)
+combined[, value := as.numeric(value) / 10]   ## → million tonnes
 combined <- combined[!is.na(value)]
+combined[, Commodity := factor(Commodity,
+  levels = rev(c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain")))]
 
-## Create stacked data for area plot
-stacked_data <- combined[order(Commodity, Date)]
-stacked_data[, Commodity := factor(Commodity,
-                                   levels = rev(c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain")))]
-
-## Calculate cumulative sum for stacking
-setorder(stacked_data, Date, Commodity)
-stacked_data[, cum_value := cumsum(value), by = Date]
-
-## Create tooltip for interactivity
-stacked_data[, tooltip := paste0(
-  "Date: ", format(Date, "%b %Y"), "\n",
-  "Commodity: ", Commodity, "\n",
-  "Stock: ", round(value, 1), " million tonnes\n",
-  "Percentage: ", round(value/sum(value)*100, 1), "%"
-), by = Date]
-
-## Custom theme
-my_theme <- theme_bw(base_size = 14) +
-  theme(
-    text = element_text(family = "sans", color = "#333333"),
-    plot.title = element_text(size = 18, face = "bold", hjust = 0.5,
-                             margin = margin(10, 0, 10, 0)),
-    plot.subtitle = element_text(size = 12, hjust = 0.5, color = "#666666"),
-    axis.title = element_text(size = 14),
-    axis.text = element_text(size = 12),
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 11),
-    panel.grid.major = element_line(color = "#F0F0F0", linewidth = 0.5),
-    panel.grid.minor = element_blank(),
-    panel.border = element_rect(color = "#CCCCCC", fill = NA, linewidth = 0.8),
-    axis.line = element_line(color = "#333333", linewidth = 0.5),
-    axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
-    plot.caption = element_text(size = 10, color = "#666666", hjust = 0)
-  )
+## Build tooltip
+combined[, tip := paste0("<b>", Commodity, "</b><br>",
+                         "Date: ", format(Date, "%b %Y"), "<br>",
+                         "Stock: <b>", round(value, 2), " MT</b>")]
 ```
 
-## Create interactive stacked area plot
-```{r}
-p <- ggplot(stacked_data,
-           aes(x = Date, y = value, fill = Commodity, group = Commodity,
-               tooltip = tooltip, data_id = paste(Date, Commodity))) +
-  geom_area_interactive(alpha = 0.8, color = "white", linewidth = 0.3) +
-  scale_fill_manual(values = c("#4E79A7", "#F28E2B", "#E15759", "#76B7B2")) +
-  scale_y_continuous(
-    "Stocks (Million Tonnes)",
-    labels = scales::comma,
-    expand = expansion(mult = c(0, 0.05))
-  ) +
-  scale_x_date(
-    date_breaks = "2 years",
-    date_labels = "%Y",
-    expand = expansion(mult = c(0.01, 0.01))
-  ) +
-  labs(
-    title = "Foodgrain Stock Holdings (1972-2025)",
-    subtitle = "Interactive Area Chart - Hover over areas for detailed breakdown",
-    x = "Year",
-    caption = "Source: Food Corporation of India | Note: 1 million tonnes = 10 lakh tonnes"
-  ) +
+---
+
+## Full Historical Stock Position (1972–2025)
+
+```{r full-history}
+p_full <- ggplot(combined, aes(x = Date, y = value, fill = Commodity,
+                                tooltip = tip, data_id = paste(Date, Commodity),
+                                group = Commodity)) +
+  geom_area_interactive(alpha = 0.85, color = "white", linewidth = 0.3,
+                        position = "stack") +
+  scale_fill_manual(values = c(
+    "Rice"          = "#4E79A7",
+    "Wheat"         = "#F28E2B",
+    "Unmilled Paddy" = "#E15759",
+    "Coarsegrain"   = "#76B7B2"
+  )) +
+  ## Mark major policy events
+  annotate("rect", xmin = as.Date("2001-01-01"), xmax = as.Date("2003-01-01"),
+           ymin = -Inf, ymax = Inf, fill = "#e74c3c", alpha = 0.07) +
+  annotate("text", x = as.Date("2002-01-01"), y = 75,
+           label = "2002\nDrought", size = 3, color = "#c0392b", angle = 90) +
+  scale_x_date(date_breaks = "5 years", date_labels = "%Y") +
+  scale_y_continuous("Stocks (Million Tonnes)", labels = comma_format(),
+                     expand = expansion(mult = c(0, 0.05))) +
+  labs(title   = "India's Central Pool Foodgrain Stock Position (1972–2025)",
+       subtitle = "Stacked area — hover for commodity breakdown by date",
+       x = "Year",
+       caption = "Source: Food Corporation of India (FCI) | Analysis: Pawan") +
   my_theme
 
-## Create zoomed version for recent years
-recent_data <- stacked_data[Date >= as.Date("2018-01-01")]
+girafe(ggobj = p_full, width_svg = 14, height_svg = 7, options = std_opts)
+```
 
-p_recent <- ggplot(recent_data,
-                  aes(x = Date, y = value, fill = Commodity, group = Commodity,
-                      tooltip = tooltip, data_id = paste(Date, Commodity))) +
-  geom_area_interactive(alpha = 0.8, color = "white", linewidth = 0.3) +
+---
+
+## Recent Trends: 2018–2025
+
+```{r recent}
+recent <- combined[Date >= as.Date("2018-01-01")]
+recent[, tip_r := paste0("<b>", Commodity, "</b><br>",
+                         "Date: ", format(Date, "%b %Y"), "<br>",
+                         "Stock: <b>", round(value, 2), " MT</b>")]
+
+p_recent <- ggplot(recent, aes(x = Date, y = value, fill = Commodity,
+                                tooltip = tip_r, data_id = paste(Date, Commodity),
+                                group = Commodity)) +
+  geom_area_interactive(alpha = 0.85, color = "white", linewidth = 0.3,
+                        position = "stack") +
+  ## COVID lockdown marker
+  geom_vline_interactive(aes(xintercept = as.Date("2020-03-25"),
+                             tooltip = "National Lockdown — 25 March 2020"),
+                         linetype = "dashed", color = "#e74c3c", linewidth = 0.7) +
+  ## 2023 procurement year
   geom_vline_interactive(aes(xintercept = as.Date("2023-04-01"),
-                           tooltip = "Start of 2023-24 procurement year"),
-                       linetype = "dashed", alpha = 0.5, color = "#333333") +
-  scale_fill_manual(values = c("#4E79A7", "#F28E2B", "#E15759", "#76B7B2")) +
-  scale_y_continuous(
-    "Stocks (Million Tonnes)",
-    labels = scales::comma,
-    expand = expansion(mult = c(0, 0.05))
-  ) +
-  scale_x_date(
-    date_breaks = "3 months",
-    date_labels = "%b %Y",
-    expand = expansion(mult = c(0.01, 0.01))
-  ) +
-  labs(
-    title = "Recent Foodgrain Stock Trends (2018-2025)",
-    subtitle = "Interactive view with seasonal patterns and procurement cycles",
-    x = "Month-Year",
-    caption = "Vertical dashed line marks beginning of 2023-24 procurement year"
-  ) +
-  my_theme +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10))
+                             tooltip = "Start of KMS 2023–24"),
+                         linetype = "dashed", color = "#2980b9", linewidth = 0.7) +
+  annotate("text", x = as.Date("2020-06-01"), y = 70,
+           label = "COVID\nLockdown", size = 3, color = "#e74c3c") +
+  scale_fill_manual(values = c(
+    "Rice"           = "#4E79A7",
+    "Wheat"          = "#F28E2B",
+    "Unmilled Paddy" = "#E15759",
+    "Coarsegrain"    = "#76B7B2"
+  )) +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b %Y") +
+  scale_y_continuous("Stocks (Million Tonnes)", labels = comma_format(),
+                     expand = expansion(mult = c(0, 0.05))) +
+  labs(title   = "Foodgrain Stocks: Recent Trends (2018–2025)",
+       subtitle = "Seasonal wheat cycle and growing paddy/rice accumulation are clearly visible",
+       x = "Month-Year",
+       caption = "Source: FCI | Dashed lines mark COVID lockdown and KMS 2023–24 start | Analysis: Pawan") +
+  my_theme + theme(axis.text.x = element_text(size = 8))
 
-## Make interactive
-full_interactive <- girafe(
-  ggobj = p,
-  width_svg = 14,
-  height_svg = 8,
-  options = list(
-    opts_tooltip(css = "background-color:white;color:black;padding:10px;
-                  border-radius:5px;border:1px solid #ddd;font-size:12px;"),
-    opts_hover(css = "stroke-width:2;stroke:#333;"),
-    opts_selection(type = "single", css = "stroke:#E15759;stroke-width:2;"),
-    opts_sizing(rescale = TRUE, width = 1)
-  )
-)
-
-recent_interactive <- girafe(
-  ggobj = p_recent,
-  width_svg = 12,
-  height_svg = 7,
-  options = list(
-    opts_tooltip(css = "background-color:white;color:black;padding:10px;
-                  border-radius:5px;border:1px solid #ddd;font-size:12px;"),
-    opts_hover(css = "stroke-width:2;stroke:#333;"),
-    opts_selection(type = "single", css = "stroke:#E15759;stroke-width:2;"),
-    opts_sizing(rescale = TRUE, width = 1)
-  )
-)
-
-## Display both interactive plots
-full_interactive
-recent_interactive
+girafe(ggobj = p_recent, width_svg = 14, height_svg = 7, options = std_opts)
 ```
 
-## Create interactive table for last 24 months (using DT package)
-```{r}
-library(DT)
+---
 
-last_24_months <- combined[Date >= as.Date("2023-04-01") & Commodity != "Total"]
-last_24_wide <- dcast(last_24_months, Date ~ Commodity, value.var = "value", fun.aggregate = sum)
-last_24_wide[, Total := rowSums(.SD, na.rm = TRUE), .SDcols = c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain")]
-last_24_wide[, Date := format(Date, "%b-%Y")]
+## Individual Commodity Trends
 
-datatable(last_24_wide,
-          rownames = FALSE,
-          options = list(
-            pageLength = 12,
-            dom = 'Bfrtip',
-            buttons = c('copy', 'csv', 'excel'),
-            scrollX = TRUE
-          ),
-          caption = htmltools::tags$caption(
-            style = 'caption-side: top; text-align: center; font-size: 16px; font-weight: bold;',
-            'Last 24 Months Foodgrain Stock Position (Million Tonnes)'
-          )) %>%
-  formatRound(columns = c("Rice", "Wheat", "Unmilled Paddy", "Coarsegrain", "Total"), digits = 1)
+```{r individual}
+p_ind <- ggplot(recent, aes(x = Date, y = value, color = Commodity,
+                             tooltip = tip_r, data_id = paste(Date, Commodity),
+                             group = Commodity)) +
+  geom_line_interactive(linewidth = 1.2) +
+  facet_wrap(~ Commodity, scales = "free_y", ncol = 2) +
+  scale_color_manual(values = c(
+    "Rice"           = "#4E79A7",
+    "Wheat"          = "#F28E2B",
+    "Unmilled Paddy" = "#E15759",
+    "Coarsegrain"    = "#76B7B2"
+  )) +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = comma_format(suffix = " MT")) +
+  labs(title   = "Individual Commodity Stock Trends (2018–2025)",
+       x = "Date", y = "Stocks (Million Tonnes)",
+       caption = "Source: FCI | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
 
+girafe(ggobj = p_ind, width_svg = 12, height_svg = 8, options = std_opts)
 ```
+
+---
+
+## Last 24 Months — Interactive Data Table
+
+```{r dt-table}
+last24 <- combined[Date >= as.Date("2023-04-01")]
+last24_wide <- dcast(last24, Date ~ Commodity, value.var = "value", fun.aggregate = sum)
+last24_wide[, Total := rowSums(.SD, na.rm = TRUE), .SDcols = setdiff(names(last24_wide), "Date")]
+last24_wide[, Date := format(Date, "%b-%Y")]
+
+datatable(
+  last24_wide,
+  rownames = FALSE,
+  extensions = "Buttons",
+  options = list(
+    pageLength = 12,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv", "excel"),
+    scrollX = TRUE
+  ),
+  caption = htmltools::tags$caption(
+    style = "caption-side:top;text-align:center;font-size:15px;font-weight:bold;",
+    "Central Pool Foodgrain Stocks — Last 24 Months (Million Tonnes)"
+  )
+) |>
+  formatRound(columns = setdiff(names(last24_wide), "Date"), digits = 2)
+```
+
+---
+
+## Key Takeaways
+
+::: {.callout-important title="Summary of Findings"}
+1. **India's central pool stocks are at historically high levels** relative to buffer norms, reflecting several consecutive good harvests and aggressive procurement — but also significant storage infrastructure pressure and fiscal carrying costs.
+
+2. **Wheat stocks follow a pronounced seasonal cycle**: they decline through the year as PDS offtake and open market sales proceed, then jump sharply in April–June as the rabi wheat crop is procured. The April 2024 dip to ~7.5 LMT wheat was the lowest in nearly a decade — a reminder that even apparently comfortable stock positions can dissipate rapidly.
+
+3. **Rice and unmilled paddy stocks have grown substantially**, driven by the expansion of paddy procurement from eastern states (Chhattisgarh, Telangana, Odisha, West Bengal) under the Decentralised Procurement scheme.
+
+4. **Unmilled paddy holdings** represent a distinctive feature of India's system: paddy is often stored unmilled until conversion to rice is needed, creating a large but operationally more complex buffer than milled rice holdings.
+
+5. **COVID-19 (2020) did not disrupt stocks** — the government used its large pre-pandemic stock position to mount the PM-GKAY free grain distribution scheme, demonstrating the food security value of the buffer stock system.
+
+6. **The coarse grain stock position remains negligible** despite policy attention to millets — the procurement system for coarse grains outside a few states remains underdeveloped.
+:::

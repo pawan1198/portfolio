@@ -2,6 +2,7 @@
 title: "Article"
 description: "Articles on , statistical analysis, and data storytelling."
 listing:
+  id: "article"
   contents: article
   sort: "date desc"
   type: grid

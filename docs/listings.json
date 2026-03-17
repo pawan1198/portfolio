@@ -30,7 +30,6 @@
   {
     "listing": "/statistics-with-r.html",
     "items": [
-      "/statistics-with-r/graphical-presentation-function.html",
       "/statistics-with-r/chapter4.html",
       "/statistics-with-r/chapter3.html",
       "/statistics-with-r/chapter2.html",
@@ -39,9 +38,6 @@
   },
   {
     "listing": "/article.html",
-    "items": [
-      "/article/article1.html",
-      "/article/article2.html"
-    ]
+    "items": []
   }
 ]

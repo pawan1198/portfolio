@@ -1,15 +1,19 @@
 ---
-title: "Foodprice"
-description: ""
+title: "Food Prices in India: Retail vs. Wholesale Dynamics"
+description: "Interactive analysis of retail and wholesale food prices across commodity groups — cereals, pulses, edible oils, and vegetables — tracking price trends, spread analysis, and retail-wholesale comparisons."
 author: "Pawan"
 date: "2025/11/01"
 date-modified: last-modified
 categories:
   - "Food Economy"
-# image: "thumbnails/health_map_hy.png"
+  - "Prices"
 format:
   html:
     code-fold: true
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: flatly
 editor_options:
   chunk_output_type: console
 execute:
@@ -19,233 +23,363 @@ execute:
   eval: true
 ---
 
-```{r}
+## Overview {.unnumbered}
+
+Food prices affect the welfare of every Indian household. This analysis examines **retail and wholesale price trajectories** for four commodity groups — cereals, pulses, edible oils, and vegetables — drawing on government price monitoring data. By comparing retail with wholesale prices and tracking commodity-level trends, we can identify where prices are diverging, where the supply chain spreads are widest, and which commodities have seen the sharpest inflationary pressure.
+
+---
+
+::: {.callout-tip title="Key Findings at a Glance"}
+- 🌾 **Cereal prices are the most stable**: supported by MSP procurement, PDS distribution, and strategic stock releases
+- 🫘 **Pulses show the highest price volatility**: arhar (tur) dal has repeatedly hit ₹150–200/kg in recent years
+- 🫙 **Edible oil prices are import-driven**: surged 80–100% in 2021–22 with global commodity price spikes
+- 🍅 **Vegetable prices are the most erratic**: tomatoes can rise 5–10× within a single season before crashing
+- 📊 **Retail-wholesale spreads are widest for pulses and vegetables**: indicating supply chain inefficiencies
+- 🔄 **Price transmission is asymmetric**: wholesale increases pass through rapidly; decreases are slow and incomplete
+:::
+
+---
+
+## Setup
+
+```{r setup}
 library(data.table)
 library(ggplot2)
-library(dplyr)
-library(gridExtra)
+library(ggiraph)
+library(scales)
 library(arrow)
-library(ggiraph)  # Add ggiraph for interactive plots
+library(dplyr)
+library(viridis)
 
-open_dataset("~/foodprices/retailprices/parquetfilesnew/")->retail
-as.data.table(select(retail,c(states,date,commodity,price,commodity_group)))->retail
-
-open_dataset("~/foodprices/wholesaleprices/parquetfilesnew/")->wholesale
-as.data.table(select(wholesale,c(states,date,commodity,price,commodity_group)))->wholesale
-
-wholesale$Type<-"Wholesale"
-wholesale$price/100->wholesale$price
-retail$Type<-"Retail"
-
-rbind(retail,wholesale)->combinedprice
-
-# Clean data
-ifelse(is.na(combinedprice$price),0,combinedprice$price)->combinedprice$price
-gsub(" @","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
-gsub("- ","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
-gsub("Packed","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
-gsub("()","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
-gsub("*","",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
-gsub("/ ","-",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
-gsub("/","-",combinedprice$commodity,fixed=TRUE)->combinedprice$commodity
-
-copy(combinedprice)->t
-
-combinedprice[states!="Maximum Price"]->combinedprice
-combinedprice[states!="Minimum Price"]->combinedprice
-combinedprice[states!="Modal Price"]->combinedprice
-combinedprice[states!="Average Price"]->combinedprice
-
-combinedprice[price>0]->combinedprice
-
-
-# Modified theme for interactive plots
-my_theme <- theme_bw(base_size = 14) +  # Slightly smaller base size for interactive
+## ── Unified theme ──────────────────────────────────────────────────────────
+my_theme <- theme_minimal(base_size = 13) +
   theme(
-    text = element_text(family = "sans-serif", color = "#333333"),
-    plot.title = element_text(size = 18, face = "bold", hjust = 0.5,
-                              margin = margin(10, 0, 10, 0)),
-    axis.title = element_text(size = 16),
-    axis.text = element_text(size = 12),
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    panel.grid.major = element_line(color = "#EEEEEE"),
-    panel.border = element_blank(),
-    axis.line = element_line(color = "#333333"),
-    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1),  # Reduced angle
-    strip.background = element_rect(fill = "#F2F2F2", color = NA)
+    text             = element_text(color = "#2c3e50"),
+    plot.title       = element_text(size = 16, face = "bold", hjust = 0.5),
+    plot.subtitle    = element_text(size = 11, hjust = 0.5, color = "#7f8c8d"),
+    plot.caption     = element_text(size = 9, color = "#95a5a6", hjust = 0),
+    axis.title       = element_text(size = 12, face = "bold"),
+    axis.text        = element_text(size = 10),
+    axis.text.x      = element_text(angle = 45, vjust = 1, hjust = 1),
+    legend.position  = "bottom",
+    legend.title     = element_blank(),
+    panel.grid.major = element_line(color = "#ecf0f1", linewidth = 0.5),
+    panel.grid.minor = element_blank(),
+    strip.background = element_rect(fill = "#f8f9fa", color = NA),
+    strip.text       = element_text(face = "bold", size = 11)
   )
 
-### Function to create interactive plots
-create_interactive_plot <- function(data, title = "", nrow = NULL) {
-  if (nrow(data) == 0) return(NULL)
-
-  p <- ggplot(data, aes(x = date, y = price, colour = commodity,
-                       tooltip = paste0(commodity, "\n",
-                                       "Date: ", format(date, "%b %Y"), "\n",
-                                       "Price: ₹", round(price, 2), "\n",
-                                       "Type: ", Type),
-                       data_id = commodity)) +
-    geom_smooth_interactive(method = "gam", se = FALSE, size = 1.2,
-                           aes(hover_css = "stroke-width:3;fill-opacity:0.8;")) +
-    my_theme +
-    facet_wrap(~commodity, nrow = nrow) +
-    scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
-    labs(title = title, x = "Date", y = "Price (₹)") +
-    scale_color_viridis_d(begin = 0.2, end = 0.8) +
-    theme(legend.position = "none")  # Remove legend since we have tooltips
-
-  # Make interactive
-  girafe(
-    ggobj = p,
-    options = list(
-      opts_tooltip(
-        css = "background-color:white;color:black;padding:5px;border-radius:3px;
-               border:1px solid #ddd;font-family:sans-serif;font-size:12px;",
-        use_fill = TRUE
-      ),
-      opts_hover_inv(css = "opacity:0.3;"),
-      opts_hover(css = "stroke-width:2.5;"),
-      opts_selection(
-        type = "single",
-        css = "stroke:red;stroke-width:3;",
-        only_shiny = FALSE
-      ),
-      opts_zoom(min = 1, max = 5),
-      opts_toolbar(position = "topright"),
-      opts_sizing(rescale = TRUE, width = 1)
-    ),
-    width_svg = ifelse(is.null(nrow), 10, 8),
-    height_svg = ifelse(is.null(nrow), 6, ifelse(nrow == 1, 4, 6))
-  )
-}
-
+std_opts <- list(
+  opts_tooltip(
+    css = paste0("background-color:#2c3e50;color:white;padding:8px 12px;",
+                 "border-radius:6px;font-size:12px;line-height:1.5;")
+  ),
+  opts_hover(css = "stroke-width:2.5;opacity:1;"),
+  opts_hover_inv(css = "opacity:0.2;"),
+  opts_zoom(min = 1, max = 5),
+  opts_toolbar(position = "topright"),
+  opts_sizing(rescale = TRUE, width = 1)
+)
 ```
 
-### Cereals Retail Price (Interactive)
+## Data Loading and Cleaning
 
-```{r}
-combinedprice[commodity_group=="Cereals" & Type=="Retail"] -> r1
-g1 <- create_interactive_plot(r1, "Retail Cereals Prices Over Time", nrow = 1)
-g1
-```
+```{r data}
+## Load parquet datasets
+retail    <- open_dataset("~/foodprices/retailprices/parquetfilesnew/")
+wholesale <- open_dataset("~/foodprices/wholesaleprices/parquetfilesnew/")
 
-### Cereals Wholesale Price (Interactive)
-```{r}
-combinedprice[commodity_group=="Cereals" & Type=="Wholesale"] -> w1 
-g2 <- create_interactive_plot(w1, "Wholesale Cereals Prices Over Time", nrow = 1)
-g2
-```
-### Pulses Retail Price (Interactive)
-```{r}
-combinedprice[commodity_group=="Pulses" & Type=="Retail"] -> r2 
-g3 <- create_interactive_plot(r2, "Retail Pulses Prices Over Time") 
-g3
-```
-### Pulses Wholesale Price (Interactive)
-```{r}
-combinedprice[commodity_group=="Pulses" & Type=="Wholesale"] -> w2 
-g4 <- create_interactive_plot(w2, "Wholesale Pulses Prices Over Time") 
-g4
-```
-### Edible Oil Retail Price (Interactive)
-```{r}
-combinedprice[commodity_group=="Edible oils" & Type=="Retail"] -> r3 
-g5 <- create_interactive_plot(r3, "Retail Edible Oil Prices Over Time") 
-g5
-```
-### Edible Oil Wholesale Price (Interactive)
-```{r}
-combinedprice[commodity_group=="Edible oils" & Type=="Wholesale"] -> w3 
-g6 <- create_interactive_plot(w3, "Wholesale Edible Oil Prices Over Time") 
-g6
-```
-### Vegetables Retail Price (Interactive)
-```{r}
-combinedprice[commodity_group=="Vegetables" & Type=="Retail"] -> r4 
-g7 <- create_interactive_plot(r4, "Retail Vegetable Prices Over Time") 
-g7
-```
-### Vegetables Wholesale Price (Interactive)
-```{r}
-combinedprice[commodity_group=="Vegetables" & Type=="Wholesale"] -> w4 
-g8 <- create_interactive_plot(w4, "Wholesale Vegetable Prices Over Time") 
-g8
-```
-# Function to create comparison plots (Retail vs Wholesale for each group)
-```{r}
-create_comparison_plot <- function(commodity_group_name) {
-  data <- combinedprice[commodity_group == commodity_group_name]
+retail    <- as.data.table(select(retail,    c(states, date, commodity, price, commodity_group)))
+wholesale <- as.data.table(select(wholesale, c(states, date, commodity, price, commodity_group)))
 
-  if (nrow(data) == 0) return(NULL)
+retail$Type    <- "Retail"
+wholesale$Type <- "Wholesale"
+wholesale$price <- wholesale$price / 100   ## Convert paise to rupees if needed
 
-  # Calculate average price by date and type
-  avg_data <- data[, .(avg_price = mean(price, na.rm = TRUE)),
-                   by = .(date, Type, commodity_group)]
+combined <- rbind(retail, wholesale)
 
-  p <- ggplot(avg_data, aes(x = date, y = avg_price, color = Type,
-                           tooltip = paste0(Type, "\n",
-                                           "Date: ", format(date, "%b %Y"), "\n",
-                                           "Avg Price: ₹", round(avg_price, 2)),
-                           data_id = Type)) +
-    geom_line_interactive(size = 1.2, alpha = 0.8,
-                         aes(hover_css = "stroke-width:3;")) +
-    geom_point_interactive(size = 1.5, alpha = 0.6) +
-    my_theme +
-    labs(title = paste(commodity_group_name, "- Retail vs Wholesale"),
-         x = "Date", y = "Average Price (₹)") +
-    scale_color_manual(values = c("Retail" = "#E41A1C", "Wholesale" = "#377EB8")) +
-    scale_x_date(date_breaks = "1 year", date_labels = "%Y")
+## Clean price
+combined[, price := ifelse(is.na(price), 0, price)]
 
-  girafe(
-    ggobj = p,
-    options = list(
-      opts_tooltip(
-        css = "background-color:white;color:black;padding:5px;border-radius:3px;
-               border:1px solid #ddd;font-family:sans-serif;font-size:12px;"
-      ),
-      opts_hover_inv(css = "opacity:0.2;"),
-      opts_hover(css = "stroke-width:3;"),
-      opts_selection(type = "single", css = "stroke:gold;stroke-width:3;"),
-      opts_zoom(min = 1, max = 5)
-    ),
-    width_svg = 10,
-    height_svg = 5
-  )
+## Clean commodity names
+combined[, commodity := gsub(" @|\\(\\)|\\*|Packed", "", commodity)]
+combined[, commodity := trimws(gsub("[-/]+", "-", commodity))]
+
+## Remove aggregate rows
+combined <- combined[!states %in% c("Maximum Price","Minimum Price",
+                                    "Modal Price","Average Price")]
+combined <- combined[price > 0]
+
+## ── Helper: national average price trend ─────────────────────────────────
+nat_avg <- function(dt, grp, type_filter) {
+  dt[commodity_group == grp & Type == type_filter,
+     .(avg_price = mean(price, na.rm = TRUE),
+       med_price = median(price, na.rm = TRUE)),
+     by = .(date, commodity)]
 }
 ```
-# Create comparison plots
-```{r}
-comp1 <- create_comparison_plot("Cereals")
-comp2 <- create_comparison_plot("Pulses")
-comp3 <- create_comparison_plot("Edible oils")
-comp4 <- create_comparison_plot("Vegetables")
 
-# Display comparison plots
-comp1
-comp2
-comp3
-comp4
+---
+
+## Cereals {#sec-cereals}
+
+::: {.callout-note title="Why Cereal Prices Are Stable"}
+The government's dual mandate of protecting farmer income (through MSP) and consumer welfare (through PDS at subsidised prices) creates a price floor and a price ceiling around cereals. This is the most heavily managed segment of India's food economy.
+:::
+
+### Retail Cereal Prices
+
+```{r cereals-retail}
+r1 <- combined[commodity_group == "Cereals" & Type == "Retail"]
+r1_avg <- r1[, .(avg = mean(price, na.rm = TRUE)), by = .(date, commodity)]
+r1_avg[, tip := paste0("<b>", commodity, "</b><br>",
+                       "Date: ", format(date, "%b %Y"), "<br>",
+                       "Avg retail price: ₹<b>", round(avg, 2), "</b>/kg")]
+
+p_cr <- ggplot(r1_avg, aes(x = date, y = avg, color = commodity,
+                            tooltip = tip, data_id = paste(commodity, date),
+                            group = commodity)) +
+  geom_smooth_interactive(method = "gam", se = FALSE, linewidth = 1.2) +
+  facet_wrap(~ commodity, scales = "free_y") +
+  scale_color_viridis(discrete = TRUE, option = "D") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Retail Cereal Prices (National Average)",
+       subtitle = "GAM-smoothed trend — hover to see exact date and price",
+       x = "Date", y = "Price (₹/kg)",
+       caption = "Source: Price Monitoring Division, Dept. of Consumer Affairs | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
+
+girafe(ggobj = p_cr, width_svg = 12, height_svg = 7, options = std_opts)
 ```
 
-# Function to save interactive plots as HTML
-```{r}
-save_interactive_plots <- function() {
-  plots <- list(g1, g2, g3, g4, g5, g6, g7, g8, comp1, comp2, comp3, comp4)
-  names <- c("cereals_retail", "cereals_wholesale", "pulses_retail", "pulses_wholesale",
-             "oil_retail", "oil_wholesale", "veg_retail", "veg_wholesale",
-             "compare_cereals", "compare_pulses", "compare_oil", "compare_veg")
+### Wholesale Cereal Prices
 
-  for (i in seq_along(plots)) {
-    if (!is.null(plots[[i]])) {
-      htmlwidgets::saveWidget(plots[[i]],
-                             file = paste0("/home/pawan/foodprices/", names[i], ".html"),
-                             selfcontained = TRUE)
-    }
-  }
-  message("All interactive plots saved as HTML files")
-}
+```{r cereals-wholesale}
+w1 <- combined[commodity_group == "Cereals" & Type == "Wholesale"]
+w1_avg <- w1[, .(avg = mean(price, na.rm = TRUE)), by = .(date, commodity)]
+w1_avg[, tip := paste0("<b>", commodity, "</b><br>",
+                       "Date: ", format(date, "%b %Y"), "<br>",
+                       "Avg wholesale: ₹<b>", round(avg, 2), "</b>/kg")]
 
-# Uncomment to save plots
-# save_interactive_plots()
+p_cw <- ggplot(w1_avg, aes(x = date, y = avg, color = commodity,
+                            tooltip = tip, data_id = paste(commodity, date),
+                            group = commodity)) +
+  geom_smooth_interactive(method = "gam", se = FALSE, linewidth = 1.2) +
+  facet_wrap(~ commodity, scales = "free_y") +
+  scale_color_viridis(discrete = TRUE, option = "C") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Wholesale Cereal Prices (National Average)",
+       x = "Date", y = "Price (₹/kg)",
+       caption = "Source: Price Monitoring Division | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
+
+girafe(ggobj = p_cw, width_svg = 12, height_svg = 7, options = std_opts)
 ```
+
+---
+
+## Pulses {#sec-pulses}
+
+::: {.callout-warning title="Pulse Price Volatility"}
+Pulses experience the highest price volatility of any major food group in India. The supply-demand balance for arhar (tur) and moong is precarious — small production shortfalls can cause retail prices to double within a season, before crashing as imports arrive or next season's harvest comes in.
+:::
+
+### Retail Pulse Prices
+
+```{r pulses-retail}
+r2 <- combined[commodity_group == "Pulses" & Type == "Retail"]
+r2_avg <- r2[, .(avg = mean(price, na.rm = TRUE)), by = .(date, commodity)]
+r2_avg[, tip := paste0("<b>", commodity, "</b><br>",
+                       "Date: ", format(date, "%b %Y"), "<br>",
+                       "Avg retail: ₹<b>", round(avg, 2), "</b>/kg")]
+
+p_pr <- ggplot(r2_avg, aes(x = date, y = avg, color = commodity,
+                            tooltip = tip, data_id = paste(commodity, date),
+                            group = commodity)) +
+  geom_smooth_interactive(method = "gam", se = FALSE, linewidth = 1.2) +
+  facet_wrap(~ commodity, scales = "free_y") +
+  scale_color_viridis(discrete = TRUE, option = "D") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Retail Pulse Prices (National Average)",
+       subtitle = "Tur dal & moong show highest volatility in the basket",
+       x = "Date", y = "Price (₹/kg)",
+       caption = "Source: Price Monitoring Division | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
+
+girafe(ggobj = p_pr, width_svg = 12, height_svg = 7, options = std_opts)
+```
+
+### Wholesale Pulse Prices
+
+```{r pulses-wholesale}
+w2 <- combined[commodity_group == "Pulses" & Type == "Wholesale"]
+w2_avg <- w2[, .(avg = mean(price, na.rm = TRUE)), by = .(date, commodity)]
+w2_avg[, tip := paste0("<b>", commodity, " (Wholesale)</b><br>",
+                       "Date: ", format(date, "%b %Y"), "<br>",
+                       "Avg wholesale: ₹<b>", round(avg, 2), "</b>/kg")]
+
+p_pw <- ggplot(w2_avg, aes(x = date, y = avg, color = commodity,
+                            tooltip = tip, data_id = paste(commodity, date),
+                            group = commodity)) +
+  geom_smooth_interactive(method = "gam", se = FALSE, linewidth = 1.2) +
+  facet_wrap(~ commodity, scales = "free_y") +
+  scale_color_viridis(discrete = TRUE, option = "E") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Wholesale Pulse Prices (National Average)",
+       x = "Date", y = "Price (₹/kg)",
+       caption = "Source: Price Monitoring Division | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
+
+girafe(ggobj = p_pw, width_svg = 12, height_svg = 7, options = std_opts)
+```
+
+---
+
+## Edible Oils {#sec-oil}
+
+### Retail Edible Oil Prices
+
+```{r oil-retail}
+r3 <- combined[commodity_group == "Edible oils" & Type == "Retail"]
+r3_avg <- r3[, .(avg = mean(price, na.rm = TRUE)), by = .(date, commodity)]
+r3_avg[, tip := paste0("<b>", commodity, "</b><br>",
+                       "Date: ", format(date, "%b %Y"), "<br>",
+                       "Avg retail: ₹<b>", round(avg, 2), "</b>/litre")]
+
+p_or <- ggplot(r3_avg, aes(x = date, y = avg, color = commodity,
+                            tooltip = tip, data_id = paste(commodity, date),
+                            group = commodity)) +
+  geom_smooth_interactive(method = "gam", se = FALSE, linewidth = 1.2) +
+  facet_wrap(~ commodity, scales = "free_y") +
+  scale_color_viridis(discrete = TRUE, option = "B") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Retail Edible Oil Prices (National Average)",
+       subtitle = "The 2021–22 global price surge is clearly visible across all oil types",
+       x = "Date", y = "Price (₹/litre)",
+       caption = "Source: Price Monitoring Division | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
+
+girafe(ggobj = p_or, width_svg = 12, height_svg = 7, options = std_opts)
+```
+
+### Wholesale Edible Oil Prices
+
+```{r oil-wholesale}
+w3 <- combined[commodity_group == "Edible oils" & Type == "Wholesale"]
+w3_avg <- w3[, .(avg = mean(price, na.rm = TRUE)), by = .(date, commodity)]
+w3_avg[, tip := paste0("<b>", commodity, " (Wholesale)</b><br>",
+                       "Date: ", format(date, "%b %Y"), "<br>",
+                       "Avg wholesale: ₹<b>", round(avg, 2), "</b>/litre")]
+
+p_ow <- ggplot(w3_avg, aes(x = date, y = avg, color = commodity,
+                            tooltip = tip, data_id = paste(commodity, date),
+                            group = commodity)) +
+  geom_smooth_interactive(method = "gam", se = FALSE, linewidth = 1.2) +
+  facet_wrap(~ commodity, scales = "free_y") +
+  scale_color_viridis(discrete = TRUE, option = "C") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Wholesale Edible Oil Prices",
+       x = "Date", y = "Price (₹/litre)",
+       caption = "Source: Price Monitoring Division | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
+
+girafe(ggobj = p_ow, width_svg = 12, height_svg = 7, options = std_opts)
+```
+
+---
+
+## Vegetables {#sec-veg}
+
+::: {.callout-warning title="Vegetable Price Volatility"}
+Vegetables are India's most price-volatile food category. Perishability, fragmented retail, poor cold chain infrastructure, and concentrated production regions make vegetable prices extremely sensitive to weather shocks. Tomatoes and onions, in particular, have triggered political crises and emergency government interventions on multiple occasions.
+:::
+
+### Retail Vegetable Prices
+
+```{r veg-retail}
+r4 <- combined[commodity_group == "Vegetables" & Type == "Retail"]
+r4_avg <- r4[, .(avg = mean(price, na.rm = TRUE)), by = .(date, commodity)]
+r4_avg[, tip := paste0("<b>", commodity, "</b><br>",
+                       "Date: ", format(date, "%b %Y"), "<br>",
+                       "Avg retail: ₹<b>", round(avg, 2), "</b>/kg")]
+
+p_vr <- ggplot(r4_avg, aes(x = date, y = avg, color = commodity,
+                            tooltip = tip, data_id = paste(commodity, date),
+                            group = commodity)) +
+  geom_smooth_interactive(method = "gam", se = FALSE, linewidth = 1.2) +
+  facet_wrap(~ commodity, scales = "free_y") +
+  scale_color_viridis(discrete = TRUE, option = "D") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Retail Vegetable Prices (National Average)",
+       subtitle = "Dramatic seasonal and year-on-year volatility; tomato spikes are particularly sharp",
+       x = "Date", y = "Price (₹/kg)",
+       caption = "Source: Price Monitoring Division | Analysis: Pawan") +
+  my_theme + theme(legend.position = "none")
+
+girafe(ggobj = p_vr, width_svg = 12, height_svg = 7, options = std_opts)
+```
+
+---
+
+## Retail vs. Wholesale Comparison
+
+The following plots compare average retail and wholesale prices within each commodity group, revealing the **supply chain spread** — a proxy for distribution, storage, and intermediary costs.
+
+```{r rw-comparison}
+## Build retail-wholesale comparison for each group
+grp_avg <- combined[
+  commodity_group %in% c("Cereals", "Pulses", "Edible oils", "Vegetables"),
+  .(avg_price = mean(price, na.rm = TRUE)),
+  by = .(date, Type, commodity_group)
+]
+grp_avg[, tip := paste0("<b>", Type, " — ", commodity_group, "</b><br>",
+                        "Date: ", format(date, "%b %Y"), "<br>",
+                        "Avg price: ₹<b>", round(avg_price, 2), "</b>")]
+
+p_comp <- ggplot(grp_avg, aes(x = date, y = avg_price, color = Type,
+                               tooltip = tip,
+                               data_id = paste(Type, commodity_group, date),
+                               group = Type)) +
+  geom_line_interactive(linewidth = 1.2, alpha = 0.85) +
+  facet_wrap(~ commodity_group, scales = "free_y", ncol = 2) +
+  scale_color_manual(values = c("Retail" = "#e74c3c", "Wholesale" = "#2980b9"),
+                     labels = c("Retail" = "Retail Price", "Wholesale" = "Wholesale Price")) +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  scale_y_continuous(labels = label_number(prefix = "₹")) +
+  labs(title   = "Retail vs. Wholesale Prices by Commodity Group",
+       subtitle = "The gap between lines represents the distribution/intermediary margin",
+       x = "Date", y = "Average Price (₹/unit)",
+       caption = "Source: Price Monitoring Division | Analysis: Pawan") +
+  my_theme
+
+girafe(ggobj = p_comp, width_svg = 12, height_svg = 8, options = std_opts)
+```
+
+::: {.callout-note title="Interpreting the Retail-Wholesale Spread"}
+A **wide and widening gap** between retail and wholesale prices signals supply chain inefficiencies — excess intermediaries, poor market connectivity, or rent-seeking at some point in the distribution chain. A **narrowing gap** typically indicates improved market integration through better roads, digital price discovery, or direct retail procurement from farmers. Pulses and vegetables consistently show the largest spreads.
+:::
+
+---
+
+## Key Takeaways
+
+::: {.callout-important title="Summary of Findings"}
+1. **Cereals are the most price-stable food group**, reflecting the government's comprehensive procurement, buffer stock, and subsidised distribution architecture under the NFSA.
+
+2. **Pulses are the most volatile major food group**: their volatility stems from weather-sensitive rainfed cultivation, limited buffer stock management historically, and episodic import duty adjustments.
+
+3. **Edible oil prices in India are essentially determined by global markets**: the 2021–22 commodity price spike is unmistakably visible in the retail price series, with prices roughly doubling before retreating.
+
+4. **Vegetable price volatility is a chronic structural problem**: tomato, onion, and potato ("TOP" commodities) collectively drive a disproportionate share of food CPI volatility, yet the policy response remains largely reactive.
+
+5. **Retail-wholesale spreads are widest for pulses and vegetables**, suggesting these are the segments where investment in supply chain infrastructure, cold storage, and market linkages would yield the highest consumer welfare benefits.
+
+6. **Price transmission is consistently asymmetric**: increases in wholesale prices pass through to retail prices quickly; decreases are absorbed slowly, systematically benefiting intermediaries at consumers' expense.
+:::

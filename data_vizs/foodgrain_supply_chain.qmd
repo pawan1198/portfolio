@@ -71,6 +71,7 @@ std_opts <- list(
 ```{r data}
 ## Procurement
 proc <- fread("/home/pawan/procurement/procurement.csv")
+proc <- proc[Crop!="Rice"]
 
 ## Stocks
 stocksall <- unique(fread("~/stocks/stocksall.csv"))
@@ -104,19 +105,19 @@ usd_imp[,Import:=as.numeric(gsub(",","",Import))][is.na(Import),Import:=0]
 ```{r fig-proc-total}
 #| fig-cap: "India's Foodgrain Procurement by Crop and Marketing Season (Lakh Metric Tonnes)"
 proc_sum <- proc[,.(Total=sum(Total,na.rm=TRUE),FCI=sum(FCI,na.rm=TRUE),
-                    State=sum(StateAgency,na.rm=TRUE)),by=.(Crop,MarketingSeason)]
+                    State=sum(StateAgency,na.rm=TRUE)),by=.(Crop,MarketingYear)]
 proc_sum[,FCI_pct:=round(FCI*100/Total)][,State_pct:=round(State*100/Total)]
-proc_sum[,tip:=paste0("<b>",Crop,"</b><br>Season: ",MarketingSeason,
+proc_sum[,tip:=paste0("<b>",Crop,"</b><br>Season: ",MarketingYear,
   "<br>Total: <b>",round(Total,1)," LMT</b><br>FCI: ",round(FCI,1),
   " (",FCI_pct,"%)<br>State: ",round(State,1)," (",State_pct,"%)")]
 
-pp <- ggplot(proc_sum,aes(x=MarketingSeason,y=Total,fill=Crop,
-                           tooltip=tip,data_id=paste(Crop,MarketingSeason)))+
+pp <- ggplot(proc_sum,aes(x=MarketingYear,y=Total,fill=Crop,
+                           tooltip=tip,data_id=paste(Crop,MarketingYear)))+
   geom_bar_interactive(stat="identity",width=0.75,alpha=0.9)+
   facet_wrap(~Crop,scales="free_y")+
   scale_fill_viridis(discrete=TRUE,option="D")+
   scale_y_continuous(labels=comma_format())+
-  labs(y="Quantity (Lakh Metric Tonnes)",x="Marketing Season",
+  labs(y="Quantity (Lakh Metric Tonnes)",x="Marketing Year",
        caption="Source: DFPD Procurement Portal | Analysis: Pawan")+my_theme+
   theme(legend.position="none")
 girafe(ggobj=pp,width_svg=12,height_svg=7,options=std_opts)
@@ -127,7 +128,7 @@ girafe(ggobj=pp,width_svg=12,height_svg=7,options=std_opts)
 ```{r tbl-proc}
 #| tbl-cap: "Procurement Summary by Crop and Season (LMT)"
 proc_wide <- dcast(proc_sum[Crop %in% c("Wheat","Paddy")],
-                   MarketingSeason~Crop,value.var="Total",fun.aggregate=sum)
+                   MarketingYear~Crop,value.var="Total",fun.aggregate=sum)
 proc_wide[,Grand_Total:=rowSums(.SD,na.rm=TRUE),.SDcols=c("Wheat","Paddy")]
 proc_wide[,YoY_Wheat:=round((Wheat/shift(Wheat)-1)*100,1)]
 proc_wide[,YoY_Paddy:=round((Paddy/shift(Paddy)-1)*100,1)]
@@ -136,7 +137,7 @@ gt(proc_wide)|>
              subtitle="FCI + State Agencies; YoY = year-on-year % change")|>
   fmt_number(columns=c(Wheat,Paddy,Grand_Total),decimals=1)|>
   fmt_number(columns=c(YoY_Wheat,YoY_Paddy),decimals=1)|>
-  cols_label(MarketingSeason="Season",Grand_Total="Total",
+  cols_label(MarketingYear="Year",Grand_Total="Total",
              YoY_Wheat="Wheat YoY%",YoY_Paddy="Paddy YoY%")|>
   data_color(columns=Wheat,palette=c("#eff6ff","#bfdbfe","#1d4ed8"))|>
   data_color(columns=Paddy,palette=c("#f0fdf4","#86efac","#16a34a"))|>
@@ -322,8 +323,8 @@ girafe(ggobj=pi,width_svg=10,height_svg=6,options=std_opts)
 
 ```{r tbl-integrated}
 #| tbl-cap: "Integrated Supply Chain Overview: Wheat Procurement, Stocks, and Exports"
-wheat_proc <- proc[Crop=="Wheat",.(Proc_LMT=round(sum(Total,na.rm=TRUE),1)),by=MarketingSeason]
-wheat_proc[,Year:=as.numeric(substr(MarketingSeason,1,4))]
+wheat_proc <- proc[Crop=="Wheat",.(Proc_LMT=round(sum(Total,na.rm=TRUE),1)),by=MarketingYear]
+wheat_proc[,Year:=as.numeric(substr(MarketingYear,1,4))]
 wheat_stock_apr <- stocks_long[Commodity=="Wheat"&!is.na(value),
   .(Stock_MT=round(mean(as.numeric(value),na.rm=TRUE)/10,2)),by=.(Year=year(Date))]
 wheat_exp_yr <- qty_exp[HSCode4=="1001",.(Wheat_Exp=round(sum(Export,na.rm=TRUE)/1000,1)),by=Year]

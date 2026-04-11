@@ -1,6 +1,6 @@
 ---
 title: "India's Labour Market in Transition: Insights from the Periodic Labour Force Survey"
-description: "A 2,000-word analytical article examining India's labour force participation rates, worker force participation, unemployment, and sectoral employment structure using PLFS microdata from 2018–19 through 2021–22."
+description: "This analysis examining India's labour force participation rates, worker force participation, unemployment, and sectoral employment structure using PLFS microdata from 2018–19 through 2021–22."
 author: "Pawan"
 date: "2025/11/02"
 date-modified: last-modified

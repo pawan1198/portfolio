@@ -1,6 +1,6 @@
 ---
 title: "The Edible Oil Trap: India's Deepening Import Dependency and the Road to Self-Sufficiency"
-description: "A 2,000-word analytical article examining India's structural reliance on edible oil imports, the geopolitical risks of concentrated supply chains, the price transmission mechanism to Indian households, and policy pathways toward greater self-sufficiency."
+description: "This analysis examining India's structural reliance on edible oil imports, the geopolitical risks of concentrated supply chains, the price transmission mechanism to Indian households, and policy pathways toward greater self-sufficiency."
 author: "Pawan"
 date: "2025/10/28"
 date-modified: last-modified

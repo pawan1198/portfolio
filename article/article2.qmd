@@ -1,6 +1,6 @@
 ---
 title: "India's Fertilizer Dependency: Geopolitical Risks, Price Shocks, and the Subsidy Burden"
-description: "A 2,000-word analytical article on India's structural dependence on imported fertilizers — urea, DAP, MOP, and phosphates — examining supply concentration, the 2021–22 price crisis, the subsidy bill, and pathways to greater self-sufficiency."
+description: "This analysis on India's structural dependence on imported fertilizers — urea, DAP, MOP, and phosphates — examining supply concentration, the 2021–22 price crisis, the subsidy bill, and pathways to greater self-sufficiency."
 author: "Pawan"
 date: "2025/11/26"
 date-modified: last-modified

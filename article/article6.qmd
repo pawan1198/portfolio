@@ -1,6 +1,6 @@
 ---
 title: "India's Trade Story: From Persistent Deficit to Export Ambition — An Analysis of Merchandise Trade Trends"
-description: "A 2,000-word analytical article examining India's merchandise trade trajectory, the structural sources of the trade deficit, India's export composition and performance, and the policy agenda for building a more competitive export economy."
+description: "This analysis examining India's merchandise trade trajectory, the structural sources of the trade deficit, India's export composition and performance, and the policy agenda for building a more competitive export economy."
 author: "Pawan"
 date: "2025/10/29"
 date-modified: last-modified

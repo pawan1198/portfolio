@@ -1,6 +1,6 @@
 ---
 title: "Food Price Inflation in India: Retail vs. Wholesale Dynamics and the Household Impact"
-description: "A 2,000-word analytical article examining the structure, drivers, and household impact of food price inflation in India, focusing on cereals, pulses, edible oils, and vegetables through a retail-wholesale price lens."
+description: "This analysis examining the structure, drivers, and household impact of food price inflation in India, focusing on cereals, pulses, edible oils, and vegetables through a retail-wholesale price lens."
 author: "Pawan"
 date: "2025/11/01"
 date-modified: last-modified

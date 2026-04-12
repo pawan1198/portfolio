@@ -1,0 +1,89 @@
+---
+title: "Professional Profile"
+author: "Pawan"
+image: /home/pawan/portfolio/pawan-iamge.png
+website:
+  search: 
+    location: navbar
+    type: textbox
+  navbar:
+    left:
+      - text: "Home"
+        file: index.qmd
+      - text: "Data Visualizations"
+        file: data_vizs.qmd
+      - text: "About Me"
+        file: about.qmd
+    tools:
+      - icon: github
+        href: "https://github.com/pawan1198"
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/pawanjangra1198/"    
+  listing:
+    feed: true    
+---
+
+## Professional Summary
+
+I am an experienced professional with a strong background in research and data analysis, specializing in survey methodology, data management, and statistical analysis across diverse domains.
+
+## Experience
+
+### Field Surveyor
+**OP Jindal Global University** | *March 2025 - May 2025*
+
+- Participated in field surveys for the Health Financing Research Study in Haryana
+- Collected and managed survey data using ODK (Open Data Kit) software
+- Contributed to health economics research through systematic data collection
+
+### Course Assistant
+**IDEAs Advanced Certificate Programme on Research in Political Economy** | *2022-2024*
+
+- **Survey Field Assistant**: Leveraged previous field experience to support survey operations across multiple regions in India, ensuring high-quality data collection
+- **Technical Assistant**: Managed hybrid classroom setups for both in-person and international online students, optimizing audiovisual delivery through Zoom and OBS Studio
+- **Office Assistant**: Coordinated administrative functions including resource person logistics, stationery management, accounts, and consumables
+- Developed expertise in virtual learning platforms, videography, and audiography to enhance educational delivery
+- Assisted renowned economists from global institutions during lecture sessions
+
+### Research Assistant
+**Society for Social and Economic Research (SSER), New Delhi** | *2018-2022*
+
+- **Survey Field Investigator**: Conducted comprehensive door-to-door surveys with strong participant communication and issue-resolution capabilities
+- **Data Manager**: Organized and streamlined survey materials and data collection processes
+- **Data Analyst**: Performed statistical analysis using R and Python, identifying trends and generating reports from large datasets including:
+  - Union budget data compilation and analysis
+  - Periodic Labour Force Survey data processing
+  - Secondary data collection through web scraping techniques
+- Collaborated with research teams to develop and refine data collection methodologies
+
+## Technical Skills
+
+**Programming & Analysis**
+- R (Statistical Computing)
+- Python (Data Analysis)
+- Linux, Windows, macOS operating systems
+- Large dataset management
+
+**Software & Platforms**
+- Microsoft Office Suite
+- Zoom (Virtual Meeting Platforms)
+- OBS Studio (Broadcasting Software)/home/pawan/bin/portfolio/a/index.qmd
+- Survey data collection tools
+
+**Research Competencies**
+- Field survey design and execution
+- Data verification and quality assurance
+- Statistical analysis and reporting
+- Cross-platform data compilation
+
+## Core Strengths
+
+- **Research Methodology**: Experienced in both quantitative and qualitative research approaches
+- **Technical Adaptation**: Proficient in adapting various software solutions to research needs
+- **Administrative Coordination**: Skilled in office management and resource coordination
+- **Team Collaboration**: Effective in multidisciplinary research environments
+- **Communication**: Strong explanatory skills for complex procedures and methodologies
+
+---
+
+*Available for research collaborations, data analysis projects, and academic support roles.*

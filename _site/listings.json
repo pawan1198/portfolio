@@ -1,0 +1,50 @@
+[
+  {
+    "listing": "/article.html",
+    "items": [
+      "/article/article2.html",
+      "/article/article4.html",
+      "/article/article3.html",
+      "/article/article6.html",
+      "/article/article1.html"
+    ]
+  },
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/blog/combine-plot.html",
+      "/blog/why-R.html",
+      "/blog/post1.html",
+      "/blog/post2.html",
+      "/blog/post3.html"
+    ]
+  },
+  {
+    "listing": "/data_vizs.html",
+    "items": [
+      "/data_vizs/fuelprice.html",
+      "/data_vizs/fertilizer.html",
+      "/data_vizs/trade1.html",
+      "/data_vizs/stocks.html",
+      "/data_vizs/fertilizer2.html",
+      "/data_vizs/edibleoil.html",
+      "/data_vizs/trade.html",
+      "/data_vizs/foodprice.html",
+      "/data_vizs/foodgrain_supply_chain.html",
+      "/data_vizs/procurement.html",
+      "/data_vizs/plfs.html",
+      "/data_vizs/import_concentration_risk.html",
+      "/data_vizs/trade2.html"
+    ]
+  },
+  {
+    "listing": "/statistics-with-r.html",
+    "items": [
+      "/statistics-with-r/survival_analysis_blog.html",
+      "/statistics-with-r/chapter4.html",
+      "/statistics-with-r/chapter3.html",
+      "/statistics-with-r/chapter2.html",
+      "/statistics-with-r/chapter1.html"
+    ]
+  }
+]

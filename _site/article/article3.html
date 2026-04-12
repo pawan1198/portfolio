@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Pawan">
+<meta name="dcterms.date" content="2025-11-01">
+<meta name="description" content="This analysis examining the structure, drivers, and household impact of food price inflation in India, focusing on cereals, pulses, edible oils, and vegetables through a retail-wholesale price lens.">
+
+<title>Food Price Inflation in India: Retail vs.&nbsp;Wholesale Dynamics and the Household Impact – Pawan Jangra</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-af320953eaf589d570710fcb3ac0a286.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=DM+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="Food Price Inflation in India: Retail vs.&nbsp;Wholesale Dynamics and the Household Impact – Pawan Jangra">
+<meta property="og:description" content="This analysis examining the structure, drivers, and household impact of food price inflation in India, focusing on cereals, pulses, edible oils, and vegetables through a retail-wholesale price lens.">
+<meta property="og:site_name" content="Pawan Jangra">
+<meta name="twitter:title" content="Food Price Inflation in India: Retail vs.&nbsp;Wholesale Dynamics and the Household Impact – Pawan Jangra">
+<meta name="twitter:description" content="This analysis examining the structure, drivers, and household impact of food price inflation in India, focusing on cereals, pulses, edible oils, and vegetables through a retail-wholesale price lens.">
+<meta name="twitter:creator" content="@pawan1198">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Pawan.</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#about"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#experience"> 
+<span class="menu-text">Experience</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#skills"> 
+<span class="menu-text">Skills</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#quarto"> 
+<span class="menu-text">R &amp; Quarto</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#blog"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#editor-section"> 
+<span class="menu-text">Editor</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#r-section"> 
+<span class="menu-text">R Code</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html#contact"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-the-price-of-eating-in-india" id="toc-introduction-the-price-of-eating-in-india" class="nav-link active" data-scroll-target="#introduction-the-price-of-eating-in-india">Introduction: The Price of Eating in India</a></li>
+  <li><a href="#the-anatomy-of-indias-food-price-system" id="toc-the-anatomy-of-indias-food-price-system" class="nav-link" data-scroll-target="#the-anatomy-of-indias-food-price-system">The Anatomy of India’s Food Price System</a></li>
+  <li><a href="#cereals-the-managed-core" id="toc-cereals-the-managed-core" class="nav-link" data-scroll-target="#cereals-the-managed-core">Cereals: The Managed Core</a></li>
+  <li><a href="#pulses-the-volatile-protein-source" id="toc-pulses-the-volatile-protein-source" class="nav-link" data-scroll-target="#pulses-the-volatile-protein-source">Pulses: The Volatile Protein Source</a></li>
+  <li><a href="#edible-oils-imported-inflation" id="toc-edible-oils-imported-inflation" class="nav-link" data-scroll-target="#edible-oils-imported-inflation">Edible Oils: Imported Inflation</a></li>
+  <li><a href="#vegetables-the-seasonal-volatility-problem" id="toc-vegetables-the-seasonal-volatility-problem" class="nav-link" data-scroll-target="#vegetables-the-seasonal-volatility-problem">Vegetables: The Seasonal Volatility Problem</a></li>
+  <li><a href="#policy-conclusions-what-works-and-what-doesnt" id="toc-policy-conclusions-what-works-and-what-doesnt" class="nav-link" data-scroll-target="#policy-conclusions-what-works-and-what-doesnt">Policy Conclusions: What Works and What Doesn’t</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/pawan1198/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Food Price Inflation in India: Retail vs.&nbsp;Wholesale Dynamics and the Household Impact</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Food Economy</div>
+    <div class="quarto-category">Prices</div>
+    <div class="quarto-category">Inflation</div>
+    <div class="quarto-category">Articles</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    This analysis examining the structure, drivers, and household impact of food price inflation in India, focusing on cereals, pulses, edible oils, and vegetables through a retail-wholesale price lens.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta column-page-left">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Pawan </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 1, 2025</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">April 12, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction-the-price-of-eating-in-india" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-the-price-of-eating-in-india">Introduction: The Price of Eating in India</h2>
+<p>Food price inflation is never just a macroeconomic statistic in India. For the 800 million people covered under the National Food Security Act and the hundreds of millions more who live just above the subsidy threshold, a 20% increase in the price of dal or a 30% spike in the cost of cooking oil is not an abstraction — it is a direct reduction in nutritional intake, a delayed school fee, or a missed medical appointment. India’s food price system — its architecture of wholesale markets, regulated mandis, state-controlled procurement, and retail supply chains — is one of the most complex in the world, and understanding how prices at the farm gate translate to prices at the retail counter is essential to crafting effective policy responses.</p>
+<p>This article analyses India’s food price dynamics across four key commodity groups: cereals, pulses, edible oils, and vegetables. Drawing on retail and wholesale price data compiled from the government’s price monitoring cell, it examines the structure of retail-wholesale price spreads, the seasonal and structural drivers of price volatility, and the differential impact of food inflation on urban and rural households.</p>
+<hr>
+</section>
+<section id="the-anatomy-of-indias-food-price-system" class="level2">
+<h2 class="anchored" data-anchor-id="the-anatomy-of-indias-food-price-system">The Anatomy of India’s Food Price System</h2>
+<p>India’s food pricing operates on two interlinked tracks. The <strong>wholesale track</strong> reflects prices in regulated agricultural produce market committee (APMC) mandis and wholesale distribution hubs — the price at which traders buy from farmers or import suppliers. The <strong>retail track</strong> reflects what consumers actually pay in local markets, kirana stores, and modern retail outlets. The gap between these two — the retail-wholesale spread — represents the cumulative cost of storage, transportation, processing, taxation, and the margins of the multiple intermediaries who sit between the farmer and the consumer.</p>
+<p>In well-functioning markets, this spread should be stable and relatively narrow, reflecting genuine costs of distribution. In India, however, price spread data reveals a more troubled picture: spreads are often wide, highly variable across states and seasons, and frequently resistant to downward adjustment even when wholesale prices fall. This asymmetric price transmission — wholesale price increases rapidly pass through to retail prices, but wholesale price decreases do not — is a recurrent feature of Indian food markets that imposes a structural cost on consumers.</p>
+<p>The government’s price monitoring system collects daily retail prices for 22 essential commodities across 200+ reporting centres, and wholesale prices from major mandis across the country. This granular data reveals patterns of price inflation that aggregate indices like the Consumer Price Index (CPI) — Food often obscure.</p>
+<hr>
+</section>
+<section id="cereals-the-managed-core" class="level2">
+<h2 class="anchored" data-anchor-id="cereals-the-managed-core">Cereals: The Managed Core</h2>
+<p>Among the four commodity groups examined here, cereals — primarily rice and wheat — represent the most heavily managed segment of India’s food system. The government sets Minimum Support Prices (MSP) for wheat and paddy annually, procures tens of millions of tonnes through FCI and state agencies, and distributes subsidised cereals to approximately 800 million beneficiaries under the National Food Security Act (NFSA) and subsequently the Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY).</p>
+<p>This system largely insulates the retail price of wheat and rice from international price shocks. When global wheat prices surged in 2022 following Russia’s invasion of Ukraine, India’s domestic wheat retail prices rose modestly — in part because the government released stocks from its buffer reserves and banned wheat exports. The rice retail price trajectory has been similarly dampened by government intervention.</p>
+<p>However, this managed stability comes at a cost. First, it requires enormous public expenditure — the PMGKAY alone costs the government approximately ₹3.5–4 lakh crore annually in food subsidies. Second, the suppression of market prices discourages private sector investment in cereal post-harvest infrastructure, cold storage, and processing. Third, the gap between PDS issue prices and market prices creates significant leakage, diversion, and “ghost beneficiary” problems that reduce the scheme’s actual welfare impact.</p>
+<p>The retail-wholesale spread for rice in India is typically ₹5–8 per kg — roughly 15–20% of the retail price. For wheat, the spread tends to be narrower, at ₹3–5 per kg. These spreads are highest in remote states with poor road connectivity and weakest in states with well-developed APMC infrastructure and private trade networks.</p>
+<hr>
+</section>
+<section id="pulses-the-volatile-protein-source" class="level2">
+<h2 class="anchored" data-anchor-id="pulses-the-volatile-protein-source">Pulses: The Volatile Protein Source</h2>
+<p>If cereals represent the managed, stable core of India’s food price system, pulses represent its volatile, poorly managed periphery. Dal — the protein staple of hundreds of millions of Indian vegetarian households — has experienced some of the most severe price spikes in India’s recent food history. Arhar (tur) dal crossed ₹200 per kg in Delhi in 2023–24, a level that would have been unimaginable a decade earlier. Moong, urad, and masoor have each touched historic highs in various recent years.</p>
+<p>The structural reasons for pulse price volatility are well-established. First, India’s domestic pulse production is highly weather-sensitive — pulses are grown predominantly in rainfed areas on residual moisture, making them particularly vulnerable to erratic monsoons. Second, pulse acreage is in constant competition with higher-value crops, and the absence of robust government procurement (until relatively recently) gave farmers weak incentives to maintain pulse cultivation areas. Third, the import regime for pulses has been erratic — the government alternates between imposing import duties (to protect domestic farmers) and suspending them (to control consumer prices), creating uncertainty for both producers and traders.</p>
+<p>The retail-wholesale spread for pulses is notably large — typically ₹15–25 per kg, or 20–30% of retail prices. Unlike cereals, where a largely standardised product moves through established supply chains, pulses involve significant post-harvest processing (cleaning, milling, packaging), greater spatial price variation, and more fragmented retail distribution. The dal mill sector — which is largely unorganised and under-capitalised — is a significant contributor to the wide spread.</p>
+<p>The government’s response to pulse price spikes has typically been a combination of import duty waivers, release of buffer stock, and export bans. While these measures can dampen acute price spikes, they do not address the structural supply constraints. A more durable solution would involve sustained investment in pulse research (drought-tolerant varieties, better yields), dedicated procurement and price support for pulse farmers, and investment in the dal milling and cold chain infrastructure.</p>
+<hr>
+</section>
+<section id="edible-oils-imported-inflation" class="level2">
+<h2 class="anchored" data-anchor-id="edible-oils-imported-inflation">Edible Oils: Imported Inflation</h2>
+<p>No commodity group better illustrates the transmission of global price shocks to Indian household budgets than edible oils. As detailed elsewhere in this analysis, India imports 14–16 million tonnes of edible oils annually — accounting for over 50% of its consumption requirement. This structural import dependence means that global edible oil price movements — driven by palm oil supply in Southeast Asia, soybean harvests in South America, or sunflower oil disruptions in the Black Sea region — translate almost directly into Indian retail price changes.</p>
+<p>The transmission mechanism operates rapidly and with high fidelity in the upward direction. When international palm oil prices rose sharply in 2021–22, Indian retail palm olein prices in Delhi moved from approximately ₹90/litre to ₹165/litre within six months. The retail-wholesale spread for edible oils is typically ₹5–10 per litre — smaller in proportional terms than pulses, but significant in absolute terms given the large volumes consumed.</p>
+<p>Downward price transmission, however, tends to be slower and incomplete. When international edible oil prices fell sharply in the second half of 2022 — palm oil fell from over USD 1,600/MT to below USD 900/MT within months — Indian retail prices declined more gradually, with retailers and distributors adjusting inventory positions before passing the reduction to consumers. This asymmetry systematically favours the supply chain intermediaries at the expense of households.</p>
+<p>The government’s key policy tools for edible oil price management are import duty adjustments (duties on crude edible oils have been reduced to near-zero to keep domestic prices in check) and occasional direct market interventions through NAFED. But given the structural nature of India’s import dependence, these tools can only smooth price fluctuations at the margin — they cannot insulate Indian consumers from sustained global price increases.</p>
+<hr>
+</section>
+<section id="vegetables-the-seasonal-volatility-problem" class="level2">
+<h2 class="anchored" data-anchor-id="vegetables-the-seasonal-volatility-problem">Vegetables: The Seasonal Volatility Problem</h2>
+<p>Vegetables represent perhaps the most spectacularly volatile segment of India’s retail food price landscape. Tomato prices in Delhi famously crossed ₹200 per kg in July–August 2023 — a price so extraordinary that it entered political discourse and became the subject of WhatsApp memes across the country. This was not an isolated event; onion prices have triggered political crises in India on multiple occasions since Independence, and the dramatic seasonal swings in the prices of tomato, potato, and leafy vegetables are an annually recurring phenomenon.</p>
+<p>The structure of vegetable price volatility is fundamentally different from that of cereals or pulses. Vegetables are highly perishable, cannot be stored for more than a few days without refrigeration, and are grown in concentrated clusters — Nashik for onions, Pune and Karnataka for tomatoes, Agra for potatoes — that create geographic price transmission problems when these clusters experience adverse weather or pest attacks.</p>
+<p>India’s cold chain infrastructure for vegetables remains woefully inadequate relative to production volumes. Approximately 30–40% of the vegetable harvest is estimated to be lost post-harvest due to inadequate storage, poor roads, and lack of refrigerated transport. This wastage drives up the effective cost of the remaining produce, contributing to high retail prices even in years of good harvest. It also means that production surpluses — which should logically reduce prices — often go to waste rather than being distributed to deficit regions.</p>
+<p>The retail-wholesale spread for vegetables varies enormously by commodity and season but typically ranges from ₹5–20 per kg — sometimes representing 50–70% of the retail price in markets with fragmented retail and poor road connectivity.</p>
+<hr>
+</section>
+<section id="policy-conclusions-what-works-and-what-doesnt" class="level2">
+<h2 class="anchored" data-anchor-id="policy-conclusions-what-works-and-what-doesnt">Policy Conclusions: What Works and What Doesn’t</h2>
+<p>Two decades of food price management experience in India has established a reasonably clear hierarchy of intervention effectiveness.</p>
+<p><strong>What works</strong>: Strategic public procurement and distribution for storable commodities like wheat, rice, and pulses can effectively dampen price spikes for these specific items. Direct benefit transfers (DBT) to farmers — such as PM-KISAN — provide income support without distorting markets. Investment in cold chain infrastructure, rural roads, and post-harvest management reduces food waste and improves spatial price integration.</p>
+<p><strong>What doesn’t work well</strong>: Short-term export bans, while effective in damping domestic prices immediately, damage India’s reputation as a reliable trading partner and depress farm-gate prices, creating a disincentive for future production. Import duty waivers are blunt instruments that do not distinguish between emergency needs and normal-year import requirements. Price controls in vegetable markets, when attempted, typically cause supply withdrawal and worsen shortages.</p>
+<p>The most durable solution to India’s food inflation problem is structural: higher agricultural productivity, reduced post-harvest losses, better market integration across states, and a more effective safety net for low-income households. These are long-term investments whose payoffs are diffuse and delayed — which is precisely why they tend to be under-prioritised relative to headline-grabbing but ultimately ineffective short-term interventions.</p>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>India’s food price system is a reflection of the country’s extraordinary agricultural complexity: vast geographic diversity, 140 million farming households, a fragmented supply chain with multiple intermediaries, and a government that simultaneously tries to protect farmer incomes (through MSP and procurement) and consumer welfare (through subsidies and price controls). Navigating these competing objectives without distorting market signals is inherently difficult. Understanding the granular dynamics of retail and wholesale price movements — commodity by commodity, state by state, season by season — is an essential foundation for the better-targeted interventions that India’s food economy requires.</p>
+<hr>
+<p><em>Data sources: Price Monitoring Division, Department of Consumer Affairs; National Sample Survey (NSS); FAOSTAT. Analysis by Pawan.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pawan1198\.github\.io\/portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2025 Pawan Jangra</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Built with <a href="https://quarto.org">Quarto</a> &amp; R</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pawan1198/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

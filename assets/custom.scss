@@ -1,0 +1,180 @@
+/*-- scss:defaults --*/
+
+// ── Brand Colour Palette ───────────────────────────
+$navy:        #0d1b2a;
+$navy2:       #1a2e45;
+$teal:        #1d9e75;
+$teal-light:  #e1f5ee;
+$teal-mid:    #5dcaa5;
+$amber:       #ba7517;
+$coral:       #d85a30;
+$slate:       #4a5568;
+$muted:       #718096;
+$border:      #e2e8f0;
+$light-bg:    #f7f8fc;
+
+// ── Quarto Bootstrap Variable Overrides ────────────
+$body-bg:              $light-bg;
+$body-color:           #1a202c;
+$link-color:           $teal;
+$link-hover-color:     darken($teal, 10%);
+
+$font-family-base:     'DM Sans', system-ui, -apple-system, sans-serif;
+$headings-font-family: 'Playfair Display', Georgia, serif;
+$font-family-code:     'JetBrains Mono', 'Fira Code', monospace;
+
+$font-size-base:       1rem;
+$line-height-base:     1.75;
+
+$border-radius:        12px;
+$border-radius-sm:     6px;
+$border-radius-lg:     18px;
+
+// ── Navbar ─────────────────────────────────────────
+$navbar-bg:            rgba(13, 27, 42, 0.96);
+$navbar-fg:            rgba(255, 255, 255, 0.82);
+$navbar-hl:            #ffffff;
+
+// ── Code Blocks ────────────────────────────────────
+$code-block-bg:        $navy;
+$code-color:           #a5f3d0;
+$code-bg:              $light-bg;
+
+// ── Headings ───────────────────────────────────────
+$headings-color:       $navy;
+$headings-font-weight: 600;
+
+// ── Primary Colours (Bootstrap) ───────────────────
+$primary:   $teal;
+$secondary: $navy;
+$info:      #534ab7;
+$warning:   $amber;
+$danger:    $coral;
+$success:   $teal;
+
+/*-- scss:rules --*/
+
+// ── Navbar Overrides ────────────────────────────────
+.navbar {
+  background: rgba(13, 27, 42, 0.96) !important;
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: $font-family-base;
+}
+
+.navbar-brand {
+  font-family: $headings-font-family;
+  font-size: 1.3rem;
+  color: #fff !important;
+  letter-spacing: 0.02em;
+  &::after { content: '.'; color: $teal-mid; }
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 0.88rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem !important;
+  transition: all 0.2s;
+  &:hover, &.active {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+// ── Suppress Quarto default content padding ─────────
+#quarto-document-content,
+#quarto-content,
+.page-layout-full {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+}
+
+#TOC,
+#quarto-margin-sidebar,
+.quarto-sidebar {
+  display: none !important;
+}
+
+.page-columns {
+  grid-template-columns: 1fr !important;
+}
+
+main.content {
+  padding: 0 !important;
+}
+
+// ── Code Blocks ────────────────────────────────────
+pre.sourceCode, div.sourceCode {
+  background: $navy;
+  border-radius: $border-radius;
+  border: none;
+  padding: 1.25rem 1.5rem;
+  font-size: 0.83rem;
+  line-height: 1.75;
+  code { color: #a5f3d0; background: none; }
+}
+
+code {
+  font-family: $font-family-code;
+  font-size: 0.82em;
+  color: $coral;
+  background: $light-bg;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+
+// ── Callouts ────────────────────────────────────────
+.callout {
+  border-radius: $border-radius;
+  border-left-width: 4px;
+}
+
+.callout-note    { border-left-color: $teal; }
+.callout-tip     { border-left-color: darken($teal, 10%); }
+.callout-warning { border-left-color: $amber; }
+.callout-caution { border-left-color: $coral; }
+
+// ── Tables ─────────────────────────────────────────
+.table {
+  font-size: 0.9rem;
+  th {
+    background: $navy;
+    color: #fff;
+    font-weight: 600;
+    font-family: $font-family-base;
+  }
+  td { border-color: $border; }
+  tbody tr:nth-child(even) td { background: $light-bg; }
+}
+
+// ── Search Box ─────────────────────────────────────
+#quarto-search {
+  .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    &::placeholder { color: rgba(255, 255, 255, 0.45); }
+    &:focus { border-color: $teal-mid; box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.2); }
+  }
+}
+
+// ── Footer ─────────────────────────────────────────
+.nav-footer {
+  background: #070f17;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  a { color: rgba(255, 255, 255, 0.55); text-decoration: none; &:hover { color: #fff; } }
+}
+
+// ── Smooth Section Anchors ─────────────────────────
+section { scroll-margin-top: 72px; }
+
+// ── Responsive ─────────────────────────────────────
+@media (max-width: 768px) {
+  .navbar-brand { font-size: 1.1rem; }
+}

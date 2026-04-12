@@ -35,8 +35,8 @@ website:
         href: blog.qmd#blog
       - text: "Editor"
         href: index.qmd#editor-section
-      #- text: "R Code"
-      #  href: index.qmd#r-section
+      - text: "R Code"
+        href: index.qmd#r-section
     right:
       - text: "Contact"
         href: index.qmd#contact

@@ -1,9 +1,9 @@
 ---
-title: "Pawan | Data Analyst & Economic Researcher"
-description: "7+ years translating complex survey data into policy-relevant insights — specialising in Indian agricultural, labour, and economic policy."
-author: "Pawan "
-date: today
-image: assets/pawan-avatar.png
+#title: "Pawan | Data Analyst & Research Consultant"
+#description: "7+ years translating complex survey data into policy-relevant insights — specialising in Indian agricultural, labour, and economic policy."
+#author: "Pawan "
+#date: today
+#image: assets/pawan-avatar.png
 
 # ── Quarto website config (also set in _quarto.yml) ──────────────
 website:
@@ -318,7 +318,7 @@ section{padding:6rem 2rem;}
   <div class="hero-grid"></div>
   <div class="hero-content fade-in visible">
     <div class="hero-badge">Open to Research Collaborations</div>
-    <h1>Pawan Jangra<br/><em>Data Analyst &amp; Economic Researcher</em></h1>
+    <h1>Pawan<br/><em>Data Analyst &amp; Research Consultant</em></h1>
     <p class="hero-sub">
       7+ years translating complex survey data into policy-relevant insights —
       specialising in Indian agricultural, labour, and economic policy.
@@ -349,8 +349,8 @@ section{padding:6rem 2rem;}
       <div class="avatar-block fade-in">
         <div class="avatar-card">
           <div class="avatar-circle">PJ</div>
-          <h3>Pawan Jangra</h3>
-          <p>New Delhi, India</p>
+          <h3>Pawan </h3>
+          <p>Sonipat, Haryana (Inida) </p>
           <div class="contact-links">
             <a href="https://github.com/pawan1198" target="_blank" rel="noopener" class="contact-link">
               <span>⌥</span> github.com/pawan1198
@@ -803,7 +803,7 @@ project:
   type: book
 book:
   title: <span class="str">"R for Statistical Analysis"</span>
-  author: <span class="str">"Pawan Jangra"</span>
+  author: <span class="str">"Pawan"</span>
   date: <span class="str">"today"</span>
   chapters:
     - index.qmd
@@ -931,7 +931,7 @@ p <span class="kw">&lt;-</span> <span class="fn">ggplot</span>(lfpr, <span class
      ══════════════════════════════════════════════════ -->
 <footer class="site-footer">
   <p>
-    © 2025 Pawan Jangra ·
+    © Pawan ·
     Built with <a href="https://quarto.org" target="_blank">Quarto</a> &amp; R ·
     <a href="https://pawan1198.github.io/portfolio/">Portfolio</a> ·
     <a href="https://github.com/pawan1198" target="_blank">GitHub</a>

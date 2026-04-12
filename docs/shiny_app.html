@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="Explore statistical concepts interactively through embedded Shiny-style web applications.">
+
+<title>Interactive Shiny Apps – Pawan</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./assets/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-3bb01a80cfeb6dd8c1add0f8c420b4b9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=DM+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Interactive Shiny Apps – Pawan">
+<meta property="og:description" content="Explore statistical concepts interactively through embedded Shiny-style web applications.">
+<meta property="og:site_name" content="Pawan">
+<meta name="twitter:title" content="Interactive Shiny Apps – Pawan">
+<meta name="twitter:description" content="Explore statistical concepts interactively through embedded Shiny-style web applications.">
+<meta name="twitter:creator" content="@pawan1198">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Pawan.</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html#about"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html#experience"> 
+<span class="menu-text">Experience</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./data_vizs.html#data_viz"> 
+<span class="menu-text">Data Visualizations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html#skills"> 
+<span class="menu-text">Skills</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./blog.html#blog"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html#editor-section"> 
+<span class="menu-text">Editor</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html#contact"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#dist-explorer" id="toc-dist-explorer" class="nav-link active" data-scroll-target="#dist-explorer">App 1: Distribution Explorer</a></li>
+  <li><a href="#regression" id="toc-regression" class="nav-link" data-scroll-target="#regression">App 2: Regression Simulator</a></li>
+  <li><a href="#clt" id="toc-clt" class="nav-link" data-scroll-target="#clt">App 3: Central Limit Theorem Visualizer</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/pawan1198/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Interactive Shiny Apps</h1>
+</div>
+
+<div>
+  <div class="description">
+    Explore statistical concepts interactively through embedded Shiny-style web applications.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p><strong>Note:</strong> These apps are built using pure JavaScript/HTML to run directly in the browser — no server required. For full Shiny apps, deploy via <a href="https://www.shinyapps.io">shinyapps.io</a> and embed the iframe.</p>
+</blockquote>
+<hr>
+<section id="dist-explorer" class="level2">
+<h2 class="anchored" data-anchor-id="dist-explorer">App 1: Distribution Explorer</h2>
+<p>Interactively explore statistical distributions by adjusting parameters.</p>
+<div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+<div style="background:#0f172a; color:white; padding:1rem 1.5rem; font-weight:600; display:flex; align-items:center; gap:8px;">
+  <span>📊</span> Distribution Explorer
+</div>
+<div style="padding:1.5rem; background:white;">
+
+<div style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:start;">
+
+<div>
+  <label style="display:block; font-weight:600; margin-bottom:0.5rem; font-size:0.9rem;">Distribution Type</label>
+  <select id="dist-type" style="width:100%; padding:8px 12px; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:1rem; font-size:0.9rem;">
+    <option value="normal">Normal Distribution</option>
+    <option value="uniform">Uniform Distribution</option>
+    <option value="exponential">Exponential Distribution</option>
+    <option value="poisson">Poisson Distribution</option>
+  </select>
+
+  <label style="display:block; font-weight:600; margin-bottom:0.5rem; font-size:0.9rem;">Sample Size: <span id="n-label">500</span></label>
+  <input type="range" id="sample-n" min="50" max="5000" value="500" step="50" style="width:100%; margin-bottom:1rem;">
+
+  <div id="param-controls"></div>
+
+  <button onclick="generateDist()" style="width:100%; background:linear-gradient(135deg,#2563eb,#7c3aed); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; margin-top:0.5rem;">
+    🔄 Generate New Sample
+  </button>
+
+  <div id="dist-stats" style="margin-top:1.5rem; background:#f8fafc; border-radius:8px; padding:1rem; font-size:0.85rem; line-height:2;"></div>
+</div>
+
+<div>
+  <canvas id="dist-canvas" width="480" height="360" style="width:100%; border-radius:8px; border:1px solid #f1f5f9;"></canvas>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const distCanvas = document.getElementById('dist-canvas');
+const ctx = distCanvas.getContext('2d');
+
+function randn() {
+  let u = 0, v = 0;
+  while(u === 0) u = Math.random();
+  while(v === 0) v = Math.random();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+function generateDist() {
+  const type = document.getElementById('dist-type').value;
+  const n = +document.getElementById('sample-n').value;
+  document.getElementById('n-label').textContent = n;
+
+  let data = [];
+  let title = '';
+
+  if (type === 'normal') {
+    const mu = +(document.getElementById('mu') ? document.getElementById('mu').value : 0);
+    const sigma = +(document.getElementById('sigma') ? document.getElementById('sigma').value : 1);
+    data = Array.from({length:n}, () => mu + sigma * randn());
+    title = `Normal(μ=${mu}, σ=${sigma})`;
+  } else if (type === 'uniform') {
+    const a = +(document.getElementById('ua') ? document.getElementById('ua').value : 0);
+    const b = +(document.getElementById('ub') ? document.getElementById('ub').value : 1);
+    data = Array.from({length:n}, () => a + (b - a) * Math.random());
+    title = `Uniform(${a}, ${b})`;
+  } else if (type === 'exponential') {
+    const lambda = +(document.getElementById('lambda') ? document.getElementById('lambda').value : 1);
+    data = Array.from({length:n}, () => -Math.log(1 - Math.random()) / lambda);
+    title = `Exponential(λ=${lambda})`;
+  } else if (type === 'poisson') {
+    const lam = +(document.getElementById('plam') ? document.getElementById('plam').value : 3);
+    data = Array.from({length:n}, () => {
+      let L = Math.exp(-lam), k = 0, p = 1;
+      do { k++; p *= Math.random(); } while(p > L);
+      return k - 1;
+    });
+    title = `Poisson(λ=${lam})`;
+  }
+
+  drawHistogram(data, title);
+  showStats(data);
+}
+
+function drawHistogram(data, title) {
+  const W = distCanvas.width, H = distCanvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const bins = 40;
+  const min = Math.min(...data), max = Math.max(...data);
+  const binW = (max - min) / bins;
+  const counts = new Array(bins).fill(0);
+  data.forEach(v => {
+    let i = Math.floor((v - min) / binW);
+    if (i >= bins) i = bins - 1;
+    counts[i]++;
+  });
+
+  const maxCount = Math.max(...counts);
+  const pad = { t:50, r:20, b:50, l:50 };
+  const chartW = W - pad.l - pad.r;
+  const chartH = H - pad.t - pad.b;
+
+  // Background
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(pad.l, pad.t, chartW, chartH);
+
+  // Grid lines
+  ctx.strokeStyle = '#e2e8f0';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.t + chartH * (1 - i/5);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l+chartW, y); ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(Math.round(maxCount * i/5), pad.l - 5, y + 3);
+  }
+
+  // Bars with gradient
+  const bw = chartW / bins;
+  counts.forEach((c, i) => {
+    const bh = (c / maxCount) * chartH;
+    const x = pad.l + i * bw;
+    const y = pad.t + chartH - bh;
+    const grad = ctx.createLinearGradient(0, y, 0, y+bh);
+    grad.addColorStop(0, '#2563eb');
+    grad.addColorStop(1, '#7c3aed');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x+1, y, bw-2, bh);
+  });
+
+  // X axis labels
+  ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+  for (let i = 0; i <= 5; i++) {
+    const v = min + (max - min) * i / 5;
+    const x = pad.l + chartW * i / 5;
+    ctx.fillText(v.toFixed(2), x, H - 10);
+  }
+
+  // Title
+  ctx.fillStyle = '#0f172a'; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(title, W/2, 25);
+}
+
+function showStats(data) {
+  const n = data.length;
+  const mean = data.reduce((a,b)=>a+b,0)/n;
+  const variance = data.reduce((a,b)=>a+(b-mean)**2,0)/(n-1);
+  const std = Math.sqrt(variance);
+  const sorted = [...data].sort((a,b)=>a-b);
+  const median = sorted[Math.floor(n/2)];
+  const q1 = sorted[Math.floor(n/4)];
+  const q3 = sorted[Math.floor(3*n/4)];
+
+  document.getElementById('dist-stats').innerHTML = `
+    <strong>Summary Statistics</strong><br>
+    n = ${n} &nbsp;|&nbsp; Mean = ${mean.toFixed(3)}<br>
+    SD = ${std.toFixed(3)} &nbsp;|&nbsp; Var = ${variance.toFixed(3)}<br>
+    Median = ${median.toFixed(3)}<br>
+    Q1 = ${q1.toFixed(3)} &nbsp;|&nbsp; Q3 = ${q3.toFixed(3)}<br>
+    Min = ${Math.min(...data).toFixed(3)} &nbsp;|&nbsp; Max = ${Math.max(...data).toFixed(3)}
+  `;
+}
+
+function updateParams() {
+  const type = document.getElementById('dist-type').value;
+  const pc = document.getElementById('param-controls');
+  if (type === 'normal') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Mean (μ): <span id="mu-v">0</span></label>
+      <input type="range" id="mu" min="-10" max="10" value="0" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('mu-v').textContent=this.value">
+      <label style="font-weight:600;font-size:0.9rem;">Std Dev (σ): <span id="sig-v">1</span></label>
+      <input type="range" id="sigma" min="0.1" max="5" value="1" step="0.1" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('sig-v').textContent=this.value">`;
+  } else if (type === 'uniform') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Min (a): <span id="ua-v">0</span></label>
+      <input type="range" id="ua" min="-10" max="10" value="0" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('ua-v').textContent=this.value">
+      <label style="font-weight:600;font-size:0.9rem;">Max (b): <span id="ub-v">10</span></label>
+      <input type="range" id="ub" min="-10" max="20" value="10" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('ub-v').textContent=this.value">`;
+  } else if (type === 'exponential') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Rate (λ): <span id="lam-v">1</span></label>
+      <input type="range" id="lambda" min="0.1" max="5" value="1" step="0.1" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('lam-v').textContent=this.value">`;
+  } else if (type === 'poisson') {
+    pc.innerHTML = `
+      <label style="font-weight:600;font-size:0.9rem;">Lambda (λ): <span id="plam-v">3</span></label>
+      <input type="range" id="plam" min="0.5" max="20" value="3" step="0.5" style="width:100%;margin-bottom:1rem;" oninput="document.getElementById('plam-v').textContent=this.value">`;
+  }
+  generateDist();
+}
+
+document.getElementById('dist-type').addEventListener('change', updateParams);
+document.getElementById('sample-n').addEventListener('input', () => {
+  document.getElementById('n-label').textContent = document.getElementById('sample-n').value;
+});
+
+updateParams();
+</script>
+<hr>
+</section>
+<section id="regression" class="level2">
+<h2 class="anchored" data-anchor-id="regression">App 2: Regression Simulator</h2>
+<p>Interactively add data points and watch the regression line update in real time.</p>
+<div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+<div style="background:#0f172a; color:white; padding:1rem 1.5rem; font-weight:600;">
+  📈 Regression Simulator — Click on the chart to add points!
+</div>
+<div style="padding:1.5rem; background:white;">
+
+<div style="display:grid; grid-template-columns:3fr 1fr; gap:2rem; align-items:start;">
+<div>
+  <canvas id="reg-canvas" width="500" height="380" style="width:100%; cursor:crosshair; border:1px solid #e2e8f0; border-radius:8px; background:#f8fafc;"></canvas>
+</div>
+<div>
+  <button onclick="clearReg()" style="width:100%; background:#ef4444; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; margin-bottom:1rem;">
+    🗑️ Clear All
+  </button>
+  <button onclick="addRandomPoints()" style="width:100%; background:linear-gradient(135deg,#2563eb,#7c3aed); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600; margin-bottom:1.5rem;">
+    ✨ Add 10 Points
+  </button>
+  <div id="reg-stats" style="background:#f8fafc; border-radius:8px; padding:1rem; font-size:0.85rem; line-height:2;">
+    <em>Add points to see regression results</em>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const rc = document.getElementById('reg-canvas');
+const rctx = rc.getContext('2d');
+let regPoints = [];
+
+function drawReg() {
+  const W = rc.width, H = rc.height;
+  const pad = {t:20, r:20, b:40, l:50};
+  
+  rctx.clearRect(0, 0, W, H);
+  rctx.fillStyle = '#f8fafc';
+  rctx.fillRect(0,0,W,H);
+  rctx.fillStyle = 'white';
+  rctx.fillRect(pad.l, pad.t, W-pad.l-pad.r, H-pad.t-pad.b);
+
+  // Grid
+  rctx.strokeStyle = '#e2e8f0'; rctx.lineWidth = 1;
+  for (let i=0;i<=5;i++) {
+    const x = pad.l + (W-pad.l-pad.r)*i/5;
+    const y = pad.t + (H-pad.t-pad.b)*i/5;
+    rctx.beginPath(); rctx.moveTo(x,pad.t); rctx.lineTo(x,H-pad.b); rctx.stroke();
+    rctx.beginPath(); rctx.moveTo(pad.l,y); rctx.lineTo(W-pad.r,y); rctx.stroke();
+  }
+
+  // Axes labels
+  rctx.fillStyle = '#64748b'; rctx.font = '11px sans-serif'; rctx.textAlign = 'center';
+  rctx.fillText('X', W/2, H-5);
+  rctx.save(); rctx.translate(12, H/2); rctx.rotate(-Math.PI/2);
+  rctx.fillText('Y', 0, 0); rctx.restore();
+
+  if (regPoints.length < 2) {
+    rctx.fillStyle = '#94a3b8'; rctx.font = '14px sans-serif'; rctx.textAlign = 'center';
+    rctx.fillText('Click to add data points', W/2, H/2);
+    return;
+  }
+
+  // Regression
+  const xs = regPoints.map(p=>p.x), ys = regPoints.map(p=>p.y);
+  const n = xs.length;
+  const mx = xs.reduce((a,b)=>a+b)/n, my = ys.reduce((a,b)=>a+b)/n;
+  const num = xs.reduce((a,x,i)=>a+(x-mx)*(ys[i]-my), 0);
+  const den = xs.reduce((a,x)=>a+(x-mx)**2, 0);
+  const slope = num/den, intercept = my - slope*mx;
+  const ss_res = ys.reduce((a,y,i)=>a+(y-(slope*xs[i]+intercept))**2,0);
+  const ss_tot = ys.reduce((a,y)=>a+(y-my)**2,0);
+  const r2 = 1 - ss_res/ss_tot;
+
+  // Regression line
+  const x1=0, x2=W, y1=intercept+slope*x1, y2=intercept+slope*x2;
+  rctx.beginPath();
+  rctx.strokeStyle='#2563eb'; rctx.lineWidth=2.5;
+  rctx.moveTo(x1,y1); rctx.lineTo(x2,y2); rctx.stroke();
+
+  // Points
+  regPoints.forEach(p => {
+    rctx.beginPath();
+    rctx.arc(p.x, p.y, 5, 0, Math.PI*2);
+    rctx.fillStyle='#e11d48'; rctx.fill();
+    rctx.strokeStyle='white'; rctx.lineWidth=1.5; rctx.stroke();
+  });
+
+  document.getElementById('reg-stats').innerHTML = `
+    <strong>Regression Results</strong><br>
+    n = ${n} points<br>
+    Slope = ${slope.toFixed(4)}<br>
+    Intercept = ${intercept.toFixed(4)}<br>
+    R² = ${r2.toFixed(4)}<br>
+    R = ${Math.sqrt(Math.abs(r2)).toFixed(4)}<br>
+    <br>ŷ = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}
+  `;
+}
+
+rc.addEventListener('click', (e) => {
+  const rect = rc.getBoundingClientRect();
+  const scaleX = rc.width / rect.width;
+  const scaleY = rc.height / rect.height;
+  regPoints.push({ x: (e.clientX - rect.left)*scaleX, y: (e.clientY - rect.top)*scaleY });
+  drawReg();
+});
+
+function clearReg() {
+  regPoints = [];
+  document.getElementById('reg-stats').innerHTML = '<em>Add points to see regression results</em>';
+  drawReg();
+}
+
+function addRandomPoints() {
+  const W = rc.width, H = rc.height;
+  const baseSlope = (Math.random()-0.5)*0.8;
+  for (let i=0;i<10;i++) {
+    const x = 50 + Math.random()*(W-100);
+    const y = H/2 - baseSlope*(x-W/2) + (Math.random()-0.5)*100;
+    regPoints.push({x, y});
+  }
+  drawReg();
+}
+
+drawReg();
+</script>
+<hr>
+</section>
+<section id="clt" class="level2">
+<h2 class="anchored" data-anchor-id="clt">App 3: Central Limit Theorem Visualizer</h2>
+<div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+<div style="background:#0f172a; color:white; padding:1rem 1.5rem; font-weight:600;">
+  🔔 Central Limit Theorem Demonstration
+</div>
+<div style="padding:1.5rem; background:white;">
+
+<div style="margin-bottom:1.5rem; display:flex; gap:2rem; flex-wrap:wrap; align-items:center;">
+  <div>
+    <label style="font-weight:600; font-size:0.9rem;">Population Shape</label><br>
+    <select id="pop-shape" style="padding:8px 12px; border:1px solid #e2e8f0; border-radius:8px; margin-top:4px;">
+      <option value="uniform">Uniform (Skewed)</option>
+      <option value="exponential">Exponential</option>
+      <option value="bimodal">Bimodal</option>
+    </select>
+  </div>
+  <div>
+    <label style="font-weight:600; font-size:0.9rem;">Sample Size (n): <span id="clt-n">30</span></label><br>
+    <input type="range" id="clt-n-input" min="2" max="200" value="30" step="1" style="width:200px;margin-top:8px;" oninput="document.getElementById('clt-n').textContent=this.value">
+  </div>
+  <button onclick="runCLT()" style="background:linear-gradient(135deg,#2563eb,#7c3aed); color:white; border:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-weight:600; margin-top:22px;">
+    ▶ Run (1000 samples)
+  </button>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+  <div>
+    <div style="font-weight:600; text-align:center; margin-bottom:0.5rem; font-size:0.9rem; color:#64748b;">Population Distribution</div>
+    <canvas id="pop-canvas" width="320" height="200" style="width:100%; border:1px solid #e2e8f0; border-radius:8px;"></canvas>
+  </div>
+  <div>
+    <div style="font-weight:600; text-align:center; margin-bottom:0.5rem; font-size:0.9rem; color:#64748b;">Sampling Distribution of <span style="color:#7c3aed">x̄</span></div>
+    <canvas id="samp-canvas" width="320" height="200" style="width:100%; border:1px solid #e2e8f0; border-radius:8px;"></canvas>
+  </div>
+</div>
+<div id="clt-info" style="margin-top:1rem; background:#f8fafc; border-radius:8px; padding:1rem; font-size:0.85rem;"></div>
+
+</div>
+</div>
+
+<script>
+function drawMiniHist(canvasId, data, color1, color2, title) {
+  const cv = document.getElementById(canvasId);
+  const ct = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ct.clearRect(0,0,W,H);
+  ct.fillStyle='#f8fafc'; ct.fillRect(0,0,W,H);
+  ct.fillStyle='white'; ct.fillRect(30,10,W-40,H-30);
+
+  const bins=30, min=Math.min(...data), max=Math.max(...data);
+  const bw=(max-min)/bins;
+  const counts=new Array(bins).fill(0);
+  data.forEach(v=>{let i=Math.floor((v-min)/bw); if(i>=bins)i=bins-1; counts[i]++;});
+  const mc=Math.max(...counts);
+  const cw=(W-40)/bins, ch=H-40;
+
+  counts.forEach((c,i)=>{
+    const bh=(c/mc)*ch, x=30+i*cw, y=10+ch-bh;
+    const g=ct.createLinearGradient(0,y,0,y+bh);
+    g.addColorStop(0,color1); g.addColorStop(1,color2);
+    ct.fillStyle=g; ct.fillRect(x,y,cw-1,bh);
+  });
+
+  // Normal curve overlay for sampling dist
+  if (canvasId==='samp-canvas') {
+    const mean=data.reduce((a,b)=>a+b)/data.length;
+    const std=Math.sqrt(data.reduce((a,b)=>a+(b-mean)**2)/(data.length-1));
+    ct.beginPath(); ct.strokeStyle='#e11d48'; ct.lineWidth=2;
+    for(let px=0;px<=W-40;px++) {
+      const xv=min+(px/(W-40))*(max-min);
+      const dens=Math.exp(-0.5*((xv-mean)/std)**2)/(std*Math.sqrt(2*Math.PI));
+      const py=10+ch-Math.min((dens*data.length*bw/mc)*ch, ch);
+      px===0 ? ct.moveTo(30+px,py) : ct.lineTo(30+px,py);
+    }
+    ct.stroke();
+  }
+}
+
+function runCLT() {
+  const shape = document.getElementById('pop-shape').value;
+  const n = +document.getElementById('clt-n-input').value;
+  
+  // Population
+  let pop = [];
+  for(let i=0;i<5000;i++) {
+    if(shape==='uniform') pop.push(Math.random()*10);
+    else if(shape==='exponential') pop.push(-Math.log(1-Math.random())*2);
+    else pop.push(Math.random()<0.5 ? 2+randn()*0.8 : 8+randn()*0.8);
+  }
+
+  // Sampling distribution
+  let means = [];
+  for(let i=0;i<1000;i++) {
+    let sum=0;
+    for(let j=0;j<n;j++) sum+=pop[Math.floor(Math.random()*pop.length)];
+    means.push(sum/n);
+  }
+
+  drawMiniHist('pop-canvas', pop, '#f59e0b', '#d97706');
+  drawMiniHist('samp-canvas', means, '#2563eb', '#7c3aed');
+
+  const pm=pop.reduce((a,b)=>a+b)/pop.length;
+  const ps=Math.sqrt(pop.reduce((a,b)=>a+(b-pm)**2)/pop.length);
+  const mm=means.reduce((a,b)=>a+b)/means.length;
+  const ms=Math.sqrt(means.reduce((a,b)=>a+(b-mm)**2)/means.length);
+
+  document.getElementById('clt-info').innerHTML = `
+    <strong>Central Limit Theorem in Action</strong> &nbsp;|&nbsp;
+    Population: μ=${pm.toFixed(3)}, σ=${ps.toFixed(3)} &nbsp;|&nbsp;
+    Sampling Dist: x̄=${mm.toFixed(3)}, SE=${ms.toFixed(3)} &nbsp;|&nbsp;
+    Predicted SE = σ/√n = ${(ps/Math.sqrt(n)).toFixed(3)} &nbsp;|&nbsp;
+    <em style="color:#7c3aed">No matter the population shape, the sampling distribution approaches Normal! 🔔</em>
+  `;
+}
+
+runCLT();
+</script>
+<hr>
+<blockquote class="blockquote">
+<p><strong>Want Full Shiny Apps?</strong> For server-side Shiny apps with live data, database connections, and full R computations, deploy via <a href="https://www.shinyapps.io">shinyapps.io</a> and embed them here using iframes. See the <a href="statistics-with-r/chapter1.html">Statistics with R</a> section for code examples.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pawan1198\.github\.io\/portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Pawan</p>
+</div>   
+    <div class="nav-footer-center">
+<p>Built with <a href="https://quarto.org">Quarto</a> &amp; R</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pawan1198/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

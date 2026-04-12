@@ -1,0 +1,924 @@
+---
+title: "Survival Analysis in R: From Theory to Practice"
+subtitle: "A Comprehensive Guide to Time-to-Event Data Using the Kaplan-Meier Estimator, Cox Proportional Hazards Model, and Beyond"
+author: "Pawan"
+date: "2026-04-10"
+date-format: "MMMM D, YYYY"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Contents"
+    toc-location: left
+    number-sections: true
+    theme: cosmo
+    highlight-style: github
+    code-fold: show
+    code-tools: true
+    code-copy: true
+    fig-align: center
+    fig-width: 9
+    fig-height: 6
+    df-print: kable
+    embed-resources: true
+    smooth-scroll: true
+    css: |
+      body { font-family: "Georgia", serif; line-height: 1.8; }
+      h1, h2, h3 { font-family: "Helvetica Neue", sans-serif; color: #2c3e50; }
+      .callout-note { background: #eaf4fb; border-left: 4px solid #2980b9; }
+      .callout-warning { background: #fef9e7; border-left: 4px solid #f39c12; }
+      .callout-tip { background: #eafaf1; border-left: 4px solid #27ae60; }
+      code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+#bibliography: references.bib
+execute:
+  echo: true
+  warning: false
+  message: false
+  cache: false
+---
+
+---
+
+# Introduction {#sec-intro}
+
+> *"The question is not whether you will die, but when — and survival analysis is the statistics that answers it."*
+
+Survival analysis is one of the most practically powerful branches of statistics, yet it remains underutilised in many research domains beyond its traditional home in biomedical science. At its heart, survival analysis is concerned with **time-to-event data** — data that records how long it takes until some outcome of interest occurs. The outcome might be death (in clinical trials), machine failure (in reliability engineering), loan default (in finance), job loss (in labour economics), or crop failure (in agricultural research).
+
+What makes survival data unique — and why standard regression methods fail — is the problem of **censoring**. In most real-world studies, we do not observe the event for every subject by the time the study ends. Some people are still alive; some patients dropped out of the trial; some machines are still running. These observations are said to be **censored**: we know the event has not happened up to a certain point, but we do not know when it will happen.
+
+This blog post provides a thorough, practical walkthrough of survival analysis using R. We will cover:
+
+1. The theoretical foundations of survival analysis
+2. The **Kaplan-Meier** non-parametric estimator
+3. The **Log-rank test** for comparing survival curves
+4. The **Cox Proportional Hazards** model for covariate adjustment
+5. Model diagnostics and the proportional hazards assumption
+6. A full applied case study using Indian agricultural and labour market framing
+
+By the end, you will have the conceptual grounding and the working R code to apply survival analysis to your own data.
+
+---
+
+# Theoretical Foundations {#sec-theory}
+
+## What Is a Survival Function? {#sec-survival-function}
+
+Let $T$ be a non-negative random variable representing the time until an event occurs. The **survival function** $S(t)$ is defined as the probability that the event has *not* occurred by time $t$:
+
+$$S(t) = P(T > t), \quad t \geq 0$$
+
+Key properties of $S(t)$:
+
+- $S(0) = 1$ — at time zero, no one has experienced the event
+- $S(\infty) = 0$ — eventually, everyone experiences the event (in theory)
+- $S(t)$ is a non-increasing, right-continuous step function
+
+## The Hazard Function {#sec-hazard}
+
+The **hazard function** $h(t)$, also called the hazard rate or instantaneous failure rate, describes the *conditional* rate at which the event occurs at time $t$, given that it has not occurred before:
+
+$$h(t) = \lim_{\Delta t \to 0} \frac{P(t \leq T < t + \Delta t \mid T \geq t)}{\Delta t}$$
+
+The hazard function is not a probability — it is a rate, and it can exceed 1. Intuitively, it tells us *how dangerous* time $t$ is for a subject still at risk.
+
+The relationship between the survival and hazard functions is fundamental:
+
+$$S(t) = \exp\left(-\int_0^t h(u)\, du\right) = \exp(-H(t))$$
+
+where $H(t) = \int_0^t h(u)\, du$ is the **cumulative hazard function**.
+
+## Censoring: The Heart of Survival Analysis {#sec-censoring}
+
+**Right censoring** is the most common form: the subject is still event-free at the last observation time. This happens because:
+
+- The study ends before the subject experiences the event
+- The subject withdraws from the study
+- The subject dies from a competing cause
+
+**Left censoring** occurs when the event happened before the start of observation. **Interval censoring** occurs when we know only that the event occurred within a time window.
+
+For most applied work, we assume **non-informative** or **independent** censoring — the censoring mechanism is unrelated to the subject's risk of experiencing the event. Violations of this assumption (e.g., sicker patients dropping out) can bias estimates.
+
+::: {.callout-note}
+## Why Not Just Use OLS Regression?
+
+Ordinary least squares regression on survival times ignores censoring, treating censored observations as if the event occurred at the last observed time. This introduces severe **downward bias** in estimated survival times. Survival analysis uses likelihood-based methods that properly account for censored observations.
+:::
+
+---
+
+# The Kaplan-Meier Estimator {#sec-km}
+
+## Mathematical Definition {#sec-km-math}
+
+The **Kaplan-Meier (KM) estimator**, also called the product-limit estimator, is a non-parametric maximum likelihood estimator of $S(t)$. It is computed at each observed event time.
+
+Let $t_1 < t_2 < \cdots < t_k$ be the **distinct** event times. At each time $t_j$, define:
+
+- $n_j$ = number of subjects **at risk** just before time $t_j$ (the **risk set**)
+- $d_j$ = number of **events** (deaths/failures) at time $t_j$
+
+The Kaplan-Meier estimator is:
+
+$$\hat{S}(t) = \prod_{j: t_j \leq t} \left(1 - \frac{d_j}{n_j}\right)$$
+
+This is the **product of survival probabilities** at each event time. The estimate remains constant between event times, creating the characteristic step-function shape.
+
+## Variance and Confidence Intervals {#sec-km-ci}
+
+The standard error of $\hat{S}(t)$ is computed using **Greenwood's formula**:
+
+$$\widehat{\text{Var}}[\hat{S}(t)] = \hat{S}(t)^2 \sum_{j: t_j \leq t} \frac{d_j}{n_j(n_j - d_j)}$$
+
+Point-wise 95% confidence intervals can be constructed on the log or log-log scale (the latter is preferred as it keeps intervals within $[0, 1]$):
+
+$$\exp\!\left(\log\hat{S}(t) \cdot \exp\!\left(\pm 1.96 \cdot \frac{\hat{\sigma}}{\log\hat{S}(t)}\right)\right)$$
+
+---
+
+# R Implementation {#sec-r-impl}
+
+## Package Setup {#sec-packages}
+
+We use the `survival` package (the workhorse of survival analysis in R), `survminer` for publication-quality plots, `ggplot2` for custom visualizations, and `data.table` for data manipulation.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+# Install if needed:
+# install.packages(c("survival", "survminer", "ggplot2", "data.table",
+#                    "dplyr", "knitr", "kableExtra", "patchwork", "scales"))
+
+library(survival)
+library(survminer)
+library(ggplot2)
+library(data.table)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+library(scales)
+
+# Global ggplot theme
+theme_surv <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title    = element_text(face = "bold", size = 15, colour = "#2c3e50"),
+    plot.subtitle = element_text(colour = "#555555", size = 11),
+    axis.title    = element_text(face = "bold"),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    plot.caption  = element_text(colour = "#888888", hjust = 0, size = 9)
+  )
+
+theme_set(theme_surv)
+set.seed(42)
+```
+
+## Simulating a Realistic Dataset {#sec-data}
+
+We simulate a study of **500 agricultural workers** in rural India, tracking time-to-exit from informal farm employment (in months). Workers exit due to migration to urban areas, entry into MGNREGS, or crop loss forcing a career change. Workers still employed at the end of the 36-month study period are censored.
+
+Covariates include:
+
+- `region`: North vs. South India (structural labour market differences)
+- `landholding`: Marginal (&lt;1 ha) vs. Small (1–2 ha) vs. Medium (&gt;2 ha)
+- `age_group`: Young (&lt;35) vs. Middle (35–55) vs. Older (&gt;55)
+- `irrigation`: Access to irrigation (Yes/No)
+- `education`: Illiterate vs. Primary vs. Secondary+
+
+```{r}
+#| label: simulate-data
+
+set.seed(2024)
+n <- 500
+
+# Simulate baseline hazard from a Weibull distribution
+# Shape > 1 means increasing hazard (workers more likely to exit as time goes on)
+
+dt <- data.table(
+  id          = 1:n,
+  region      = sample(c("North", "South"), n, replace = TRUE, prob = c(0.55, 0.45)),
+  landholding = sample(c("Marginal", "Small", "Medium"), n, replace = TRUE, prob = c(0.50, 0.30, 0.20)),
+  age_group   = sample(c("Young", "Middle", "Older"), n, replace = TRUE, prob = c(0.35, 0.45, 0.20)),
+  irrigation  = sample(c("Yes", "No"), n, replace = TRUE, prob = c(0.40, 0.60)),
+  education   = sample(c("Illiterate", "Primary", "Secondary+"), n, replace = TRUE, prob = c(0.30, 0.40, 0.30))
+)
+
+# Assign baseline scale parameters based on covariates
+# Lower scale → shorter time to exit
+dt[, scale_param := 40]
+dt[region == "North",        scale_param := scale_param * 0.80]  # faster exit in North
+dt[landholding == "Marginal", scale_param := scale_param * 0.75]  # marginal land → faster exit
+dt[landholding == "Medium",   scale_param := scale_param * 1.30]  # medium land → slower exit
+dt[age_group == "Young",      scale_param := scale_param * 0.85]  # young → more mobile
+dt[age_group == "Older",      scale_param := scale_param * 1.20]  # older → less mobile
+dt[irrigation == "No",        scale_param := scale_param * 0.88]  # no irrigation → faster exit
+dt[education == "Secondary+", scale_param := scale_param * 1.15]  # educated → better options → stay longer OR exit faster?
+
+# Simulate true event times (Weibull with shape=1.4)
+dt[, true_time := rweibull(n, shape = 1.4, scale = scale_param)]
+
+# Censoring time: uniform up to 36 months
+dt[, censor_time := runif(n, min = 6, max = 36)]
+
+# Observed time is the minimum
+dt[, time   := pmin(true_time, censor_time)]
+dt[, status := as.integer(true_time <= censor_time)]  # 1 = event, 0 = censored
+
+# Cap at study end (36 months)
+dt[time > 36, `:=`(time = 36, status = 0L)]
+
+# Factor variables
+dt[, region      := factor(region, levels = c("South", "North"))]
+dt[, landholding := factor(landholding, levels = c("Medium", "Small", "Marginal"))]
+dt[, age_group   := factor(age_group, levels = c("Middle", "Young", "Older"))]
+dt[, irrigation  := factor(irrigation, levels = c("Yes", "No"))]
+dt[, education   := factor(education, levels = c("Secondary+", "Primary", "Illiterate"))]
+
+cat("Dataset dimensions:", nrow(dt), "rows x", ncol(dt), "columns\n")
+cat("Event rate:", round(mean(dt$status) * 100, 1), "%\n")
+cat("Median follow-up time:", round(median(dt$time), 1), "months\n")
+```
+
+### Dataset Summary Table
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary of Agricultural Worker Survival Dataset"
+
+summary_tab <- dt[, .(
+  N      = .N,
+  Events = sum(status),
+  `Event Rate (%)` = round(mean(status) * 100, 1),
+  `Median Time (months)` = round(median(time), 1),
+  `Mean Time (months)` = round(mean(time), 1)
+), by = region]
+
+kable(summary_tab, align = "lrrrrr") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) |>
+  add_header_above(c(" " = 1, "Follow-up Statistics" = 5))
+```
+
+---
+
+# Kaplan-Meier Analysis {#sec-km-analysis}
+
+## Overall Survival Curve {#sec-km-overall}
+
+We begin with the overall KM estimate — the survival function across all 500 workers, ignoring covariates.
+
+```{r}
+#| label: fig-km-overall
+#| fig-cap: "Overall Kaplan-Meier survival curve: Probability of remaining in informal farm employment over 36 months. Shaded band = 95% confidence interval. Vertical ticks = censored observations."
+
+# Fit overall KM
+km_overall <- survfit(Surv(time, status) ~ 1, data = dt)
+
+# Extract KM data for ggplot
+km_df <- data.frame(
+  time   = km_overall$time,
+  surv   = km_overall$surv,
+  lower  = km_overall$lower,
+  upper  = km_overall$upper,
+  n.risk = km_overall$n.risk,
+  n.event = km_overall$n.event,
+  n.censor = km_overall$n.censor
+)
+
+# Mark censored observations
+censor_df <- km_df[km_df$n.censor > 0, ]
+
+p_overall <- ggplot(km_df, aes(x = time, y = surv)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#3498db", alpha = 0.15) +
+  geom_step(colour = "#2c3e50", linewidth = 1.1) +
+  geom_point(data = censor_df, aes(x = time, y = surv),
+             shape = 3, size = 2.5, colour = "#e74c3c", stroke = 1.2) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", colour = "#e67e22", linewidth = 0.8) +
+  annotate("text", x = 33, y = 0.52, label = "S(t) = 0.50", 
+           colour = "#e67e22", size = 3.5, fontface = "italic") +
+  scale_y_continuous(labels = percent_format(), limits = c(0, 1.02)) +
+  scale_x_continuous(breaks = seq(0, 36, 6)) +
+  labs(
+    title    = "Kaplan-Meier Survival Estimate: Informal Farm Employment",
+    subtitle = paste0("n = ", nrow(dt), " workers | Events = ", sum(dt$status),
+                      " (", round(mean(dt$status)*100, 1), "%) | Follow-up: 0–36 months"),
+    x        = "Time (Months)",
+    y        = "Probability of Remaining in Farm Employment",
+    caption  = "Note: + symbols indicate censored observations. Shaded region = 95% pointwise CI."
+  )
+
+p_overall
+```
+
+::: {.callout-tip}
+## Reading the KM Curve
+
+The **median survival time** is read where the curve crosses the 50% line ($S(t) = 0.5$). Here, the median represents the time at which half the workers had exited informal farm employment. At 36 months (study end), approximately **`r round(tail(km_df$surv[!is.nan(km_df$surv)], 1)*100, 1)`%** of workers were still in farm employment (or had not yet been observed to exit).
+:::
+
+### Key Quantile Estimates
+
+```{r}
+#| label: tbl-km-quantiles
+#| tbl-cap: "KM Estimated Survival Quantiles (with 95% CI)"
+
+quants <- quantile(km_overall, probs = c(0.25, 0.50, 0.75))
+
+q_df <- data.frame(
+  Quantile      = c("25th (Q1)", "50th (Median)", "75th (Q3)"),
+  `Time (months)` = quants$quantile,
+  `Lower 95% CI` = quants$lower,
+  `Upper 95% CI` = quants$upper
+)
+
+kable(q_df, row.names = FALSE) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+## Stratified KM by Region {#sec-km-region}
+
+Now we compare North vs. South India workers. The key question: do workers in the two regions have different probabilities of remaining in informal farm employment over time?
+
+```{r}
+#| label: fig-km-region
+#| fig-cap: "Kaplan-Meier curves stratified by region (North vs. South India)"
+
+km_region <- survfit(Surv(time, status) ~ region, data = dt)
+
+# Extract with strata labels
+km_r_df <- data.frame(
+  time   = km_region$time,
+  surv   = km_region$surv,
+  lower  = km_region$lower,
+  upper  = km_region$upper,
+  strata = rep(names(km_region$strata), km_region$strata)
+)
+km_r_df$strata <- gsub("region=", "", km_r_df$strata)
+
+ggplot(km_r_df, aes(x = time, y = surv, colour = strata, fill = strata)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.12, colour = NA) +
+  geom_step(linewidth = 1.1) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", colour = "grey50", linewidth = 0.6) +
+  scale_colour_manual(values = c("North" = "#e74c3c", "South" = "#2980b9"),
+                      name = "Region") +
+  scale_fill_manual(values = c("North" = "#e74c3c", "South" = "#2980b9"),
+                    name = "Region") +
+  scale_y_continuous(labels = percent_format(), limits = c(0, 1.02)) +
+  scale_x_continuous(breaks = seq(0, 36, 6)) +
+  labs(
+    title    = "KM Survival Curves by Region",
+    subtitle = "Comparing informal farm employment retention: North vs. South India",
+    x        = "Time (Months)",
+    y        = "P(Remaining in Farm Employment)",
+    caption  = "Shaded bands = 95% confidence intervals"
+  )
+```
+
+## Stratified KM by Land Holding {#sec-km-land}
+
+```{r}
+#| label: fig-km-land
+#| fig-cap: "KM curves stratified by land holding size"
+
+km_land <- survfit(Surv(time, status) ~ landholding, data = dt)
+
+km_l_df <- data.frame(
+  time   = km_land$time,
+  surv   = km_land$surv,
+  lower  = km_land$lower,
+  upper  = km_land$upper,
+  strata = rep(names(km_land$strata), km_land$strata)
+)
+km_l_df$strata <- gsub("landholding=", "", km_l_df$strata)
+km_l_df$strata <- factor(km_l_df$strata, levels = c("Marginal", "Small", "Medium"))
+
+ggplot(km_l_df, aes(x = time, y = surv, colour = strata, fill = strata)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.12, colour = NA) +
+  geom_step(linewidth = 1.1) +
+  scale_colour_manual(values = c("Marginal" = "#e74c3c", "Small" = "#f39c12", "Medium" = "#27ae60"),
+                      name = "Land Holding") +
+  scale_fill_manual(values = c("Marginal" = "#e74c3c", "Small" = "#f39c12", "Medium" = "#27ae60"),
+                    name = "Land Holding") +
+  scale_y_continuous(labels = percent_format(), limits = c(0, 1.02)) +
+  scale_x_continuous(breaks = seq(0, 36, 6)) +
+  labs(
+    title    = "KM Survival Curves by Land Holding Size",
+    subtitle = "Marginal landholders exit informal farm work fastest",
+    x        = "Time (Months)",
+    y        = "P(Remaining in Farm Employment)",
+    caption  = "Marginal: <1 ha  |  Small: 1–2 ha  |  Medium: >2 ha"
+  )
+```
+
+The curves clearly separate: **marginal landholders** (less than 1 hectare) exit informal farm employment faster than small or medium holders. This is consistent with economic theory — precarious landholders face greater income volatility and are more likely to seek alternative livelihoods.
+
+---
+
+# Log-Rank Test {#sec-logrank}
+
+## Theory {#sec-logrank-theory}
+
+The **log-rank test** (also called the Mantel-Cox test) is the standard non-parametric test for comparing survival curves between two or more groups. It tests the null hypothesis:
+
+$$H_0: S_1(t) = S_2(t) \quad \text{for all } t$$
+
+versus the alternative that the curves differ at some point. The test statistic is:
+
+$$\chi^2 = \frac{\left(\sum_j (O_{1j} - E_{1j})\right)^2}{\sum_j V_j}$$
+
+where at each event time $t_j$:
+
+- $O_{1j}$ = observed events in group 1
+- $E_{1j} = n_{1j} \cdot d_j / n_j$ = expected events in group 1 under $H_0$
+- $V_j$ = variance term
+
+The log-rank test gives **equal weight** to all event times. It is most powerful when the hazard ratio between groups is **constant over time** (proportional hazards).
+
+::: {.callout-warning}
+## When Not to Use the Log-Rank Test
+
+If survival curves **cross** (the groups have different hazards at different time points), the log-rank test has low power. In that case, the **weighted log-rank test** (e.g., Prentice-Wilcoxon, which weights early event times more heavily) or a stratified test should be preferred.
+:::
+
+## Applying the Log-Rank Test {#sec-logrank-apply}
+
+```{r}
+#| label: logrank-tests
+
+# Region
+lr_region <- survdiff(Surv(time, status) ~ region, data = dt)
+cat("=== Log-Rank Test: Region ===\n")
+print(lr_region)
+
+# Land holding
+lr_land <- survdiff(Surv(time, status) ~ landholding, data = dt)
+cat("\n=== Log-Rank Test: Land Holding ===\n")
+print(lr_land)
+
+# Irrigation access
+lr_irr <- survdiff(Surv(time, status) ~ irrigation, data = dt)
+cat("\n=== Log-Rank Test: Irrigation Access ===\n")
+print(lr_irr)
+```
+
+```{r}
+#| label: tbl-logrank-summary
+#| tbl-cap: "Summary of Log-Rank Test Results"
+
+logrank_summary <- data.frame(
+  Variable   = c("Region (North vs. South)", "Land Holding (3 levels)", "Irrigation Access"),
+  `Chi-square` = c(
+    round(lr_region$chisq, 3),
+    round(lr_land$chisq, 3),
+    round(lr_irr$chisq, 3)
+  ),
+  df = c(1, 2, 1),
+  `p-value` = c(
+    round(1 - pchisq(lr_region$chisq, 1), 4),
+    round(1 - pchisq(lr_land$chisq, 2), 4),
+    round(1 - pchisq(lr_irr$chisq, 1), 4)
+  ),
+  Interpretation = c(
+    ifelse(1 - pchisq(lr_region$chisq, 1) < 0.05, "Significant difference", "No significant difference"),
+    ifelse(1 - pchisq(lr_land$chisq, 2) < 0.05, "Significant difference", "No significant difference"),
+    ifelse(1 - pchisq(lr_irr$chisq, 1) < 0.05, "Significant difference", "No significant difference")
+  )
+)
+
+kable(logrank_summary, digits = 4) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) |>
+  column_spec(5, bold = TRUE,
+              color = ifelse(logrank_summary$Interpretation == "Significant difference", "#27ae60", "#e74c3c"))
+```
+
+**Interpretation:** The log-rank test for land holding is statistically significant ($p < 0.05$), confirming that the survival curves across land holding categories differ from what would be expected under the null hypothesis of equal survival. Marginal landholders exit informal farm employment significantly earlier than medium holders.
+
+---
+
+# Cox Proportional Hazards Model {#sec-cox}
+
+## Theory {#sec-cox-theory}
+
+The **Cox proportional hazards model** (Cox 1972) is the most widely used regression model in survival analysis. It is a **semi-parametric** model: it does not assume a specific distributional form for the baseline hazard $h_0(t)$, but it does assume that covariates act **multiplicatively** on the hazard:
+
+$$h(t \mid \mathbf{x}) = h_0(t) \cdot \exp(\boldsymbol{\beta}^\top \mathbf{x})$$
+
+where:
+
+- $h_0(t)$ is the unspecified **baseline hazard** (shared by all subjects with $\mathbf{x} = 0$)
+- $\mathbf{x}$ is the vector of covariates
+- $\boldsymbol{\beta}$ is the vector of regression coefficients
+
+### The Proportionality Assumption
+
+The crucial assumption is that the **hazard ratio** between any two subjects is **constant over time**:
+
+$$\frac{h(t \mid \mathbf{x}_1)}{h(t \mid \mathbf{x}_2)} = \frac{\exp(\boldsymbol{\beta}^\top \mathbf{x}_1)}{\exp(\boldsymbol{\beta}^\top \mathbf{x}_2)} = \exp\!\left(\boldsymbol{\beta}^\top (\mathbf{x}_1 - \mathbf{x}_2)\right)$$
+
+Note that $h_0(t)$ cancels — this is the *proportional hazards* property.
+
+### Partial Likelihood Estimation
+
+Cox's elegant insight was that $\boldsymbol{\beta}$ can be estimated without knowing $h_0(t)$, using a **partial likelihood**:
+
+$$L(\boldsymbol{\beta}) = \prod_{j=1}^{k} \frac{\exp(\boldsymbol{\beta}^\top \mathbf{x}_{(j)})}{\sum_{i \in R(t_j)} \exp(\boldsymbol{\beta}^\top \mathbf{x}_i)}$$
+
+where:
+
+- The product runs over the $k$ distinct event times
+- $\mathbf{x}_{(j)}$ is the covariate vector for the subject who experienced the event at $t_j$
+- $R(t_j)$ is the **risk set** at time $t_j$ (all subjects still under observation)
+
+### Interpreting Hazard Ratios
+
+The exponentiated coefficient $e^{\hat{\beta}_k}$ is the **hazard ratio (HR)** for a one-unit increase in $x_k$ (holding other covariates fixed):
+
+- $\text{HR} > 1$: Higher hazard (faster time to event) — the covariate increases risk
+- $\text{HR} < 1$: Lower hazard (longer time to event) — the covariate is protective
+- $\text{HR} = 1$: No effect
+
+## Fitting the Cox Model {#sec-cox-fit}
+
+```{r}
+#| label: cox-model
+
+cox_fit <- coxph(
+  Surv(time, status) ~ region + landholding + age_group + irrigation + education,
+  data = dt,
+  ties = "efron"   # Efron approximation for tied event times (better than Breslow)
+)
+
+summary(cox_fit)
+```
+
+```{r}
+#| label: tbl-cox-hr
+#| tbl-cap: "Cox Model: Hazard Ratios with 95% Confidence Intervals"
+
+cox_tbl <- broom::tidy(cox_fit, exponentiate = TRUE, conf.int = TRUE)
+
+cox_tbl_fmt <- cox_tbl |>
+  mutate(
+    term        = gsub("region|landholding|age_group|irrigation|education", "", term),
+    HR          = round(estimate, 3),
+    `95% CI`    = paste0("(", round(conf.low, 3), ", ", round(conf.high, 3), ")"),
+    `p-value`   = ifelse(p.value < 0.001, "<0.001", round(p.value, 4)),
+    Significance = case_when(
+      p.value < 0.001 ~ "***",
+      p.value < 0.01  ~ "**",
+      p.value < 0.05  ~ "*",
+      p.value < 0.10  ~ ".",
+      TRUE            ~ ""
+    )
+  ) |>
+  select(Covariate = term, HR, `95% CI`, `p-value`, Significance)
+
+kable(cox_tbl_fmt) |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) |>
+  add_header_above(c(" " = 1, "Hazard Ratio Estimates" = 4)) |>
+  footnote(general = "Reference categories: South region, Medium land, Middle age, Irrigation=Yes, Secondary+ education. *** p<0.001, ** p<0.01, * p<0.05",
+           general_title = "Note:")
+```
+
+## Forest Plot of Hazard Ratios {#sec-forest}
+
+```{r}
+#| label: fig-forest
+#| fig-cap: "Forest plot of hazard ratios from the Cox proportional hazards model. HR > 1 indicates higher hazard (faster exit from farm employment)."
+#| fig-height: 7
+
+cox_plot_df <- broom::tidy(cox_fit, exponentiate = TRUE, conf.int = TRUE) |>
+  mutate(
+    label = c(
+      "North (vs. South)",
+      "Small land (vs. Medium)",
+      "Marginal land (vs. Medium)",
+      "Young (vs. Middle)",
+      "Older (vs. Middle)",
+      "Irrigation: No (vs. Yes)",
+      "Primary educ. (vs. Secondary+)",
+      "Illiterate (vs. Secondary+)"
+    ),
+    group = c("Region", "Land Holding", "Land Holding",
+              "Age Group", "Age Group", "Irrigation", "Education", "Education"),
+    sig = p.value < 0.05
+  )
+
+ggplot(cox_plot_df, aes(x = estimate, y = reorder(label, estimate), colour = sig)) +
+  geom_vline(xintercept = 1, linetype = "dashed", colour = "#888888", linewidth = 0.8) +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
+                 height = 0.25, linewidth = 0.9) +
+  geom_point(size = 4, shape = 18) +
+  scale_colour_manual(values = c("TRUE" = "#e74c3c", "FALSE" = "#7f8c8d"),
+                      labels = c("TRUE" = "p < 0.05", "FALSE" = "p ≥ 0.05"),
+                      name = "Significance") +
+  scale_x_log10(breaks = c(0.5, 0.75, 1, 1.25, 1.5, 2.0),
+                labels = c("0.50", "0.75", "1.00", "1.25", "1.50", "2.00")) +
+  facet_grid(group ~ ., scales = "free_y", space = "free_y") +
+  labs(
+    title    = "Cox Model: Hazard Ratios for Exit from Informal Farm Employment",
+    subtitle = "HR > 1 = higher hazard (faster exit); HR < 1 = lower hazard (longer tenure)",
+    x        = "Hazard Ratio (log scale)",
+    y        = NULL,
+    caption  = "Red = statistically significant (p < 0.05). Horizontal bars = 95% CI."
+  ) +
+  theme(
+    strip.text       = element_text(face = "bold", size = 10),
+    strip.background = element_rect(fill = "#ecf0f1", colour = NA)
+  )
+```
+
+**Key findings from the Cox model:**
+
+- **Marginal landholders** have a hazard ratio substantially above 1 relative to medium holders, meaning they exit informal farm employment significantly faster — consistent with our KM analysis.
+- **North India workers** have a higher hazard of exit compared to South India workers, reflecting the region's more active rural-to-urban migration streams.
+- **Older workers** (>55 years) show a lower hazard (protective effect), as older individuals have fewer outside options and are less geographically mobile.
+- **Lack of irrigation access** raises the hazard, as rain-fed farmers face more precarious livelihoods.
+
+---
+
+# Model Diagnostics: Testing Proportional Hazards {#sec-diagnostics}
+
+## The Schoenfeld Residuals Test {#sec-schoenfeld}
+
+The most standard test for the proportional hazards (PH) assumption is based on **Schoenfeld residuals**. If PH holds, the Schoenfeld residuals should have zero correlation with time (i.e., the scaled residuals should be flat over time).
+
+The function `cox.zph()` computes the Grambsch-Therneau test for non-proportionality:
+
+$$H_0: \text{Regression coefficient is constant over time (PH holds)}$$
+
+```{r}
+#| label: ph-test
+
+ph_test <- cox.zph(cox_fit)
+print(ph_test)
+```
+
+```{r}
+#| label: fig-schoenfeld
+#| fig-cap: "Scaled Schoenfeld residual plots for each covariate. A flat line (dashed) indicates proportional hazards. A significant trend suggests time-varying effects."
+#| fig-height: 9
+#| fig-width: 10
+
+# Plot Schoenfeld residuals
+par(mfrow = c(3, 3), mar = c(4, 4, 3, 1))
+plot(ph_test, hr = TRUE)
+par(mfrow = c(1, 1))
+```
+
+::: {.callout-note}
+## Interpreting the PH Test
+
+A **p-value < 0.05** for a covariate in `cox.zph()` suggests that the PH assumption is violated for that covariate — its effect changes over time. Remedies include:
+
+1. **Stratification**: If a nuisance variable violates PH, stratify by it rather than include it as a covariate
+2. **Time-varying coefficients**: Extend the Cox model with $\beta(t)$ terms
+3. **Time × covariate interaction**: Include an interaction term with $\log(t)$ or $t$
+:::
+
+## Martingale and Deviance Residuals {#sec-martingale}
+
+```{r}
+#| label: fig-martingale
+#| fig-cap: "Martingale residuals plotted against linear predictors. Smoothed line should be roughly flat (near zero) if the functional form is correct. Deviance residuals (right) identify outlier subjects."
+
+# Residuals
+mart_resid <- residuals(cox_fit, type = "martingale")
+dev_resid  <- residuals(cox_fit, type = "deviance")
+lp         <- predict(cox_fit, type = "lp")  # linear predictor
+
+resid_df <- data.frame(
+  lp         = lp,
+  martingale = mart_resid,
+  deviance   = dev_resid
+)
+
+p1 <- ggplot(resid_df, aes(x = lp, y = martingale)) +
+  geom_point(alpha = 0.4, colour = "#2980b9", size = 1.5) +
+  geom_smooth(method = "loess", se = TRUE, colour = "#e74c3c", linewidth = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Martingale Residuals", x = "Linear Predictor", y = "Martingale Residual")
+
+p2 <- ggplot(resid_df, aes(x = lp, y = deviance)) +
+  geom_point(alpha = 0.4, colour = "#27ae60", size = 1.5) +
+  geom_smooth(method = "loess", se = TRUE, colour = "#e74c3c", linewidth = 1) +
+  geom_hline(yintercept = c(-2, 0, 2), linetype = c("dashed", "solid", "dashed"),
+             colour = c("grey50", "black", "grey50")) +
+  labs(title = "Deviance Residuals", x = "Linear Predictor", y = "Deviance Residual",
+       caption = "Observations outside ±2 may be influential outliers")
+
+p1 + p2 + plot_annotation(
+  title = "Cox Model Residual Diagnostics",
+  theme = theme(plot.title = element_text(face = "bold", size = 14))
+)
+```
+
+---
+
+# Cumulative Hazard and Baseline Survival {#sec-cumhaz}
+
+## Nelson-Aalen Cumulative Hazard Estimator {#sec-nelson-aalen}
+
+An alternative to the KM estimator is the **Nelson-Aalen estimator** of the cumulative hazard:
+
+$$\hat{H}(t) = \sum_{j: t_j \leq t} \frac{d_j}{n_j}$$
+
+The survival function is then estimated as $\hat{S}(t) = \exp(-\hat{H}(t))$, which is slightly more robust for small samples. The Nelson-Aalen estimator is the basis of the **Fleming-Harrington** estimator.
+
+```{r}
+#| label: fig-cumhaz
+#| fig-cap: "Nelson-Aalen cumulative hazard estimates by region. An increasing slope indicates the hazard is growing over time (consistent with Weibull shape > 1)."
+
+km_cum <- survfit(Surv(time, status) ~ region, data = dt,
+                  type = "fh")  # Fleming-Harrington = Nelson-Aalen based
+
+km_c_df <- data.frame(
+  time   = km_cum$time,
+  cumhaz = km_cum$cumhaz,
+  strata = rep(names(km_cum$strata), km_cum$strata)
+)
+km_c_df$strata <- gsub("region=", "", km_c_df$strata)
+
+ggplot(km_c_df, aes(x = time, y = cumhaz, colour = strata)) +
+  geom_step(linewidth = 1.2) +
+  scale_colour_manual(values = c("North" = "#e74c3c", "South" = "#2980b9"),
+                      name = "Region") +
+  scale_x_continuous(breaks = seq(0, 36, 6)) +
+  labs(
+    title    = "Nelson-Aalen Cumulative Hazard by Region",
+    subtitle = "Steeper slope = higher hazard rate = faster exit from farm employment",
+    x        = "Time (Months)",
+    y        = "Cumulative Hazard H(t)"
+  )
+```
+
+---
+
+# Predicted Survival Curves from the Cox Model {#sec-pred-curves}
+
+One of the most useful outputs of the Cox model is **covariate-adjusted survival curves** for specific subject profiles. We compare four representative worker profiles:
+
+```{r}
+#| label: fig-pred-survival
+#| fig-cap: "Cox model-predicted survival curves for four representative worker profiles. Profiles differ in land holding and irrigation access."
+
+# Define four profiles
+profiles <- data.frame(
+  region      = factor("South", levels = levels(dt$region)),
+  landholding = factor(c("Medium",   "Marginal", "Medium",  "Marginal"),
+                       levels = levels(dt$landholding)),
+  age_group   = factor("Middle", levels = levels(dt$age_group)),
+  irrigation  = factor(c("Yes", "Yes", "No", "No"), levels = levels(dt$irrigation)),
+  education   = factor("Primary", levels = levels(dt$education))
+)
+
+profiles$profile_label <- c(
+  "Medium land + Irrigation",
+  "Marginal land + Irrigation",
+  "Medium land + No Irrigation",
+  "Marginal land + No Irrigation"
+)
+
+pred_surv <- survfit(cox_fit, newdata = profiles)
+
+# Build data frame for plotting
+build_pred_df <- function(sf, labels) {
+  lapply(seq_along(labels), function(i) {
+    idx_start <- if (i == 1) 1 else sum(sf$strata[1:(i-1)]) + 1
+    idx_end   <- sum(sf$strata[1:i])
+    data.frame(
+      time    = sf$time[idx_start:idx_end],
+      surv    = sf$surv[idx_start:idx_end],
+      lower   = sf$lower[idx_start:idx_end],
+      upper   = sf$upper[idx_start:idx_end],
+      profile = labels[i]
+    )
+  }) |> bind_rows()
+}
+
+pred_df <- build_pred_df(pred_surv, profiles$profile_label)
+pred_df$profile <- factor(pred_df$profile,
+                          levels = c("Medium land + Irrigation",
+                                     "Marginal land + Irrigation",
+                                     "Medium land + No Irrigation",
+                                     "Marginal land + No Irrigation"))
+
+pal4 <- c("#27ae60", "#f39c12", "#2980b9", "#e74c3c")
+
+ggplot(pred_df, aes(x = time, y = surv, colour = profile, fill = profile)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.10, colour = NA) +
+  geom_step(linewidth = 1.1) +
+  scale_colour_manual(values = pal4, name = "Worker Profile") +
+  scale_fill_manual(values = pal4, name = "Worker Profile") +
+  scale_y_continuous(labels = percent_format(), limits = c(0, 1.02)) +
+  scale_x_continuous(breaks = seq(0, 36, 6)) +
+  labs(
+    title    = "Cox-Adjusted Predicted Survival Curves by Worker Profile",
+    subtitle = "South region, Middle age, Primary education — varying land and irrigation",
+    x        = "Time (Months)",
+    y        = "P(Remaining in Farm Employment)",
+    caption  = "Shaded bands = 95% CI. Profiles represent distinct vulnerability combinations."
+  ) +
+  guides(colour = guide_legend(nrow = 2), fill = guide_legend(nrow = 2))
+```
+
+**Interpretation:** The predicted survival curves clearly illustrate the **compounding disadvantage** of marginal land *plus* no irrigation. Workers in this category (red curve) have the steepest decline in probability of remaining in farm employment — indicating the fastest exit. In contrast, medium landholders with irrigation access (green curve) retain the highest probability of continuing in farm employment throughout the study window. This has direct policy implications: improving irrigation access for marginal farmers could slow the pace of distress-driven rural-to-urban migration.
+
+---
+
+# Full Model Comparison Table {#sec-model-compare}
+
+```{r}
+#| label: tbl-model-compare
+#| tbl-cap: "Model comparison: Concordance, log-likelihood, and information criteria"
+
+# Nested models for comparison
+cox_null <- coxph(Surv(time, status) ~ 1, data = dt)
+cox_m1   <- coxph(Surv(time, status) ~ region, data = dt)
+cox_m2   <- coxph(Surv(time, status) ~ region + landholding, data = dt)
+cox_full <- cox_fit
+
+model_compare <- data.frame(
+  Model = c("Null", "Region only", "+ Land holding", "Full model"),
+  df    = c(0, 1, 3, 8),
+  LogLik = round(c(
+    logLik(cox_null),
+    logLik(cox_m1),
+    logLik(cox_m2),
+    logLik(cox_full)
+  ), 2),
+  AIC   = round(AIC(cox_null, cox_m1, cox_m2, cox_full)$AIC, 2),
+  Concordance = round(c(
+    0.500,
+    concordance(cox_m1)$concordance,
+    concordance(cox_m2)$concordance,
+    concordance(cox_full)$concordance
+  ), 4)
+)
+
+kable(model_compare) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) |>
+  row_spec(4, bold = TRUE, background = "#eafaf1")
+```
+
+The **concordance index** (C-statistic) measures discriminatory ability — equivalent to the AUC for survival models. The full model achieves the highest concordance, indicating that combining all five covariates provides the best discrimination between workers who exit early versus late.
+
+---
+
+# Discussion and Conclusions {#sec-conclusion}
+
+## Summary of Findings
+
+This analysis demonstrated a complete workflow of survival analysis applied to simulated Indian agricultural labour market data. The key findings are:
+
+1. **Marginal landholders** face the highest hazard of exiting informal farm employment, with statistically significant differences confirmed by both the log-rank test and the Cox model.
+
+2. **North India** workers exit faster than South India workers, consistent with known patterns of more intensive rural-urban migration in northern states.
+
+3. **Lack of irrigation access** significantly increases the hazard of exit — a finding with strong policy relevance for agricultural investment priorities.
+
+4. **Older workers** are less likely to exit, reflecting lower spatial mobility and fewer alternative livelihood options.
+
+5. The Cox model's concordance index of approximately **`r round(concordance(cox_full)$concordance, 3)`** indicates reasonable discriminatory ability, suggesting the included covariates meaningfully differentiate time-to-exit across workers.
+
+## Practical Considerations
+
+**Censoring validity:** Our analysis assumes non-informative censoring. In practice, workers who are healthier, wealthier, or better-connected may selectively continue in observation, which could bias estimates. Sensitivity analyses (e.g., inverse probability of censoring weighting, IPCW) should be considered.
+
+**Competing risks:** Exit from farm employment is not a single endpoint — workers may exit to urban employment, MGNREGS, self-employment, or illness. Standard survival analysis does not distinguish these causes. A **competing risks framework** (e.g., Fine-Gray sub-distribution hazard model using `cmprsk`) would provide more nuanced estimates.
+
+**Time-varying covariates:** Rainfall, crop prices, and MGNREGS wage rates change over the 36-month study period. Incorporating these as **time-varying covariates** in the Cox model (using the counting-process formulation `Surv(start, stop, status)`) would improve model validity.
+
+## Further Extensions
+
+| Topic | R Package | Method |
+|-------|-----------|--------|
+| Competing risks | `cmprsk`, `tidycmprsk` | Fine-Gray model |
+| Parametric models | `flexsurv` | Weibull, Gompertz, log-normal |
+| Time-varying covariates | `survival` | Counting-process format |
+| Machine learning survival | `randomForestSRC`, `survivalmodels` | Random survival forests |
+| Bayesian survival | `rstanarm`, `brms` | Stan-based MCMC |
+
+---
+
+# Appendix: Session Information {#sec-appendix}
+
+```{r}
+#| label: session-info
+#| code-fold: true
+
+sessionInfo()
+```
+
+---
+
+::: {.callout-note}
+## Reproducibility
+
+All analysis in this document is fully reproducible. The dataset is simulated using `set.seed(2024)`. No external data files are required. 
+
+Required R packages: `survival`, `survminer`, `ggplot2`, `data.table`, `dplyr`, `broom`, `knitr`, `kableExtra`, `patchwork`, `scales`.
+:::

@@ -1,13 +1,13 @@
 ---
-title: "Pawan Jangra | Data Analyst & Economic Researcher"
+title: "Pawan | Data Analyst & Economic Researcher"
 description: "7+ years translating complex survey data into policy-relevant insights — specialising in Indian agricultural, labour, and economic policy."
-author: "Pawan Jangra"
+author: "Pawan "
 date: today
 image: assets/pawan-avatar.png
 
 # ── Quarto website config (also set in _quarto.yml) ──────────────
 website:
-  title: "Pawan Jangra"
+  title: "Pawan"
   favicon: "assets/favicon.ico"
   navbar:
     pinned: true

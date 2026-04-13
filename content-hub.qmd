@@ -1,0 +1,1226 @@
+---
+title: "Content Hub | Pawan"
+description: "Blog, Data Visualizations, Articles, and Statistics with R — all in one place. Write or upload and your content appears instantly."
+author: "Pawan"
+date: today
+
+format:
+  html:
+    theme: [cosmo, custom.scss]
+    toc: false
+    page-layout: full
+    include-in-header:
+      - text: |
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+    include-before-body:
+      - text: |
+          <div id="progress"></div>
+
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<!-- ═══════════════════════════════════════════
+     INLINE STYLES
+     ═══════════════════════════════════════════ -->
+<style>
+/* ── TOKENS ── */
+:root{
+  --navy:#0d1b2a;--navy2:#1a2e45;--teal:#1d9e75;--teal2:#17856a;
+  --teal-light:#e1f5ee;--teal-mid:#5dcaa5;
+  --amber:#ba7517;--amber-light:#faeeda;
+  --coral:#d85a30;--coral-light:#faece7;
+  --purple:#534ab7;--purple-light:#eeedfe;
+  --slate:#4a5568;--muted:#718096;--border:#e2e8f0;
+  --light:#f7f8fc;--white:#fff;--text:#1a202c;
+  --font-head:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --radius:12px;--shadow:0 4px 24px rgba(13,27,42,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:var(--font-body);color:var(--text);background:var(--light);line-height:1.7;}
+
+/* ── SCROLL PROGRESS ── */
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--teal);z-index:9999;transition:width .1s;}
+
+/* ── PAGE HERO ── */
+.page-hero{
+  background:linear-gradient(135deg,var(--navy) 55%,var(--navy2));
+  padding:5rem 2rem 4rem;text-align:center;color:#fff;
+  position:relative;overflow:hidden;
+}
+.page-hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(29,158,117,.13) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+.page-hero h1{font-family:var(--font-head);font-size:clamp(2rem,5vw,3.2rem);margin-bottom:.75rem;position:relative;}
+.page-hero p{color:rgba(255,255,255,.62);font-size:1.05rem;max-width:560px;margin:0 auto;position:relative;}
+.hero-badge{
+  display:inline-block;margin-bottom:1.2rem;position:relative;
+  background:rgba(29,158,117,.18);border:1px solid rgba(29,158,117,.35);
+  color:var(--teal-mid);font-size:.75rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;padding:.3rem .9rem;border-radius:20px;
+}
+
+/* ── NAV OVERRIDES ── */
+.navbar{background:rgba(13,27,42,.96)!important;backdrop-filter:blur(12px);}
+.navbar-brand,.nav-link{color:rgba(255,255,255,.8)!important;}
+.navbar-brand{font-family:var(--font-head);font-size:1.25rem;}
+.nav-link:hover{color:#fff!important;background:rgba(255,255,255,.12);border-radius:6px;}
+#TOC,#quarto-margin-sidebar,.quarto-sidebar{display:none!important;}
+#quarto-document-content,main.content{padding:0!important;margin:0!important;max-width:100%!important;}
+.page-columns{grid-template-columns:1fr!important;}
+
+/* ── SECTION ── */
+.hub-section{padding:3.5rem 2rem;}
+.container{max-width:1100px;margin:auto;}
+.section-label{display:block;font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+.section-title{font-family:var(--font-head);font-size:clamp(1.8rem,4vw,2.6rem);color:var(--navy);margin-bottom:.6rem;line-height:1.2;}
+.section-desc{color:var(--muted);font-size:1rem;max-width:600px;margin-bottom:2.5rem;}
+
+/* ── SUPER TABS ── */
+.super-tabs{
+  display:flex;gap:0;border-bottom:2px solid var(--border);
+  margin-bottom:2.5rem;overflow-x:auto;flex-wrap:nowrap;
+  background:var(--white);border-radius:var(--radius) var(--radius) 0 0;
+  box-shadow:var(--shadow);
+}
+.super-tab{
+  padding:.85rem 1.5rem;font-size:.9rem;font-weight:600;
+  border:none;background:transparent;cursor:pointer;
+  color:var(--muted);transition:all .2s;border-bottom:3px solid transparent;
+  white-space:nowrap;margin-bottom:-2px;font-family:var(--font-body);
+  display:flex;align-items:center;gap:.5rem;
+}
+.super-tab:hover{color:var(--navy);}
+.super-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.super-panel{display:none;}
+.super-panel.active{display:block;}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:.65rem;flex-wrap:wrap;align-items:center;margin-bottom:2rem;}
+.filter-search{
+  flex:1;min-width:180px;max-width:300px;
+  padding:.5rem 1rem;border:1.5px solid var(--border);
+  border-radius:8px;font-size:.88rem;outline:none;
+  font-family:var(--font-body);background:var(--white);
+}
+.filter-search:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(29,158,117,.1);}
+.filter-btn{
+  padding:.38rem .95rem;border-radius:20px;font-size:.8rem;
+  font-weight:600;border:1.5px solid var(--border);
+  background:var(--white);cursor:pointer;transition:all .2s;
+  color:var(--text);font-family:var(--font-body);
+}
+.filter-btn.active,.filter-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* ── CONTENT GRID ── */
+.content-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.6rem;}
+
+/* ── CONTENT CARD ── */
+.content-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+  transition:transform .22s,box-shadow .22s;cursor:pointer;
+}
+.content-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+.card-accent{height:4px;}
+.card-accent.economics,.card-accent.trade,.card-accent.agriculture{background:var(--teal);}
+.card-accent.data,.card-accent.analysis{background:var(--amber);}
+.card-accent.r,.card-accent.statistics{background:var(--purple);}
+.card-accent.general,.card-accent.articles,.card-accent.article{background:var(--coral);}
+.card-accent.food-economy,.card-accent.foodgrain{background:#17856a;}
+.card-accent.energy,.card-accent.fuel,.card-accent.prices{background:#ba7517;}
+.card-body{padding:1.35rem 1.5rem;}
+.card-meta{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-bottom:.65rem;}
+.card-cat{font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.18rem .6rem;border-radius:4px;}
+.cat-economics,.cat-trade,.cat-agriculture,.cat-food-economy{background:var(--teal-light);color:var(--teal);}
+.cat-data,.cat-analysis{background:var(--amber-light);color:var(--amber);}
+.cat-r,.cat-statistics{background:var(--purple-light);color:var(--purple);}
+.cat-general,.cat-articles,.cat-article{background:var(--coral-light);color:var(--coral);}
+.cat-energy,.cat-fuel,.cat-prices{background:var(--amber-light);color:var(--amber);}
+.cat-plfs,.cat-labour{background:#e1f5ee;color:#0f6e56;}
+.card-date{font-size:.76rem;color:var(--muted);}
+.card-title{font-family:var(--font-head);font-size:1.05rem;color:var(--navy);margin-bottom:.45rem;line-height:1.38;}
+.card-excerpt{font-size:.86rem;color:var(--muted);line-height:1.65;}
+.card-readmore{font-size:.8rem;color:var(--teal);font-weight:700;margin-top:.85rem;display:inline-block;}
+.card-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.75rem;}
+.card-tag{font-size:.7rem;background:var(--light);color:var(--slate);padding:.18rem .55rem;border-radius:20px;border:1px solid var(--border);}
+.card-type-badge{
+  font-size:.68rem;font-weight:700;padding:.18rem .55rem;border-radius:4px;
+  background:rgba(29,158,117,.12);color:var(--teal);letter-spacing:.06em;text-transform:uppercase;
+}
+.user-badge{background:rgba(83,74,183,.15);color:var(--purple);}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--muted);}
+.empty-state h3{font-family:var(--font-head);color:var(--navy);margin-bottom:.5rem;}
+.empty-state p{font-size:.9rem;}
+
+/* ── WRITE / EDITOR ── */
+.editor-zone{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.editor-topbar{
+  background:var(--navy);color:#fff;padding:.65rem 1.1rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;
+}
+.editor-topbar-title{font-size:.85rem;font-weight:600;}
+.topbar-btn{
+  background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.85);
+  font-size:.75rem;padding:.25rem .65rem;border-radius:5px;cursor:pointer;
+  transition:background .2s;font-family:var(--font-body);
+}
+.topbar-btn:hover{background:rgba(255,255,255,.22);color:#fff;}
+.editor-layout{display:grid;grid-template-columns:1fr 1fr;height:500px;}
+.editor-pane,.preview-pane{display:flex;flex-direction:column;border-right:1px solid var(--border);}
+.preview-pane{border-right:none;}
+.pane-label{background:var(--light);border-bottom:1px solid var(--border);padding:.4rem 1rem;font-size:.78rem;font-weight:600;color:var(--slate);}
+#md-editor{
+  flex:1;border:none;resize:none;outline:none;
+  padding:1.1rem;font-family:var(--font-mono);font-size:.83rem;
+  line-height:1.75;color:var(--text);
+}
+#md-preview{
+  flex:1;overflow-y:auto;padding:1.1rem;font-size:.9rem;line-height:1.8;
+}
+/* preview typography */
+#md-preview h1{font-family:var(--font-head);font-size:1.7rem;color:var(--navy);margin:.5rem 0 .4rem;}
+#md-preview h2{font-family:var(--font-head);font-size:1.3rem;color:var(--navy);margin:.9rem 0 .35rem;}
+#md-preview h3{font-family:var(--font-head);font-size:1.1rem;color:var(--navy2);margin:.75rem 0 .3rem;}
+#md-preview p{margin-bottom:.8rem;color:var(--slate);}
+#md-preview ul,#md-preview ol{padding-left:1.5rem;margin-bottom:.8rem;color:var(--slate);}
+#md-preview li{margin-bottom:.25rem;}
+#md-preview code{font-family:var(--font-mono);background:var(--light);padding:.1rem .38rem;border-radius:4px;font-size:.8rem;color:var(--coral);}
+#md-preview pre{background:var(--navy);color:var(--teal-mid);padding:1rem 1.2rem;border-radius:8px;overflow-x:auto;margin:.8rem 0;}
+#md-preview pre code{background:none;color:inherit;padding:0;}
+#md-preview blockquote{border-left:3px solid var(--teal);padding:.45rem 1rem;background:var(--teal-light);border-radius:0 6px 6px 0;margin:.8rem 0;color:var(--muted);}
+#md-preview table{width:100%;border-collapse:collapse;font-size:.86rem;margin:.8rem 0;}
+#md-preview th{background:var(--navy);color:#fff;padding:.48rem .75rem;text-align:left;}
+#md-preview td{border:1px solid var(--border);padding:.4rem .75rem;}
+#md-preview tr:nth-child(even) td{background:var(--light);}
+#md-preview a{color:var(--teal);}
+#md-preview hr{border:none;border-top:1.5px solid var(--border);margin:1.2rem 0;}
+#md-preview strong{color:var(--navy);}
+.editor-toolbar{
+  background:var(--light);border-bottom:1px solid var(--border);
+  padding:.45rem .9rem;display:flex;gap:.35rem;flex-wrap:wrap;align-items:center;
+}
+.tb-btn{
+  background:var(--white);border:1px solid var(--border);border-radius:5px;
+  padding:.26rem .6rem;font-size:.78rem;font-weight:600;cursor:pointer;
+  transition:all .2s;color:var(--text);font-family:var(--font-mono);
+}
+.tb-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+.tb-sep{width:1px;height:20px;background:var(--border);margin:0 .2rem;}
+.editor-footer{
+  background:var(--light);border-top:1px solid var(--border);
+  padding:.55rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.editor-stat{font-size:.76rem;color:var(--muted);}
+.editor-actions{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.1rem;}
+
+/* ── UPLOAD DROP ── */
+.drop-zone{
+  border:2px dashed var(--border);border-radius:var(--radius);
+  padding:3rem 2rem;text-align:center;cursor:pointer;
+  transition:all .25s;background:var(--white);
+}
+.drop-zone:hover,.drop-zone.dragover{border-color:var(--teal);background:var(--teal-light);}
+.drop-zone h3{font-size:1.1rem;color:var(--navy);margin-bottom:.4rem;}
+.drop-zone p{font-size:.86rem;color:var(--muted);}
+.drop-zone input[type=file]{display:none;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .22s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--white);border-radius:16px;max-width:760px;
+  width:100%;max-height:88vh;overflow-y:auto;
+  box-shadow:0 24px 64px rgba(0,0,0,.3);
+  transform:scale(.96);transition:transform .22s;
+}
+.modal-overlay.open .modal{transform:scale(1);}
+.modal-header{
+  background:var(--navy);color:#fff;padding:1.4rem 2rem;
+  border-radius:16px 16px 0 0;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-header h2{font-family:var(--font-head);font-size:1.25rem;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.5rem;cursor:pointer;}
+.modal-close:hover{color:#fff;}
+.modal-body{padding:1.75rem 2rem;}
+.modal-body h3{font-family:var(--font-head);font-size:1.1rem;color:var(--navy);margin:1.1rem 0 .45rem;}
+.modal-body p{font-size:.9rem;color:var(--slate);line-height:1.75;margin-bottom:.75rem;}
+.modal-body ul{padding-left:1.4rem;color:var(--slate);font-size:.88rem;}
+.modal-body ul li{margin-bottom:.32rem;}
+.modal-body code{font-family:var(--font-mono);background:var(--light);padding:.1rem .38rem;border-radius:4px;font-size:.8rem;color:var(--coral);}
+.modal-body pre{background:var(--navy);color:var(--teal-mid);padding:1rem 1.2rem;border-radius:8px;overflow-x:auto;margin:.8rem 0;font-family:var(--font-mono);font-size:.8rem;line-height:1.7;}
+.modal-footer{
+  padding:1.1rem 2rem;border-top:1px solid var(--border);
+  display:flex;gap:.75rem;justify-content:flex-end;
+}
+
+/* ── STAT STRIP ── */
+.stat-strip{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.stat-pill{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.6rem 1.2rem;display:flex;align-items:center;gap:.6rem;}
+.stat-pill-num{font-family:var(--font-head);font-size:1.5rem;color:var(--navy);line-height:1;}
+.stat-pill-label{font-size:.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;}
+
+/* ── STATS CHAPTER ── */
+.stats-chapter{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem;transition:box-shadow .2s;}
+.stats-chapter:hover{box-shadow:var(--shadow);}
+.chapter-num{font-size:.75rem;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem;}
+.chapter-title{font-family:var(--font-head);font-size:1.15rem;color:var(--navy);margin-bottom:.4rem;}
+.chapter-desc{font-size:.87rem;color:var(--muted);line-height:1.6;}
+.chapter-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:.75rem;font-size:.82rem;color:var(--teal);font-weight:700;text-decoration:none;}
+.chapter-link:hover{color:var(--teal2);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:2rem;right:2rem;background:var(--navy);color:#fff;
+  padding:.8rem 1.3rem;border-radius:8px;font-size:.86rem;z-index:9999;
+  transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;
+  max-width:340px;box-shadow:var(--shadow);
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{border-left:4px solid var(--teal);}
+.toast.error{border-left:4px solid var(--coral);}
+.toast.info{border-left:4px solid var(--purple);}
+
+/* ── BTN ── */
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.5rem;border-radius:7px;font-size:.88rem;font-weight:600;text-decoration:none;transition:all .2s;cursor:pointer;border:none;font-family:var(--font-body);}
+.btn-primary{background:var(--teal);color:#fff;}
+.btn-primary:hover{background:var(--teal2);}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--border);}
+.btn-outline:hover{background:var(--light);}
+.btn-purple{background:var(--purple);color:#fff;}
+.btn-sm{padding:.42rem .95rem;font-size:.8rem;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .editor-layout{grid-template-columns:1fr;height:auto;}
+  .editor-pane{height:280px;}
+  .preview-pane{min-height:260px;}
+  .super-tab{padding:.7rem 1rem;font-size:.82rem;}
+  .content-grid{grid-template-columns:1fr;}
+}
+</style>
+```
+
+```{=html}
+<!-- ═══════════════════════════════════
+     PAGE HERO
+     ═══════════════════════════════════ -->
+<div class="page-hero">
+  <div class="hero-badge">Write · Publish · Explore</div>
+  <h1>Content Hub</h1>
+  <p>Blog posts, data visualizations, research articles, and statistics chapters — all in one place. Write or upload and your content appears instantly.</p>
+</div>
+```
+
+```{=html}
+<!-- ═══════════════════════════════════
+     MAIN SECTION WITH SUPER TABS
+     ═══════════════════════════════════ -->
+<div class="hub-section">
+<div class="container">
+
+<!-- Stat strip (live-updated by JS) -->
+<div class="stat-strip" id="stat-strip">
+  <div class="stat-pill"><div class="stat-pill-num" id="stat-total">—</div><div class="stat-pill-label">Total Items</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="stat-viz">13</div><div class="stat-pill-label">Data Viz</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="stat-articles">5</div><div class="stat-pill-label">Articles</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="stat-blog">6</div><div class="stat-pill-label">Blog Posts</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="stat-stats">5</div><div class="stat-pill-label">R Chapters</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="stat-user">0</div><div class="stat-pill-label">Your Posts</div></div>
+</div>
+
+<!-- Super tabs -->
+<div class="super-tabs" role="tablist">
+  <button class="super-tab active" role="tab" onclick="switchTab('all')">🗂 All Content</button>
+  <button class="super-tab" role="tab" onclick="switchTab('viz')">📊 Data Viz</button>
+  <button class="super-tab" role="tab" onclick="switchTab('articles')">📰 Articles</button>
+  <button class="super-tab" role="tab" onclick="switchTab('blog')">✍️ Blog</button>
+  <button class="super-tab" role="tab" onclick="switchTab('stats')">📚 Statistics with R</button>
+  <button class="super-tab" role="tab" onclick="switchTab('write')">🖊 Write / Upload</button>
+</div>
+
+<!-- ════ PANEL: ALL + individual panels ════ -->
+<div id="panel-all" class="super-panel active">
+  <div class="filter-bar">
+    <input type="search" class="filter-search" id="search-all" placeholder="Search all content…" oninput="renderAll()"/>
+    <button class="filter-btn active" onclick="setFilter(this,'all','all')">All</button>
+    <button class="filter-btn" onclick="setFilter(this,'all','viz')">Data Viz</button>
+    <button class="filter-btn" onclick="setFilter(this,'all','articles')">Articles</button>
+    <button class="filter-btn" onclick="setFilter(this,'all','blog')">Blog</button>
+    <button class="filter-btn" onclick="setFilter(this,'all','stats')">Statistics</button>
+    <button class="filter-btn" onclick="setFilter(this,'all','user')">My Posts</button>
+  </div>
+  <div class="content-grid" id="grid-all"></div>
+</div>
+
+<div id="panel-viz" class="super-panel">
+  <div class="filter-bar">
+    <input type="search" class="filter-search" id="search-viz" placeholder="Search visualizations…" oninput="renderViz()"/>
+    <button class="filter-btn active" onclick="setFilter(this,'viz','')">All</button>
+    <button class="filter-btn" onclick="setFilter(this,'viz','trade')">Trade</button>
+    <button class="filter-btn" onclick="setFilter(this,'viz','agriculture')">Agriculture</button>
+    <button class="filter-btn" onclick="setFilter(this,'viz','food-economy')">Food Economy</button>
+    <button class="filter-btn" onclick="setFilter(this,'viz','energy')">Energy</button>
+    <button class="filter-btn" onclick="setFilter(this,'viz','plfs')">PLFS</button>
+  </div>
+  <div class="content-grid" id="grid-viz"></div>
+</div>
+
+<div id="panel-articles" class="super-panel">
+  <div class="filter-bar">
+    <input type="search" class="filter-search" id="search-articles" placeholder="Search articles…" oninput="renderArticles()"/>
+    <button class="filter-btn active" onclick="setFilter(this,'articles','')">All</button>
+    <button class="filter-btn" onclick="setFilter(this,'articles','trade')">Trade</button>
+    <button class="filter-btn" onclick="setFilter(this,'articles','labour')">Labour</button>
+    <button class="filter-btn" onclick="setFilter(this,'articles','food-economy')">Food Economy</button>
+  </div>
+  <div class="content-grid" id="grid-articles"></div>
+</div>
+
+<div id="panel-blog" class="super-panel">
+  <div class="filter-bar">
+    <input type="search" class="filter-search" id="search-blog" placeholder="Search blog posts…" oninput="renderBlog()"/>
+    <button class="filter-btn active" onclick="setFilter(this,'blog','')">All</button>
+    <button class="filter-btn" onclick="setFilter(this,'blog','economics')">Economics</button>
+    <button class="filter-btn" onclick="setFilter(this,'blog','r')">R / Quarto</button>
+    <button class="filter-btn" onclick="setFilter(this,'blog','data')">Data</button>
+  </div>
+  <div class="content-grid" id="grid-blog"></div>
+</div>
+
+<div id="panel-stats" class="super-panel">
+  <div style="margin-bottom:1.25rem">
+    <span class="section-label">Statistics with R</span>
+    <h2 class="section-title" style="font-size:1.75rem">18-Chapter R Textbook</h2>
+    <p class="section-desc" style="margin-bottom:1.5rem">A comprehensive statistics textbook built with Quarto — from R foundations to advanced econometrics, with Indian economic data examples throughout.</p>
+  </div>
+  <div id="chapters-list"></div>
+</div>
+
+<div id="panel-write" class="super-panel">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;margin-bottom:2.5rem">
+
+    <!-- Write tab -->
+    <div>
+      <span class="section-label">Write</span>
+      <h2 class="section-title" style="font-size:1.6rem">Markdown Editor</h2>
+      <p style="font-size:.9rem;color:var(--muted);margin-bottom:1.25rem">Write in Markdown, RMarkdown, or Quarto format. Hit <strong>Publish to Blog</strong> and your post appears instantly in the Blog tab.</p>
+
+      <!-- Post meta -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
+        <div>
+          <label style="display:block;font-size:.8rem;font-weight:600;color:var(--slate);margin-bottom:.3rem">Title *</label>
+          <input type="text" id="post-title" class="filter-search" style="width:100%;max-width:100%" placeholder="My Post Title"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:.8rem;font-weight:600;color:var(--slate);margin-bottom:.3rem">Category</label>
+          <select id="post-cat" class="filter-search" style="width:100%;max-width:100%">
+            <option value="blog">Blog</option>
+            <option value="data-viz">Data Viz</option>
+            <option value="article">Article</option>
+            <option value="statistics">Statistics with R</option>
+            <option value="economics">Economics</option>
+            <option value="r">R / Quarto</option>
+            <option value="data">Data</option>
+            <option value="trade">Trade</option>
+            <option value="agriculture">Agriculture</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:.75rem">
+        <label style="display:block;font-size:.8rem;font-weight:600;color:var(--slate);margin-bottom:.3rem">Short Description</label>
+        <input type="text" id="post-desc" class="filter-search" style="width:100%;max-width:100%" placeholder="A brief summary of your post…"/>
+      </div>
+    </div>
+
+    <!-- Upload tab -->
+    <div>
+      <span class="section-label">Upload</span>
+      <h2 class="section-title" style="font-size:1.6rem">Upload a File</h2>
+      <p style="font-size:.9rem;color:var(--muted);margin-bottom:1.25rem">Upload any <code>.md</code>, <code>.qmd</code>, or <code>.Rmd</code> file. It will be rendered and saved as a post in your chosen category.</p>
+      <div class="drop-zone" id="drop-zone">
+        <div style="font-size:2.2rem;margin-bottom:.65rem">📄</div>
+        <h3>Drop your file here</h3>
+        <p>Supports .md · .qmd · .Rmd · .txt</p>
+        <p style="margin-top:.4rem;font-size:.78rem">or click to browse</p>
+        <input type="file" id="upload-input" accept=".md,.qmd,.rmd,.Rmd,.txt"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Editor -->
+  <div class="editor-zone">
+    <div class="editor-topbar">
+      <span class="editor-topbar-title">✏️ Editor — <span id="current-fname" style="opacity:.65">untitled.md</span></span>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+        <button class="topbar-btn" onclick="editorAct('yaml')">+ YAML</button>
+        <button class="topbar-btn" onclick="editorAct('r-chunk')">+ R Chunk</button>
+        <button class="topbar-btn" onclick="copyPreviewHtml()">Copy HTML</button>
+      </div>
+    </div>
+    <div class="editor-toolbar">
+      <button class="tb-btn" onclick="editorAct('h1')">H1</button>
+      <button class="tb-btn" onclick="editorAct('h2')">H2</button>
+      <button class="tb-btn" onclick="editorAct('h3')">H3</button>
+      <div class="tb-sep"></div>
+      <button class="tb-btn" onclick="editorAct('bold')"><b>B</b></button>
+      <button class="tb-btn" onclick="editorAct('italic')"><i>I</i></button>
+      <button class="tb-btn" onclick="editorAct('code-inline')">`c`</button>
+      <div class="tb-sep"></div>
+      <button class="tb-btn" onclick="editorAct('ul')">• List</button>
+      <button class="tb-btn" onclick="editorAct('ol')">1. List</button>
+      <button class="tb-btn" onclick="editorAct('blockquote')">❝</button>
+      <button class="tb-btn" onclick="editorAct('hr')">—</button>
+      <div class="tb-sep"></div>
+      <button class="tb-btn" onclick="editorAct('link')">🔗</button>
+      <button class="tb-btn" onclick="editorAct('table')">⊞</button>
+      <button class="tb-btn" onclick="editorAct('code-block')">``` Block</button>
+    </div>
+    <div class="editor-layout">
+      <div class="editor-pane">
+        <div class="pane-label">Write</div>
+        <textarea id="md-editor" spellcheck="true" placeholder="Write your Markdown, RMarkdown, or Quarto document here…
+
+# My Title
+
+## Introduction
+
+Start writing...
+
+&#96;&#96;&#96;{r}
+library(ggplot2)
+# R code here
+&#96;&#96;&#96;
+
+| Col 1 | Col 2 |
+|-------|-------|
+| A     | 1     |
+"></textarea>
+      </div>
+      <div class="preview-pane">
+        <div class="pane-label">Live Preview</div>
+        <div id="md-preview"><em style="color:var(--muted);font-size:.88rem">Preview appears here…</em></div>
+      </div>
+    </div>
+    <div class="editor-footer">
+      <span class="editor-stat" id="word-count">0 words</span>
+      <span class="editor-stat" id="save-indicator" style="color:var(--teal)"></span>
+    </div>
+  </div>
+
+  <!-- Editor action buttons -->
+  <div class="editor-actions">
+    <button class="btn btn-primary" onclick="publishPost()">🚀 Publish to Blog</button>
+    <button class="btn btn-outline" onclick="downloadFile('md')">⬇ .md</button>
+    <button class="btn btn-outline" onclick="downloadFile('qmd')">⬇ .qmd</button>
+    <button class="btn btn-outline" onclick="downloadFile('rmd')">⬇ .Rmd</button>
+    <button class="btn btn-outline" onclick="downloadFile('html')">⬇ HTML</button>
+    <label class="btn btn-outline" style="cursor:pointer">⬆ Upload
+      <input type="file" accept=".md,.qmd,.rmd,.Rmd,.txt" style="display:none" onchange="loadFileIntoEditor(event)"/>
+    </label>
+    <button class="btn btn-outline" onclick="clearEditor()" style="color:var(--coral);border-color:var(--coral)">🗑 Clear</button>
+  </div>
+</div>
+
+</div><!-- /panel-write -->
+
+</div><!-- /container -->
+</div><!-- /hub-section -->
+```
+
+```{=html}
+<!-- ═══════════════════════════════════
+     POST MODAL
+     ═══════════════════════════════════ -->
+<div class="modal-overlay" id="post-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Post</h2>
+      <button class="modal-close" onclick="closeModal('post-modal')">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('post-modal')">Close</button>
+      <button class="btn btn-primary btn-sm" onclick="openPostInEditor()">✏️ Edit</button>
+      <a id="modal-ext-link" href="#" target="_blank" rel="noopener" class="btn btn-outline btn-sm" style="display:none">Open ↗</a>
+    </div>
+  </div>
+</div>
+```
+
+```{=html}
+<!-- ═══════════════════════════════════
+     TOAST
+     ═══════════════════════════════════ -->
+<div id="toast" class="toast"></div>
+```
+
+```{=html}
+<!-- ═══════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════
+   DATA STORE
+   ════════════════════════════════════════════ */
+const STORE_KEY = 'pawan_content_v2';
+
+/* ── Built-in Data Viz items (from data_vizs.html) ── */
+const BUILT_IN_VIZ = [
+  { id:'viz-fuel',      type:'viz', title:'Fuel Price Analysis: India\'s Retail Prices & International Crude Dynamics',    cats:['energy','fuel','prices'],        date:'Mar 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/fuelprice.html',                excerpt:'Analysis of India\'s retail petrol and diesel price dynamics versus international crude oil benchmarks.' },
+  { id:'viz-fert',      type:'viz', title:'India\'s Fertilizer Import Landscape: Supply Concentration & Price Dynamics',    cats:['trade','fertilizer','agriculture'], date:'Mar 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/fertilizer.html',               excerpt:'Deep-dive into fertilizer import concentration, supplier risks, and price volatility.' },
+  { id:'viz-trade1',    type:'viz', title:'Comprehensive Trade Analysis: Methodology, Code, and Insights',                  cats:['trade'],                         date:'Dec 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/trade1.html',                    excerpt:'Full methodology and code walkthrough for India trade data analysis using R.' },
+  { id:'viz-stocks',    type:'viz', title:'India\'s Foodgrain Buffer Stocks: Trends, Norms, and Policy',                    cats:['food-economy','agriculture'],    date:'Mar 2026', url:'https://pawan1198.github.io/portfolio/data_vizs/stocks.html',                    excerpt:'Tracking India\'s strategic foodgrain buffer stocks against FCI norms and policy implications.' },
+  { id:'viz-fert2',     type:'viz', title:'India\'s Fertilizer Import & Production Statistics',                             cats:['trade','fertilizer','agriculture'], date:'Mar 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/fertilizer2.html',              excerpt:'Statistical overview of fertilizer imports and domestic production trends in India.' },
+  { id:'viz-edible',    type:'viz', title:'Edible Oils Import by India',                                                     cats:['trade','edible-oils'],            date:'Dec 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/edibleoil.html',                 excerpt:'Import patterns and source country concentration in India\'s edible oil supply chain.' },
+  { id:'viz-trade',     type:'viz', title:'India\'s Trade Statistics: Exports, Imports & Sectoral Composition',             cats:['trade','economy'],               date:'Mar 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/trade.html',                     excerpt:'Comprehensive overview of India\'s merchandise trade — exports, imports, and sectoral breakdown.' },
+  { id:'viz-food',      type:'viz', title:'Food Prices in India: Retail vs. Wholesale Dynamics',                            cats:['food-economy','prices'],         date:'Mar 2026', url:'https://pawan1198.github.io/portfolio/data_vizs/foodprice.html',                  excerpt:'Comparing retail and wholesale food price movements and their household impact.' },
+  { id:'viz-chain',     type:'viz', title:'India\'s Foodgrain Supply Chain: Procurement, Buffer Stocks, and Trade',         cats:['food-economy','agriculture','trade'], date:'Mar 2026', url:'https://pawan1198.github.io/portfolio/data_vizs/foodgrain_supply_chain.html', excerpt:'Integrated analysis of India\'s complete foodgrain supply chain.' },
+  { id:'viz-proc',      type:'viz', title:'India\'s Public Foodgrain Procurement: Trends, Patterns & Policy Implications',  cats:['food-economy','procurement'],    date:'Mar 2026', url:'https://pawan1198.github.io/portfolio/data_vizs/procurement.html',               excerpt:'MSP operations, procurement volumes, and agriculture policy implications.' },
+  { id:'viz-plfs',      type:'viz', title:'PLFS Labour Force Survey Visualizations',                                         cats:['plfs','nss','labour'],           date:'Dec 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/plfs.html',                       excerpt:'Interactive charts of LFPR, WPR, and unemployment rates from Periodic Labour Force Survey data.' },
+  { id:'viz-hhi',       type:'viz', title:'India\'s Import Concentration Risk: A Cross-Commodity Analysis',                  cats:['trade','fertilizer','edible-oils','food-economy','analysis'], date:'Mar 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/import_concentration_risk.html', excerpt:'HHI-based concentration risk analysis across edible oils, fertilizers, and key imports.' },
+  { id:'viz-trade2',    type:'viz', title:'India\'s Trade Statistics: Exports, Imports & Sectoral Composition (II)',        cats:['trade','exports','imports'],     date:'Mar 2025', url:'https://pawan1198.github.io/portfolio/data_vizs/trade2.html',                    excerpt:'Updated sectoral breakdown of India\'s merchandise trade performance.' },
+];
+
+/* ── Built-in Articles (from article.html) ── */
+const BUILT_IN_ARTICLES = [
+  { id:'art-fert',  type:'articles', title:'India\'s Fertilizer Dependency: Geopolitical Risks, Price Shocks, and the Subsidy Burden', cats:['trade','fertilizer','agriculture','articles'], date:'Nov 2025', url:'https://pawan1198.github.io/portfolio/article/article2.html', excerpt:'India\'s structural dependence on imported fertilizers — urea, DAP, MOP — and the 2021–22 price crisis.', readTime:'9 min' },
+  { id:'art-plfs',  type:'articles', title:'India\'s Labour Market in Transition: Insights from the Periodic Labour Force Survey',     cats:['plfs','labour','articles'],                    date:'Nov 2025', url:'https://pawan1198.github.io/portfolio/article/article4.html', excerpt:'LFPR, WPR, unemployment, and sectoral employment structure using PLFS microdata.',                 readTime:'11 min' },
+  { id:'art-food',  type:'articles', title:'Food Price Inflation in India: Retail vs. Wholesale Dynamics and the Household Impact',    cats:['food-economy','prices','articles'],             date:'Nov 2025', url:'https://pawan1198.github.io/portfolio/article/article3.html', excerpt:'Drivers and household impact of food price inflation in India across cereals, pulses, and edible oils.', readTime:'10 min' },
+  { id:'art-trade', type:'articles', title:'India\'s Trade Story: From Persistent Deficit to Export Ambition',                         cats:['trade','economy','articles'],                   date:'Oct 2025', url:'https://pawan1198.github.io/portfolio/article/article6.html', excerpt:'India\'s merchandise trade trajectory — structural deficit, export composition, and the policy agenda.', readTime:'9 min' },
+  { id:'art-oil',   type:'articles', title:'The Edible Oil Trap: India\'s Deepening Import Dependency and the Road to Self-Sufficiency', cats:['trade','edible-oils','articles'],              date:'Oct 2025', url:'https://pawan1198.github.io/portfolio/article/article1.html', excerpt:'India\'s structural reliance on edible oil imports, geopolitical risks, and price transmission.', readTime:'9 min' },
+];
+
+/* ── Built-in Blog Posts ── */
+const BUILT_IN_BLOG = [
+  { id:'blog-oil',    type:'blog', title:'India\'s Edible Oil Imports: HHI Concentration Risk Analysis',  cats:['economics','trade'],    date:'Mar 2025', excerpt:'Using HHI to measure India\'s palm, soy, and sunflower oil import dependency concentration across 8 source countries.', body:`<p>India imports over 60% of its edible oil requirements.</p><h3>HHI Analysis</h3><p>Using HHI = Σ market_share², we measured concentration across 8 source countries. HHI > 2500 = high risk.</p><h3>Key Findings</h3><ul><li>Palm oil HHI ~5200 — extreme concentration in Indonesia (85%)</li><li>Sunflower oil HHI ~4800 — Ukraine war exposed vulnerability</li><li>Soybean HHI ~3100 — more diversified</li></ul><h3>R Code</h3><p>Analysis with <code>data.table</code> and <code>ggiraph</code>. HHI computed as <code>sum(share^2 * 10000)</code> per commodity-year.</p>` },
+  { id:'blog-plfs',   type:'blog', title:'PLFS Labour Market Trends: 2018–2024 in R',                     cats:['economics','r'],        date:'Feb 2025', excerpt:'A reproducible data.table pipeline for the Periodic Labour Force Survey — LFPR, WPR, unemployment rates over time.', body:`<p>The Periodic Labour Force Survey (PLFS) is India's primary household survey for labour statistics.</p><h3>Pipeline</h3><ul><li><code>fread()</code> handles 2M+ rows per year</li><li>Weighted LFPR, WPR, unemployment by state, sex, sector</li></ul><h3>Key Trend</h3><p>Female LFPR rose from ~23% to ~37% — rural women entering the labour force post-COVID.</p>` },
+  { id:'blog-fuel',   type:'blog', title:'Fuel Price Data Journalism: Multi-format Quarto Report',         cats:['economics','data'],     date:'Jan 2025', excerpt:'Petrol and diesel retail prices across Indian states — multi-format Quarto output (HTML/PDF/Word) from one .qmd source.', body:`<h3>Data Sources</h3><ul><li>PPAC historical price data</li><li>State-wise VAT from state budgets</li><li>INR/USD from RBI</li></ul><h3>Multi-format</h3><p>One <code>.qmd</code> renders to HTML (Plotly), PDF (LaTeX), and Word via conditional format blocks.</p>` },
+  { id:'blog-gst',    type:'blog', title:'GST Collections: ARIMA Forecasting & Shinydashboard',           cats:['data','economics'],     date:'Dec 2024', excerpt:'Monthly GST data analysis with ARIMA(2,1,1)(0,1,1)[12] forecasting and a full interactive Shiny dashboard.', body:`<h3>Analysis</h3><ul><li>STL decomposition</li><li>ARIMA(2,1,1)(0,1,1)[12] model</li><li>State comparison: Maharashtra vs TN vs Karnataka</li></ul><h3>Shiny Dashboard</h3><p>State selector, date filter, download button, and embedded forecast chart.</p>` },
+  { id:'blog-book',   type:'blog', title:'Building an 18-Chapter Statistics Textbook with Quarto',         cats:['r'],                    date:'Nov 2024', excerpt:'My workflow for a full Quarto Book project — custom SCSS, citation styles, data.table chapter, and debugging render errors.', body:`<h3>Structure</h3><ul><li>18 chapters in <code>.qmd</code></li><li>Custom SCSS, citation CSL</li><li>Dedicated data.table chapter with PLFS examples</li></ul><h3>Debugging</h3><p>LaTeX <code>\\newcommand</code> conflicts fixed with <code>cache: false</code> in chapter YAML.</p>` },
+  { id:'blog-esq',    type:'blog', title:'esquisse + GWalkR: No-Code Data Exploration in R',               cats:['r'],                    date:'Oct 2024', excerpt:'How drag-and-drop tools esquisse and GWalkR speed up EDA before writing a single line of ggplot2 code.', body:`<h3>esquisse</h3><p>Drag columns to aesthetic channels → instant ggplot2 chart + exported R code.</p><h3>GWalkR</h3><p>Tableau-inspired canvas — embeds in Shiny and Quarto HTML.</p>` },
+];
+
+/* ── Statistics chapters ── */
+const STATS_CHAPTERS = [
+  { num:'Ch 1',  title:'Introduction to R',                  desc:'R syntax, data types, vectors, lists, and the RStudio workflow.' },
+  { num:'Ch 2',  title:'Data Manipulation with data.table',  desc:'Fast data wrangling with fread, keys, chained operations, and joins.' },
+  { num:'Ch 3',  title:'Descriptive Statistics',             desc:'Measures of central tendency, dispersion, and distribution shapes.' },
+  { num:'Ch 4',  title:'Probability & Distributions',        desc:'Discrete and continuous distributions, CLT, sampling theory.' },
+  { num:'Ch 5',  title:'Data Visualization with ggplot2',    desc:'Grammar of graphics, geoms, scales, themes, and publication-ready plots.' },
+  { num:'Ch 6',  title:'Hypothesis Testing',                 desc:'t-tests, ANOVA, chi-square, and non-parametric alternatives.' },
+  { num:'Ch 7',  title:'Confidence Intervals & Effect Sizes', desc:'Bootstrap CIs, Cohen\'s d, and practical significance.' },
+  { num:'Ch 8',  title:'Simple Linear Regression',           desc:'OLS, diagnostics, and interpretation with Indian economic examples.' },
+  { num:'Ch 9',  title:'Multiple Regression',                desc:'Multicollinearity, variable selection, and model validation.' },
+  { num:'Ch 10', title:'Panel Data Methods',                 desc:'Fixed and random effects, Hausman test, and PLFS applications.' },
+  { num:'Ch 11', title:'Time Series Analysis',               desc:'Stationarity, ARIMA, seasonal decomposition, and forecasting.' },
+  { num:'Ch 12', title:'Survey Data Analysis',               desc:'Complex survey designs, weights, and PLFS/NSS microdata.' },
+  { num:'Ch 13', title:'Categorical Data Analysis',          desc:'Logistic regression, ordered outcomes, and count models.' },
+  { num:'Ch 14', title:'Causal Inference Basics',            desc:'DAGs, IV estimation, diff-in-diff, and RDD.' },
+  { num:'Ch 15', title:'Machine Learning with R',            desc:'Decision trees, random forests, and regularization methods.' },
+  { num:'Ch 16', title:'Interactive Visualization',          desc:'Shiny dashboards, ggiraph, Plotly, and esquisse.' },
+  { num:'Ch 17', title:'Reproducible Research with Quarto',  desc:'Books, reports, websites — from a single source.' },
+  { num:'Ch 18', title:'Indian Economic Data Practicum',     desc:'End-to-end project: PLFS, budget, trade, and agricultural data.' },
+];
+
+/* ════════════════════════════════════════════
+   STORAGE HELPERS
+   ════════════════════════════════════════════ */
+function loadUserPosts() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveUserPosts(posts) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(posts));
+}
+
+/* ════════════════════════════════════════════
+   TAB SWITCHING
+   ════════════════════════════════════════════ */
+let currentTab = 'all';
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.super-tab').forEach((t,i) => {
+    const tabs = ['all','viz','articles','blog','stats','write'];
+    t.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.super-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'all')      renderAll();
+  else if (tab === 'viz')      renderViz();
+  else if (tab === 'articles') renderArticles();
+  else if (tab === 'blog')     renderBlog();
+  else if (tab === 'stats')    renderStats();
+}
+
+/* ════════════════════════════════════════════
+   ACTIVE FILTER STATE
+   ════════════════════════════════════════════ */
+const activeFilters = { all:'all', viz:'', articles:'', blog:'' };
+function setFilter(btn, panel, cat) {
+  activeFilters[panel] = cat;
+  btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (panel === 'all')      renderAll();
+  else if (panel === 'viz')      renderViz();
+  else if (panel === 'articles') renderArticles();
+  else if (panel === 'blog')     renderBlog();
+}
+
+/* ════════════════════════════════════════════
+   RENDERERS
+   ════════════════════════════════════════════ */
+function buildCard(item) {
+  const mainCat = (item.cats && item.cats[0]) || item.type || 'general';
+  const catLabel = (item.cats && item.cats[0]) || item.type || 'general';
+  const isUser = item.source === 'user';
+  const typeLabel = {viz:'Data Viz', articles:'Article', blog:'Blog', user:'Your Post'}[item.type] || item.type;
+
+  return `<div class="content-card" onclick="openCard('${item.id}')">
+    <div class="card-accent ${mainCat}"></div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-cat cat-${catLabel}">${catLabel.replace(/-/g,' ')}</span>
+        <span class="card-date">${item.date || ''}</span>
+        ${item.readTime ? `<span style="font-size:.74rem;color:var(--muted)">${item.readTime}</span>` : ''}
+        <span class="card-type-badge ${isUser ? 'user-badge' : ''}">${isUser ? '★ Your Post' : typeLabel}</span>
+      </div>
+      <div class="card-title">${item.title}</div>
+      <div class="card-excerpt">${item.excerpt || ''}</div>
+      <span class="card-readmore">Read more →</span>
+    </div>
+  </div>`;
+}
+
+function filterItems(items, searchId, catField) {
+  const q = (document.getElementById(searchId)?.value || '').toLowerCase();
+  return items.filter(item => {
+    const matchCat = !catField || (item.cats && item.cats.includes(catField));
+    const matchQ   = !q || (item.title + ' ' + item.excerpt).toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+}
+
+function renderGrid(gridId, items) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>No results</h3><p>Try adjusting your search or filters.</p></div>`;
+    return;
+  }
+  grid.innerHTML = items.map(buildCard).join('');
+}
+
+function renderAll() {
+  const userPosts = loadUserPosts();
+  const cat = activeFilters.all;
+  const allItems = [...BUILT_IN_VIZ, ...BUILT_IN_ARTICLES, ...BUILT_IN_BLOG, ...userPosts];
+  const filtered = allItems.filter(item => {
+    if (cat === 'all') return true;
+    if (cat === 'user') return item.source === 'user';
+    return item.type === cat || (item.cats && item.cats.includes(cat));
+  });
+  const q = (document.getElementById('search-all')?.value || '').toLowerCase();
+  const result = filtered.filter(item =>
+    !q || (item.title + ' ' + (item.excerpt||'')).toLowerCase().includes(q)
+  );
+  renderGrid('grid-all', result);
+  updateStats(userPosts);
+}
+
+function renderViz() {
+  const cat = activeFilters.viz;
+  const q   = document.getElementById('search-viz')?.value || '';
+  const userViz = loadUserPosts().filter(p => p.type === 'data-viz' || (p.cats && p.cats.includes('data-viz')));
+  const all = [...BUILT_IN_VIZ, ...userViz];
+  const filtered = all.filter(item => {
+    const matchCat = !cat || (item.cats && item.cats.includes(cat));
+    const matchQ   = !q || (item.title + ' ' + (item.excerpt||'')).toLowerCase().includes(q.toLowerCase());
+    return matchCat && matchQ;
+  });
+  renderGrid('grid-viz', filtered);
+}
+
+function renderArticles() {
+  const cat = activeFilters.articles;
+  const q   = document.getElementById('search-articles')?.value || '';
+  const userArts = loadUserPosts().filter(p => p.type === 'articles' || p.type === 'article');
+  const all = [...BUILT_IN_ARTICLES, ...userArts];
+  const filtered = all.filter(item => {
+    const matchCat = !cat || (item.cats && item.cats.includes(cat));
+    const matchQ   = !q || (item.title + ' ' + (item.excerpt||'')).toLowerCase().includes(q.toLowerCase());
+    return matchCat && matchQ;
+  });
+  renderGrid('grid-articles', filtered);
+}
+
+function renderBlog() {
+  const cat = activeFilters.blog;
+  const q   = document.getElementById('search-blog')?.value || '';
+  const userBlog = loadUserPosts().filter(p => p.type === 'blog' || p.type === 'economics' || p.type === 'r' || p.type === 'data');
+  const all = [...BUILT_IN_BLOG, ...userBlog];
+  const filtered = all.filter(item => {
+    const matchCat = !cat || (item.cats && item.cats.includes(cat));
+    const matchQ   = !q || (item.title + ' ' + (item.excerpt||'')).toLowerCase().includes(q.toLowerCase());
+    return matchCat && matchQ;
+  });
+  renderGrid('grid-blog', filtered);
+}
+
+function renderStats() {
+  const list = document.getElementById('chapters-list');
+  if (!list) return;
+  list.innerHTML = STATS_CHAPTERS.map(ch => `
+    <div class="stats-chapter">
+      <div class="chapter-num">${ch.num}</div>
+      <div class="chapter-title">${ch.title}</div>
+      <div class="chapter-desc">${ch.desc}</div>
+      <a class="chapter-link" href="https://pawan1198.github.io/portfolio/statistics-with-r.html" target="_blank" rel="noopener">
+        View on Portfolio ↗
+      </a>
+    </div>
+  `).join('');
+}
+
+function updateStats(userPosts) {
+  if (!userPosts) userPosts = loadUserPosts();
+  const total = BUILT_IN_VIZ.length + BUILT_IN_ARTICLES.length + BUILT_IN_BLOG.length + STATS_CHAPTERS.length + userPosts.length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-user').textContent  = userPosts.length;
+}
+
+/* ════════════════════════════════════════════
+   OPEN CARD → MODAL
+   ════════════════════════════════════════════ */
+let currentCardContent = '';
+let currentCardTitle   = '';
+
+function openCard(id) {
+  const allItems = [...BUILT_IN_VIZ, ...BUILT_IN_ARTICLES, ...BUILT_IN_BLOG, ...loadUserPosts()];
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+
+  currentCardTitle   = item.title;
+  currentCardContent = item.body || item.mdContent || '';
+
+  document.getElementById('modal-title').textContent = item.title;
+
+  // Render body
+  const bodyEl = document.getElementById('modal-body');
+  if (item.body) {
+    bodyEl.innerHTML = item.body;
+  } else if (item.mdContent) {
+    bodyEl.innerHTML = parseMd(item.mdContent);
+  } else if (item.url) {
+    bodyEl.innerHTML = `<p style="color:var(--muted);font-size:.9rem">This content lives on the original portfolio site. Click <strong>Open ↗</strong> below to read the full article.</p><p style="margin-top:.75rem;font-size:.88rem;color:var(--slate)">${item.excerpt || ''}</p>`;
+  } else {
+    bodyEl.innerHTML = `<p>${item.excerpt || 'No content available.'}</p>`;
+  }
+
+  // External link
+  const extLink = document.getElementById('modal-ext-link');
+  if (item.url) {
+    extLink.href = item.url;
+    extLink.style.display = 'inline-flex';
+  } else {
+    extLink.style.display = 'none';
+  }
+
+  document.getElementById('post-modal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.getElementById('post-modal').addEventListener('click', e => {
+  if (e.target.id === 'post-modal') closeModal('post-modal');
+});
+
+function openPostInEditor() {
+  closeModal('post-modal');
+  // Load content into editor
+  const ed = document.getElementById('md-editor');
+  if (currentCardContent) {
+    ed.value = currentCardContent;
+  } else {
+    ed.value = `# ${currentCardTitle}\n\n`;
+  }
+  document.getElementById('post-title').value = currentCardTitle;
+  ed.dispatchEvent(new Event('input'));
+  switchTab('write');
+  showToast('Opened in editor', 'info');
+}
+
+/* ════════════════════════════════════════════
+   MARKDOWN PARSER
+   ════════════════════════════════════════════ */
+function parseMd(text) {
+  if (!text) return '';
+  return text
+    .replace(/```(\w*)\n([\s\S]*?)```/gm, (_,lang,code) =>
+      `<pre><code class="lang-${lang}">${code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`)
+    .replace(/`([^`\n]+)`/gm, '<code>$1</code>')
+    .replace(/^---\n([\s\S]*?)---\n/m, (_,fm) =>
+      `<div style="background:var(--amber-light);border-left:3px solid var(--amber);padding:.7rem 1rem;border-radius:0 6px 6px 0;margin-bottom:1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--amber)"><strong>YAML Front Matter</strong><pre style="margin:.3rem 0 0;background:none;padding:0;color:var(--amber)">${fm}</pre></div>`)
+    .replace(/^#{6}\s(.+)$/gm, '<h6>$1</h6>')
+    .replace(/^#{5}\s(.+)$/gm, '<h5>$1</h5>')
+    .replace(/^#{4}\s(.+)$/gm, '<h4>$1</h4>')
+    .replace(/^#{3}\s(.+)$/gm, '<h3>$1</h3>')
+    .replace(/^#{2}\s(.+)$/gm, '<h2>$1</h2>')
+    .replace(/^#{1}\s(.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*\*(.+?)\*\*\*/gm, '<strong><em>$1</em></strong>')
+    .replace(/\*\*(.+?)\*\*/gm,     '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/gm,          '<em>$1</em>')
+    .replace(/~~(.+?)~~/gm,          '<del>$1</del>')
+    .replace(/^>\s(.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^---$/gm, '<hr/>')
+    .replace(/\!\[([^\]]*)\]\(([^)]+)\)/gm, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px;margin:.5rem 0"/>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/gm, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/(\|.+\|\n\|[-| :]+\|\n(?:\|.+\|\n?)+)/gm, m => {
+      const rows   = m.trim().split('\n');
+      const header = rows[0].split('|').filter(c=>c.trim()).map(c=>`<th>${c.trim()}</th>`).join('');
+      const body   = rows.slice(2).map(r =>
+        '<tr>' + r.split('|').filter(c=>c.trim()).map(c=>`<td>${c.trim()}</td>`).join('') + '</tr>'
+      ).join('');
+      return `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`;
+    })
+    .replace(/^(?!\d+\.)[-*]\s(.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)/g, m => {
+      if (m.includes('<ol>') || m.includes('<ul>')) return m;
+      return `<ul>${m}</ul>`;
+    })
+    .replace(/^\d+\.\s(.+)$/gm, '<li data-ol>$1</li>')
+    .replace(/(<li data-ol>[\s\S]*?<\/li>)/g, m => `<ol>${m.replace(/ data-ol/g,'')}</ol>`)
+    .replace(/^(?!<[houlipta/br]).+$/gm, line => line.trim() ? `<p>${line}</p>` : '');
+}
+
+/* ════════════════════════════════════════════
+   EDITOR
+   ════════════════════════════════════════════ */
+const mdEditorEl  = document.getElementById('md-editor');
+const mdPreviewEl = document.getElementById('md-preview');
+let autoSaveTimer;
+
+mdEditorEl.addEventListener('input', () => {
+  mdPreviewEl.innerHTML = parseMd(mdEditorEl.value) ||
+    '<em style="color:var(--muted);font-size:.88rem">Preview appears here…</em>';
+  updateWordCount();
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => {
+    localStorage.setItem('pawan_editor_draft_hub', mdEditorEl.value);
+    document.getElementById('save-indicator').textContent = 'Auto-saved';
+    setTimeout(() => document.getElementById('save-indicator').textContent = '', 2500);
+  }, 1800);
+});
+
+// Restore draft
+const savedDraft = localStorage.getItem('pawan_editor_draft_hub');
+if (savedDraft) {
+  mdEditorEl.value = savedDraft;
+  mdEditorEl.dispatchEvent(new Event('input'));
+}
+
+// Tab key
+mdEditorEl.addEventListener('keydown', e => {
+  if (e.key === 'Tab') { e.preventDefault(); insertAt('  '); }
+  if ((e.ctrlKey||e.metaKey) && e.key === 's') { e.preventDefault(); downloadFile('md'); }
+  if ((e.ctrlKey||e.metaKey) && e.key === 'b') { e.preventDefault(); wrapSel('**','**'); }
+  if ((e.ctrlKey||e.metaKey) && e.key === 'i') { e.preventDefault(); wrapSel('*','*'); }
+});
+
+function updateWordCount() {
+  const words = mdEditorEl.value.trim().split(/\s+/).filter(Boolean).length;
+  const lines = mdEditorEl.value.split('\n').length;
+  document.getElementById('word-count').textContent = `${words} words · ${lines} lines`;
+}
+
+function insertAt(text) {
+  const s = mdEditorEl.selectionStart, e = mdEditorEl.selectionEnd;
+  mdEditorEl.value = mdEditorEl.value.slice(0,s) + text + mdEditorEl.value.slice(e);
+  mdEditorEl.setSelectionRange(s+text.length, s+text.length);
+  mdEditorEl.focus();
+  mdEditorEl.dispatchEvent(new Event('input'));
+}
+
+function wrapSel(before, after) {
+  const s = mdEditorEl.selectionStart, e = mdEditorEl.selectionEnd;
+  const sel = mdEditorEl.value.slice(s,e) || 'text';
+  const wrapped = before + sel + after;
+  mdEditorEl.value = mdEditorEl.value.slice(0,s) + wrapped + mdEditorEl.value.slice(e);
+  mdEditorEl.setSelectionRange(s+before.length, s+before.length+sel.length);
+  mdEditorEl.focus();
+  mdEditorEl.dispatchEvent(new Event('input'));
+}
+
+function lineStart(prefix) {
+  const s = mdEditorEl.selectionStart;
+  const ls = mdEditorEl.value.lastIndexOf('\n', s-1) + 1;
+  mdEditorEl.value = mdEditorEl.value.slice(0,ls) + prefix + mdEditorEl.value.slice(ls);
+  mdEditorEl.setSelectionRange(ls+prefix.length, ls+prefix.length);
+  mdEditorEl.focus();
+  mdEditorEl.dispatchEvent(new Event('input'));
+}
+
+function editorAct(action) {
+  switch(action) {
+    case 'bold':       wrapSel('**','**'); break;
+    case 'italic':     wrapSel('*','*');   break;
+    case 'code-inline':wrapSel('`','`');   break;
+    case 'h1':         lineStart('# ');    break;
+    case 'h2':         lineStart('## ');   break;
+    case 'h3':         lineStart('### ');  break;
+    case 'blockquote': lineStart('> ');    break;
+    case 'ul':         lineStart('- ');    break;
+    case 'ol':         lineStart('1. ');   break;
+    case 'hr':         insertAt('\n---\n'); break;
+    case 'link':       { const u=prompt('URL:','https://') || 'https://'; const t=prompt('Text:','Link') || 'Link'; insertAt(`[${t}](${u})`); break; }
+    case 'table':      insertAt('\n| Column 1 | Column 2 |\n|----------|----------|\n| Value 1  | Value 2  |\n'); break;
+    case 'code-block': { const l=prompt('Language:','r')||'r'; insertAt(`\n\`\`\`${l}\n# code here\n\`\`\`\n`); break; }
+    case 'r-chunk':    insertAt('\n```{r}\n# R code chunk\nlibrary(ggplot2)\n\n```\n'); break;
+    case 'yaml':       {
+      const t = prompt('Type (qmd/rmd/post):','qmd')||'qmd';
+      const snips = {
+        qmd:`---\ntitle: "${document.getElementById('post-title').value || 'My Analysis'}"\nauthor: "Pawan Jangra"\ndate: "today"\nformat:\n  html:\n    toc: true\n    code-fold: true\n---\n\n`,
+        rmd:`---\ntitle: "${document.getElementById('post-title').value || 'My Report'}"\nauthor: "Pawan Jangra"\ndate: "\`r Sys.Date()\`"\noutput:\n  html_document:\n    toc: true\n---\n\n`,
+        post:`---\ntitle: "${document.getElementById('post-title').value || 'Blog Post'}"\nauthor: "Pawan Jangra"\ndate: "${new Date().toISOString().split('T')[0]}"\ncategories: [${document.getElementById('post-cat').value || 'blog'}]\ndescription: "${document.getElementById('post-desc').value || ''}"\n---\n\n`,
+      };
+      insertAt(snips[t]||snips.qmd); break;
+    }
+  }
+}
+
+function clearEditor() {
+  if (!confirm('Clear editor? Unsaved work will be lost.')) return;
+  mdEditorEl.value = '';
+  mdEditorEl.dispatchEvent(new Event('input'));
+  document.getElementById('post-title').value = '';
+  document.getElementById('post-desc').value  = '';
+  document.getElementById('current-fname').textContent = 'untitled.md';
+  localStorage.removeItem('pawan_editor_draft_hub');
+}
+
+function copyPreviewHtml() {
+  navigator.clipboard.writeText(mdPreviewEl.innerHTML)
+    .then(() => showToast('HTML copied!', 'success'));
+}
+
+/* ════════════════════════════════════════════
+   DOWNLOAD
+   ════════════════════════════════════════════ */
+function getTitle() {
+  const titleInput = document.getElementById('post-title')?.value.trim();
+  if (titleInput) return titleInput;
+  const h1 = mdEditorEl.value.match(/^#\s+(.+)$/m);
+  const yaml = mdEditorEl.value.match(/^title:\s+"?(.+?)"?\s*$/m);
+  return (yaml?.[1] || h1?.[1] || 'document').trim();
+}
+
+function getSlug() {
+  return getTitle().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'document';
+}
+
+function downloadBlob(content, fname, type) {
+  const blob = new Blob([content], {type});
+  const a = Object.assign(document.createElement('a'), {href:URL.createObjectURL(blob), download:fname});
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+function buildHtmlDoc(body, title) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>body{max-width:820px;margin:40px auto;padding:0 24px;font-family:'DM Sans',sans-serif;line-height:1.8;color:#1a202c;}
+h1,h2,h3{font-family:'Playfair Display',serif;color:#0d1b2a;}
+h1{font-size:2.1rem;margin:1.2rem 0 .6rem;}h2{font-size:1.55rem;margin:1.2rem 0 .5rem;}
+code{background:#f7f8fc;padding:.1rem .38rem;border-radius:4px;font-size:.82em;color:#d85a30;}
+pre{background:#0d1b2a;color:#5dcaa5;padding:1.1rem 1.3rem;border-radius:10px;overflow-x:auto;margin:.85rem 0;}
+pre code{background:none;color:inherit;}
+blockquote{border-left:3px solid #1d9e75;padding:.5rem 1rem;background:#e1f5ee;margin:.85rem 0;}
+table{border-collapse:collapse;width:100%;margin:.85rem 0;}th{background:#0d1b2a;color:#fff;padding:.5rem .75rem;text-align:left;}
+td{border:1px solid #e2e8f0;padding:.42rem .75rem;}tr:nth-child(even) td{background:#f7f8fc;}
+.footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e2e8f0;font-size:.82rem;color:#718096;text-align:center;}
+</style></head><body>
+<h1>${title}</h1>
+${body}
+<div class="footer">Published from Pawan Jangra's Research Portfolio · <a href="https://pawan1198.github.io/portfolio/">pawan1198.github.io/portfolio</a></div>
+</body></html>`;
+}
+
+function downloadFile(fmt) {
+  if (!mdEditorEl.value.trim()) { showToast('Nothing to download', 'error'); return; }
+  const slug  = getSlug();
+  const title = getTitle();
+  let content = mdEditorEl.value;
+
+  if (fmt === 'html') {
+    downloadBlob(buildHtmlDoc(mdPreviewEl.innerHTML, title), slug + '.html', 'text/html');
+  } else if (fmt === 'qmd') {
+    if (!content.startsWith('---')) content = `---\ntitle: "${title}"\nauthor: "Pawan Jangra"\ndate: "today"\nformat:\n  html:\n    toc: true\n    code-fold: true\n---\n\n` + content;
+    downloadBlob(content, slug + '.qmd', 'text/plain');
+  } else if (fmt === 'rmd') {
+    if (!content.startsWith('---')) content = `---\ntitle: "${title}"\nauthor: "Pawan Jangra"\ndate: "\`r Sys.Date()\`"\noutput:\n  html_document:\n    toc: true\n---\n\n` + content;
+    downloadBlob(content, slug + '.Rmd', 'text/plain');
+  } else {
+    downloadBlob(content, slug + '.md', 'text/markdown');
+  }
+  showToast(`Downloaded ${slug}.${fmt}`, 'success');
+}
+
+/* ════════════════════════════════════════════
+   PUBLISH TO BLOG
+   ════════════════════════════════════════════ */
+function publishPost() {
+  const title = document.getElementById('post-title')?.value.trim() ||
+    (mdEditorEl.value.match(/^#\s+(.+)$/m)?.[1]) || '';
+  if (!title) { showToast('Please enter a title for your post', 'error'); return; }
+  if (!mdEditorEl.value.trim()) { showToast('Editor is empty', 'error'); return; }
+
+  const cat   = document.getElementById('post-cat')?.value || 'blog';
+  const desc  = document.getElementById('post-desc')?.value.trim() || '';
+  const mdContent = mdEditorEl.value;
+
+  // Map category to type and cats array
+  const typeMap = {
+    'data-viz':'viz', 'article':'articles', 'articles':'articles',
+    'statistics':'stats', 'blog':'blog',
+    'economics':'blog', 'r':'blog', 'data':'blog',
+    'trade':'viz', 'agriculture':'viz',
+  };
+  const type  = typeMap[cat] || 'blog';
+  const cats  = [cat];
+
+  const post = {
+    id:        'user-' + Date.now(),
+    type,
+    cats,
+    source:    'user',
+    title,
+    date:      new Date().toLocaleDateString('en-IN', {month:'short', year:'numeric'}),
+    excerpt:   desc || mdContent.replace(/[#*`>\-\[\]|]/g,'').trim().slice(0,160) + '…',
+    mdContent,
+    body:      parseMd(mdContent),
+  };
+
+  const posts = loadUserPosts();
+  posts.unshift(post);
+  saveUserPosts(posts);
+  showToast(`"${title}" published!`, 'success');
+  updateStats(posts);
+
+  // Switch to the right tab
+  const tabMap = { viz:'viz', articles:'articles', stats:'stats', blog:'blog' };
+  setTimeout(() => switchTab(tabMap[type] || 'blog'), 800);
+}
+
+/* ════════════════════════════════════════════
+   FILE UPLOAD INTO EDITOR
+   ════════════════════════════════════════════ */
+function loadFileIntoEditor(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    mdEditorEl.value = e.target.result;
+    mdEditorEl.dispatchEvent(new Event('input'));
+    document.getElementById('current-fname').textContent = file.name;
+    // Auto-fill title from filename or YAML
+    const yaml = e.target.result.match(/^title:\s+"?(.+?)"?\s*$/m);
+    const h1   = e.target.result.match(/^#\s+(.+)$/m);
+    const titleInput = document.getElementById('post-title');
+    if (titleInput && !titleInput.value) {
+      titleInput.value = yaml?.[1] || h1?.[1] || file.name.replace(/\.(md|qmd|rmd|txt)$/i,'');
+    }
+    showToast(`Loaded: ${file.name}`, 'success');
+  };
+  reader.readAsText(file);
+}
+
+/* ════════════════════════════════════════════
+   DRAG-DROP UPLOAD ZONE
+   ════════════════════════════════════════════ */
+(function() {
+  const zone  = document.getElementById('drop-zone');
+  const input = document.getElementById('upload-input');
+  if (!zone || !input) return;
+  zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    const fakeEvent = { target: { files: [file] } };
+    loadFileIntoEditor(fakeEvent);
+    // Auto-publish via title prompt
+    setTimeout(() => {
+      const titleInput = document.getElementById('post-title');
+      if (titleInput && titleInput.value) {
+        if (confirm(`Publish "${titleInput.value}" to your blog?`)) publishPost();
+      }
+    }, 600);
+  });
+  zone.addEventListener('click', () => input.click());
+  input.addEventListener('change', e => {
+    loadFileIntoEditor(e);
+    setTimeout(() => {
+      const titleInput = document.getElementById('post-title');
+      if (titleInput && titleInput.value) {
+        if (confirm(`Publish "${titleInput.value}" to your blog?`)) publishPost();
+      }
+    }, 600);
+  });
+})();
+
+/* ════════════════════════════════════════════
+   SCROLL PROGRESS
+   ════════════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const p   = document.getElementById('progress');
+  const pct = (window.scrollY/(document.body.scrollHeight - window.innerHeight))*100;
+  if (p) p.style.width = Math.min(pct,100) + '%';
+}, { passive:true });
+
+/* ════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════ */
+function showToast(msg, type='info', dur=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = `toast ${type}`;
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), dur);
+}
+
+/* ════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderAll();
+  renderStats();
+  updateStats();
+});
+// Also run immediately in case DOMContentLoaded already fired
+renderAll();
+renderStats();
+updateStats();
+</script>
+```

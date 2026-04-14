@@ -25,14 +25,16 @@ website:
         href: about.qmd#about
       - text: "Experience"
         href: index.qmd#experience
-      - text: "Data Visualizations"
-        href: data_vizs.qmd#data_viz
+      - text: "Content Hub"
+        href: content-hub.qmd
+      #- text: "Data Visualizations"
+      #  href: data_vizs.qmd#data_viz
       - text: "Skills"
         href: index.qmd#skills
       #- text: "R & Quarto"
       #  href: index.qmd#quarto
-      - text: "Blog"
-        href: blog.qmd#blog
+      #- text: "Blog"
+      #  href: blog.qmd#blog
       - text: "Editor"
         href: index.qmd#editor-section
       - text: "R Code"

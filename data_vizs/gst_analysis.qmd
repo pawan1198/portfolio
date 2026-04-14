@@ -2,8 +2,8 @@
 title: "India GST Collection Analysis"
 subtitle: "Interactive Dashboard — Financial Years 2017–18 to 2024–25"
 author: "GST Analytics"
-date: "2026-13-04"
-date-format: last-modified
+date: "2026-04-13"
+date-modified: last-modified
 
 format:
   html:

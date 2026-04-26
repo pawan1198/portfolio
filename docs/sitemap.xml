@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pawan1198.github.io/portfolio/index.html</loc>
-    <lastmod>2026-04-14T15:53:45.921Z</lastmod>
+    <lastmod>2026-04-18T19:47:30.584Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/shiny_app.html</loc>
@@ -31,5 +31,9 @@
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs/gst_analysis.html</loc>
     <lastmod>2026-04-14T15:56:21.859Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/content-hub_old.html</loc>
+    <lastmod>2026-04-14T15:54:09.594Z</lastmod>
   </url>
 </urlset>

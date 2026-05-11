@@ -235,7 +235,7 @@
     "href": "statistics-with-r.html",
     "title": "Statistics With R",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n\n\n\n\n\n\n\n\nSurvival Analysis in R: From Theory to Practice\n\n\n\nApril 10, 2026\n\n\n\n\n\n\n\n\n\n\n\nChapter 4: Time Series Analysis\n\n\n\nFebruary 20, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 3: Regression Analysis\n\n\n\nFebruary 5, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 2: Probability & Distributions\n\n\n\nJanuary 20, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 1: Descriptive Statistics\n\n\n\nJanuary 10, 2025\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n\n\n\n\n\n\n\n\nTime Series Models\n\n\n\nMay 11, 2026\n\n\n\n\n\n\n\n\n\n\n\nBasic Statistics\n\n\n\nMay 11, 2026\n\n\n\n\n\n\n\n\n\n\n\nThe Central Limit Theorem\n\n\n\nMay 11, 2026\n\n\n\n\n\n\n\n\n\n\n\nRegression Analysis\n\n\n\nMay 11, 2026\n\n\n\n\n\n\n\n\n\n\n\nStatistical Graphics\n\n\n\nMay 11, 2026\n\n\n\n\n\n\n\n\n\n\n\nSurvival Analysis in R: From Theory to Practice\n\n\n\nApril 10, 2026\n\n\n\n\n\n\n\n\n\n\n\nChapter 4: Time Series Analysis\n\n\n\nFebruary 20, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 3: Regression Analysis\n\n\n\nFebruary 5, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 2: Probability & Distributions\n\n\n\nJanuary 20, 2025\n\n\n\n\n\n\n\n\n\n\n\nChapter 1: Descriptive Statistics\n\n\n\nJanuary 10, 2025\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "data_vizs/edibleoil.html#palm-oil",
@@ -2273,5 +2273,474 @@
     "title": "Content Hub",
     "section": "",
     "text": "Data Viz · Articles · Blog · Statistics with R\n  Content Hub\n  All research and writing in one place. Click any card to read the summary and open the full content.\n\n\n\n\n  🗂 All Content\n  📊 Data Viz\n  📰 Articles\n  ✍️ Blog\n  📚 Statistics with R\n\n\n\n\n  \n    \n      28Total Items\n      13Data Viz\n      5Articles\n      5Blog Posts\n      5R Chapters\n    \n    \n      \n      All\n      Data Viz\n      Articles\n      Blog\n      Statistics\n    \n    \n  \n\n\n\n\n  \n    Research\n    Data Visualizations\n    Interactive charts and analysis on Indian trade, agriculture, food economy, energy, and labour markets.\n    \n      \n      All\n      Trade\n      Agriculture\n      Food Economy\n      Energy\n      PLFS\n    \n    \n  \n\n\n\n\n  \n    Publications\n    Articles\n    Long-form analytical articles on Indian economic policy, trade, labour markets, and food systems.\n    \n      \n      All\n      Trade\n      Labour\n      Food Economy\n    \n    \n  \n\n\n\n\n  \n    Writing\n    Blog\n    Articles on R programming, statistical analysis, survey methodology, and data storytelling.\n    \n      \n      All\n      R Programming\n      Data Viz\n      Survey\n    \n    \n  \n\n\n\n\n  \n    Textbook\n    Statistics with R\n    A hands-on statistics textbook using real Indian economic datasets — from descriptive stats to regression, time series, and survey analysis.\n    \n  \n\n\n\n\n  \n    \n      \n      \n    \n    \n      Open ↗\n      ✕\n    \n  \n  \n    Summary\n    Full Page\n  \n  \n    \n    \n    \n      🔗\n      Click Full Page above to load the content,or Open ↗ to view in a new tab."
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html",
+    "href": "statistics-with-r/01_basic_statistics.html",
+    "title": "Basic Statistics",
+    "section": "",
+    "text": "Basic statistics is the foundation of all data analysis. It provides tools to summarize, describe, and understand data before performing any advanced modelling. It answers the most fundamental question: What does the data look like?"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#population-vs-sample",
+    "href": "statistics-with-r/01_basic_statistics.html#population-vs-sample",
+    "title": "Basic Statistics",
+    "section": "1. Population vs Sample",
+    "text": "1. Population vs Sample\n\nPopulation: The complete set of all items of interest (e.g., all students in India).\nSample: A subset of the population selected for study (e.g., 500 students from Delhi).\n\nWe use sample statistics to estimate population parameters.\n\n\n\nMeasure\nPopulation Symbol\nSample Symbol\n\n\n\n\nMean\nμ (mu)\nx̄\n\n\nStandard Deviation\nσ (sigma)\ns\n\n\nSize\nN\nn"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#measures-of-central-tendency",
+    "href": "statistics-with-r/01_basic_statistics.html#measures-of-central-tendency",
+    "title": "Basic Statistics",
+    "section": "2. Measures of Central Tendency",
+    "text": "2. Measures of Central Tendency\nThese describe the centre of the data.\n\nMean (Arithmetic Average)\n\\[\\bar{x} = \\frac{\\sum_{i=1}^{n} x_i}{n}\\]\n\n\nMedian\nThe middle value when data is sorted. For \\(n\\) observations:\n\nIf \\(n\\) is odd: Median = \\(\\left(\\frac{n+1}{2}\\right)\\)th value\nIf \\(n\\) is even: Median = average of \\(\\left(\\frac{n}{2}\\right)\\)th and \\(\\left(\\frac{n}{2}+1\\right)\\)th values\n\n\n\nMode\nThe value that occurs most frequently in the dataset."
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#measures-of-dispersion",
+    "href": "statistics-with-r/01_basic_statistics.html#measures-of-dispersion",
+    "title": "Basic Statistics",
+    "section": "3. Measures of Dispersion",
+    "text": "3. Measures of Dispersion\nThese describe how spread out the data is.\n\nVariance\n\\[s^2 = \\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})^2}{n-1}\\]\n\n\nStandard Deviation\n\\[s = \\sqrt{\\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})^2}{n-1}}\\]\n\n\nRange\n\\[\\text{Range} = x_{\\max} - x_{\\min}\\]\n\n\nInterquartile Range (IQR)\n\\[\\text{IQR} = Q_3 - Q_1\\]\nwhere \\(Q_1\\) = 25th percentile and \\(Q_3\\) = 75th percentile."
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#measures-of-shape",
+    "href": "statistics-with-r/01_basic_statistics.html#measures-of-shape",
+    "title": "Basic Statistics",
+    "section": "4. Measures of Shape",
+    "text": "4. Measures of Shape\n\nSkewness\nMeasures asymmetry of the distribution.\n\\[\\text{Skewness} = \\frac{1}{n} \\sum_{i=1}^{n} \\left(\\frac{x_i - \\bar{x}}{s}\\right)^3\\]\n\nSkewness = 0 → Symmetric\nSkewness &gt; 0 → Right-skewed (tail on the right)\nSkewness &lt; 0 → Left-skewed (tail on the left)\n\n\n\nKurtosis\nMeasures peakedness of the distribution.\n\\[\\text{Kurtosis} = \\frac{1}{n} \\sum_{i=1}^{n} \\left(\\frac{x_i - \\bar{x}}{s}\\right)^4\\]"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#loading-and-exploring-data",
+    "href": "statistics-with-r/01_basic_statistics.html#loading-and-exploring-data",
+    "title": "Basic Statistics",
+    "section": "Loading and Exploring Data",
+    "text": "Loading and Exploring Data\n\n# Use the built-in 'mtcars' dataset\ndata(mtcars)\n\n# First look at the data\nhead(mtcars)\n\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n\nstr(mtcars)\n\n'data.frame':   32 obs. of  11 variables:\n $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...\n $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...\n $ disp: num  160 160 108 258 360 ...\n $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...\n $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...\n $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...\n $ qsec: num  16.5 17 18.6 19.4 17 ...\n $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...\n $ am  : num  1 1 1 0 0 0 0 0 0 0 ...\n $ gear: num  4 4 4 3 3 3 3 4 4 4 ...\n $ carb: num  4 4 1 1 2 1 4 2 2 4 ..."
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#measures-of-central-tendency-1",
+    "href": "statistics-with-r/01_basic_statistics.html#measures-of-central-tendency-1",
+    "title": "Basic Statistics",
+    "section": "Measures of Central Tendency",
+    "text": "Measures of Central Tendency\n\n# Focus on miles per gallon (mpg)\nx &lt;- mtcars$mpg\n\ncat(\"Mean    :\", mean(x), \"\\n\")\n\nMean    : 20.09062 \n\ncat(\"Median  :\", median(x), \"\\n\")\n\nMedian  : 19.2 \n\ncat(\"Mode    :\", as.numeric(names(sort(table(x), decreasing = TRUE)[1])), \"\\n\")\n\nMode    : 10.4"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#measures-of-dispersion-1",
+    "href": "statistics-with-r/01_basic_statistics.html#measures-of-dispersion-1",
+    "title": "Basic Statistics",
+    "section": "Measures of Dispersion",
+    "text": "Measures of Dispersion\n\ncat(\"Variance:\", var(x), \"\\n\")\n\nVariance: 36.3241 \n\ncat(\"Std Dev :\", sd(x), \"\\n\")\n\nStd Dev : 6.026948 \n\ncat(\"Range   :\", range(x), \"\\n\")\n\nRange   : 10.4 33.9 \n\ncat(\"IQR     :\", IQR(x), \"\\n\")\n\nIQR     : 7.375"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#quantiles-and-summary",
+    "href": "statistics-with-r/01_basic_statistics.html#quantiles-and-summary",
+    "title": "Basic Statistics",
+    "section": "Quantiles and Summary",
+    "text": "Quantiles and Summary\n\n# Five-number summary + mean\nsummary(x)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  10.40   15.43   19.20   20.09   22.80   33.90 \n\n# Custom quantiles\nquantile(x, probs = c(0.25, 0.50, 0.75, 0.90))\n\n   25%    50%    75%    90% \n15.425 19.200 22.800 30.090"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#skewness-and-kurtosis",
+    "href": "statistics-with-r/01_basic_statistics.html#skewness-and-kurtosis",
+    "title": "Basic Statistics",
+    "section": "Skewness and Kurtosis",
+    "text": "Skewness and Kurtosis\n\n# Install e1071 if not available: install.packages(\"e1071\")\nlibrary(e1071)\n\ncat(\"Skewness:\", skewness(x), \"\\n\")\n\nSkewness: 0.610655 \n\ncat(\"Kurtosis:\", kurtosis(x), \"\\n\")\n\nKurtosis: -0.372766"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#full-descriptive-statistics-table",
+    "href": "statistics-with-r/01_basic_statistics.html#full-descriptive-statistics-table",
+    "title": "Basic Statistics",
+    "section": "Full Descriptive Statistics Table",
+    "text": "Full Descriptive Statistics Table\n\n# A clean descriptive statistics summary\ndesc_stats &lt;- data.frame(\n  Statistic = c(\"N\", \"Mean\", \"Median\", \"SD\", \"Variance\",\n                \"Min\", \"Max\", \"Range\", \"IQR\", \"Skewness\", \"Kurtosis\"),\n  Value = round(c(\n    length(x), mean(x), median(x), sd(x), var(x),\n    min(x), max(x), diff(range(x)), IQR(x),\n    skewness(x), kurtosis(x)\n  ), 3)\n)\n\nprint(desc_stats)\n\n   Statistic  Value\n1          N 32.000\n2       Mean 20.091\n3     Median 19.200\n4         SD  6.027\n5   Variance 36.324\n6        Min 10.400\n7        Max 33.900\n8      Range 23.500\n9        IQR  7.375\n10  Skewness  0.611\n11  Kurtosis -0.373"
+  },
+  {
+    "objectID": "statistics-with-r/01_basic_statistics.html#visualisation",
+    "href": "statistics-with-r/01_basic_statistics.html#visualisation",
+    "title": "Basic Statistics",
+    "section": "Visualisation",
+    "text": "Visualisation\n\npar(mfrow = c(1, 3))\n\n# Histogram\nhist(x,\n     main = \"Distribution of MPG\",\n     xlab = \"Miles Per Gallon\",\n     col = \"steelblue\", border = \"white\",\n     breaks = 10)\nabline(v = mean(x), col = \"red\", lwd = 2, lty = 2)\nabline(v = median(x), col = \"darkgreen\", lwd = 2, lty = 2)\nlegend(\"topright\", legend = c(\"Mean\", \"Median\"),\n       col = c(\"red\", \"darkgreen\"), lty = 2, lwd = 2)\n\n# Boxplot\nboxplot(x,\n        main = \"Boxplot of MPG\",\n        ylab = \"Miles Per Gallon\",\n        col = \"lightblue\", border = \"navy\")\n\n# QQ Plot (normality check)\nqqnorm(x, main = \"Normal Q-Q Plot\")\nqqline(x, col = \"red\", lwd = 2)"
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html",
+    "href": "statistics-with-r/02_central_limit_theorem.html",
+    "title": "The Central Limit Theorem",
+    "section": "",
+    "text": "The Central Limit Theorem (CLT) is arguably the most important result in all of statistics. It explains why the normal distribution appears everywhere in practice and forms the theoretical backbone of hypothesis testing, confidence intervals, and much of inferential statistics.\n\n“No matter what shape the original population has, the distribution of the sample mean becomes approximately normal as the sample size increases.”"
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html#standard-error-se",
+    "href": "statistics-with-r/02_central_limit_theorem.html#standard-error-se",
+    "title": "The Central Limit Theorem",
+    "section": "Standard Error (SE)",
+    "text": "Standard Error (SE)\nThe standard deviation of the sampling distribution of the mean is called the Standard Error:\n\\[SE = \\frac{\\sigma}{\\sqrt{n}}\\]\n\nAs \\(n\\) increases → SE decreases → sample mean is more precise\nDoubling sample size reduces SE by factor of \\(\\sqrt{2} \\approx 1.41\\)"
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html#rule-of-thumb-for-sample-size",
+    "href": "statistics-with-r/02_central_limit_theorem.html#rule-of-thumb-for-sample-size",
+    "title": "The Central Limit Theorem",
+    "section": "Rule of Thumb for Sample Size",
+    "text": "Rule of Thumb for Sample Size\n\n\n\nPopulation Shape\nMinimum \\(n\\) for CLT\n\n\n\n\nRoughly symmetric\n\\(n \\geq 30\\)\n\n\nModerately skewed\n\\(n \\geq 50\\)\n\n\nHeavily skewed / extreme outliers\n\\(n \\geq 100\\)"
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html#simulating-the-clt-uniform-distribution",
+    "href": "statistics-with-r/02_central_limit_theorem.html#simulating-the-clt-uniform-distribution",
+    "title": "The Central Limit Theorem",
+    "section": "Simulating the CLT — Uniform Distribution",
+    "text": "Simulating the CLT — Uniform Distribution\nWe draw repeated samples from a Uniform distribution (clearly non-normal) and watch the distribution of sample means converge to normal.\n\nset.seed(42)\n\n# Parameters\npop_mean &lt;- 0.5   # mean of Uniform(0,1)\npop_sd   &lt;- sqrt(1/12)  # sd of Uniform(0,1)\n\n# Sample sizes to demonstrate\nsample_sizes &lt;- c(1, 5, 30, 100)\nn_simulations &lt;- 5000\n\npar(mfrow = c(2, 2), mar = c(4, 4, 3, 1))\n\nfor (n in sample_sizes) {\n  # Draw 5000 sample means, each from a sample of size n\n  sample_means &lt;- replicate(n_simulations, mean(runif(n, 0, 1)))\n\n  hist(sample_means,\n       breaks = 40,\n       probability = TRUE,\n       col = \"steelblue\",\n       border = \"white\",\n       main = paste(\"n =\", n),\n       xlab = \"Sample Mean\",\n       xlim = c(0, 1))\n\n  # Overlay the theoretical normal curve\n  curve(dnorm(x, mean = pop_mean, sd = pop_sd / sqrt(n)),\n        add = TRUE, col = \"red\", lwd = 2.5)\n}"
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html#simulating-the-clt-exponential-distribution-very-skewed",
+    "href": "statistics-with-r/02_central_limit_theorem.html#simulating-the-clt-exponential-distribution-very-skewed",
+    "title": "The Central Limit Theorem",
+    "section": "Simulating the CLT — Exponential Distribution (Very Skewed)",
+    "text": "Simulating the CLT — Exponential Distribution (Very Skewed)\n\nset.seed(123)\n\n# Exponential with rate = 1: mean = 1, sd = 1\nsample_sizes2 &lt;- c(1, 10, 30, 100)\n\npar(mfrow = c(2, 2), mar = c(4, 4, 3, 1))\n\nfor (n in sample_sizes2) {\n  sample_means &lt;- replicate(n_simulations, mean(rexp(n, rate = 1)))\n\n  hist(sample_means,\n       breaks = 50,\n       probability = TRUE,\n       col = \"coral\",\n       border = \"white\",\n       main = paste(\"Exponential — n =\", n),\n       xlab = \"Sample Mean\")\n\n  # Theoretical normal overlay\n  curve(dnorm(x, mean = 1, sd = 1 / sqrt(n)),\n        add = TRUE, col = \"navy\", lwd = 2.5)\n}"
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html#demonstrating-the-standard-error",
+    "href": "statistics-with-r/02_central_limit_theorem.html#demonstrating-the-standard-error",
+    "title": "The Central Limit Theorem",
+    "section": "Demonstrating the Standard Error",
+    "text": "Demonstrating the Standard Error\n\n# True SE shrinks as n increases\nn_values &lt;- c(10, 30, 50, 100, 200, 500, 1000)\ntrue_se   &lt;- 1 / sqrt(n_values)  # for Exp(1), sigma = 1\n\ndata.frame(\n  n  = n_values,\n  SE = round(true_se, 4)\n)\n\n     n     SE\n1   10 0.3162\n2   30 0.1826\n3   50 0.1414\n4  100 0.1000\n5  200 0.0707\n6  500 0.0447\n7 1000 0.0316\n\n\n\nplot(n_values, true_se,\n     type = \"b\", pch = 16, col = \"steelblue\", lwd = 2,\n     xlab = \"Sample Size (n)\",\n     ylab = \"Standard Error\",\n     main = \"Standard Error Decreases as n Increases\")\nabline(h = 0, lty = 2, col = \"grey\")"
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html#practical-application-confidence-interval",
+    "href": "statistics-with-r/02_central_limit_theorem.html#practical-application-confidence-interval",
+    "title": "The Central Limit Theorem",
+    "section": "Practical Application — Confidence Interval",
+    "text": "Practical Application — Confidence Interval\nSuppose we want to estimate the mean weight of students at a university. We take a sample of \\(n = 50\\) students.\n\nset.seed(99)\n\n# Simulated weight data (population: skewed, like real weight data)\nweights &lt;- rexp(50, rate = 1/70) + 40   # mean ≈ 110 lbs, shifted\n\nn    &lt;- length(weights)\nxbar &lt;- mean(weights)\ns    &lt;- sd(weights)\nse   &lt;- s / sqrt(n)\n\n# 95% Confidence Interval using CLT (z = 1.96)\nz    &lt;- qnorm(0.975)\nci_lower &lt;- xbar - z * se\nci_upper &lt;- xbar + z * se\n\ncat(sprintf(\"Sample Mean   : %.2f\\n\", xbar))\n\nSample Mean   : 116.07\n\ncat(sprintf(\"Std Error     : %.2f\\n\", se))\n\nStd Error     : 12.80\n\ncat(sprintf(\"95%% CI        : (%.2f, %.2f)\\n\", ci_lower, ci_upper))\n\n95% CI        : (90.98, 141.15)\n\n\nThe 95% CI means: if we repeated this sampling procedure 100 times, approximately 95 of those intervals would contain the true population mean."
+  },
+  {
+    "objectID": "statistics-with-r/02_central_limit_theorem.html#verifying-coverage-probability",
+    "href": "statistics-with-r/02_central_limit_theorem.html#verifying-coverage-probability",
+    "title": "The Central Limit Theorem",
+    "section": "Verifying Coverage Probability",
+    "text": "Verifying Coverage Probability\n\nset.seed(42)\n\n# True mean = 70 (Exponential with rate=1/70, shifted)\ntrue_mean &lt;- 110\ncoverage_count &lt;- 0\nn_trials &lt;- 1000\nn_each &lt;- 50\n\nfor (i in 1:n_trials) {\n  samp &lt;- rexp(n_each, rate = 1/70) + 40\n  xbar_i &lt;- mean(samp)\n  se_i   &lt;- sd(samp) / sqrt(n_each)\n  lower  &lt;- xbar_i - 1.96 * se_i\n  upper  &lt;- xbar_i + 1.96 * se_i\n  if (lower &lt;= true_mean && true_mean &lt;= upper) {\n    coverage_count &lt;- coverage_count + 1\n  }\n}\n\ncat(sprintf(\"Empirical coverage: %.1f%% (target: 95%%)\\n\",\n            100 * coverage_count / n_trials))\n\nEmpirical coverage: 93.0% (target: 95%)"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html",
+    "href": "statistics-with-r/03_regression.html",
+    "title": "Regression Analysis",
+    "section": "",
+    "text": "Regression analysis is a statistical method used to understand and quantify the relationship between variables. It helps us:\n\nExplain how a dependent variable changes with one or more independent variables.\nPredict future values of the dependent variable.\n\n\nExample: How does a car’s fuel efficiency (MPG) change with its weight and horsepower?"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#definition",
+    "href": "statistics-with-r/03_regression.html#definition",
+    "title": "Regression Analysis",
+    "section": "Definition",
+    "text": "Definition\nModels the linear relationship between one predictor \\(X\\) and a response \\(Y\\):\n\\[Y = \\beta_0 + \\beta_1 X + \\varepsilon\\]\nwhere:\n\n\\(Y\\) = dependent variable (response)\n\\(X\\) = independent variable (predictor)\n\\(\\beta_0\\) = intercept (value of \\(Y\\) when \\(X = 0\\))\n\\(\\beta_1\\) = slope (change in \\(Y\\) per unit change in \\(X\\))\n\\(\\varepsilon \\sim N(0, \\sigma^2)\\) = random error term"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#ordinary-least-squares-ols-estimation",
+    "href": "statistics-with-r/03_regression.html#ordinary-least-squares-ols-estimation",
+    "title": "Regression Analysis",
+    "section": "Ordinary Least Squares (OLS) Estimation",
+    "text": "Ordinary Least Squares (OLS) Estimation\nOLS minimises the sum of squared residuals:\n\\[\\text{SSR} = \\sum_{i=1}^{n}(y_i - \\hat{y}_i)^2 = \\sum_{i=1}^{n}(y_i - \\hat{\\beta}_0 - \\hat{\\beta}_1 x_i)^2\\]\nThe closed-form solutions are:\n\\[\\hat{\\beta}_1 = \\frac{\\sum_{i=1}^{n}(x_i - \\bar{x})(y_i - \\bar{y})}{\\sum_{i=1}^{n}(x_i - \\bar{x})^2} = \\frac{S_{xy}}{S_{xx}}\\]\n\\[\\hat{\\beta}_0 = \\bar{y} - \\hat{\\beta}_1 \\bar{x}\\]"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#goodness-of-fit-r-squared",
+    "href": "statistics-with-r/03_regression.html#goodness-of-fit-r-squared",
+    "title": "Regression Analysis",
+    "section": "Goodness of Fit — R-squared",
+    "text": "Goodness of Fit — R-squared\n\\[R^2 = 1 - \\frac{\\text{SSRes}}{\\text{SST}} = 1 - \\frac{\\sum(y_i - \\hat{y}_i)^2}{\\sum(y_i - \\bar{y})^2}\\]\n\n\\(R^2 = 1\\): Perfect fit\n\\(R^2 = 0\\): Model explains nothing\n\\(0 &lt; R^2 &lt; 1\\): Proportion of variance explained"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#definition-1",
+    "href": "statistics-with-r/03_regression.html#definition-1",
+    "title": "Regression Analysis",
+    "section": "Definition",
+    "text": "Definition\n\\[Y = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + \\cdots + \\beta_k X_k + \\varepsilon\\]\nIn matrix notation:\n\\[\\mathbf{Y} = \\mathbf{X}\\boldsymbol{\\beta} + \\boldsymbol{\\varepsilon}\\]\nOLS solution:\n\\[\\hat{\\boldsymbol{\\beta}} = (\\mathbf{X}^T\\mathbf{X})^{-1}\\mathbf{X}^T\\mathbf{Y}\\]"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#adjusted-r-squared",
+    "href": "statistics-with-r/03_regression.html#adjusted-r-squared",
+    "title": "Regression Analysis",
+    "section": "Adjusted R-squared",
+    "text": "Adjusted R-squared\nFor multiple regression, use Adjusted \\(R^2\\) to penalise for extra predictors:\n\\[\\bar{R}^2 = 1 - \\frac{(1-R^2)(n-1)}{n-k-1}\\]\nwhere \\(k\\) = number of predictors and \\(n\\) = sample size."
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#simple-linear-regression-1",
+    "href": "statistics-with-r/03_regression.html#simple-linear-regression-1",
+    "title": "Regression Analysis",
+    "section": "Simple Linear Regression",
+    "text": "Simple Linear Regression\n\n# Use mtcars: predict mpg from weight (wt)\ndata(mtcars)\n\n# Fit the model\nmodel_simple &lt;- lm(mpg ~ wt, data = mtcars)\nsummary(model_simple)\n\n\nCall:\nlm(formula = mpg ~ wt, data = mtcars)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-4.5432 -2.3647 -0.1252  1.4096  6.8727 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)  37.2851     1.8776  19.858  &lt; 2e-16 ***\nwt           -5.3445     0.5591  -9.559 1.29e-10 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 3.046 on 30 degrees of freedom\nMultiple R-squared:  0.7528,    Adjusted R-squared:  0.7446 \nF-statistic: 91.38 on 1 and 30 DF,  p-value: 1.294e-10\n\n\n\nInterpretation of Output\n\ncat(\"Intercept (β₀)  :\", coef(model_simple)[1], \"\\n\")\n\nIntercept (β₀)  : 37.28513 \n\ncat(\"Slope (β₁)      :\", coef(model_simple)[2], \"\\n\")\n\nSlope (β₁)      : -5.344472 \n\ncat(\"R-squared       :\", summary(model_simple)$r.squared, \"\\n\")\n\nR-squared       : 0.7528328 \n\ncat(\"Adj R-squared   :\", summary(model_simple)$adj.r.squared, \"\\n\")\n\nAdj R-squared   : 0.7445939 \n\n\nThe slope of ~−5.34 means: for every 1000 lb increase in weight, MPG decreases by ~5.34.\n\n\nScatter Plot with Regression Line\n\nplot(mtcars$wt, mtcars$mpg,\n     pch = 16, col = \"steelblue\",\n     xlab = \"Weight (1000 lbs)\",\n     ylab = \"Miles Per Gallon\",\n     main = \"Simple Linear Regression: MPG ~ Weight\")\n\nabline(model_simple, col = \"red\", lwd = 2)\n\n# Add R² label\nr2 &lt;- round(summary(model_simple)$r.squared, 3)\nlegend(\"topright\", legend = paste(\"R² =\", r2), bty = \"n\")\n\n\n\n\n\n\n\n\n\n\nResidual Diagnostics\n\npar(mfrow = c(2, 2))\nplot(model_simple, col = \"steelblue\", pch = 16)\n\n\n\n\n\n\n\n\nThe four diagnostic plots check:\n\nResiduals vs Fitted: Should show no pattern (linearity, homoscedasticity)\nNormal Q-Q: Points should follow the diagonal line (normality)\nScale-Location: Should be horizontal (equal variance)\nResiduals vs Leverage: Identifies influential points"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#multiple-linear-regression-1",
+    "href": "statistics-with-r/03_regression.html#multiple-linear-regression-1",
+    "title": "Regression Analysis",
+    "section": "Multiple Linear Regression",
+    "text": "Multiple Linear Regression\n\n# Predict mpg from weight AND horsepower\nmodel_multi &lt;- lm(mpg ~ wt + hp, data = mtcars)\nsummary(model_multi)\n\n\nCall:\nlm(formula = mpg ~ wt + hp, data = mtcars)\n\nResiduals:\n   Min     1Q Median     3Q    Max \n-3.941 -1.600 -0.182  1.050  5.854 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) 37.22727    1.59879  23.285  &lt; 2e-16 ***\nwt          -3.87783    0.63273  -6.129 1.12e-06 ***\nhp          -0.03177    0.00903  -3.519  0.00145 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 2.593 on 29 degrees of freedom\nMultiple R-squared:  0.8268,    Adjusted R-squared:  0.8148 \nF-statistic: 69.21 on 2 and 29 DF,  p-value: 9.109e-12\n\n\n\ncat(\"Intercept        :\", round(coef(model_multi)[1], 3), \"\\n\")\n\nIntercept        : 37.227 \n\ncat(\"β₁ (wt)          :\", round(coef(model_multi)[2], 3), \"\\n\")\n\nβ₁ (wt)          : -3.878 \n\ncat(\"β₂ (hp)          :\", round(coef(model_multi)[3], 3), \"\\n\")\n\nβ₂ (hp)          : -0.032 \n\ncat(\"Adjusted R²      :\", round(summary(model_multi)$adj.r.squared, 3), \"\\n\")\n\nAdjusted R²      : 0.815 \n\n\nCompared to the simple model, adding horsepower increases Adjusted R² — meaning it adds explanatory power."
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#comparing-models",
+    "href": "statistics-with-r/03_regression.html#comparing-models",
+    "title": "Regression Analysis",
+    "section": "Comparing Models",
+    "text": "Comparing Models\n\n# ANOVA test to compare models\nanova(model_simple, model_multi)\n\nAnalysis of Variance Table\n\nModel 1: mpg ~ wt\nModel 2: mpg ~ wt + hp\n  Res.Df    RSS Df Sum of Sq      F   Pr(&gt;F)   \n1     30 278.32                                \n2     29 195.05  1    83.274 12.381 0.001451 **\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\nA significant p-value means the more complex model fits significantly better."
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#prediction",
+    "href": "statistics-with-r/03_regression.html#prediction",
+    "title": "Regression Analysis",
+    "section": "Prediction",
+    "text": "Prediction\n\n# Predict MPG for a new car: wt = 3.0, hp = 110\nnew_car &lt;- data.frame(wt = 3.0, hp = 110)\n\n# Point prediction\npred &lt;- predict(model_multi, newdata = new_car)\ncat(\"Predicted MPG:\", round(pred, 2), \"\\n\")\n\nPredicted MPG: 22.1 \n\n# With 95% prediction interval\npred_interval &lt;- predict(model_multi, newdata = new_car, interval = \"prediction\")\nprint(pred_interval)\n\n       fit     lwr     upr\n1 22.09875 16.6858 27.5117"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#checking-multicollinearity-vif",
+    "href": "statistics-with-r/03_regression.html#checking-multicollinearity-vif",
+    "title": "Regression Analysis",
+    "section": "Checking Multicollinearity (VIF)",
+    "text": "Checking Multicollinearity (VIF)\n\n# install.packages(\"car\")\nlibrary(car)\nvif(model_multi)\n\n      wt       hp \n1.766625 1.766625 \n\n\n\nVIF &lt; 5: No serious multicollinearity\nVIF &gt; 10: High multicollinearity — consider removing or combining predictors"
+  },
+  {
+    "objectID": "statistics-with-r/03_regression.html#full-model-with-all-predictors",
+    "href": "statistics-with-r/03_regression.html#full-model-with-all-predictors",
+    "title": "Regression Analysis",
+    "section": "Full Model with All Predictors",
+    "text": "Full Model with All Predictors\n\nmodel_full &lt;- lm(mpg ~ ., data = mtcars)\nsummary(model_full)$adj.r.squared\n\n[1] 0.8066423\n\n\n\n# Stepwise selection to find the best model\nmodel_step &lt;- step(model_full, direction = \"backward\", trace = 0)\nsummary(model_step)\n\n\nCall:\nlm(formula = mpg ~ wt + qsec + am, data = mtcars)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-3.4811 -1.5555 -0.7257  1.4110  4.6610 \n\nCoefficients:\n            Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)   9.6178     6.9596   1.382 0.177915    \nwt           -3.9165     0.7112  -5.507 6.95e-06 ***\nqsec          1.2259     0.2887   4.247 0.000216 ***\nam            2.9358     1.4109   2.081 0.046716 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 2.459 on 28 degrees of freedom\nMultiple R-squared:  0.8497,    Adjusted R-squared:  0.8336 \nF-statistic: 52.75 on 3 and 28 DF,  p-value: 1.21e-11"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html",
+    "href": "statistics-with-r/04_time_series.html",
+    "title": "Time Series Models",
+    "section": "",
+    "text": "A time series is a sequence of data points collected at successive points in time, typically at equally spaced intervals. Time series analysis is used to understand past behaviour and forecast future values.\n\nExamples: monthly rainfall, daily stock prices, quarterly GDP, weekly sales figures, annual temperature records."
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#decomposition-models",
+    "href": "statistics-with-r/04_time_series.html#decomposition-models",
+    "title": "Time Series Models",
+    "section": "Decomposition Models",
+    "text": "Decomposition Models\nAdditive model (when seasonal variation is constant):\n\\[Y_t = T_t + S_t + C_t + I_t\\]\nMultiplicative model (when seasonal variation grows with trend):\n\\[Y_t = T_t \\times S_t \\times C_t \\times I_t\\]"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#stationarity",
+    "href": "statistics-with-r/04_time_series.html#stationarity",
+    "title": "Time Series Models",
+    "section": "Stationarity",
+    "text": "Stationarity\nA time series is stationary if its statistical properties (mean, variance, autocovariance) do not change over time.\n\nMean stationarity: \\(E[Y_t] = \\mu\\) (constant)\nVariance stationarity: \\(\\text{Var}(Y_t) = \\sigma^2\\) (constant)\nCovariance stationarity: \\(\\text{Cov}(Y_t, Y_{t+k})\\) depends only on lag \\(k\\), not time \\(t\\)\n\nMost real-world series are non-stationary and must be transformed."
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#autocorrelation-function-acf",
+    "href": "statistics-with-r/04_time_series.html#autocorrelation-function-acf",
+    "title": "Time Series Models",
+    "section": "Autocorrelation Function (ACF)",
+    "text": "Autocorrelation Function (ACF)\nMeasures the correlation of a series with its own past values:\n\\[\\rho_k = \\frac{\\text{Cov}(Y_t, Y_{t-k})}{\\text{Var}(Y_t)} = \\frac{\\gamma_k}{\\gamma_0}\\]"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#partial-autocorrelation-function-pacf",
+    "href": "statistics-with-r/04_time_series.html#partial-autocorrelation-function-pacf",
+    "title": "Time Series Models",
+    "section": "Partial Autocorrelation Function (PACF)",
+    "text": "Partial Autocorrelation Function (PACF)\nMeasures the correlation between \\(Y_t\\) and \\(Y_{t-k}\\) after removing the effects of lags \\(1, 2, \\ldots, k-1\\)."
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#arp-autoregressive-model",
+    "href": "statistics-with-r/04_time_series.html#arp-autoregressive-model",
+    "title": "Time Series Models",
+    "section": "AR(p) — Autoregressive Model",
+    "text": "AR(p) — Autoregressive Model\nCurrent value depends on its own past \\(p\\) values:\n\\[Y_t = \\phi_1 Y_{t-1} + \\phi_2 Y_{t-2} + \\cdots + \\phi_p Y_{t-p} + \\varepsilon_t\\]"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#maq-moving-average-model",
+    "href": "statistics-with-r/04_time_series.html#maq-moving-average-model",
+    "title": "Time Series Models",
+    "section": "MA(q) — Moving Average Model",
+    "text": "MA(q) — Moving Average Model\nCurrent value depends on past \\(q\\) error terms:\n\\[Y_t = \\varepsilon_t + \\theta_1 \\varepsilon_{t-1} + \\theta_2 \\varepsilon_{t-2} + \\cdots + \\theta_q \\varepsilon_{t-q}\\]"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#armap-q",
+    "href": "statistics-with-r/04_time_series.html#armap-q",
+    "title": "Time Series Models",
+    "section": "ARMA(p, q)",
+    "text": "ARMA(p, q)\nCombination of AR and MA:\n\\[Y_t = \\phi_1 Y_{t-1} + \\cdots + \\phi_p Y_{t-p} + \\varepsilon_t + \\theta_1 \\varepsilon_{t-1} + \\cdots + \\theta_q \\varepsilon_{t-q}\\]"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#arimap-d-q",
+    "href": "statistics-with-r/04_time_series.html#arimap-d-q",
+    "title": "Time Series Models",
+    "section": "ARIMA(p, d, q)",
+    "text": "ARIMA(p, d, q)\nWhen the series is non-stationary, we apply differencing \\(d\\) times:\n\\[\\Delta^d Y_t = \\text{ARMA}(p, q)\\]\nwhere \\(\\Delta Y_t = Y_t - Y_{t-1}\\) (first difference).\n\nModel Selection Guide\n\n\n\nACF Pattern\nPACF Pattern\nSuggested Model\n\n\n\n\nCuts off after lag \\(q\\)\nTails off\nMA(\\(q\\))\n\n\nTails off\nCuts off after lag \\(p\\)\nAR(\\(p\\))\n\n\nBoth tail off\nBoth tail off\nARMA(\\(p\\), \\(q\\))\n\n\nBoth non-stationary\n—\nDifference first, then check"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#loading-a-time-series",
+    "href": "statistics-with-r/04_time_series.html#loading-a-time-series",
+    "title": "Time Series Models",
+    "section": "Loading a Time Series",
+    "text": "Loading a Time Series\n\n# Built-in dataset: monthly airline passengers (1949-1960)\ndata(\"AirPassengers\")\n\n# Inspect structure\nprint(AirPassengers)\n\n     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec\n1949 112 118 132 129 121 135 148 148 136 119 104 118\n1950 115 126 141 135 125 149 170 170 158 133 114 140\n1951 145 150 178 163 172 178 199 199 184 162 146 166\n1952 171 180 193 181 183 218 230 242 209 191 172 194\n1953 196 196 236 235 229 243 264 272 237 211 180 201\n1954 204 188 235 227 234 264 302 293 259 229 203 229\n1955 242 233 267 269 270 315 364 347 312 274 237 278\n1956 284 277 317 313 318 374 413 405 355 306 271 306\n1957 315 301 356 348 355 422 465 467 404 347 305 336\n1958 340 318 362 348 363 435 491 505 404 359 310 337\n1959 360 342 406 396 420 472 548 559 463 407 362 405\n1960 417 391 419 461 472 535 622 606 508 461 390 432\n\nclass(AirPassengers)\n\n[1] \"ts\"\n\nfrequency(AirPassengers)  # 12 = monthly\n\n[1] 12\n\nstart(AirPassengers)\n\n[1] 1949    1\n\nend(AirPassengers)\n\n[1] 1960   12"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#plotting-the-series",
+    "href": "statistics-with-r/04_time_series.html#plotting-the-series",
+    "title": "Time Series Models",
+    "section": "Plotting the Series",
+    "text": "Plotting the Series\n\nplot(AirPassengers,\n     main = \"Monthly International Airline Passengers (1949–1960)\",\n     ylab = \"Number of Passengers (thousands)\",\n     xlab = \"Year\",\n     col = \"steelblue\", lwd = 1.5)\n\n\n\n\n\n\n\n\nClearly shows an upward trend and growing seasonal pattern → multiplicative decomposition is appropriate."
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#decomposition",
+    "href": "statistics-with-r/04_time_series.html#decomposition",
+    "title": "Time Series Models",
+    "section": "Decomposition",
+    "text": "Decomposition\n\n# Multiplicative decomposition (seasonal variation grows with level)\ndecomp &lt;- decompose(AirPassengers, type = \"multiplicative\")\nplot(decomp)\n\n\n\n\n\n\n\n\n\n# View seasonal indices\nround(decomp$seasonal[1:12], 4)\n\n [1] 0.9102 0.8836 1.0074 0.9759 0.9814 1.1128 1.2266 1.2199 1.0605 0.9218\n[11] 0.8012 0.8988"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#stationarity-testing-augmented-dickey-fuller-test",
+    "href": "statistics-with-r/04_time_series.html#stationarity-testing-augmented-dickey-fuller-test",
+    "title": "Time Series Models",
+    "section": "Stationarity Testing — Augmented Dickey-Fuller Test",
+    "text": "Stationarity Testing — Augmented Dickey-Fuller Test\n\\[H_0: \\text{Series has a unit root (non-stationary)}\\] \\[H_1: \\text{Series is stationary}\\]\n\n# install.packages(\"tseries\")\nlibrary(tseries)\n\nadf.test(AirPassengers)\n\n\n    Augmented Dickey-Fuller Test\n\ndata:  AirPassengers\nDickey-Fuller = -7.3186, Lag order = 5, p-value = 0.01\nalternative hypothesis: stationary\n\n\nIf p-value &gt; 0.05 → fail to reject \\(H_0\\) → series is non-stationary → need differencing."
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#acf-and-pacf-plots",
+    "href": "statistics-with-r/04_time_series.html#acf-and-pacf-plots",
+    "title": "Time Series Models",
+    "section": "ACF and PACF Plots",
+    "text": "ACF and PACF Plots\n\n# Log-transform to stabilise variance, then first-difference\nlog_ap &lt;- log(AirPassengers)\ndiff_log_ap &lt;- diff(log_ap, differences = 1)\n\npar(mfrow = c(1, 2))\nacf(diff_log_ap,  main = \"ACF of Differenced Log Passengers\",  lag.max = 36)\npacf(diff_log_ap, main = \"PACF of Differenced Log Passengers\", lag.max = 36)\n\n\n\n\n\n\n\n\nSpikes at seasonal lags (12, 24) indicate seasonal ARIMA is needed."
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#fitting-arima-model",
+    "href": "statistics-with-r/04_time_series.html#fitting-arima-model",
+    "title": "Time Series Models",
+    "section": "Fitting ARIMA Model",
+    "text": "Fitting ARIMA Model\n\n# Manual ARIMA fit\nmodel_arima &lt;- arima(log_ap,\n                     order = c(0, 1, 1),          # non-seasonal: d=1, MA(1)\n                     seasonal = list(order = c(0, 1, 1), period = 12))\n\nsummary(model_arima)\n\n          Length Class  Mode     \ncoef        2    -none- numeric  \nsigma2      1    -none- numeric  \nvar.coef    4    -none- numeric  \nmask        2    -none- logical  \nloglik      1    -none- numeric  \naic         1    -none- numeric  \narma        7    -none- numeric  \nresiduals 144    ts     numeric  \ncall        4    -none- call     \nseries      1    -none- character\ncode        1    -none- numeric  \nn.cond      1    -none- numeric  \nnobs        1    -none- numeric  \nmodel      10    -none- list"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#auto-arima-automatic-order-selection",
+    "href": "statistics-with-r/04_time_series.html#auto-arima-automatic-order-selection",
+    "title": "Time Series Models",
+    "section": "Auto-ARIMA (automatic order selection)",
+    "text": "Auto-ARIMA (automatic order selection)\n\n# install.packages(\"forecast\")\nlibrary(forecast)\n\nmodel_auto &lt;- auto.arima(AirPassengers, lambda = 0)  # lambda=0 for log transform\nprint(model_auto)\n\nSeries: AirPassengers \nARIMA(0,1,1)(0,1,1)[12] \nBox Cox transformation: lambda= 0 \n\nCoefficients:\n          ma1     sma1\n      -0.4018  -0.5569\ns.e.   0.0896   0.0731\n\nsigma^2 = 0.001371:  log likelihood = 244.7\nAIC=-483.4   AICc=-483.21   BIC=-474.77"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#forecasting",
+    "href": "statistics-with-r/04_time_series.html#forecasting",
+    "title": "Time Series Models",
+    "section": "Forecasting",
+    "text": "Forecasting\n\n# Forecast 24 months ahead\nfc &lt;- forecast(model_auto, h = 24)\n\nplot(fc,\n     main = \"24-Month Forecast: Airline Passengers\",\n     ylab = \"Passengers (thousands)\",\n     xlab = \"Year\",\n     col = \"steelblue\")\n\n\n\n\n\n\n\n\n\n# View forecast values with confidence intervals\nprint(fc)\n\n         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95\nJan 1961       450.4224 429.5461 472.3132 418.8895 484.3289\nFeb 1961       425.7172 402.8146 449.9219 391.1938 463.2874\nMar 1961       479.0068 450.1386 509.7265 435.5677 526.7781\nApr 1961       492.4045 459.8801 527.2290 443.5416 546.6503\nMay 1961       509.0550 472.7467 548.1518 454.5866 570.0497\nJun 1961       583.3449 538.8968 631.4591 516.7552 658.5155\nJul 1961       670.0108 615.9149 728.8579 589.0693 762.0740\nAug 1961       667.0776 610.3693 729.0546 582.3280 764.1613\nSep 1961       558.1894 508.4826 612.7552 483.9871 643.7679\nOct 1961       497.2078 451.0221 548.1230 428.3358 577.1537\nNov 1961       429.8720 388.3656 475.8144 368.0412 502.0903\nDec 1961       477.2426 429.4869 530.3083 406.1725 560.7482\nJan 1962       495.9301 441.4199 557.1717 415.0328 592.5957\nFeb 1962       468.7289 414.3000 530.3084 388.0942 566.1170\nMar 1962       527.4025 463.0847 600.6535 432.2757 643.4631\nApr 1962       542.1538 473.0479 621.3551 440.1061 667.8634\nMay 1962       560.4865 486.1084 646.2450 450.8180 696.8336\nJun 1962       642.2823 553.8414 744.8460 512.0656 805.6127\nJul 1962       737.7043 632.5975 860.2747 583.1625 933.2006\nAug 1962       734.4748 626.4582 861.1161 575.8651 936.7700\nSep 1962       614.5852 521.4868 724.3039 478.0561 790.1058\nOct 1962       547.4424 462.1839 648.4284 422.5653 709.2234\nNov 1962       473.3034 397.6439 563.3587 362.6186 617.7735\nDec 1962       525.4600 439.3700 628.4185 399.6627 690.8531"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#checking-residuals",
+    "href": "statistics-with-r/04_time_series.html#checking-residuals",
+    "title": "Time Series Models",
+    "section": "Checking Residuals",
+    "text": "Checking Residuals\n\n# Residuals should look like white noise\ncheckresiduals(model_auto)\n\n\n\n\n\n\n\n\n\n    Ljung-Box test\n\ndata:  Residuals from ARIMA(0,1,1)(0,1,1)[12]\nQ* = 26.446, df = 22, p-value = 0.233\n\nModel df: 2.   Total lags used: 24\n\n\nA good model leaves white noise residuals: - No autocorrelation in residuals - Residuals approximately normally distributed - Ljung-Box test p-value &gt; 0.05"
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#accuracy-metrics",
+    "href": "statistics-with-r/04_time_series.html#accuracy-metrics",
+    "title": "Time Series Models",
+    "section": "Accuracy Metrics",
+    "text": "Accuracy Metrics\n\naccuracy(model_auto)\n\n                     ME     RMSE      MAE          MPE     MAPE     MASE\nTraining set 0.05140418 10.15504 7.357553 -0.004079016 2.623636 0.229706\n                    ACF1\nTraining set -0.03689673\n\n\n\n\n\nMetric\nDescription\n\n\n\n\nME\nMean Error\n\n\nRMSE\nRoot Mean Squared Error\n\n\nMAE\nMean Absolute Error\n\n\nMAPE\nMean Absolute Percentage Error\n\n\nMASE\nMean Absolute Scaled Error\n\n\n\nLower values = better model fit."
+  },
+  {
+    "objectID": "statistics-with-r/04_time_series.html#exponential-smoothing-ets-alternative-approach",
+    "href": "statistics-with-r/04_time_series.html#exponential-smoothing-ets-alternative-approach",
+    "title": "Time Series Models",
+    "section": "Exponential Smoothing (ETS) — Alternative Approach",
+    "text": "Exponential Smoothing (ETS) — Alternative Approach\n\nmodel_ets &lt;- ets(AirPassengers)\nsummary(model_ets)\n\nETS(M,Ad,M) \n\nCall:\nets(y = AirPassengers)\n\n  Smoothing parameters:\n    alpha = 0.7096 \n    beta  = 0.0204 \n    gamma = 1e-04 \n    phi   = 0.98 \n\n  Initial states:\n    l = 120.9939 \n    b = 1.7705 \n    s = 0.8944 0.7993 0.9217 1.0592 1.2203 1.2318\n           1.1105 0.9786 0.9804 1.011 0.8869 0.9059\n\n  sigma:  0.0392\n\n     AIC     AICc      BIC \n1395.166 1400.638 1448.623 \n\nTraining set error measures:\n                   ME     RMSE      MAE       MPE     MAPE      MASE       ACF1\nTraining set 1.567359 10.74726 7.791605 0.4357799 2.857917 0.2432573 0.03945056\n\nfc_ets &lt;- forecast(model_ets, h = 24)\naccuracy(fc_ets)\n\n                   ME     RMSE      MAE       MPE     MAPE      MASE       ACF1\nTraining set 1.567359 10.74726 7.791605 0.4357799 2.857917 0.2432573 0.03945056\n\n\nETS models are often competitive with ARIMA and are simpler to interpret."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html",
+    "href": "statistics-with-r/05_statistical_graphics.html",
+    "title": "Statistical Graphics",
+    "section": "",
+    "text": "Statistical graphics are visual representations of data that help us explore distributions, relationships, patterns, and anomalies that are impossible to see in tables of numbers.\n\n“A picture is worth a thousand words — in statistics, a good chart is worth a thousand rows of data.”\n\nGood graphics are the first and last step in data analysis: used in exploratory data analysis (EDA) to understand data, and in reporting to communicate findings."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#setup",
+    "href": "statistics-with-r/05_statistical_graphics.html#setup",
+    "title": "Statistical Graphics",
+    "section": "Setup",
+    "text": "Setup\n\ndata(mtcars)\ndata(iris)\n\n# Convert cyl to factor for grouped plots\nmtcars$cyl &lt;- as.factor(mtcars$cyl)"
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#histogram-distribution-of-one-variable",
+    "href": "statistics-with-r/05_statistical_graphics.html#histogram-distribution-of-one-variable",
+    "title": "Statistical Graphics",
+    "section": "Histogram — Distribution of One Variable",
+    "text": "Histogram — Distribution of One Variable\n\nhist(mtcars$mpg,\n     breaks = 12,\n     col    = \"steelblue\",\n     border = \"white\",\n     main   = \"Distribution of Fuel Efficiency\",\n     xlab   = \"Miles Per Gallon (MPG)\",\n     ylab   = \"Frequency\")\n\n# Add density curve\nlines(density(mtcars$mpg) |&gt; (\\(d) list(x = d$x, y = d$y * length(mtcars$mpg) * diff(range(mtcars$mpg)) / 12))(),\n      col = \"red\", lwd = 2)\n\n\n\n\n\n\n\n\nWhen to use: To see the shape, spread, and central tendency of a single continuous variable."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#boxplot-comparing-distributions",
+    "href": "statistics-with-r/05_statistical_graphics.html#boxplot-comparing-distributions",
+    "title": "Statistical Graphics",
+    "section": "Boxplot — Comparing Distributions",
+    "text": "Boxplot — Comparing Distributions\n\nboxplot(mpg ~ cyl,\n        data   = mtcars,\n        col    = c(\"lightblue\", \"lightgreen\", \"salmon\"),\n        border = \"navy\",\n        main   = \"MPG by Number of Cylinders\",\n        xlab   = \"Cylinders\",\n        ylab   = \"Miles Per Gallon\")\n\n\n\n\n\n\n\n\nReading a boxplot:\n\nBox: Q1 to Q3 (middle 50% of data)\nLine inside box: Median (Q2)\nWhiskers: Extend to 1.5 × IQR from the box edges\nPoints beyond whiskers: Outliers\n\nWhen to use: Compare distributions across groups; excellent for detecting outliers."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#scatter-plot-relationship-between-two-variables",
+    "href": "statistics-with-r/05_statistical_graphics.html#scatter-plot-relationship-between-two-variables",
+    "title": "Statistical Graphics",
+    "section": "Scatter Plot — Relationship Between Two Variables",
+    "text": "Scatter Plot — Relationship Between Two Variables\n\nplot(mtcars$wt, mtcars$mpg,\n     pch  = 16,\n     col  = as.numeric(mtcars$cyl) + 1,\n     cex  = 1.3,\n     xlab = \"Weight (1000 lbs)\",\n     ylab = \"Miles Per Gallon\",\n     main = \"Weight vs MPG by Cylinders\")\n\nlegend(\"topright\",\n       legend = c(\"4 cyl\", \"6 cyl\", \"8 cyl\"),\n       col    = c(2, 3, 4),\n       pch    = 16,\n       title  = \"Cylinders\")\n\n# Add overall trend line\nabline(lm(mpg ~ wt, data = mtcars), col = \"darkgrey\", lwd = 2, lty = 2)\n\n\n\n\n\n\n\n\nWhen to use: Examine the relationship (direction, strength, linearity) between two continuous variables."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#bar-chart-frequency-of-categories",
+    "href": "statistics-with-r/05_statistical_graphics.html#bar-chart-frequency-of-categories",
+    "title": "Statistical Graphics",
+    "section": "Bar Chart — Frequency of Categories",
+    "text": "Bar Chart — Frequency of Categories\n\ncyl_counts &lt;- table(mtcars$cyl)\n\nbarplot(cyl_counts,\n        col    = c(\"lightblue\", \"steelblue\", \"navy\"),\n        border = \"white\",\n        main   = \"Number of Cars by Cylinder Count\",\n        xlab   = \"Cylinders\",\n        ylab   = \"Count\",\n        ylim   = c(0, 16))\n\n\n\n\n\n\n\n\nWhen to use: Show counts or frequencies for categorical data."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#line-chart-trends-over-time",
+    "href": "statistics-with-r/05_statistical_graphics.html#line-chart-trends-over-time",
+    "title": "Statistical Graphics",
+    "section": "Line Chart — Trends Over Time",
+    "text": "Line Chart — Trends Over Time\n\nplot(AirPassengers,\n     col  = \"steelblue\",\n     lwd  = 2,\n     main = \"Monthly Airline Passengers (1949–1960)\",\n     xlab = \"Year\",\n     ylab = \"Passengers (thousands)\")\n\n\n\n\n\n\n\n\nWhen to use: Display how a quantity changes over time."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#pairs-plot-multivariate-overview",
+    "href": "statistics-with-r/05_statistical_graphics.html#pairs-plot-multivariate-overview",
+    "title": "Statistical Graphics",
+    "section": "Pairs Plot — Multivariate Overview",
+    "text": "Pairs Plot — Multivariate Overview\n\npairs(iris[, 1:4],\n      col  = as.numeric(iris$Species) + 1,\n      pch  = 16,\n      main = \"Pairs Plot — Iris Dataset\",\n      labels = c(\"Sepal\\nLength\", \"Sepal\\nWidth\", \"Petal\\nLength\", \"Petal\\nWidth\"))\n\n\n\n\n\n\n\n\nWhen to use: Explore all pairwise relationships in a dataset simultaneously. Excellent for EDA."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#setup-1",
+    "href": "statistics-with-r/05_statistical_graphics.html#setup-1",
+    "title": "Statistical Graphics",
+    "section": "Setup",
+    "text": "Setup\n\n# install.packages(\"ggplot2\")\nlibrary(ggplot2)\n\n# Convert for ggplot\nmtcars2 &lt;- mtcars\nmtcars2$cyl &lt;- as.factor(mtcars2$cyl)"
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#ggplot2-histogram",
+    "href": "statistics-with-r/05_statistical_graphics.html#ggplot2-histogram",
+    "title": "Statistical Graphics",
+    "section": "ggplot2 Histogram",
+    "text": "ggplot2 Histogram\n\nggplot(mtcars2, aes(x = mpg)) +\n  geom_histogram(bins = 12, fill = \"steelblue\", colour = \"white\") +\n  geom_density(aes(y = after_stat(count) * 2.5),\n               colour = \"red\", linewidth = 1) +\n  labs(title = \"Distribution of MPG\",\n       x = \"Miles Per Gallon\",\n       y = \"Count\") +\n  theme_minimal()"
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#ggplot2-boxplot",
+    "href": "statistics-with-r/05_statistical_graphics.html#ggplot2-boxplot",
+    "title": "Statistical Graphics",
+    "section": "ggplot2 Boxplot",
+    "text": "ggplot2 Boxplot\n\nggplot(mtcars2, aes(x = cyl, y = mpg, fill = cyl)) +\n  geom_boxplot(outlier.colour = \"red\", outlier.shape = 16) +\n  scale_fill_manual(values = c(\"lightblue\", \"lightgreen\", \"salmon\")) +\n  labs(title = \"MPG Distribution by Cylinders\",\n       x = \"Number of Cylinders\",\n       y = \"Miles Per Gallon\",\n       fill = \"Cylinders\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")"
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#ggplot2-scatter-plot-with-smooth-trend",
+    "href": "statistics-with-r/05_statistical_graphics.html#ggplot2-scatter-plot-with-smooth-trend",
+    "title": "Statistical Graphics",
+    "section": "ggplot2 Scatter Plot with Smooth Trend",
+    "text": "ggplot2 Scatter Plot with Smooth Trend\n\nggplot(mtcars2, aes(x = wt, y = mpg, colour = cyl)) +\n  geom_point(size = 3, alpha = 0.8) +\n  geom_smooth(method = \"lm\", se = TRUE, colour = \"black\",\n              linetype = \"dashed\", linewidth = 0.8) +\n  scale_colour_manual(values = c(\"4\" = \"#2196F3\",\n                                  \"6\" = \"#4CAF50\",\n                                  \"8\" = \"#F44336\")) +\n  labs(title    = \"Weight vs MPG\",\n       subtitle = \"Linear trend with 95% confidence band\",\n       x        = \"Weight (1000 lbs)\",\n       y        = \"Miles Per Gallon\",\n       colour   = \"Cylinders\") +\n  theme_minimal()"
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#ggplot2-faceted-plot",
+    "href": "statistics-with-r/05_statistical_graphics.html#ggplot2-faceted-plot",
+    "title": "Statistical Graphics",
+    "section": "ggplot2 Faceted Plot",
+    "text": "ggplot2 Faceted Plot\n\nggplot(mtcars2, aes(x = wt, y = mpg)) +\n  geom_point(colour = \"steelblue\", size = 2.5, alpha = 0.8) +\n  geom_smooth(method = \"lm\", se = FALSE, colour = \"red\") +\n  facet_wrap(~ cyl, labeller = label_both) +\n  labs(title = \"MPG vs Weight — Faceted by Cylinders\",\n       x = \"Weight (1000 lbs)\",\n       y = \"Miles Per Gallon\") +\n  theme_bw()\n\n\n\n\n\n\n\n\nWhen to use facets: Compare the same relationship across subgroups without overlapping data."
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#ggplot2-bar-chart",
+    "href": "statistics-with-r/05_statistical_graphics.html#ggplot2-bar-chart",
+    "title": "Statistical Graphics",
+    "section": "ggplot2 Bar Chart",
+    "text": "ggplot2 Bar Chart\n\nggplot(mtcars2, aes(x = cyl, fill = cyl)) +\n  geom_bar() +\n  scale_fill_manual(values = c(\"lightblue\", \"steelblue\", \"navy\")) +\n  labs(title = \"Car Count by Cylinders\",\n       x = \"Cylinders\", y = \"Count\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")"
+  },
+  {
+    "objectID": "statistics-with-r/05_statistical_graphics.html#heatmap-correlation-matrix",
+    "href": "statistics-with-r/05_statistical_graphics.html#heatmap-correlation-matrix",
+    "title": "Statistical Graphics",
+    "section": "Heatmap — Correlation Matrix",
+    "text": "Heatmap — Correlation Matrix\n\n# Compute correlation matrix\nmtcars_num &lt;- mtcars[, sapply(mtcars, is.numeric)]\ncor_mat &lt;- cor(mtcars_num)\n\n# Reshape for ggplot\ncor_df &lt;- as.data.frame(as.table(cor_mat))\nnames(cor_df) &lt;- c(\"Var1\", \"Var2\", \"Correlation\")\n\nggplot(cor_df, aes(x = Var1, y = Var2, fill = Correlation)) +\n  geom_tile(colour = \"white\", linewidth = 0.5) +\n  geom_text(aes(label = round(Correlation, 2)),\n            size = 3, colour = \"black\") +\n  scale_fill_gradient2(low = \"#D73027\", mid = \"white\", high = \"#1A9850\",\n                       midpoint = 0, limits = c(-1, 1)) +\n  labs(title = \"Correlation Heatmap — mtcars\",\n       x = \"\", y = \"\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\nWhen to use: Quickly identify strongly correlated variable pairs before regression modelling."
   }
 ]

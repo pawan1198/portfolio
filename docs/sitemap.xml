@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pawan1198.github.io/portfolio/index.html</loc>
-    <lastmod>2026-04-18T19:47:30.584Z</lastmod>
+    <lastmod>2026-05-11T15:35:06.205Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/shiny_app.html</loc>
@@ -35,5 +35,29 @@
   <url>
     <loc>https://pawan1198.github.io/portfolio/content-hub_old.html</loc>
     <lastmod>2026-04-14T15:54:09.594Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/statistics-with-r/01_basic_statistics.html</loc>
+    <lastmod>2026-05-11T15:27:49.231Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/statistics-with-r.html</loc>
+    <lastmod>2026-05-11T15:34:37.390Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/statistics-with-r/02_central_limit_theorem.html</loc>
+    <lastmod>2026-05-11T15:28:23.069Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/statistics-with-r/03_regression.html</loc>
+    <lastmod>2026-05-11T15:28:42.257Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/statistics-with-r/04_time_series.html</loc>
+    <lastmod>2026-05-11T15:29:05.041Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/statistics-with-r/05_statistical_graphics.html</loc>
+    <lastmod>2026-05-11T15:29:31.192Z</lastmod>
   </url>
 </urlset>

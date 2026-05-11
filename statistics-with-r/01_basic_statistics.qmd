@@ -1,0 +1,251 @@
+---
+title: "Basic Statistics"
+subtitle: "Concepts, Formulas, and Applications in R"
+author: "Pawan"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+    code-fold: false
+    highlight-style: github
+  pdf:
+    toc: true
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+**Basic statistics** is the foundation of all data analysis. It provides tools to summarize, describe, and understand data before performing any advanced modelling. It answers the most fundamental question: *What does the data look like?*
+
+---
+
+# Key Concepts and Definitions
+
+## 1. Population vs Sample
+
+- **Population**: The complete set of all items of interest (e.g., all students in India).
+- **Sample**: A subset of the population selected for study (e.g., 500 students from Delhi).
+
+We use **sample statistics** to estimate **population parameters**.
+
+| Measure | Population Symbol | Sample Symbol |
+|---------|------------------|---------------|
+| Mean | μ (mu) | x̄ |
+| Standard Deviation | σ (sigma) | s |
+| Size | N | n |
+
+---
+
+## 2. Measures of Central Tendency
+
+These describe the **centre** of the data.
+
+### Mean (Arithmetic Average)
+
+$$\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}$$
+
+### Median
+
+The **middle value** when data is sorted. For $n$ observations:
+
+- If $n$ is odd: Median = $\left(\frac{n+1}{2}\right)$th value
+- If $n$ is even: Median = average of $\left(\frac{n}{2}\right)$th and $\left(\frac{n}{2}+1\right)$th values
+
+### Mode
+
+The value that **occurs most frequently** in the dataset.
+
+---
+
+## 3. Measures of Dispersion
+
+These describe how **spread out** the data is.
+
+### Variance
+
+$$s^2 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n-1}$$
+
+### Standard Deviation
+
+$$s = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n-1}}$$
+
+### Range
+
+$$\text{Range} = x_{\max} - x_{\min}$$
+
+### Interquartile Range (IQR)
+
+$$\text{IQR} = Q_3 - Q_1$$
+
+where $Q_1$ = 25th percentile and $Q_3$ = 75th percentile.
+
+---
+
+## 4. Measures of Shape
+
+### Skewness
+
+Measures **asymmetry** of the distribution.
+
+$$\text{Skewness} = \frac{1}{n} \sum_{i=1}^{n} \left(\frac{x_i - \bar{x}}{s}\right)^3$$
+
+- Skewness = 0 → Symmetric
+- Skewness > 0 → Right-skewed (tail on the right)
+- Skewness < 0 → Left-skewed (tail on the left)
+
+### Kurtosis
+
+Measures **peakedness** of the distribution.
+
+$$\text{Kurtosis} = \frac{1}{n} \sum_{i=1}^{n} \left(\frac{x_i - \bar{x}}{s}\right)^4$$
+
+---
+
+# When and Where to Use Basic Statistics
+
+| Situation | Tool |
+|-----------|------|
+| Summarising exam scores | Mean, Median, SD |
+| Comparing income distributions | Median, IQR (robust to outliers) |
+| Understanding data shape | Skewness, Kurtosis |
+| Checking data spread | Variance, Range |
+| Exploratory Data Analysis (EDA) | All of the above |
+
+**Real-world examples:**
+- A hospital computes the **mean** age of patients to plan resources.
+- An economist uses the **median** income (not mean) because income data is right-skewed.
+- A teacher computes **standard deviation** of marks to judge class variability.
+
+---
+
+# Implementation in R
+
+## Loading and Exploring Data
+
+```{r}
+# Use the built-in 'mtcars' dataset
+data(mtcars)
+
+# First look at the data
+head(mtcars)
+str(mtcars)
+```
+
+## Measures of Central Tendency
+
+```{r}
+# Focus on miles per gallon (mpg)
+x <- mtcars$mpg
+
+cat("Mean    :", mean(x), "\n")
+cat("Median  :", median(x), "\n")
+cat("Mode    :", as.numeric(names(sort(table(x), decreasing = TRUE)[1])), "\n")
+```
+
+## Measures of Dispersion
+
+```{r}
+cat("Variance:", var(x), "\n")
+cat("Std Dev :", sd(x), "\n")
+cat("Range   :", range(x), "\n")
+cat("IQR     :", IQR(x), "\n")
+```
+
+## Quantiles and Summary
+
+```{r}
+# Five-number summary + mean
+summary(x)
+
+# Custom quantiles
+quantile(x, probs = c(0.25, 0.50, 0.75, 0.90))
+```
+
+## Skewness and Kurtosis
+
+```{r}
+# Install e1071 if not available: install.packages("e1071")
+library(e1071)
+
+cat("Skewness:", skewness(x), "\n")
+cat("Kurtosis:", kurtosis(x), "\n")
+```
+
+## Full Descriptive Statistics Table
+
+```{r}
+# A clean descriptive statistics summary
+desc_stats <- data.frame(
+  Statistic = c("N", "Mean", "Median", "SD", "Variance",
+                "Min", "Max", "Range", "IQR", "Skewness", "Kurtosis"),
+  Value = round(c(
+    length(x), mean(x), median(x), sd(x), var(x),
+    min(x), max(x), diff(range(x)), IQR(x),
+    skewness(x), kurtosis(x)
+  ), 3)
+)
+
+print(desc_stats)
+```
+
+## Visualisation
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+
+par(mfrow = c(1, 3))
+
+# Histogram
+hist(x,
+     main = "Distribution of MPG",
+     xlab = "Miles Per Gallon",
+     col = "steelblue", border = "white",
+     breaks = 10)
+abline(v = mean(x), col = "red", lwd = 2, lty = 2)
+abline(v = median(x), col = "darkgreen", lwd = 2, lty = 2)
+legend("topright", legend = c("Mean", "Median"),
+       col = c("red", "darkgreen"), lty = 2, lwd = 2)
+
+# Boxplot
+boxplot(x,
+        main = "Boxplot of MPG",
+        ylab = "Miles Per Gallon",
+        col = "lightblue", border = "navy")
+
+# QQ Plot (normality check)
+qqnorm(x, main = "Normal Q-Q Plot")
+qqline(x, col = "red", lwd = 2)
+```
+
+---
+
+# Interpretation
+
+Looking at the MPG data from `mtcars`:
+
+- The **mean MPG** (~20.09) is slightly higher than the **median** (~19.2), suggesting a mild right skew.
+- The **standard deviation** (~6.03) tells us most cars fall within ±6 MPG of the mean.
+- The **IQR** spans from ~15.4 to ~22.8 MPG, covering the middle 50% of cars.
+- The **Q-Q plot** helps assess if the data follows a normal distribution.
+
+---
+
+# Summary
+
+> Basic statistics transforms raw numbers into meaningful insights. Always start any data analysis by computing and visualising these descriptive measures — they guide every decision that follows.
+
+| What | Formula | R Function |
+|------|---------|-----------|
+| Mean | $\bar{x} = \frac{\sum x_i}{n}$ | `mean()` |
+| Median | Middle value | `median()` |
+| Variance | $s^2 = \frac{\sum(x_i - \bar{x})^2}{n-1}$ | `var()` |
+| Std Dev | $s = \sqrt{s^2}$ | `sd()` |
+| IQR | $Q_3 - Q_1$ | `IQR()` |
+| Summary | All at once | `summary()` |

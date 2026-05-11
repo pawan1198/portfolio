@@ -1,0 +1,290 @@
+---
+title: "Regression Analysis"
+subtitle: "Simple and Multiple Linear Regression in R"
+author: "Pawan"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+    code-fold: false
+    highlight-style: github
+  pdf:
+    toc: true
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+**Regression analysis** is a statistical method used to understand and quantify the **relationship between variables**. It helps us:
+
+- Explain how a dependent variable changes with one or more independent variables.
+- **Predict** future values of the dependent variable.
+
+> Example: How does a car's fuel efficiency (MPG) change with its weight and horsepower?
+
+---
+
+# Types of Regression
+
+| Type | Response Variable | Predictors |
+|------|-----------------|------------|
+| Simple Linear | Continuous | 1 continuous |
+| Multiple Linear | Continuous | 2+ continuous/categorical |
+| Logistic | Binary (0/1) | Any |
+| Polynomial | Continuous | Powered terms |
+
+This paper focuses on **Simple and Multiple Linear Regression**.
+
+---
+
+# Simple Linear Regression
+
+## Definition
+
+Models the linear relationship between one predictor $X$ and a response $Y$:
+
+$$Y = \beta_0 + \beta_1 X + \varepsilon$$
+
+where:
+
+- $Y$ = dependent variable (response)
+- $X$ = independent variable (predictor)
+- $\beta_0$ = intercept (value of $Y$ when $X = 0$)
+- $\beta_1$ = slope (change in $Y$ per unit change in $X$)
+- $\varepsilon \sim N(0, \sigma^2)$ = random error term
+
+## Ordinary Least Squares (OLS) Estimation
+
+OLS minimises the **sum of squared residuals**:
+
+$$\text{SSR} = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2 = \sum_{i=1}^{n}(y_i - \hat{\beta}_0 - \hat{\beta}_1 x_i)^2$$
+
+The closed-form solutions are:
+
+$$\hat{\beta}_1 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i - \bar{x})^2} = \frac{S_{xy}}{S_{xx}}$$
+
+$$\hat{\beta}_0 = \bar{y} - \hat{\beta}_1 \bar{x}$$
+
+## Goodness of Fit — R-squared
+
+$$R^2 = 1 - \frac{\text{SSRes}}{\text{SST}} = 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2}$$
+
+- $R^2 = 1$: Perfect fit
+- $R^2 = 0$: Model explains nothing
+- $0 < R^2 < 1$: Proportion of variance explained
+
+---
+
+# Multiple Linear Regression
+
+## Definition
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k + \varepsilon$$
+
+In matrix notation:
+
+$$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$$
+
+OLS solution:
+
+$$\hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y}$$
+
+## Adjusted R-squared
+
+For multiple regression, use **Adjusted $R^2$** to penalise for extra predictors:
+
+$$\bar{R}^2 = 1 - \frac{(1-R^2)(n-1)}{n-k-1}$$
+
+where $k$ = number of predictors and $n$ = sample size.
+
+---
+
+# Assumptions of Linear Regression (LINE)
+
+| Letter | Assumption |
+|--------|-----------|
+| **L** | **L**inearity: relationship between $X$ and $Y$ is linear |
+| **I** | **I**ndependence: observations are independent |
+| **N** | **N**ormality: residuals are normally distributed |
+| **E** | **E**qual variance: residuals have constant variance (homoscedasticity) |
+
+---
+
+# When and Where to Use
+
+| Scenario | Use Case |
+|----------|----------|
+| Economics | Predicting GDP from investment and consumption |
+| Medicine | Predicting blood pressure from age and BMI |
+| Real estate | Predicting house price from area and location |
+| Agriculture | Predicting crop yield from rainfall and temperature |
+| HR analytics | Predicting salary from experience and education |
+
+---
+
+# Implementation in R
+
+## Simple Linear Regression
+
+```{r}
+# Use mtcars: predict mpg from weight (wt)
+data(mtcars)
+
+# Fit the model
+model_simple <- lm(mpg ~ wt, data = mtcars)
+summary(model_simple)
+```
+
+### Interpretation of Output
+
+```{r}
+cat("Intercept (β₀)  :", coef(model_simple)[1], "\n")
+cat("Slope (β₁)      :", coef(model_simple)[2], "\n")
+cat("R-squared       :", summary(model_simple)$r.squared, "\n")
+cat("Adj R-squared   :", summary(model_simple)$adj.r.squared, "\n")
+```
+
+The slope of ~−5.34 means: for every 1000 lb increase in weight, MPG decreases by ~5.34.
+
+### Scatter Plot with Regression Line
+
+```{r}
+#| fig-width: 7
+#| fig-height: 5
+
+plot(mtcars$wt, mtcars$mpg,
+     pch = 16, col = "steelblue",
+     xlab = "Weight (1000 lbs)",
+     ylab = "Miles Per Gallon",
+     main = "Simple Linear Regression: MPG ~ Weight")
+
+abline(model_simple, col = "red", lwd = 2)
+
+# Add R² label
+r2 <- round(summary(model_simple)$r.squared, 3)
+legend("topright", legend = paste("R² =", r2), bty = "n")
+```
+
+### Residual Diagnostics
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+
+par(mfrow = c(2, 2))
+plot(model_simple, col = "steelblue", pch = 16)
+```
+
+The four diagnostic plots check:
+
+1. **Residuals vs Fitted**: Should show no pattern (linearity, homoscedasticity)
+2. **Normal Q-Q**: Points should follow the diagonal line (normality)
+3. **Scale-Location**: Should be horizontal (equal variance)
+4. **Residuals vs Leverage**: Identifies influential points
+
+## Multiple Linear Regression
+
+```{r}
+# Predict mpg from weight AND horsepower
+model_multi <- lm(mpg ~ wt + hp, data = mtcars)
+summary(model_multi)
+```
+
+```{r}
+cat("Intercept        :", round(coef(model_multi)[1], 3), "\n")
+cat("β₁ (wt)          :", round(coef(model_multi)[2], 3), "\n")
+cat("β₂ (hp)          :", round(coef(model_multi)[3], 3), "\n")
+cat("Adjusted R²      :", round(summary(model_multi)$adj.r.squared, 3), "\n")
+```
+
+Compared to the simple model, adding horsepower increases Adjusted R² — meaning it adds explanatory power.
+
+## Comparing Models
+
+```{r}
+# ANOVA test to compare models
+anova(model_simple, model_multi)
+```
+
+A significant p-value means the more complex model fits significantly better.
+
+## Prediction
+
+```{r}
+# Predict MPG for a new car: wt = 3.0, hp = 110
+new_car <- data.frame(wt = 3.0, hp = 110)
+
+# Point prediction
+pred <- predict(model_multi, newdata = new_car)
+cat("Predicted MPG:", round(pred, 2), "\n")
+
+# With 95% prediction interval
+pred_interval <- predict(model_multi, newdata = new_car, interval = "prediction")
+print(pred_interval)
+```
+
+## Checking Multicollinearity (VIF)
+
+```{r}
+# install.packages("car")
+library(car)
+vif(model_multi)
+```
+
+- VIF < 5: No serious multicollinearity
+- VIF > 10: High multicollinearity — consider removing or combining predictors
+
+## Full Model with All Predictors
+
+```{r}
+model_full <- lm(mpg ~ ., data = mtcars)
+summary(model_full)$adj.r.squared
+```
+
+```{r}
+# Stepwise selection to find the best model
+model_step <- step(model_full, direction = "backward", trace = 0)
+summary(model_step)
+```
+
+---
+
+# Coefficient of Determination Summary
+
+```{r}
+models <- list(
+  "Simple (wt only)"    = model_simple,
+  "Multiple (wt + hp)"  = model_multi,
+  "Stepwise selected"   = model_step
+)
+
+results <- sapply(models, function(m) {
+  c(R2     = round(summary(m)$r.squared, 4),
+    AdjR2  = round(summary(m)$adj.r.squared, 4),
+    AIC    = round(AIC(m), 2))
+})
+
+as.data.frame(t(results))
+```
+
+---
+
+# Summary
+
+| Concept | Formula | R Function |
+|---------|---------|-----------|
+| Fit model | $Y = \beta_0 + \beta_1 X$ | `lm(Y ~ X)` |
+| View results | — | `summary(model)` |
+| Coefficients | $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y}$ | `coef(model)` |
+| Predict | $\hat{y} = \hat{\beta}_0 + \hat{\beta}_1 x$ | `predict(model, newdata)` |
+| Diagnostics | — | `plot(model)` |
+| VIF | — | `car::vif(model)` |
+| Model comparison | — | `anova(m1, m2)`, `AIC()` |
+
+> Regression is the workhorse of statistical modelling. Always check assumptions via diagnostic plots before interpreting coefficients.

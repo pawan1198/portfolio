@@ -1,0 +1,308 @@
+---
+title: "Time Series Models"
+subtitle: "Analysis, Decomposition, and Forecasting in R"
+author: "Pawan"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+    code-fold: false
+    highlight-style: github
+  pdf:
+    toc: true
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+A **time series** is a sequence of data points collected at successive points in time, typically at equally spaced intervals. Time series analysis is used to understand past behaviour and **forecast future values**.
+
+> Examples: monthly rainfall, daily stock prices, quarterly GDP, weekly sales figures, annual temperature records.
+
+---
+
+# Components of a Time Series
+
+Every time series can be decomposed into four components:
+
+| Component | Symbol | Description |
+|-----------|--------|-------------|
+| **Trend** ($T_t$) | Long-run direction | Rising, falling, or flat over time |
+| **Seasonality** ($S_t$) | Regular periodic pattern | Repeats within a known period (month, quarter, year) |
+| **Cyclical** ($C_t$) | Long-term wave | Multi-year business/economic cycles |
+| **Irregular/Noise** ($I_t$) | Random fluctuation | Unexplained random variation |
+
+## Decomposition Models
+
+**Additive model** (when seasonal variation is constant):
+
+$$Y_t = T_t + S_t + C_t + I_t$$
+
+**Multiplicative model** (when seasonal variation grows with trend):
+
+$$Y_t = T_t \times S_t \times C_t \times I_t$$
+
+---
+
+# Key Concepts and Definitions
+
+## Stationarity
+
+A time series is **stationary** if its statistical properties (mean, variance, autocovariance) do not change over time.
+
+- **Mean stationarity**: $E[Y_t] = \mu$ (constant)
+- **Variance stationarity**: $\text{Var}(Y_t) = \sigma^2$ (constant)
+- **Covariance stationarity**: $\text{Cov}(Y_t, Y_{t+k})$ depends only on lag $k$, not time $t$
+
+Most real-world series are **non-stationary** and must be transformed.
+
+## Autocorrelation Function (ACF)
+
+Measures the correlation of a series with its own past values:
+
+$$\rho_k = \frac{\text{Cov}(Y_t, Y_{t-k})}{\text{Var}(Y_t)} = \frac{\gamma_k}{\gamma_0}$$
+
+## Partial Autocorrelation Function (PACF)
+
+Measures the correlation between $Y_t$ and $Y_{t-k}$ **after removing** the effects of lags $1, 2, \ldots, k-1$.
+
+---
+
+# The ARIMA Family of Models
+
+## AR(p) — Autoregressive Model
+
+Current value depends on its own past $p$ values:
+
+$$Y_t = \phi_1 Y_{t-1} + \phi_2 Y_{t-2} + \cdots + \phi_p Y_{t-p} + \varepsilon_t$$
+
+## MA(q) — Moving Average Model
+
+Current value depends on past $q$ error terms:
+
+$$Y_t = \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \cdots + \theta_q \varepsilon_{t-q}$$
+
+## ARMA(p, q)
+
+Combination of AR and MA:
+
+$$Y_t = \phi_1 Y_{t-1} + \cdots + \phi_p Y_{t-p} + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \cdots + \theta_q \varepsilon_{t-q}$$
+
+## ARIMA(p, d, q)
+
+When the series is non-stationary, we apply **differencing** $d$ times:
+
+$$\Delta^d Y_t = \text{ARMA}(p, q)$$
+
+where $\Delta Y_t = Y_t - Y_{t-1}$ (first difference).
+
+### Model Selection Guide
+
+| ACF Pattern | PACF Pattern | Suggested Model |
+|-------------|--------------|----------------|
+| Cuts off after lag $q$ | Tails off | MA($q$) |
+| Tails off | Cuts off after lag $p$ | AR($p$) |
+| Both tail off | Both tail off | ARMA($p$, $q$) |
+| Both non-stationary | — | Difference first, then check |
+
+---
+
+# When and Where to Use Time Series Models
+
+| Domain | Application |
+|--------|-------------|
+| Economics | GDP forecasting, inflation modelling |
+| Finance | Stock price prediction, volatility modelling |
+| Meteorology | Rainfall, temperature prediction |
+| Retail | Sales forecasting, inventory planning |
+| Healthcare | Disease incidence forecasting |
+| Energy | Electricity demand forecasting |
+
+---
+
+# Implementation in R
+
+## Loading a Time Series
+
+```{r}
+# Built-in dataset: monthly airline passengers (1949-1960)
+data("AirPassengers")
+
+# Inspect structure
+print(AirPassengers)
+class(AirPassengers)
+frequency(AirPassengers)  # 12 = monthly
+start(AirPassengers)
+end(AirPassengers)
+```
+
+## Plotting the Series
+
+```{r}
+#| fig-width: 9
+#| fig-height: 4
+
+plot(AirPassengers,
+     main = "Monthly International Airline Passengers (1949–1960)",
+     ylab = "Number of Passengers (thousands)",
+     xlab = "Year",
+     col = "steelblue", lwd = 1.5)
+```
+
+Clearly shows an **upward trend** and **growing seasonal pattern** → multiplicative decomposition is appropriate.
+
+## Decomposition
+
+```{r}
+#| fig-width: 9
+#| fig-height: 7
+
+# Multiplicative decomposition (seasonal variation grows with level)
+decomp <- decompose(AirPassengers, type = "multiplicative")
+plot(decomp)
+```
+
+```{r}
+# View seasonal indices
+round(decomp$seasonal[1:12], 4)
+```
+
+## Stationarity Testing — Augmented Dickey-Fuller Test
+
+$$H_0: \text{Series has a unit root (non-stationary)}$$
+$$H_1: \text{Series is stationary}$$
+
+```{r}
+# install.packages("tseries")
+library(tseries)
+
+adf.test(AirPassengers)
+```
+
+If p-value > 0.05 → fail to reject $H_0$ → series is non-stationary → need differencing.
+
+## ACF and PACF Plots
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+
+# Log-transform to stabilise variance, then first-difference
+log_ap <- log(AirPassengers)
+diff_log_ap <- diff(log_ap, differences = 1)
+
+par(mfrow = c(1, 2))
+acf(diff_log_ap,  main = "ACF of Differenced Log Passengers",  lag.max = 36)
+pacf(diff_log_ap, main = "PACF of Differenced Log Passengers", lag.max = 36)
+```
+
+Spikes at seasonal lags (12, 24) indicate seasonal ARIMA is needed.
+
+## Fitting ARIMA Model
+
+```{r}
+# Manual ARIMA fit
+model_arima <- arima(log_ap,
+                     order = c(0, 1, 1),          # non-seasonal: d=1, MA(1)
+                     seasonal = list(order = c(0, 1, 1), period = 12))
+
+summary(model_arima)
+```
+
+## Auto-ARIMA (automatic order selection)
+
+```{r}
+# install.packages("forecast")
+library(forecast)
+
+model_auto <- auto.arima(AirPassengers, lambda = 0)  # lambda=0 for log transform
+print(model_auto)
+```
+
+## Forecasting
+
+```{r}
+#| fig-width: 9
+#| fig-height: 5
+
+# Forecast 24 months ahead
+fc <- forecast(model_auto, h = 24)
+
+plot(fc,
+     main = "24-Month Forecast: Airline Passengers",
+     ylab = "Passengers (thousands)",
+     xlab = "Year",
+     col = "steelblue")
+```
+
+```{r}
+# View forecast values with confidence intervals
+print(fc)
+```
+
+## Checking Residuals
+
+```{r}
+#| fig-width: 9
+#| fig-height: 5
+
+# Residuals should look like white noise
+checkresiduals(model_auto)
+```
+
+A good model leaves **white noise residuals**:
+- No autocorrelation in residuals
+- Residuals approximately normally distributed
+- Ljung-Box test p-value > 0.05
+
+## Accuracy Metrics
+
+```{r}
+accuracy(model_auto)
+```
+
+| Metric | Description |
+|--------|-------------|
+| **ME** | Mean Error |
+| **RMSE** | Root Mean Squared Error |
+| **MAE** | Mean Absolute Error |
+| **MAPE** | Mean Absolute Percentage Error |
+| **MASE** | Mean Absolute Scaled Error |
+
+Lower values = better model fit.
+
+## Exponential Smoothing (ETS) — Alternative Approach
+
+```{r}
+model_ets <- ets(AirPassengers)
+summary(model_ets)
+
+fc_ets <- forecast(model_ets, h = 24)
+accuracy(fc_ets)
+```
+
+ETS models are often competitive with ARIMA and are simpler to interpret.
+
+---
+
+# Summary
+
+| Concept | Formula / Description | R Function |
+|---------|----------------------|-----------|
+| Create ts object | `ts(data, start, frequency)` | `ts()` |
+| Plot | — | `plot()` |
+| Decompose | $Y_t = T_t + S_t + I_t$ | `decompose()` |
+| Stationarity test | ADF test | `tseries::adf.test()` |
+| ACF / PACF | $\rho_k = \gamma_k / \gamma_0$ | `acf()`, `pacf()` |
+| Fit ARIMA | $\text{ARIMA}(p,d,q)$ | `arima()` |
+| Auto-fit | — | `forecast::auto.arima()` |
+| Forecast | — | `forecast()` |
+| Check residuals | Ljung-Box test | `checkresiduals()` |
+
+> Time series analysis requires understanding the data's structure — always plot first, decompose, check stationarity, then model.

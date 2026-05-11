@@ -31,6 +31,11 @@
   {
     "listing": "/statistics-with-r.html",
     "items": [
+      "/statistics-with-r/04_time_series.html",
+      "/statistics-with-r/01_basic_statistics.html",
+      "/statistics-with-r/02_central_limit_theorem.html",
+      "/statistics-with-r/03_regression.html",
+      "/statistics-with-r/05_statistical_graphics.html",
       "/statistics-with-r/survival_analysis_blog.html",
       "/statistics-with-r/chapter4.html",
       "/statistics-with-r/chapter3.html",

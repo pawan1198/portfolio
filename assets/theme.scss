@@ -1,0 +1,207 @@
+/*-- scss:defaults --*/
+
+// Typography
+$font-family-sans-serif: 'DM Sans', system-ui, -apple-system, sans-serif;
+$font-family-monospace:  'DM Mono', 'Fira Code', monospace;
+$font-size-root: 16px;
+$line-height-base: 1.75;
+$headings-font-family: 'Fraunces', Georgia, serif;
+$headings-font-weight: 600;
+$headings-line-height: 1.2;
+
+// Colours
+$primary:   #2563eb;
+$body-color: #1e293b;
+$body-bg:   #f8fafc;
+$link-color: #2563eb;
+$link-hover-color: #1d4ed8;
+
+// Code
+$code-bg: #f1f5f9;
+$code-color: #dc2626;
+
+/*-- scss:rules --*/
+
+// ── Design tokens ──────────────────────────────────────────────
+:root {
+  --navy:    #0f172a;
+  --navy2:   #1e293b;
+  --blue:    #2563eb;
+  --blue2:   #3b82f6;
+  --teal:    #0d9488;
+  --amber:   #d97706;
+  --rose:    #e11d48;
+  --slate:   #64748b;
+  --border:  #e2e8f0;
+  --surface: #ffffff;
+  --bg:      #f8fafc;
+  --radius:  0.75rem;
+  --radius-sm: 0.375rem;
+  --shadow:  0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,.07), 0 10px 40px -4px rgba(0,0,0,.10);
+  --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+// ── Global ─────────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; }
+body { -webkit-font-smoothing: antialiased; }
+
+// ── Navbar ─────────────────────────────────────────────────────
+.navbar {
+  background: var(--navy) !important;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 1px 12px rgba(0,0,0,.25);
+  padding: .55rem 1.5rem;
+}
+.navbar .navbar-brand,
+.navbar-brand-logo { display: flex; align-items: center; gap: .65rem; }
+.navbar-brand-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #fff !important;
+  letter-spacing: -.01em;
+}
+.navbar .nav-link {
+  color: rgba(255,255,255,.78) !important;
+  font-size: .875rem;
+  font-weight: 500;
+  padding: .35rem .7rem !important;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #fff !important;
+  background: rgba(255,255,255,.1);
+}
+.navbar .dropdown-menu {
+  background: var(--navy2);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: .4rem;
+  min-width: 210px;
+}
+.navbar .dropdown-item {
+  color: rgba(255,255,255,.75) !important;
+  font-size: .875rem;
+  padding: .5rem .85rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+.navbar .dropdown-item:hover {
+  background: rgba(255,255,255,.1);
+  color: #fff !important;
+}
+
+// ── Footer ─────────────────────────────────────────────────────
+.nav-footer {
+  background: var(--navy) !important;
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 1.5rem 2rem;
+}
+.nav-footer a { color: rgba(255,255,255,.5) !important; }
+.nav-footer a:hover { color: rgba(255,255,255,.85) !important; }
+
+// ── Page layout ─────────────────────────────────────────────────
+#quarto-content { padding: 0 !important; }
+main.content { padding: 0 !important; max-width: 100% !important; }
+.page-layout-full > .column-page { padding: 0 !important; }
+#quarto-margin-sidebar { display: none !important; }
+
+// ── Listing cards (for blog/article/dataviz pages) ─────────────
+.quarto-listing {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.quarto-listing .list-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.quarto-listing .list-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.quarto-post .thumbnail { border-radius: 0; }
+.listing-description { color: var(--slate); font-size: .9rem; }
+.listing-title { font-family: 'Fraunces', serif; }
+.listing-category {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  border-radius: 20px;
+  padding: .18rem .6rem;
+}
+
+// ── Article/post body ────────────────────────────────────────────
+.page-full-width,
+#quarto-document-content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+h1,h2,h3,h4 { font-family: 'Fraunces', serif; }
+h1 { font-size: clamp(1.75rem, 3vw, 2.5rem); }
+h2 { font-size: clamp(1.3rem, 2.5vw, 1.85rem); border-bottom: 1px solid var(--border); padding-bottom: .4rem; margin-top: 2.5rem; }
+h3 { font-size: 1.2rem; margin-top: 2rem; }
+p  { color: #334155; }
+code { font-size: .88em; }
+pre { border-radius: var(--radius-sm); font-size: .85rem; }
+
+// ── Callouts ────────────────────────────────────────────────────
+.callout { border-radius: var(--radius); }
+
+// ── Page header band (used in listing pages via include) ─────────
+.page-band {
+  background: var(--navy);
+  padding: 4rem 2rem 3.5rem;
+  text-align: center;
+}
+.page-band h1 {
+  color: #fff;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  margin-bottom: .5rem;
+}
+.page-band p {
+  color: rgba(255,255,255,.6);
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.page-band .badge-row {
+  display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-top: 1.2rem;
+}
+.page-band .badge {
+  font-size: .72rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  padding: .28rem .8rem; border-radius: 20px;
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+// ── Back to top ──────────────────────────────────────────────────
+#back-to-top {
+  position: fixed; bottom: 1.75rem; right: 1.75rem;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--blue); color: #fff; border: none;
+  font-size: 1.1rem; cursor: pointer;
+  display: none; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(37,99,235,.4);
+  transition: transform var(--transition), opacity var(--transition);
+  z-index: 999;
+}
+#back-to-top.show { display: flex; }
+#back-to-top:hover { transform: translateY(-3px); }
+
+// ── Scroll progress bar ──────────────────────────────────────────
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--teal));
+  z-index: 1100; width: 0; transition: width .1s linear;
+}

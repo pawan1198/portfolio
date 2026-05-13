@@ -1,0 +1,159 @@
+---
+title: "Skills & Projects"
+description: "7+ years of research and analytical experience spanning survey methodology, statistical programming, and Indian economic policy."
+page-label: "Professional"
+page-band: true
+
+page-layout: full
+toc: false
+
+listing:
+  id: project-listing
+  contents: projects
+  sort: "date desc"
+  type: grid
+  grid-columns: 3
+  fields: [image, date, title, description, categories]
+  categories: true
+  sort-ui: false
+  filter-ui: true
+  date-format: "D MMM YYYY"
+---
+
+```{=html}
+<section class="section section-alt">
+  <div class="container-md">
+    <span class="section-label">Work History</span>
+    <h2 class="section-title">Professional Experience</h2>
+    <p class="section-desc">Research positions across academia, policy institutes, and independent consulting.</p>
+    <div class="timeline fade-up">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Research Associate — Health Financing Survey</div>
+              <div class="tl-org">OP Jindal Global University</div>
+            </div>
+            <div class="tl-date">2025</div>
+          </div>
+          <ul class="tl-points">
+            <li>Designed ODK/SurveyCTO digital data collection instruments for household health expenditure survey</li>
+            <li>Trained and supervised field enumerators; implemented CAPI quality assurance protocols</li>
+            <li>Cleaned, validated, and analysed multi-wave survey data using R (data.table, tidyverse)</li>
+            <li>Produced statistical reports and visualisations for research team and funding stakeholders</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-blue">ODK</span><span class="tag tag-teal">R</span><span class="tag tag-amber">Survey</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Research Fellow</div>
+              <div class="tl-org">IDEAs Advanced Certificate Programme on Research in Political Economy</div>
+            </div>
+            <div class="tl-date">2022 – 2024</div>
+          </div>
+          <ul class="tl-points">
+            <li>Advanced coursework in political economy, development economics, and quantitative methods</li>
+            <li>Original research papers on Indian labour markets and fiscal policy</li>
+            <li>Applied regression discontinuity and difference-in-differences to policy evaluation</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-blue">Econometrics</span><span class="tag tag-slate">Policy Analysis</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Survey Research Coordinator</div>
+              <div class="tl-org">Society for Social and Economic Research (SSER)</div>
+            </div>
+            <div class="tl-date">2020 – 2022</div>
+          </div>
+          <ul class="tl-points">
+            <li>Coordinated large-scale household surveys across multiple Indian states</li>
+            <li>Managed field operations, enumerator networks, and real-time data quality monitoring</li>
+            <li>Developed sampling frameworks using stratified random and PPS methods</li>
+            <li>Processed and analysed NSS/PLFS microdata for published research outputs</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-teal">Survey</span><span class="tag tag-blue">Sampling</span><span class="tag tag-amber">PLFS / NSS</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Independent Economic Researcher & Data Analyst</div>
+              <div class="tl-org">Freelance / Self-employed</div>
+            </div>
+            <div class="tl-date">2018 – Present</div>
+          </div>
+          <ul class="tl-points">
+            <li>Data analysis, statistical programming, and survey research for academic and policy clients</li>
+            <li>Reproducible R and Quarto pipelines delivered across diverse research contexts</li>
+            <li>Data journalism articles and interactive dashboards on Indian economic topics</li>
+            <li>Open-source R tools on GitHub: TidyTuesday visualisations, Shiny apps, and Quarto books</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-blue">R</span><span class="tag tag-teal">Quarto</span><span class="tag tag-amber">Freelance</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
+
+## Projects
+
+Drop a `.qmd` file into the `projects/` folder — it appears here automatically.
+
+::: {#project-listing}
+:::
+
+```{=html}
+<section class="section section-alt">
+  <div class="container-md">
+    <span class="section-label">Freelance</span>
+    <h2 class="section-title">Research Services</h2>
+    <p class="section-desc">Available for consulting across survey research, data analysis, and reproducible reporting.</p>
+    <div class="card-grid fade-up">
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Field Survey Management</div>
+        <p class="card-desc">End-to-end survey design, enumerator training, ODK/SurveyCTO form development, field monitoring, and quality assurance for primary data collection.</p>
+        <div class="tag-list"><span class="tag tag-blue">ODK</span><span class="tag tag-teal">SurveyCTO</span><span class="tag tag-amber">CAPI</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Statistical Analysis</div>
+        <p class="card-desc">Descriptive and inferential statistics, econometric modelling, regression analysis, hypothesis testing, and causal inference using R or Python.</p>
+        <div class="tag-list"><span class="tag tag-blue">R</span><span class="tag tag-slate">Python</span><span class="tag tag-amber">Econometrics</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <div class="card-title">Data Visualization & Reporting</div>
+        <p class="card-desc">Publication-quality static charts, interactive ggiraph dashboards, and Quarto multi-format reports for academic and policy audiences.</p>
+        <div class="tag-list"><span class="tag tag-teal">ggplot2</span><span class="tag tag-blue">Shiny</span><span class="tag tag-amber">Quarto</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Web Scraping & Data Pipelines</div>
+        <p class="card-desc">Automated data collection from government portals and public databases using Python Selenium, rvest, and Linux/Bash automation scripts.</p>
+        <div class="tag-list"><span class="tag tag-slate">Selenium</span><span class="tag tag-teal">rvest</span><span class="tag tag-blue">Bash</span></div>
+      </div>
+    </div>
+    <div style="margin-top:2.5rem;text-align:center;">
+      <a href="mailto:pawanjangra1198@gmail.com" class="btn-hero-primary">✉️ Get in Touch</a>
+    </div>
+  </div>
+</section>
+```

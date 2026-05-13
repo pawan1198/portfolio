@@ -1,0 +1,14 @@
+---
+title: "India's Trade Story — ggiraph + gt Analysis"
+description: "Interactive ggiraph charts and gt tables covering India's merchandise trade 1997–2025 from HS-code classified DGCI&S data. Exports, imports, trade deficit, and sectoral composition."
+author: "Pawan Jangra"
+date: "2025-10-29"
+categories: [Trade, ggiraph, gt, data.table]
+image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&q=80"
+---
+
+Full analysis available in the [Articles](../article.html) section.
+
+**Tools used:** R, data.table, ggiraph, gt, ggplot2, Quarto
+
+**Data source:** DGCI&S (Ministry of Commerce, India)

@@ -1,16 +1,16 @@
 ---
-title: "Data Visualizations"
-description: "Interactive charts, dashboards, and data stories built with ggplot2, ggiraph, and Shiny."
+title: "Projects"
+description: "A comprehensive portfolio of data analysis, research, and software development projects."
 page-label: "Visual"
 page-band: true
-categories: [ggplot2, ggiraph, Shiny, Plotly, gt]
+categories: [R-cheatsheets]
 
 page-layout: full
 toc: false
 
 listing:
-  id: dataviz-listing
-  contents: data_vizs
+  id: projetcs
+  contents: projects
   sort: "date desc"
   type: grid
   grid-columns: 3
@@ -20,6 +20,5 @@ listing:
   filter-ui: true
   date-format: "D MMM YYYY"
 ---
-
-::: {#dataviz-listing}
+::: {#project-listing}
 :::

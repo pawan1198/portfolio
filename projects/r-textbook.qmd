@@ -1,0 +1,14 @@
+---
+title: "R for Statistical Analysis — 18-Chapter Quarto Textbook"
+description: "Comprehensive Quarto book covering descriptive statistics through advanced modelling, with Indian agricultural and economic data contexts, custom SCSS themes, and APA 7th edition citations."
+author: "Pawan Jangra"
+date: "2025-06-01"
+categories: [Quarto Book, Statistics, R, Education]
+image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&q=80"
+---
+
+Explore the chapters in [Statistics with R](../statistics-with-r.html).
+
+**Tools used:** Quarto, R, knitr, gt, ggplot2, SCSS
+
+**GitHub:** [github.com/pawan1198](https://github.com/pawan1198)

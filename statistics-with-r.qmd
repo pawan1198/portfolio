@@ -1,21 +1,24 @@
 ---
-title: "Statistics With R"
-author: "Pawan"
+title: "Statistics with R"
+description: "A series of tutorials and worked examples covering statistical concepts with R and Indian economic data."
+page-label: "Learning"
+page-band: true
+categories: [Descriptive Stats, Distributions, Regression, Time Series, Hypothesis Testing]
+
+page-layout: full
+toc: false
+
 listing:
-  id: "statistics-with-r"
+  id: stats-listing
   contents: statistics-with-r
-  exclude: 
-    title: "Template"
-  sort: "date desc"
-  type: grid
-  image-align: left
-  categories: numbered
-  grid-item-border: false
-  grid-columns: 4
-  table-hover: true
-  date-format: "long"
-  feed: true
-  fields: [image,title, date]
-  sort-ui: [date, title]
-  page-size: 20
+  sort: "order asc"
+  type: table
+  fields: [title, description, date, categories]
+  categories: true
+  sort-ui: false
+  filter-ui: true
+  date-format: "D MMM YYYY"
 ---
+
+::: {#stats-listing}
+:::

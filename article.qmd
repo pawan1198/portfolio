@@ -1,14 +1,26 @@
 ---
-title: "Article"
-description: "Articles on , statistical analysis, and data storytelling."
+title: "Articles"
+description: "In-depth data-driven analyses on Indian trade, agriculture, labour markets, and fiscal policy."
+page-label: "Research"
+page-band: true
+categories: [Trade, Economy, Labour, Agriculture, Fiscal]
+
+page-layout: full
+toc: false
+
 listing:
-  id: "article"
+  id: article-listing
   contents: article
   sort: "date desc"
   type: grid
-  grid-columns: 3
+  grid-columns: 2
   fields: [image, date, title, description, categories, reading-time]
   categories: true
+  sort-ui: true
+  filter-ui: true
   feed: true
-page-layout: full
+  date-format: "D MMM YYYY"
 ---
+
+::: {#article-listing}
+:::

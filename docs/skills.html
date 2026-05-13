@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="7+ years of research and analytical experience spanning survey methodology, statistical programming, and Indian economic policy.">
 
-<title>About – Pawan</title>
+<title>Skills &amp; Projects – Pawan</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -33,6 +34,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./assets/favicon.ico" rel="icon">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -70,11 +73,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-project-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-project-listing'] = new List('listing-project-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <style>html{ scroll-behavior: smooth; }</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;display=swap" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="assets/styles.css">
 <meta property="og:title" content="Pawan — Data Analyst &amp; Economic Researcher">
@@ -104,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -131,7 +192,7 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./skills.html"> 
+    <a class="nav-link active" href="./skills.html" aria-current="page"> 
 <span class="menu-text">Skills &amp; Projects</span></a>
   </li>  
 </ul>
@@ -162,18 +223,24 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div><div class="category" data-category="QVJJTUE=">ARIMA <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGF0YSUyMFZpeg==">Data Viz <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ZGF0YS50YWJsZQ==">data.table <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RWR1Y2F0aW9u">Education <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RmlzY2Fs">Fiscal <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2dpcmFwaA==">ggiraph <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z2dwbG90Mg==">ggplot2 <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Z3Q=">gt <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TGFib3Vy">Labour <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UExGUw==">PLFS <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UXVhcnRvJTIwQm9vaw==">Quarto Book <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2hpbnk=">Shiny <span class="quarto-category-count">(2)</span></div><div class="category" data-category="U3RhdGlzdGljcw==">Statistics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGlkeVR1ZXNkYXk=">TidyTuesday <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhZGU=">Trade <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">About</h1>
+<h1 class="title">Skills &amp; Projects</h1>
+</div>
+
+<div>
+  <div class="description">
+    7+ years of research and analytical experience spanning survey methodology, statistical programming, and Indian economic policy.
+  </div>
 </div>
 
 
-
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta column-page-left">
 
     
   
@@ -185,63 +252,317 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div id="progress-bar"></div>
 <div class="page-band">
-  <span class="section-label section-label-light">About Me</span>
-  <h1>Pawan Jangra</h1>
-  <p>Data Analyst · Survey Researcher · Economic Researcher · New Delhi, India</p>
+  <span class="section-label section-label-light">Professional</span>
+  <h1>Skills &amp; Projects</h1>
+  <p>7+ years of research and analytical experience spanning survey methodology, statistical programming, and Indian economic policy.</p>
+  
 </div>
 
-<div class="about-wrap">
-  <div class="profile-card">
-    <div class="avatar">PJ</div>
-    <div class="profile-name">Pawan Jangra</div>
-    <div class="profile-role">Data Analyst &amp; Research Consultant</div>
-    <div class="profile-links">
-      <a href="mailto:pawanjangra1198@gmail.com" class="profile-link">✉️ pawanjangra1198@gmail.com</a>
-      <a href="https://github.com/pawan1198" class="profile-link" target="_blank">💻 github.com/pawan1198</a>
-      <a href="https://www.linkedin.com/in/pawanjangra1198/" class="profile-link" target="_blank">🔗 pawanjangra1198</a>
-      <a href="https://twitter.com/pawanjangra1198" class="profile-link" target="_blank">🐦 @pawanjangra1198</a>
-      <a href="#" class="profile-link">📍 New Delhi, India</a>
-    </div>
-    <div class="tag-list" style="margin-top:1.5rem;justify-content:center;">
-      <span class="tag tag-blue">R</span><span class="tag tag-teal">Quarto</span>
-      <span class="tag tag-dark">data.table</span><span class="tag tag-dark">ggplot2</span>
-      <span class="tag tag-blue">ODK</span><span class="tag tag-amber">Shiny</span>
+<section class="section section-alt">
+  <div class="container-md">
+    <span class="section-label">Work History</span>
+    <h2 class="section-title anchored">Professional Experience</h2>
+    <p class="section-desc">Research positions across academia, policy institutes, and independent consulting.</p>
+    <div class="timeline fade-up">
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Research Associate — Health Financing Survey</div>
+              <div class="tl-org">OP Jindal Global University</div>
+            </div>
+            <div class="tl-date">2025</div>
+          </div>
+          <ul class="tl-points">
+            <li>Designed ODK/SurveyCTO digital data collection instruments for household health expenditure survey</li>
+            <li>Trained and supervised field enumerators; implemented CAPI quality assurance protocols</li>
+            <li>Cleaned, validated, and analysed multi-wave survey data using R (data.table, tidyverse)</li>
+            <li>Produced statistical reports and visualisations for research team and funding stakeholders</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-blue">ODK</span><span class="tag tag-teal">R</span><span class="tag tag-amber">Survey</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Research Fellow</div>
+              <div class="tl-org">IDEAs Advanced Certificate Programme on Research in Political Economy</div>
+            </div>
+            <div class="tl-date">2022 – 2024</div>
+          </div>
+          <ul class="tl-points">
+            <li>Advanced coursework in political economy, development economics, and quantitative methods</li>
+            <li>Original research papers on Indian labour markets and fiscal policy</li>
+            <li>Applied regression discontinuity and difference-in-differences to policy evaluation</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-blue">Econometrics</span><span class="tag tag-slate">Policy Analysis</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Survey Research Coordinator</div>
+              <div class="tl-org">Society for Social and Economic Research (SSER)</div>
+            </div>
+            <div class="tl-date">2020 – 2022</div>
+          </div>
+          <ul class="tl-points">
+            <li>Coordinated large-scale household surveys across multiple Indian states</li>
+            <li>Managed field operations, enumerator networks, and real-time data quality monitoring</li>
+            <li>Developed sampling frameworks using stratified random and PPS methods</li>
+            <li>Processed and analysed NSS/PLFS microdata for published research outputs</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-teal">Survey</span><span class="tag tag-blue">Sampling</span><span class="tag tag-amber">PLFS / NSS</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-header">
+            <div>
+              <div class="tl-role">Independent Economic Researcher &amp; Data Analyst</div>
+              <div class="tl-org">Freelance / Self-employed</div>
+            </div>
+            <div class="tl-date">2018 – Present</div>
+          </div>
+          <ul class="tl-points">
+            <li>Data analysis, statistical programming, and survey research for academic and policy clients</li>
+            <li>Reproducible R and Quarto pipelines delivered across diverse research contexts</li>
+            <li>Data journalism articles and interactive dashboards on Indian economic topics</li>
+            <li>Open-source R tools on GitHub: TidyTuesday visualisations, Shiny apps, and Quarto books</li>
+          </ul>
+          <div class="tag-list"><span class="tag tag-blue">R</span><span class="tag tag-teal">Quarto</span><span class="tag tag-amber">Freelance</span></div>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <div>
-    <span class="section-label">Who I Am</span>
-    <h2 class="section-title anchored" style="margin-bottom:1.5rem;">Hello 👋</h2>
-    <div class="about-prose">
-      <p>I'm a <strong>data analyst and independent economic researcher</strong> with over 7 years of experience in survey methodology, statistical analysis, and research coordination across India. My work sits at the intersection of economics, statistics, and data science — translating complex survey microdata into clear, policy-relevant insights.</p>
-      <p>I have worked with leading institutions including <strong>OP Jindal Global University</strong>, the <strong>IDEAs Advanced Certificate Programme</strong>, and the <strong>Society for Social and Economic Research (SSER)</strong>. My domain expertise spans labour economics, agricultural markets, fiscal policy, and trade.</p>
-      <p>I specialise in <strong>reproducible research workflows</strong>: building fully documented, version-controlled pipelines in R and Quarto — from blog posts to full 18-chapter textbooks and interactive Shiny dashboards.</p>
+</section>
+<section id="projects" class="level2">
+<h2 class="anchored" data-anchor-id="projects">Projects</h2>
+<p>Drop a <code>.qmd</code> file into the <code>projects/</code> folder — it appears here automatically.</p>
+<div id="listing-project-listing" class="quarto-listing quarto-listing-container-grid">
+<div class="listing-actions-group">
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
     </div>
-
-    <h3 style="font-family:'Fraunces',serif;color:#0f172a;font-size:1.25rem;margin:2.5rem 0 1.25rem;" class="anchored">Technical Skills</h3>
-    <div class="skill-grid">
-      <div class="skill-item"><div class="skill-label"><span>R / Tidyverse / data.table</span><span class="skill-pct">93%</span></div><div class="skill-track"><div class="skill-fill" style="width:93%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Quarto / RMarkdown</span><span class="skill-pct">90%</span></div><div class="skill-track"><div class="skill-fill" style="width:90%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>ggplot2 / ggiraph / Shiny</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>ODK / SurveyCTO / CAPI</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Statistical Modelling / Econometrics</span><span class="skill-pct">82%</span></div><div class="skill-track"><div class="skill-fill" style="width:82%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Python / Pandas / Selenium</span><span class="skill-pct">78%</span></div><div class="skill-track"><div class="skill-fill" style="width:78%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Linux / Bash / Git</span><span class="skill-pct">75%</span></div><div class="skill-track"><div class="skill-fill" style="width:75%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Web Scraping (rvest / RSelenium)</span><span class="skill-pct">72%</span></div><div class="skill-track"><div class="skill-fill" style="width:72%"></div></div></div>
-    </div>
-
-    <h3 style="font-family:'Fraunces',serif;color:#0f172a;font-size:1.25rem;margin:2.5rem 0 1.25rem;" class="anchored">Get in Touch</h3>
-    <div class="contact-grid">
-      <a href="https://github.com/pawan1198" class="contact-card" target="_blank"><span class="contact-card-icon">💻</span><div><strong>GitHub</strong><span>@pawan1198</span></div></a>
-      <a href="https://www.linkedin.com/in/pawanjangra1198/" class="contact-card" target="_blank"><span class="contact-card-icon">🔗</span><div><strong>LinkedIn</strong><span>pawanjangra1198</span></div></a>
-      <a href="mailto:pawanjangra1198@gmail.com" class="contact-card"><span class="contact-card-icon">✉️</span><div><strong>Email</strong><span>pawanjangra1198@gmail.com</span></div></a>
-      <a href="https://twitter.com/pawanjangra1198" class="contact-card" target="_blank"><span class="contact-card-icon">🐦</span><div><strong>Twitter / X</strong><span>@pawanjangra1198</span></div></a>
-    </div>
-  </div>
 </div>
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-categories="VHJhZGUlMkNnZ2lyYXBoJTJDZ3QlMkNkYXRhLnRhYmxl" data-listing-date-sort="1761676200000" data-listing-file-modified-sort="1778641680000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="20">
+<a href="./projects/india-trade.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&amp;q=80" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+India’s Trade Story — ggiraph + gt Analysis
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Z2dpcmFwaA=='); return false;">ggiraph</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Z3Q='); return false;">gt</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS50YWJsZQ=='); return false;">data.table</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Interactive ggiraph charts and gt tables covering India’s merchandise trade 1997–2025 from HS-code classified DGCI&amp;S data. Exports, imports, trade deficit, and sectoral…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+29 Oct 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-categories="UXVhcnRvJTIwQm9vayUyQ1N0YXRpc3RpY3MlMkNSJTJDRWR1Y2F0aW9u" data-listing-date-sort="1748716200000" data-listing-file-modified-sort="1778641704000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="15">
+<a href="./projects/r-textbook.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&amp;q=80" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+R for Statistical Analysis — 18-Chapter Quarto Textbook
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UXVhcnRvJTIwQm9vaw=='); return false;">Quarto Book</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljcw=='); return false;">Statistics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RWR1Y2F0aW9u'); return false;">Education</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Comprehensive Quarto book covering descriptive statistics through advanced modelling, with Indian agricultural and economic data contexts, custom SCSS themes, and APA 7th…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+1 Jun 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="2" data-categories="TGFib3VyJTJDUExGUyUyQ2RhdGEudGFibGUlMkNnZ2lyYXBo" data-listing-date-sort="1741977000000" data-listing-file-modified-sort="1778641692000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="20">
+<a href="./projects/plfs-pipeline.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&amp;q=80" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+PLFS Labour Market Pipeline — data.table + survey
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('TGFib3Vy'); return false;">Labour</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UExGUw=='); return false;">PLFS</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZGF0YS50YWJsZQ=='); return false;">data.table</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Z2dpcmFwaA=='); return false;">ggiraph</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Fully reproducible R pipeline for Periodic Labour Force Survey microdata. Weighted LFPR, WPR, and unemployment estimates by state, gender, and sector 2018–2024.</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+15 Mar 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="3" data-categories="RmlzY2FsJTJDU2hpbnklMkNBUklNQSUyQ2dncGxvdDI=" data-listing-date-sort="1732991400000" data-listing-file-modified-sort="1778641686000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="18">
+<a href="./projects/gst-dashboard.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&amp;q=80" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+GST Collections Forecasting — ARIMA + Shinydashboard
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('RmlzY2Fs'); return false;">Fiscal</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2hpbnk='); return false;">Shiny</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QVJJTUE='); return false;">ARIMA</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Z2dwbG90Mg=='); return false;">ggplot2</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Monthly GST analysis 2017–2026 with ARIMA seasonal forecasting, ETS models, and a full interactive Shiny dashboard with state-wise breakdowns and downloadable forecasts.</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+1 Dec 2024
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="4" data-categories="VGlkeVR1ZXNkYXklMkNnZ3Bsb3QyJTJDU2hpbnklMkNEYXRhJTIwVml6" data-listing-date-sort="1704047400000" data-listing-file-modified-sort="1778641714000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="9">
+<a href="./projects/tidytuesday.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&amp;q=80" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+TidyTuesday Collection 2024–2026
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('VGlkeVR1ZXNkYXk='); return false;">TidyTuesday</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Z2dwbG90Mg=='); return false;">ggplot2</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U2hpbnk='); return false;">Shiny</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGF0YSUyMFZpeg=='); return false;">Data Viz</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Weekly data visualisation challenges — static ggplot2 charts and interactive Shiny versions for selected weeks, covering economics, science, culture, and sports datasets.</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+1 Jan 2024
+</div>
+</div>
+</div>
+</div></a>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+<section class="section section-alt">
+  <div class="container-md">
+    <span class="section-label">Freelance</span>
+    <h2 class="section-title anchored">Research Services</h2>
+    <p class="section-desc">Available for consulting across survey research, data analysis, and reproducible reporting.</p>
+    <div class="card-grid fade-up">
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Field Survey Management</div>
+        <p class="card-desc">End-to-end survey design, enumerator training, ODK/SurveyCTO form development, field monitoring, and quality assurance for primary data collection.</p>
+        <div class="tag-list"><span class="tag tag-blue">ODK</span><span class="tag tag-teal">SurveyCTO</span><span class="tag tag-amber">CAPI</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Statistical Analysis</div>
+        <p class="card-desc">Descriptive and inferential statistics, econometric modelling, regression analysis, hypothesis testing, and causal inference using R or Python.</p>
+        <div class="tag-list"><span class="tag tag-blue">R</span><span class="tag tag-slate">Python</span><span class="tag tag-amber">Econometrics</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <div class="card-title">Data Visualization &amp; Reporting</div>
+        <p class="card-desc">Publication-quality static charts, interactive ggiraph dashboards, and Quarto multi-format reports for academic and policy audiences.</p>
+        <div class="tag-list"><span class="tag tag-teal">ggplot2</span><span class="tag tag-blue">Shiny</span><span class="tag tag-amber">Quarto</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Web Scraping &amp; Data Pipelines</div>
+        <p class="card-desc">Automated data collection from government portals and public databases using Python Selenium, rvest, and Linux/Bash automation scripts.</p>
+        <div class="tag-list"><span class="tag tag-slate">Selenium</span><span class="tag tag-teal">rvest</span><span class="tag tag-blue">Bash</span></div>
+      </div>
+    </div>
+    <div style="margin-top:2.5rem;text-align:center;">
+      <a href="mailto:pawanjangra1198@gmail.com" class="btn-hero-primary">✉️ Get in Touch</a>
+    </div>
+  </div>
+</section>
 
 
+
+</section>
 
 </main> <!-- /main -->
 <button id="back-to-top" aria-label="Back to top">↑</button>

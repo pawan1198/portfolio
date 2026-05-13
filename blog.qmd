@@ -1,13 +1,26 @@
 ---
 title: "Blog"
-description: "Articles on R programming, statistical analysis, survey methodology, and data storytelling."
+description: "R programming, data analysis, survey methodology, and data storytelling for Indian economic research."
+page-label: "Writing"
+page-band: true
+categories: [R, ggplot2, data.table, Quarto, Survey]
+
+page-layout: full
+toc: false
+
 listing:
+  id: blog-listing
   contents: blog
   sort: "date desc"
   type: grid
   grid-columns: 3
   fields: [image, date, title, description, categories, reading-time]
   categories: true
+  sort-ui: true
+  filter-ui: true
   feed: true
-page-layout: full
+  date-format: "D MMM YYYY"
 ---
+
+::: {#blog-listing}
+:::

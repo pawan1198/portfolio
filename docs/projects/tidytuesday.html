@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Pawan Jangra">
+<meta name="dcterms.date" content="2024-01-01">
+<meta name="description" content="Weekly data visualisation challenges — static ggplot2 charts and interactive Shiny versions for selected weeks, covering economics, science, culture, and sports datasets.">
 
-<title>About – Pawan</title>
+<title>TidyTuesday Collection 2024–2026 – Pawan</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,23 +29,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./assets/favicon.ico" rel="icon">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-8af1e85ab2e36e7ccd4fd3dda1107f8f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-49e45a36f4bc9269dbffeba7280b557d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-8af1e85ab2e36e7ccd4fd3dda1107f8f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-49e45a36f4bc9269dbffeba7280b557d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -76,9 +79,10 @@ ul.task-list li input[type="checkbox"] {
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;display=swap" rel="stylesheet">
 
 
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="../assets/styles.css">
 <meta property="og:title" content="Pawan — Data Analyst &amp; Economic Researcher">
 <meta property="og:description" content="Survey methodology, statistical analysis, and data storytelling using R and Quarto.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&amp;q=80">
 <meta property="og:site_name" content="Pawan">
 </head>
 
@@ -89,7 +93,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Pawan</span>
     </a>
   </div>
@@ -100,11 +104,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -113,25 +117,25 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-content">    
         <li>
-    <a class="dropdown-item" href="./data_vizs.html">
+    <a class="dropdown-item" href="../data_vizs.html">
  <span class="dropdown-text">📊 Data Visualizations</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./blog.html">
+    <a class="dropdown-item" href="../blog.html">
  <span class="dropdown-text">✍️ Blog</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./article.html">
+    <a class="dropdown-item" href="../article.html">
  <span class="dropdown-text">📄 Articles</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./statistics-with-r.html">
+    <a class="dropdown-item" href="../statistics-with-r.html">
  <span class="dropdown-text">📚 Statistics with R</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./skills.html"> 
+    <a class="nav-link" href="../skills.html"> 
 <span class="menu-text">Skills &amp; Projects</span></a>
   </li>  
 </ul>
@@ -168,14 +172,37 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">About</h1>
-</div>
+<h1 class="title">TidyTuesday Collection 2024–2026</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">TidyTuesday</div>
+    <div class="quarto-category">ggplot2</div>
+    <div class="quarto-category">Shiny</div>
+    <div class="quarto-category">Data Viz</div>
+  </div>
+  </div>
 
+<div>
+  <div class="description">
+    Weekly data visualisation challenges — static ggplot2 charts and interactive Shiny versions for selected weeks, covering economics, science, culture, and sports datasets.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta column-page">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Pawan Jangra </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -185,61 +212,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="page-band">
-  <span class="section-label section-label-light">About Me</span>
-  <h1>Pawan Jangra</h1>
-  <p>Data Analyst · Survey Researcher · Economic Researcher · New Delhi, India</p>
-</div>
-
-<div class="about-wrap">
-  <div class="profile-card">
-    <div class="avatar">PJ</div>
-    <div class="profile-name">Pawan Jangra</div>
-    <div class="profile-role">Data Analyst &amp; Research Consultant</div>
-    <div class="profile-links">
-      <a href="mailto:pawanjangra1198@gmail.com" class="profile-link">✉️ pawanjangra1198@gmail.com</a>
-      <a href="https://github.com/pawan1198" class="profile-link" target="_blank">💻 github.com/pawan1198</a>
-      <a href="https://www.linkedin.com/in/pawanjangra1198/" class="profile-link" target="_blank">🔗 pawanjangra1198</a>
-      <a href="https://twitter.com/pawanjangra1198" class="profile-link" target="_blank">🐦 @pawanjangra1198</a>
-      <a href="#" class="profile-link">📍 New Delhi, India</a>
-    </div>
-    <div class="tag-list" style="margin-top:1.5rem;justify-content:center;">
-      <span class="tag tag-blue">R</span><span class="tag tag-teal">Quarto</span>
-      <span class="tag tag-dark">data.table</span><span class="tag tag-dark">ggplot2</span>
-      <span class="tag tag-blue">ODK</span><span class="tag tag-amber">Shiny</span>
-    </div>
-  </div>
-
-  <div>
-    <span class="section-label">Who I Am</span>
-    <h2 class="section-title anchored" style="margin-bottom:1.5rem;">Hello 👋</h2>
-    <div class="about-prose">
-      <p>I'm a <strong>data analyst and independent economic researcher</strong> with over 7 years of experience in survey methodology, statistical analysis, and research coordination across India. My work sits at the intersection of economics, statistics, and data science — translating complex survey microdata into clear, policy-relevant insights.</p>
-      <p>I have worked with leading institutions including <strong>OP Jindal Global University</strong>, the <strong>IDEAs Advanced Certificate Programme</strong>, and the <strong>Society for Social and Economic Research (SSER)</strong>. My domain expertise spans labour economics, agricultural markets, fiscal policy, and trade.</p>
-      <p>I specialise in <strong>reproducible research workflows</strong>: building fully documented, version-controlled pipelines in R and Quarto — from blog posts to full 18-chapter textbooks and interactive Shiny dashboards.</p>
-    </div>
-
-    <h3 style="font-family:'Fraunces',serif;color:#0f172a;font-size:1.25rem;margin:2.5rem 0 1.25rem;" class="anchored">Technical Skills</h3>
-    <div class="skill-grid">
-      <div class="skill-item"><div class="skill-label"><span>R / Tidyverse / data.table</span><span class="skill-pct">93%</span></div><div class="skill-track"><div class="skill-fill" style="width:93%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Quarto / RMarkdown</span><span class="skill-pct">90%</span></div><div class="skill-track"><div class="skill-fill" style="width:90%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>ggplot2 / ggiraph / Shiny</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>ODK / SurveyCTO / CAPI</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Statistical Modelling / Econometrics</span><span class="skill-pct">82%</span></div><div class="skill-track"><div class="skill-fill" style="width:82%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Python / Pandas / Selenium</span><span class="skill-pct">78%</span></div><div class="skill-track"><div class="skill-fill" style="width:78%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Linux / Bash / Git</span><span class="skill-pct">75%</span></div><div class="skill-track"><div class="skill-fill" style="width:75%"></div></div></div>
-      <div class="skill-item"><div class="skill-label"><span>Web Scraping (rvest / RSelenium)</span><span class="skill-pct">72%</span></div><div class="skill-track"><div class="skill-fill" style="width:72%"></div></div></div>
-    </div>
-
-    <h3 style="font-family:'Fraunces',serif;color:#0f172a;font-size:1.25rem;margin:2.5rem 0 1.25rem;" class="anchored">Get in Touch</h3>
-    <div class="contact-grid">
-      <a href="https://github.com/pawan1198" class="contact-card" target="_blank"><span class="contact-card-icon">💻</span><div><strong>GitHub</strong><span>@pawan1198</span></div></a>
-      <a href="https://www.linkedin.com/in/pawanjangra1198/" class="contact-card" target="_blank"><span class="contact-card-icon">🔗</span><div><strong>LinkedIn</strong><span>pawanjangra1198</span></div></a>
-      <a href="mailto:pawanjangra1198@gmail.com" class="contact-card"><span class="contact-card-icon">✉️</span><div><strong>Email</strong><span>pawanjangra1198@gmail.com</span></div></a>
-      <a href="https://twitter.com/pawanjangra1198" class="contact-card" target="_blank"><span class="contact-card-icon">🐦</span><div><strong>Twitter / X</strong><span>@pawanjangra1198</span></div></a>
-    </div>
-  </div>
-</div>
+<p><strong>GitHub:</strong> <a href="https://github.com/pawan1198">github.com/pawan1198</a></p>
+<p><strong>Tools used:</strong> R, ggplot2, ggiraph, Shiny, patchwork, data.table</p>
 
 
 
@@ -694,5 +668,5 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
 </body></html>

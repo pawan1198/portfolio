@@ -1,0 +1,14 @@
+---
+title: "GST Collections Forecasting — ARIMA + Shinydashboard"
+description: "Monthly GST analysis 2017–2026 with ARIMA seasonal forecasting, ETS models, and a full interactive Shiny dashboard with state-wise breakdowns and downloadable forecasts."
+author: "Pawan Jangra"
+date: "2024-12-01"
+categories: [Fiscal, Shiny, ARIMA, ggplot2]
+image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=80"
+---
+
+Full analysis in [Data Visualizations](../data_vizs.html).
+
+**Tools used:** R, forecast, Shiny, shinydashboard, ggiraph, ggplot2
+
+**Data source:** GST Council, Ministry of Finance

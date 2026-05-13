@@ -4,77 +4,87 @@ project:
 
 website:
   title: "Pawan"
-  description: "Data Analyst & Research Consultant — survey methodology, R, Quarto, Indian economic policy."
+  description: "Data Analyst & Independent Economic Researcher — Survey methodology, R, Quarto, and Indian economic policy."
   favicon: assets/favicon.ico
   site-url: "https://pawan1198.github.io/portfolio/"
-  repo-url: "https://github.com/pawan1198"
-  repo-actions: [issue]
-  open-graph: true
-  twitter-card:
-    creator: "@pawan1198"
-    card-style: summary_large_image
+  open-graph:
+    title: "Pawan — Data Analyst & Economic Researcher"
+    description: "Survey methodology, statistical analysis, and data storytelling using R and Quarto."
 
   navbar:
     pinned: true
-    background: "#0d1b2a"
-    foreground: "rgba(255,255,255,0.82)"
-    logo: ""
-    title: "Pawan."
+    background: "#0f172a"
+    foreground: "rgba(255,255,255,0.85)"
+    title: "Pawan"
     left:
+      - text: "Home"
+        href: index.qmd
       - text: "About"
-        href: about.qmd#about
-      - text: "Experience"
-        href: index.qmd#experience
-      - text: "Content Hub"
-        href: content-hub.qmd
-      #- text: "Data Visualizations"
-      #  href: data_vizs.qmd#data_viz
-      - text: "Skills"
-        href: index.qmd#skills
-      #- text: "R & Quarto"
-      #  href: index.qmd#quarto
-      #- text: "Blog"
-      #  href: blog.qmd#blog
-      - text: "Editor"
-        href: index.qmd#editor-section
-      - text: "R Code"
-        href: index.qmd#r-section
+        href: about.qmd
+      - text: "Content"
+        menu:
+          - text: "📊 Data Visualizations"
+            href: data_vizs.qmd
+          - text: "✍️ Blog"
+            href: blog.qmd
+          - text: "📄 Articles"
+            href: article.qmd
+          - text: "📚 Statistics with R"
+            href: statistics-with-r.qmd
+      - text: "Skills & Projects"
+        href: skills.qmd
     right:
-      - text: "Contact"
-        href: index.qmd#contact
       - icon: github
         href: "https://github.com/pawan1198"
-        aria-label: "GitHub"
+        aria-label: GitHub
       - icon: linkedin
         href: "https://www.linkedin.com/in/pawanjangra1198/"
-        aria-label: "LinkedIn"
-
-  search:
-    location: navbar
-    type: textbox
+        aria-label: LinkedIn
+      - icon: twitter-x
+        href: "https://twitter.com/pawanjangra1198"
+        aria-label: Twitter
 
   page-footer:
-    left: "© Pawan"
-    center: "Built with [Quarto](https://quarto.org) & R"
+    background: "#0f172a"
+    foreground: "rgba(255,255,255,0.5)"
+    left: "© 2025 Pawan"
+    center:
+      - text: "Built with Quarto"
+        href: "https://quarto.org"
     right:
       - icon: github
         href: "https://github.com/pawan1198"
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/pawanjangra1198/"
+      - icon: envelope
+        href: "mailto:pawanjangra1198@gmail.com"
+
+  sidebar: false
+
+# ── Global filters — applied to every page automatically ──────────
+filters:
+  - assets/page-band.lua
 
 format:
   html:
     theme:
       - cosmo
-      - custom.scss
-    css: styles.css
+      - assets/theme.scss
+    css: assets/styles.css
     toc: false
     page-layout: full
+    grid:
+      sidebar-width: 0px
+      body-width: 1200px
+      margin-width: 0px
     smooth-scroll: true
-    include-in-header:
-      - text: |
-          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+    link-external-newwindow: true
+    # Scripts injected globally — no per-page include needed
+    include-in-header:  assets/head-extras.html
+    include-after-body: assets/partials/page-scripts.html
 
 execute:
-  echo: false
+  freeze: auto
+  echo: true
   warning: false
   message: false
-  freeze: auto

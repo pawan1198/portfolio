@@ -39,22 +39,23 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-8af1e85ab2e36e7ccd4fd3dda1107f8f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3bb01a80cfeb6dd8c1add0f8c420b4b9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-49e45a36f4bc9269dbffeba7280b557d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "textbox",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -70,15 +71,16 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=DM+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 
 
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Pawan">
+<link rel="stylesheet" href="assets/styles.css">
+<meta property="og:title" content="Pawan — Data Analyst &amp; Economic Researcher">
+<meta property="og:description" content="Survey methodology, statistical analysis, and data storytelling using R and Quarto.">
 <meta property="og:site_name" content="Pawan">
-<meta name="twitter:title" content="Pawan">
-<meta name="twitter:creator" content="@pawan1198">
-<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -89,7 +91,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Pawan.</span>
+    <span class="navbar-title">Pawan</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -99,35 +101,42 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html#about"> 
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#experience"> 
-<span class="menu-text">Experience</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-content" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Content</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-content">    
+        <li>
+    <a class="dropdown-item" href="./data_vizs.html">
+ <span class="dropdown-text">📊 Data Visualizations</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./content-hub.html" aria-current="page"> 
-<span class="menu-text">Content Hub</span></a>
+        <li>
+    <a class="dropdown-item" href="./blog.html">
+ <span class="dropdown-text">✍️ Blog</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#skills"> 
-<span class="menu-text">Skills</span></a>
+        <li>
+    <a class="dropdown-item" href="./article.html">
+ <span class="dropdown-text">📄 Articles</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#editor-section"> 
-<span class="menu-text">Editor</span></a>
+        <li>
+    <a class="dropdown-item" href="./statistics-with-r.html">
+ <span class="dropdown-text">📚 Statistics with R</span></a>
   </li>  
+    </ul>
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./index.html#r-section"> 
-<span class="menu-text">R Code</span></a>
+    <a class="nav-link" href="./skills.html"> 
+<span class="menu-text">Skills &amp; Projects</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#contact"> 
-<span class="menu-text">Contact</span></a>
-  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/pawan1198"> <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
@@ -135,6 +144,11 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/pawanjangra1198"> <i class="bi bi-twitter-x" role="img" aria-label="Twitter">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -1184,6 +1198,8 @@ rAll(); rViz(); rArt(); rBlog(); rStat();
 
 
 </main> <!-- /main -->
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<script src="assets/site.js"></script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1271,6 +1287,11 @@ rAll(); rViz(); rArt(); rBlog(); rStat();
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
@@ -1588,16 +1609,34 @@ rAll(); rViz(); rArt(); rBlog(); rStat();
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>© Pawan</p>
+<p>© 2025 Pawan</p>
 </div>   
     <div class="nav-footer-center">
-<p>Built with <a href="https://quarto.org">Quarto</a> &amp; R</p>
-<div class="toc-actions"><ul><li><a href="https://github.com/pawan1198/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://quarto.org">
+<p>Built with Quarto</p>
+</a>
+  </li>  
+</ul>
+    </div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/pawan1198">
       <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/">
+      <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:pawanjangra1198@gmail.com">
+      <i class="bi bi-envelope" role="img">
 </i> 
     </a>
   </li>  

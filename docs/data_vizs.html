@@ -2,12 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Pawan">
-<meta name="description" content="Interactive data visualizations and analysis projects">
+<meta name="description" content="Interactive charts, dashboards, and data stories built with ggplot2, ggiraph, and Shiny.">
 
 <title>Data Visualizations – Pawan</title>
 <style>
@@ -43,22 +42,23 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-8af1e85ab2e36e7ccd4fd3dda1107f8f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3bb01a80cfeb6dd8c1add0f8c420b4b9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-49e45a36f4bc9269dbffeba7280b557d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "textbox",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -76,20 +76,20 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-data_vizs .list');
+    const listingTargetEl = window.document.querySelector('#listing-dataviz-listing .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
     }
 
     const options = {
-      valueNames: ['listing-image','listing-title','listing-date-modified','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] }],
+      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-categories","listing-date"],
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-data_vizs'] = new List('listing-data_vizs', options);
+    window['quarto-listings']['listing-dataviz-listing'] = new List('listing-dataviz-listing', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -103,7 +103,9 @@ ul.task-list li input[type="checkbox"] {
   })
   </script>
 <style>html{ scroll-behavior: smooth; }</style>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=DM+Sans:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -135,14 +137,10 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="Pawan" href="data_vizs.xml" data-external="1"><meta property="og:title" content="Data Visualizations – Pawan">
-<meta property="og:description" content="Interactive data visualizations and analysis projects">
+<link rel="stylesheet" href="assets/styles.css">
+<meta property="og:title" content="Pawan — Data Analyst &amp; Economic Researcher">
+<meta property="og:description" content="Survey methodology, statistical analysis, and data storytelling using R and Quarto.">
 <meta property="og:site_name" content="Pawan">
-<meta name="twitter:title" content="Data Visualizations – Pawan">
-<meta name="twitter:description" content="Interactive data visualizations and analysis projects">
-<meta name="twitter:creator" content="@pawan1198">
-<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -153,7 +151,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Pawan.</span>
+    <span class="navbar-title">Pawan</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,35 +161,42 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html#about"> 
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#experience"> 
-<span class="menu-text">Experience</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-content" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Content</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-content">    
+        <li>
+    <a class="dropdown-item" href="./data_vizs.html">
+ <span class="dropdown-text">📊 Data Visualizations</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./content-hub.html"> 
-<span class="menu-text">Content Hub</span></a>
+        <li>
+    <a class="dropdown-item" href="./blog.html">
+ <span class="dropdown-text">✍️ Blog</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#skills"> 
-<span class="menu-text">Skills</span></a>
+        <li>
+    <a class="dropdown-item" href="./article.html">
+ <span class="dropdown-text">📄 Articles</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#editor-section"> 
-<span class="menu-text">Editor</span></a>
+        <li>
+    <a class="dropdown-item" href="./statistics-with-r.html">
+ <span class="dropdown-text">📚 Statistics with R</span></a>
   </li>  
+    </ul>
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="./index.html#r-section"> 
-<span class="menu-text">R Code</span></a>
+    <a class="nav-link" href="./skills.html"> 
+<span class="menu-text">Skills &amp; Projects</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html#contact"> 
-<span class="menu-text">Contact</span></a>
-  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/pawan1198"> <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
@@ -199,6 +204,11 @@ window.Quarto = {
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/pawanjangra1198"> <i class="bi bi-twitter-x" role="img" aria-label="Twitter">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -221,23 +231,24 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Data Visualizations</h1>
-</div>
+  <div class="quarto-categories">
+    <div class="quarto-category">ggplot2</div>
+    <div class="quarto-category">ggiraph</div>
+    <div class="quarto-category">Shiny</div>
+    <div class="quarto-category">Plotly</div>
+    <div class="quarto-category">gt</div>
+  </div>
+  </div>
 
 <div>
   <div class="description">
-    Interactive data visualizations and analysis projects
+    Interactive charts, dashboards, and data stories built with ggplot2, ggiraph, and Shiny.
   </div>
 </div>
 
 
 <div class="quarto-title-meta column-page-left">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Pawan </p>
-          </div>
-  </div>
     
   
     
@@ -248,22 +259,29 @@ window.Quarto = {
 </header>
 
 
+<div id="progress-bar"></div>
+<div class="page-band">
+  <span class="section-label section-label-light">Visual</span>
+  <h1>Data Visualizations</h1>
+  <p>Interactive charts, dashboards, and data stories built with ggplot2, ggiraph, and Shiny.</p>
+  <div class="badge-row"><span class="badge">ggplot2</span><span class="badge">ggiraph</span><span class="badge">Shiny</span><span class="badge">Plotly</span><span class="badge">gt</span></div>
+</div>
 
-
-
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-data_vizs">
+<div id="listing-dataviz-listing" class="quarto-listing quarto-listing-container-grid">
 <div class="listing-actions-group">
    <div class="input-group input-group-sm quarto-listing-sort">
     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-data_vizs-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-data_vizs'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+    <select id="listing-dataviz-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-dataviz-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
       <option value="" disabled="" selected="" hidden="">Order By</option>
       <option value="index" data-direction="asc">Default</option>
       <option value="listing-title" data-direction="asc">
         Title
       </option>
-      <option value="listing-categories" data-direction="asc">
-        Categories
+      <option value="listing-date-sort" data-direction="asc">
+        Date - Oldest
+      </option>
+      <option value="listing-date-sort" data-direction="desc">
+        Date - Newest
       </option>
     </select>
   </div>
@@ -273,253 +291,26 @@ window.Quarto = {
     </div>
 </div>
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="RnVlbCUyQ1ByaWNlcyUyQ0VuZXJneQ==" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1773574994471" data-listing-date-modified-sort="1773574994000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1674">
-<a href="./data_vizs/fuelprice.html" class="quarto-grid-link">
+<div class="g-col-1" data-index="0" data-listing-date-sort="1776018600000" data-listing-file-modified-sort="1776182181859" data-listing-date-modified-sort="1776182181000" data-listing-reading-time-sort="19" data-listing-word-count-sort="3774">
+<a href="./data_vizs/gst_analysis.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
 <div class="card-body post-contents">
 <h5 class="no-anchor card-title listing-title">
-Fuel Price Analysis: India’s Retail Prices &amp; International Crude Dynamics
+India GST Collection Analysis
 </h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RnVlbA=='); return false;">Fuel</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJpY2Vz'); return false;">Prices</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RW5lcmd5'); return false;">Energy</div>
-
+<div class="card-text listing-description delink">
+This interactive report explores <strong>India’s Goods and Services Tax (GST)</strong> collection data across states and financial years. All monetary values are expressed in <strong>₹ Thousands…</strong>
 </div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 15, 2026
-</td>
-</tr>
-
-</tbody></table>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+13 Apr 2026
+</div>
+</div>
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="1" data-categories="VHJhZGUlMkNGZXJ0aWxpemVyJTJDQWdyaWN1bHR1cmU=" data-listing-date-sort="1764095400000" data-listing-file-modified-sort="1773574955067" data-listing-date-modified-sort="1773574955000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1713">
-<a href="./data_vizs/fertilizer.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-India’s Fertilizer Import Landscape: Supply Concentration &amp; Price Dynamics
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RmVydGlsaXplcg=='); return false;">Fertilizer</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmU='); return false;">Agriculture</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 15, 2026
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="VHJhZGU=" data-listing-date-sort="1766082600000" data-listing-file-modified-sort="1766132010596" data-listing-date-modified-sort="1766132010000" data-listing-reading-time-sort="6" data-listing-word-count-sort="1192">
-<a href="./data_vizs/trade1.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img loading='lazy' src="data_vizs/trade1_files/figure-html/unnamed-chunk-6-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Comprehensive Trade Analysis: Methodology, Code, and Insights
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 19, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="3" data-categories="Rm9vZCUyMEVjb25vbXklMkNBZ3JpY3VsdHVyZSUyQ1B1YmxpYyUyMFBvbGljeQ==" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1774796020510" data-listing-date-modified-sort="1774796020000" data-listing-reading-time-sort="11" data-listing-word-count-sort="2153">
-<a href="./data_vizs/stocks.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-India’s Foodgrain Buffer Stocks: Trends, Norms, and Policy
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm9vZCUyMEVjb25vbXk='); return false;">Food Economy</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmU='); return false;">Agriculture</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHVibGljJTIwUG9saWN5'); return false;">Public Policy</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 29, 2026
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="4" data-categories="VHJhZGUlMkNGZXJ0aWxpemVyJTJDQWdyaWN1bHR1cmU=" data-listing-date-sort="1764095400000" data-listing-file-modified-sort="1773577663247" data-listing-date-modified-sort="1773577663000" data-listing-reading-time-sort="14" data-listing-word-count-sort="2631">
-<a href="./data_vizs/fertilizer2.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-India’s Fertilizer Import &amp; Production Statistics
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RmVydGlsaXplcg=='); return false;">Fertilizer</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmU='); return false;">Agriculture</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 15, 2026
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="5" data-categories="VHJhZGUlMkNFZGlibGUlMjBPaWxz" data-listing-date-sort="1761589800000" data-listing-file-modified-sort="1766566196276" data-listing-date-modified-sort="1766566196000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2881">
-<a href="./data_vizs/edibleoil.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Edible Oils Import by India
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWRpYmxlJTIwT2lscw=='); return false;">Edible Oils</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 24, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="6" data-categories="VHJhZGUlMkNFY29ub215" data-listing-date-sort="1761676200000" data-listing-file-modified-sort="1773577776482" data-listing-date-modified-sort="1773577776000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2940">
-<a href="./data_vizs/trade.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-India’s Trade Statistics: Exports, Imports &amp; Sectoral Composition
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RWNvbm9teQ=='); return false;">Economy</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 15, 2026
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="7" data-categories="Rm9vZCUyMEVjb25vbXklMkNQcmljZXM=" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1774089134412" data-listing-date-modified-sort="1774089134000" data-listing-reading-time-sort="17" data-listing-word-count-sort="3267">
-<a href="./data_vizs/foodprice.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Food Prices in India: Retail vs.&nbsp;Wholesale Dynamics
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm9vZCUyMEVjb25vbXk='); return false;">Food Economy</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJpY2Vz'); return false;">Prices</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 21, 2026
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="8" data-categories="Rm9vZCUyMEVjb25vbXklMkNBZ3JpY3VsdHVyZSUyQ1B1YmxpYyUyMFBvbGljeSUyQ1RyYWRl" data-listing-date-sort="1773513000000" data-listing-file-modified-sort="1774795968109" data-listing-date-modified-sort="1774795968000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1583">
+<div class="g-col-1" data-index="1" data-categories="Rm9vZCUyMEVjb25vbXklMkNBZ3JpY3VsdHVyZSUyQ1B1YmxpYyUyMFBvbGljeSUyQ1RyYWRl" data-listing-date-sort="1773513000000" data-listing-file-modified-sort="1774795968109" data-listing-date-modified-sort="1774795968000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1583">
 <a href="./data_vizs/foodgrain_supply_chain.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
@@ -538,107 +329,18 @@ India’s Foodgrain Supply Chain: Procurement, Buffer Stocks, and Trade — An I
 <div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
 
 </div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 29, 2026
-</td>
-</tr>
-
-</tbody></table>
+<div class="card-text listing-description delink">
+<p>A comprehensive interactive analysis linking India’s foodgrain procurement (MSP operations), central pool buffer stocks, and cereal export/import data to understand the…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+15 Mar 2026
+</div>
+</div>
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="9" data-categories="Rm9vZCUyMEVjb25vbXklMkNQcm9jdXJlbWVudCUyQ0FncmljdWx0dXJlJTIwUG9saWN5" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1774794848775" data-listing-date-modified-sort="1774794848000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1412">
-<a href="./data_vizs/procurement.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-India’s Public Foodgrain Procurement: Trends, Patterns &amp; Policy Implications
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Rm9vZCUyMEVjb25vbXk='); return false;">Food Economy</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvY3VyZW1lbnQ='); return false;">Procurement</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmUlMjBQb2xpY3k='); return false;">Agriculture Policy</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 29, 2026
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="10" data-listing-date-sort="1776018600000" data-listing-file-modified-sort="1776182181859" data-listing-date-modified-sort="1776182181000" data-listing-reading-time-sort="19" data-listing-word-count-sort="3774">
-<a href="./data_vizs/gst_analysis.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-India GST Collection Analysis
-</h5>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-April 14, 2026
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="11" data-categories="UExGUyUyQ05TUw==" data-listing-date-sort="1762021800000" data-listing-file-modified-sort="1766419450957" data-listing-date-modified-sort="1766419450000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1684">
-<a href="./data_vizs/plfs.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-PLFS
-</h5>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UExGUw=='); return false;">PLFS</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TlNT'); return false;">NSS</div>
-
-</div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-December 22, 2025
-</td>
-</tr>
-
-</tbody></table>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="12" data-categories="VHJhZGUlMkNGZXJ0aWxpemVyJTJDRWRpYmxlJTIwT2lscyUyQ0Zvb2QlMjBFY29ub215JTJDQW5hbHlzaXM=" data-listing-date-sort="1773513000000" data-listing-file-modified-sort="1773589150178" data-listing-date-modified-sort="1773589150000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1566">
+<div class="g-col-1" data-index="2" data-categories="VHJhZGUlMkNGZXJ0aWxpemVyJTJDRWRpYmxlJTIwT2lscyUyQ0Zvb2QlMjBFY29ub215JTJDQW5hbHlzaXM=" data-listing-date-sort="1773513000000" data-listing-file-modified-sort="1773589150178" data-listing-date-modified-sort="1773589150000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1566">
 <a href="./data_vizs/import_concentration_risk.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
@@ -659,22 +361,271 @@ India’s Import Concentration Risk: A Cross-Commodity Analysis
 <div class="listing-category" onclick="window.quartoListingCategory('QW5hbHlzaXM='); return false;">Analysis</div>
 
 </div>
-<table class="card-other-values">
-
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 15, 2026
-</td>
-</tr>
-
-</tbody></table>
+<div class="card-text listing-description delink">
+<p>A novel cross-sector analysis measuring import supply concentration — using Herfindahl-Hirschman Index (HHI) calculations across edible oils, fertilizers, and key trade…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+15 Mar 2026
+</div>
+</div>
 </div>
 </div></a>
 </div>
-<div class="g-col-1" data-index="13" data-categories="VHJhZGUlMkNFeHBvcnRzJTJDSW1wb3J0cw==" data-listing-date-sort="1761676200000" data-listing-file-modified-sort="1773575116489" data-listing-date-modified-sort="1773575116000" data-listing-reading-time-sort="10" data-listing-word-count-sort="1903">
+<div class="g-col-1" data-index="3" data-categories="VHJhZGU=" data-listing-date-sort="1766082600000" data-listing-file-modified-sort="1766132010596" data-listing-date-modified-sort="1766132010000" data-listing-reading-time-sort="6" data-listing-word-count-sort="1192">
+<a href="./data_vizs/trade1.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img loading='lazy' src="data_vizs/trade1_files/figure-html/unnamed-chunk-6-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Comprehensive Trade Analysis: Methodology, Code, and Insights
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
+
+</div>
+<div class="card-text listing-description delink">
+Here the Trade analysis involves systematically examining India trade data to identify patterns, trends, and economic relationships with their trade partners. Proper trade…
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+19 Dec 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="4" data-categories="VHJhZGUlMkNGZXJ0aWxpemVyJTJDQWdyaWN1bHR1cmU=" data-listing-date-sort="1764095400000" data-listing-file-modified-sort="1773574955067" data-listing-date-modified-sort="1773574955000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1713">
+<a href="./data_vizs/fertilizer.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+India’s Fertilizer Import Landscape: Supply Concentration &amp; Price Dynamics
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RmVydGlsaXplcg=='); return false;">Fertilizer</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmU='); return false;">Agriculture</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A detailed analysis of India’s fertilizer imports — Urea, DAP, Rock Phosphate, Phosphoric Acid, and MOP — covering source-country concentration, price volatility, and…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+26 Nov 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="5" data-categories="VHJhZGUlMkNGZXJ0aWxpemVyJTJDQWdyaWN1bHR1cmU=" data-listing-date-sort="1764095400000" data-listing-file-modified-sort="1773577663247" data-listing-date-modified-sort="1773577663000" data-listing-reading-time-sort="14" data-listing-word-count-sort="2631">
+<a href="./data_vizs/fertilizer2.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+India’s Fertilizer Import &amp; Production Statistics
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RmVydGlsaXplcg=='); return false;">Fertilizer</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmU='); return false;">Agriculture</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>An interactive deep-dive into India’s imports of urea, DAP, MOP, rock phosphate, and phosphoric acid — tracking source-country concentration, international prices, and…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+26 Nov 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="6" data-categories="UExGUyUyQ05TUw==" data-listing-date-sort="1762021800000" data-listing-file-modified-sort="1766419450957" data-listing-date-modified-sort="1766419450000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1684">
+<a href="./data_vizs/plfs.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+PLFS
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('UExGUw=='); return false;">PLFS</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TlNT'); return false;">NSS</div>
+
+</div>
+<div class="card-text listing-description delink">
+
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu">library</span>(data.table)</span>
+<span id="cb1-2"><span class="fu">library</span>(readr)</span>
+<span id="cb1-3"><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><span class="fu">library</span>(readxl)</span>
+<span id="cb1-5"><span class="fu">library</span>(gt)</span>
+<span id="cb1-6"><span class="fu">options</span>(<span class="at">digits=</span><span class="dv">3</span>)</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="do">## Read Data</span></span>
+<span id="cb1-9">fvhh1819 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"/home/pawan/plfsdata/PLFS-18-19…</span></span><span id="cb1-10"><span class="ot"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-11"><span class="ot"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-12"><span class="ot"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-13"></span><span id="cb1-14"><span class="ot"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-15"><span class="ot"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-16"></span><span id="cb1-17"><span class="ot"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-18"><span class="ot"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-19"></span><span id="cb1-20"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-21"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-22"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-23"></span><span id="cb1-24"><span class="fu"></span><span class="fu"></span><span class="sc"></span><span class="st"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-25"><span class="fu"></span><span class="fu"></span><span class="sc"></span><span class="st"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-26"><span class="fu"></span><span class="fu"></span><span class="sc"></span><span class="st"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-27"></span><span id="cb1-28"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-29"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-30"></span><span id="cb1-31"></span><span id="cb1-32"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-33"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-34"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-35"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-36"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-37"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span><span class="cn"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-38"></span><span id="cb1-39"><span class="sc"></span><span class="fu"></span><span class="sc"></span><span class="er"></span></span><span id="cb1-40"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="er"></span></span><span id="cb1-41"><span class="fu"></span><span class="sc"></span><span class="er"></span><span class="dv"></span></span><span id="cb1-42"></span><span id="cb1-43"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-44"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-45"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-46"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-47"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-48"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-49"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-50"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-51"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-52"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-53"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-54"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="dv"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-55"></span><span id="cb1-56"><span class="fu"></span><span class="at"></span><span class="sc"></span><span class="at"></span><span class="dv"></span><span class="at"></span><span class="dv"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-57"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-58"></span><span id="cb1-59"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-60"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-61"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-62"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-63"></span><span id="cb1-64"><span class="fu"></span><span class="sc"></span><span class="at"></span><span class="fu"></span><span class="st"></span><span class="st"></span></span><span id="cb1-65"><span class="st"></span><span class="st"></span><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-66"></span><span id="cb1-67"><span class="sc"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-68"></span><span id="cb1-69"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span></span><span id="cb1-70"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-71"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-72"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-73"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-74"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-75"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-76"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-77"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-78"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-79"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-80"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-81"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-82"><span class="sc"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-83"></span><span id="cb1-84"></span><span id="cb1-85"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-86"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-87"></span><span id="cb1-88"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-89"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-90"></span><span id="cb1-91"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-92"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-93"></span><span id="cb1-94"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-95"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-96"></span><span id="cb1-97"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-98"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-99"></span><span id="cb1-100"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-101"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-102"></span><span id="cb1-103"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-104"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-105"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-106"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-107"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-108"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-109"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-110"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-111"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-112"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-113"></span><span id="cb1-114"><span class="fu"></span><span class="sc"></span><span class="at"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-115"><span class="st"></span></span><span id="cb1-116"><span class="st"></span></span><span id="cb1-117"><span class="st"></span></span><span id="cb1-118"><span class="st"></span></span><span id="cb1-119"><span class="st"></span></span><span id="cb1-120"><span class="st"></span></span><span id="cb1-121"><span class="st"></span></span><span id="cb1-122"><span class="st"></span></span><span id="cb1-123"><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-124"></span><span id="cb1-125"></span><span id="cb1-126"><span class="sc"></span><span class="dv"></span><span class="ot"></span></span><span id="cb1-127"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-128"><span class="sc"></span><span class="fu"></span><span class="at"></span><span class="fu"></span><span class="st"></span><span class="st"></span><span class="st"></span><span class="at"></span><span class="st"></span><span class="ot"></span></span><span id="cb1-129"><span class="sc"></span><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="at"></span><span class="fu"></span><span class="st"></span><span class="st"></span><span class="st"></span><span class="ot"></span></span><span id="cb1-130"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-131"></span><span id="cb1-132"><span class="fu"></span><span class="dv"></span><span class="sc"></span><span class="dv"></span><span class="fu"></span><span class="dv"></span><span class="dv"></span><span class="dv"></span><span class="ot"></span></span><span id="cb1-133"><span class="fu"></span><span class="dv"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-134"></span><span id="cb1-135"></span><span id="cb1-136"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-137"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-138"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-139"></span><span id="cb1-140"><span class="fu"></span><span class="fu"></span><span class="sc"></span><span class="st"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-141"><span class="fu"></span><span class="fu"></span><span class="sc"></span><span class="st"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-142"><span class="fu"></span><span class="fu"></span><span class="sc"></span><span class="st"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-143"></span><span id="cb1-144"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-145"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-146"></span><span id="cb1-147"></span><span id="cb1-148"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-149"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-150"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-151"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-152"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span></span><span id="cb1-153"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span><span class="cn"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-154"></span><span id="cb1-155"><span class="sc"></span><span class="fu"></span><span class="sc"></span><span class="er"></span></span><span id="cb1-156"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="er"></span></span><span id="cb1-157"><span class="fu"></span><span class="sc"></span><span class="er"></span><span class="dv"></span></span><span id="cb1-158"></span><span id="cb1-159"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-160"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-161"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-162"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-163"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-164"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-165"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-166"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-167"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-168"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-169"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span></span><span id="cb1-170"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="dv"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-171"></span><span id="cb1-172"><span class="fu"></span><span class="at"></span><span class="sc"></span><span class="at"></span><span class="dv"></span><span class="at"></span><span class="dv"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-173"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-174"></span><span id="cb1-175"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-176"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-177"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-178"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-179"></span><span id="cb1-180"><span class="fu"></span><span class="sc"></span><span class="at"></span><span class="fu"></span><span class="st"></span><span class="st"></span></span><span id="cb1-181"><span class="st"></span><span class="st"></span><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-182"></span><span id="cb1-183"><span class="sc"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-184"></span><span id="cb1-185"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span></span><span id="cb1-186"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-187"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-188"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-189"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-190"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-191"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-192"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-193"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-194"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-195"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-196"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-197"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-198"><span class="sc"></span><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-199"></span><span id="cb1-200"></span><span id="cb1-201"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-202"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-203"></span><span id="cb1-204"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-205"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-206"></span><span id="cb1-207"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-208"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-209"></span><span id="cb1-210"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-211"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-212"></span><span id="cb1-213"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-214"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-215"></span><span id="cb1-216"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-217"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-218"></span><span id="cb1-219"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-220"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-221"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-222"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-223"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-224"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-225"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-226"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-227"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span></span><span id="cb1-228"><span class="sc"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-229"></span><span id="cb1-230"><span class="fu"></span><span class="sc"></span><span class="at"></span><span class="fu"></span><span class="st"></span></span><span id="cb1-231"><span class="st"></span></span><span id="cb1-232"><span class="st"></span></span><span id="cb1-233"><span class="st"></span></span><span id="cb1-234"><span class="st"></span></span><span id="cb1-235"><span class="st"></span></span><span id="cb1-236"><span class="st"></span></span><span id="cb1-237"><span class="st"></span></span><span id="cb1-238"><span class="st"></span></span><span id="cb1-239"><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-240"><span class="sc"></span><span class="dv"></span><span class="ot"></span></span><span id="cb1-241"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="st"></span><span class="st"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-242"><span class="sc"></span><span class="fu"></span><span class="at"></span><span class="fu"></span><span class="st"></span><span class="st"></span><span class="st"></span><span class="at"></span><span class="st"></span><span class="ot"></span></span><span id="cb1-243"><span class="sc"></span><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="at"></span><span class="fu"></span><span class="st"></span><span class="st"></span><span class="st"></span><span class="ot"></span></span><span id="cb1-244"><span class="fu"></span><span class="sc"></span><span class="sc"></span><span class="dv"></span><span class="sc"></span><span class="dv"></span><span class="dv"></span><span class="ot"></span><span class="sc"></span></span><span id="cb1-245"></span><span id="cb1-246"><span class="fu"></span><span class="dv"></span><span class="sc"></span><span class="dv"></span><span class="fu"></span><span class="dv"></span><span class="dv"></span><span class="dv"></span><span class="ot"></span></span><span id="cb1-247"><span class="fu"></span><span class="dv"></span><span class="ot"></span><span class="st"></span></span><span id="cb1-248"></span><span id="cb1-249"><span class="fu"></span><span class="at"></span><span class="fu"></span><span class="st"></span><span class="st"></span><span class="ot"></span></span><span id="cb1-250"><span class="fu"></span><span class="sc"></span><span class="ot"></span><span class="fu"></span><span class="st"></span><span class="st"></span><span class="st"></span></span><span id="cb1-251"><span class="do"></span></span><span id="cb1-252"><span class="fu"></span></span></code></pre></div></div></details><div class="cell-output-display"><div id="ewfgsyxmbu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><style></style><table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false"><thead><tr class="gt_col_headings header"><th id="sex" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"></th><th id="sector" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"></th><th id="a2018-19" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"></th><th id="a2019-20" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"></th></tr></thead><tbody class="gt_table_body"><tr class="odd"><td class="gt_row gt_center" headers="sex"></td><td class="gt_row gt_center" headers="sector"></td><td class="gt_row gt_right" headers="2018-19"></td><td class="gt_row gt_right" headers="2019-20"></td></tr><tr class="even"><td class="gt_row gt_center" headers="sex"></td><td class="gt_row gt_center" headers="sector"></td><td class="gt_row gt_right" headers="2018-19"></td><td class="gt_row gt_right" headers="2019-20"></td></tr><tr class="odd"><td class="gt_row gt_center" headers="sex"></td><td class="gt_row gt_center" headers="sector"></td><td class="gt_row gt_right" headers="2018-19"></td><td class="gt_row gt_right" headers="2019-20"></td></tr><tr class="even"><td class="gt_row gt_center" headers="sex"></td><td class="gt_row gt_center" headers="sector"></td><td class="gt_row gt_right" headers="2018-19"></td><td class="gt_row gt_right" headers="2019-20"></td></tr><tr class="odd"><td class="gt_row gt_center" headers="sex"></td><td class="gt_row gt_center" headers="sector"></td><td class="gt_row gt_right" headers="2018-19"></td><td class="gt_row gt_right" headers="2019-20"></td></tr><tr class="even"><td class="gt_row gt_center" headers="sex"></td><td class="gt_row gt_center" headers="sector"></td><td class="gt_row gt_right" headers="2018-19"></td><td class="gt_row gt_right" headers="2019-20"></td></tr></tbody></table></div></div><details class="code-fold"><summary></summary><div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="do"></span></span><span id="cb2-2"><span class="do"></span></span><span id="cb2-3"><span class="do"></span></span><span id="cb2-4"><span class="do"></span></span><span id="cb2-5"><span class="do"></span></span></code></pre></div></div></details>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+2 Nov 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="7" data-categories="Rm9vZCUyMEVjb25vbXklMkNBZ3JpY3VsdHVyZSUyQ1B1YmxpYyUyMFBvbGljeQ==" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1774796020510" data-listing-date-modified-sort="1774796020000" data-listing-reading-time-sort="11" data-listing-word-count-sort="2153">
+<a href="./data_vizs/stocks.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+India’s Foodgrain Buffer Stocks: Trends, Norms, and Policy
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Rm9vZCUyMEVjb25vbXk='); return false;">Food Economy</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmU='); return false;">Agriculture</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHVibGljJTIwUG9saWN5'); return false;">Public Policy</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Interactive analysis of India’s central pool foodgrain stocks — rice, wheat, unmilled paddy, and coarse grains — from 1972 to 2025, tracking stock positions against buffer…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+1 Nov 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="8" data-categories="Rm9vZCUyMEVjb25vbXklMkNQcmljZXM=" data-listing-date-sort="1761935400000" data-listing-file-modified-sort="1774089134412" data-listing-date-modified-sort="1774089134000" data-listing-reading-time-sort="17" data-listing-word-count-sort="3267">
+<a href="./data_vizs/foodprice.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Food Prices in India: Retail vs.&nbsp;Wholesale Dynamics
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Rm9vZCUyMEVjb25vbXk='); return false;">Food Economy</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJpY2Vz'); return false;">Prices</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Interactive analysis of retail and wholesale food prices across commodity groups — cereals, pulses, edible oils, and vegetables — tracking price trends, spread analysis, and…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+1 Nov 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="9" data-categories="RnVlbCUyQ1ByaWNlcyUyQ0VuZXJneQ==" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1773574994471" data-listing-date-modified-sort="1773574994000" data-listing-reading-time-sort="9" data-listing-word-count-sort="1674">
+<a href="./data_vizs/fuelprice.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Fuel Price Analysis: India’s Retail Prices &amp; International Crude Dynamics
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('RnVlbA=='); return false;">Fuel</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJpY2Vz'); return false;">Prices</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RW5lcmd5'); return false;">Energy</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A comprehensive analysis of crude oil price trends, international petrol/diesel prices, and retail fuel prices in India’s metro cities.</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+30 Oct 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="10" data-categories="Rm9vZCUyMEVjb25vbXklMkNQcm9jdXJlbWVudCUyQ0FncmljdWx0dXJlJTIwUG9saWN5" data-listing-date-sort="1761762600000" data-listing-file-modified-sort="1774794848775" data-listing-date-modified-sort="1774794848000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1412">
+<a href="./data_vizs/procurement.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+India’s Public Foodgrain Procurement: Trends, Patterns &amp; Policy Implications
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Rm9vZCUyMEVjb25vbXk='); return false;">Food Economy</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UHJvY3VyZW1lbnQ='); return false;">Procurement</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QWdyaWN1bHR1cmUlMjBQb2xpY3k='); return false;">Agriculture Policy</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>A detailed analysis of foodgrain procurement by FCI and state agencies across marketing seasons, with regional breakdowns and MSP evolution.</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+30 Oct 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="11" data-categories="VHJhZGUlMkNFY29ub215" data-listing-date-sort="1761676200000" data-listing-file-modified-sort="1773577776482" data-listing-date-modified-sort="1773577776000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2940">
+<a href="./data_vizs/trade.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+India’s Trade Statistics: Exports, Imports &amp; Sectoral Composition
+</h5>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RWNvbm9teQ=='); return false;">Economy</div>
+
+</div>
+<div class="card-text listing-description delink">
+<p>Interactive analysis of India’s total merchandise trade — exports, imports, trade balance, and sector-level composition including cereals, fertilizers, and petroleum — using…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+29 Oct 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="12" data-categories="VHJhZGUlMkNFeHBvcnRzJTJDSW1wb3J0cw==" data-listing-date-sort="1761676200000" data-listing-file-modified-sort="1773575116489" data-listing-date-modified-sort="1773575116000" data-listing-reading-time-sort="10" data-listing-word-count-sort="1903">
 <a href="./data_vizs/trade2.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
@@ -691,24 +642,53 @@ India’s Trade Statistics: Exports, Imports &amp; Sectoral Composition
 <div class="listing-category" onclick="window.quartoListingCategory('SW1wb3J0cw=='); return false;">Imports</div>
 
 </div>
-<table class="card-other-values">
+<div class="card-text listing-description delink">
+<p>A comprehensive interactive analysis of India’s merchandise trade — total flows, trade balance, cereals exports, fertilizer and petroleum imports — with HS code level…</p>
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+29 Oct 2025
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="13" data-categories="VHJhZGUlMkNFZGlibGUlMjBPaWxz" data-listing-date-sort="1761589800000" data-listing-file-modified-sort="1778690997736" data-listing-date-modified-sort="1778690997000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2881">
+<a href="./data_vizs/edibleoil.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Edible Oils Import by India
+</h5>
+<div class="listing-categories">
 
-<tbody><tr>
-<td>
-Modified
-</td>
-<td class="date-modified">
-March 15, 2026
-</td>
-</tr>
+<div class="listing-category" onclick="window.quartoListingCategory('VHJhZGU='); return false;">Trade</div>
 
-</tbody></table>
+<div class="listing-category" onclick="window.quartoListingCategory('RWRpYmxlJTIwT2lscw=='); return false;">Edible Oils</div>
+
+</div>
+<div class="card-text listing-description delink">
+India, one of the world’s largest consumers and importers of edible oils, has seen significant evolution in its import basket over the last decade. An analysis of import…
+</div>
+<div class="card-attribution card-text-small end">
+<div class="listing-date">
+28 Oct 2025
+</div>
+</div>
 </div>
 </div></a>
 </div>
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div>
+
+
+
+
+</main> <!-- /main -->
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<script src="assets/site.js"></script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -796,6 +776,11 @@ March 15, 2026
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
@@ -1113,16 +1098,34 @@ March 15, 2026
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>© Pawan</p>
+<p>© 2025 Pawan</p>
 </div>   
     <div class="nav-footer-center">
-<p>Built with <a href="https://quarto.org">Quarto</a> &amp; R</p>
-<div class="toc-actions"><ul><li><a href="https://github.com/pawan1198/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://quarto.org">
+<p>Built with Quarto</p>
+</a>
+  </li>  
+</ul>
+    </div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/pawan1198">
       <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/">
+      <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:pawanjangra1198@gmail.com">
+      <i class="bi bi-envelope" role="img">
 </i> 
     </a>
   </li>  

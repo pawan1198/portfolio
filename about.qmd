@@ -1,66 +1,63 @@
 ---
-title: "About Me"
-description: "Learn more about Pawan Jangra — researcher, R programmer, and survey specialist."
-toc: true
+title: "About"
+page-layout: full
+toc: false
 ---
 
-## Hello, I'm Pawan 👋
-
-I'm a **data analyst and field researcher** with over 7 years of experience in survey methodology, statistical analysis, and research coordination across India.
-
-My work sits at the intersection of **economics, statistics, and data science** — translating complex survey data into clear insights that inform policy and research.
-
-## What I Do
-
-I specialize in:
-
-- **Survey Research** — End-to-end survey operations, from questionnaire design to data collection and analysis
-- **Statistical Programming** — R (primary), Python, and data pipeline automation
-- **Data Visualization** — Creating clear, reproducible visualizations with ggplot2, plotly, and Quarto
-- **Labour Economics** — Analysis of PLFS, NSS, and other government microdata
-- **Reproducible Research** — Building fully documented, reproducible research workflows
-
-## Tools & Technologies
-
 ```{=html}
-<div class="skills-grid" style="margin:1.5rem 0;">
-  <div class="skill-card"><div class="skill-icon">📊</div><div class="skill-name">R / Tidyverse</div><div class="skill-bar"><div class="skill-bar-fill" style="width:93%"></div></div></div>
-  <div class="skill-card"><div class="skill-icon">🐍</div><div class="skill-name">Python / Pandas</div><div class="skill-bar"><div class="skill-bar-fill" style="width:78%"></div></div></div>
-  <div class="skill-card"><div class="skill-icon">📋</div><div class="skill-name">Quarto / RMarkdown</div><div class="skill-bar"><div class="skill-bar-fill" style="width:88%"></div></div></div>
-  <div class="skill-card"><div class="skill-icon">🗺️</div><div class="skill-name">ODK / Survey CTO</div><div class="skill-bar"><div class="skill-bar-fill" style="width:90%"></div></div></div>
-  <div class="skill-card"><div class="skill-icon">🐧</div><div class="skill-name">Linux / Bash</div><div class="skill-bar"><div class="skill-bar-fill" style="width:70%"></div></div></div>
-  <div class="skill-card"><div class="skill-icon">🌐</div><div class="skill-name">Web Scraping</div><div class="skill-bar"><div class="skill-bar-fill" style="width:72%"></div></div></div>
+<div class="page-band">
+  <span class="section-label section-label-light">About Me</span>
+  <h1>Pawan Jangra</h1>
+  <p>Data Analyst · Survey Researcher · Economic Researcher · New Delhi, India</p>
 </div>
-```
 
-## Education & Training
+<div class="about-wrap">
+  <div class="profile-card">
+    <div class="avatar">PJ</div>
+    <div class="profile-name">Pawan Jangra</div>
+    <div class="profile-role">Data Analyst &amp; Research Consultant</div>
+    <div class="profile-links">
+      <a href="mailto:pawanjangra1198@gmail.com" class="profile-link">✉️ pawanjangra1198@gmail.com</a>
+      <a href="https://github.com/pawan1198" class="profile-link" target="_blank">💻 github.com/pawan1198</a>
+      <a href="https://www.linkedin.com/in/pawanjangra1198/" class="profile-link" target="_blank">🔗 pawanjangra1198</a>
+      <a href="https://twitter.com/pawanjangra1198" class="profile-link" target="_blank">🐦 @pawanjangra1198</a>
+      <a href="#" class="profile-link">📍 New Delhi, India</a>
+    </div>
+    <div class="tag-list" style="margin-top:1.5rem;justify-content:center;">
+      <span class="tag tag-blue">R</span><span class="tag tag-teal">Quarto</span>
+      <span class="tag tag-dark">data.table</span><span class="tag tag-dark">ggplot2</span>
+      <span class="tag tag-blue">ODK</span><span class="tag tag-amber">Shiny</span>
+    </div>
+  </div>
 
-- **IDEAs Advanced Certificate Programme** on Research in Political Economy (2022–2024)
-- Ongoing self-study in econometrics, machine learning, and causal inference
+  <div>
+    <span class="section-label">Who I Am</span>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Hello 👋</h2>
+    <div class="about-prose">
+      <p>I'm a <strong>data analyst and independent economic researcher</strong> with over 7 years of experience in survey methodology, statistical analysis, and research coordination across India. My work sits at the intersection of economics, statistics, and data science — translating complex survey microdata into clear, policy-relevant insights.</p>
+      <p>I have worked with leading institutions including <strong>OP Jindal Global University</strong>, the <strong>IDEAs Advanced Certificate Programme</strong>, and the <strong>Society for Social and Economic Research (SSER)</strong>. My domain expertise spans labour economics, agricultural markets, fiscal policy, and trade.</p>
+      <p>I specialise in <strong>reproducible research workflows</strong>: building fully documented, version-controlled pipelines in R and Quarto — from blog posts to full 18-chapter textbooks and interactive Shiny dashboards.</p>
+    </div>
 
-## Publications & Projects
+    <h3 style="font-family:'Fraunces',serif;color:#0f172a;font-size:1.25rem;margin:2.5rem 0 1.25rem;">Technical Skills</h3>
+    <div class="skill-grid">
+      <div class="skill-item"><div class="skill-label"><span>R / Tidyverse / data.table</span><span class="skill-pct">93%</span></div><div class="skill-track"><div class="skill-fill" style="width:93%"></div></div></div>
+      <div class="skill-item"><div class="skill-label"><span>Quarto / RMarkdown</span><span class="skill-pct">90%</span></div><div class="skill-track"><div class="skill-fill" style="width:90%"></div></div></div>
+      <div class="skill-item"><div class="skill-label"><span>ggplot2 / ggiraph / Shiny</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
+      <div class="skill-item"><div class="skill-label"><span>ODK / SurveyCTO / CAPI</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" style="width:88%"></div></div></div>
+      <div class="skill-item"><div class="skill-label"><span>Statistical Modelling / Econometrics</span><span class="skill-pct">82%</span></div><div class="skill-track"><div class="skill-fill" style="width:82%"></div></div></div>
+      <div class="skill-item"><div class="skill-label"><span>Python / Pandas / Selenium</span><span class="skill-pct">78%</span></div><div class="skill-track"><div class="skill-fill" style="width:78%"></div></div></div>
+      <div class="skill-item"><div class="skill-label"><span>Linux / Bash / Git</span><span class="skill-pct">75%</span></div><div class="skill-track"><div class="skill-fill" style="width:75%"></div></div></div>
+      <div class="skill-item"><div class="skill-label"><span>Web Scraping (rvest / RSelenium)</span><span class="skill-pct">72%</span></div><div class="skill-track"><div class="skill-fill" style="width:72%"></div></div></div>
+    </div>
 
-- Analysis of Union Budget allocation trends (2015–2024)
-- Periodic Labour Force Survey data processing pipeline in R
-- Health financing survey data management — OP Jindal Global University (2025)
-
-## Get in Touch
-
-I'm always open to research collaborations, data analysis consulting, and academic support.
-
-```{=html}
-<div class="contact-grid" style="margin-top:1.5rem;">
-  <a href="https://github.com/pawan1198" class="contact-card" target="_blank">
-    <span class="contact-icon">🐙</span><strong>GitHub</strong>
-    <span style="font-size:0.8rem;color:#64748b">@pawan1198</span>
-  </a>
-  <a href="https://www.linkedin.com/in/pawanjangra1198/" class="contact-card" target="_blank">
-    <span class="contact-icon">💼</span><strong>LinkedIn</strong>
-    <span style="font-size:0.8rem;color:#64748b">pawanjangra1198</span>
-  </a>
-  <a href="mailto:pawanjangra1198@gmail.com" class="contact-card">
-    <span class="contact-icon">📧</span><strong>Email</strong>
-    <span style="font-size:0.8rem;color:#64748b">pawanjangra1198@gmail.com</span>
-  </a>
+    <h3 style="font-family:'Fraunces',serif;color:#0f172a;font-size:1.25rem;margin:2.5rem 0 1.25rem;">Get in Touch</h3>
+    <div class="contact-grid">
+      <a href="https://github.com/pawan1198" class="contact-card" target="_blank"><span class="contact-card-icon">💻</span><div><strong>GitHub</strong><span>@pawan1198</span></div></a>
+      <a href="https://www.linkedin.com/in/pawanjangra1198/" class="contact-card" target="_blank"><span class="contact-card-icon">🔗</span><div><strong>LinkedIn</strong><span>pawanjangra1198</span></div></a>
+      <a href="mailto:pawanjangra1198@gmail.com" class="contact-card"><span class="contact-card-icon">✉️</span><div><strong>Email</strong><span>pawanjangra1198@gmail.com</span></div></a>
+      <a href="https://twitter.com/pawanjangra1198" class="contact-card" target="_blank"><span class="contact-card-icon">🐦</span><div><strong>Twitter / X</strong><span>@pawanjangra1198</span></div></a>
+    </div>
+  </div>
 </div>
 ```

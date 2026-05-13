@@ -1,0 +1,12 @@
+---
+title: "TidyTuesday Collection 2024–2026"
+description: "Weekly data visualisation challenges — static ggplot2 charts and interactive Shiny versions for selected weeks, covering economics, science, culture, and sports datasets."
+author: "Pawan Jangra"
+date: "2024-01-01"
+categories: [TidyTuesday, ggplot2, Shiny, Data Viz]
+image: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=600&q=80"
+---
+
+**GitHub:** [github.com/pawan1198](https://github.com/pawan1198)
+
+**Tools used:** R, ggplot2, ggiraph, Shiny, patchwork, data.table

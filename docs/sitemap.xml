@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pawan1198.github.io/portfolio/index.html</loc>
-    <lastmod>2026-05-13T17:02:13.548Z</lastmod>
+    <lastmod>2026-05-13T17:02:25.637Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/shiny_app.html</loc>
@@ -62,11 +62,11 @@
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/article.html</loc>
-    <lastmod>2026-05-13T03:06:42.000Z</lastmod>
+    <lastmod>2026-07-21T16:01:09.007Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/skills.html</loc>
-    <lastmod>2026-05-13T03:07:52.000Z</lastmod>
+    <lastmod>2026-07-21T15:59:12.027Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/statistics-with-r/chapter1.html</loc>
@@ -99,5 +99,29 @@
   <url>
     <loc>https://pawan1198.github.io/portfolio/projects/plfs-pipeline.html</loc>
     <lastmod>2026-05-13T03:08:12.000Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/article/article1.html</loc>
+    <lastmod>2026-07-21T15:59:46.381Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/article/article-fuel-prices-2026.html</loc>
+    <lastmod>2026-07-21T15:55:07.461Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/article/article-trade-2026.html</loc>
+    <lastmod>2026-07-21T15:55:24.361Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/article/article-ev-transition.html</loc>
+    <lastmod>2026-07-21T16:00:52.184Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/article/article-gst-8years.html</loc>
+    <lastmod>2026-07-21T15:54:49.477Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/article/article-ihds.html</loc>
+    <lastmod>2026-07-21T15:55:33.208Z</lastmod>
   </url>
 </urlset>

@@ -1,0 +1,109 @@
+---
+title: "1,755 Billion Dollars Short"
+subtitle: "Eight years, 24,000 tariff lines, and one uncomfortable truth: India's trade deficit isn't a policy failure, it's a structural feature"
+author: "Pawan"
+date: "2026/07/20"
+date-modified: last-modified
+categories:
+  - "Trade"
+  - "Economy"
+  - "Articles"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: litera
+    css: |
+      body { font-family: "Source Serif 4", Georgia, serif; color:#1c1c1c; background:#faf7f0; line-height:1.75; }
+      h1, h2, h3 { font-family: "Fraunces", "Georgia", serif; color:#1c2b40; }
+      .drop { float:left; font-family:"Fraunces",serif; font-size:4.2rem; line-height:0.8; padding-right:0.35rem; padding-top:0.15rem; color:#2c5c8a; font-weight:700; }
+      blockquote { border-left: 4px solid #2c5c8a; background:#e9eff5; padding: 0.8rem 1.2rem; font-style: italic; }
+      table { font-size: 0.9rem; }
+      code { color:#2c5c8a; }
+---
+
+<span class="drop">L</span>ine up eight years of India's merchandise trade data, at the 8-digit tariff-line level — 11,993 distinct export codes, 11,551 import codes, close to 4 million monthly observations — and one number sits at the bottom of every table: a cumulative trade deficit of USD 1,755.4 billion between April 2018 and March 2026. Exports of USD 3,130.1 billion against imports of USD 4,885.5 billion. Every single year in the dataset closed in deficit. Not most years. Every year.
+
+That kind of consistency should change how the number gets talked about. A deficit that shows up once in a while is a cyclical story — currency movements, a bad commodity year, a one-off import surge. A deficit that shows up in eight consecutive years, through a pandemic, a war, and a domestic manufacturing push, is not cyclical. It's the shape of the Indian economy — and it echoes a finding from a decade-old structural-break analysis of India's exports and imports, which found no stable long-run equilibrium relationship between the two series across six decades of Indian trade history, meaning the deficit does not simply self-correct through the channels standard trade theory would predict (structural-break cointegration study, *North American Journal of Economics and Finance*).
+
+## The two commodities that explain almost everything
+
+Look past the aggregate numbers and the deficit resolves into something much simpler than "structural imbalance" implies: it is, to a striking degree, an oil story with a gold problem attached.
+
+Crude petroleum alone accounts for USD 559.1 billion of cumulative imports over the eight-year window — the single largest import line by a wide margin — with refined petroleum products (USD 411.0 billion) close behind. Add gold (USD 285.9 billion) and rough diamonds (USD 112.1 billion), and four commodity lines account for a meaningful share of India's entire eight-year import bill.
+
+On the export side, the same commodity — petroleum — shows up again, but reversed. Refined diesel (USD 131.5 billion), petrol (USD 62.0 billion), aviation turbine fuel (USD 56.7 billion), and other refined products together make petroleum India's *largest export category too*, because Jamnagar and India's other mega-refineries buy crude, process it, and re-export the output at a margin. India imports the raw material for its top export.
+
+| HS Chapter | Description | Exports (USD B) | Imports (USD B) |
+|---|---|---:|---:|
+| 27 | Mineral Fuels | 500.9 | 1,527.5 |
+| 71 | Gems & Precious Stones | 276.9 | 604.9 |
+| 85 | Electrical Machinery | 216.3 | 544.0 |
+| 84 | Machinery | 212.6 | 422.1 |
+| 30 | Pharmaceuticals | 160.6 | — |
+| 29 | Organic Chemicals | 158.3 | 199.5 |
+
+The rule of thumb buried in this table: a USD 10 per barrel move in crude prices shifts India's annual trade balance by roughly USD 15–18 billion, in either direction, more or less automatically — before a single policy decision gets made.
+
+## What "concentration" actually looks like, numerically
+
+Trade economists measure how spread-out (or bunched-up) a country's trade basket is using the Herfindahl-Hirschman Index — the same tool used to measure market power in antitrust cases, repurposed here to measure commodity concentration. A score under 1,000 signals a diversified basket; above 2,500 signals dangerous concentration in a handful of goods.
+
+India's export HHI sits at 569 — genuinely diversified, helped by the fact that petroleum's dominance is offset by sizeable pharmaceutical, engineering, and gems exports sitting underneath it. India's import HHI sits at 1,390 — noticeably more concentrated, driven by the same three culprits repeatedly: crude oil, electronics, and gold. India's import basket, in other words, has fewer places to hide from a shock than its export basket does — consistent with bilateral-trade research showing India runs deficits with nine of its ten largest trading partners simultaneously, a pattern that recurring studies attribute less to any single bilateral relationship than to exactly this kind of concentrated import dependence (bilateral trade performance research, 2026).
+
+## The three-phase story hiding inside "eight years of deficit"
+
+Zoom into the year-by-year numbers and the deficit isn't a flat, unchanging feature — it moves through three distinct regimes.
+
+| Year | Exports (USD B) | Imports (USD B) | Balance (USD B) |
+|---|---:|---:|---:|
+| 2018 | 324.8 | 514.5 | −189.7 |
+| 2019 | 324.3 | 485.9 | −161.6 |
+| 2020 | 276.5 | 373.3 | −96.8 |
+| 2021 | 395.5 | 573.2 | −177.7 |
+| 2022 | 453.2 | 720.2 | −267.0 |
+| 2023 | 431.4 | 673.7 | −242.3 |
+| 2024 | 442.8 | 718.2 | −275.4 |
+| 2025 | 445.1 | 755.3 | −310.2 |
+
+Phase one, the **contraction**: 2019–20, when both flows collapsed roughly 22% as COVID lockdowns shut down global demand and supply chains simultaneously — and, paradoxically, this is the year with the *smallest* deficit in the dataset, at USD 96.8 billion, purely because imports fell faster than exports did.
+
+Phase two, the **expansion**: 2021–22, a V-shaped recovery so sharp that exports hit an all-time high of USD 453.2 billion in 2022, driven by a global commodity super-cycle and pent-up post-pandemic demand. The deficit widened sharply in the same window, because imports rebounded even faster.
+
+Phase three, the **plateau-with-a-widening-gap**: 2023 onward, where exports have essentially flatlined in the USD 430–450 billion range for three consecutive years while imports kept climbing, pushing the deficit to a dataset record of USD 310.2 billion in 2025 — nearly triple the 2020 trough.
+
+That third phase is the one that should worry policymakers more than the first two. A deficit that widens because a shock temporarily distorts trade flows is self-correcting. A deficit that widens because exports have stopped growing while imports keep growing is not.
+
+## Diversification is real — but it's a rounding error next to petroleum
+
+It would be unfair to the data to say nothing is changing on the export side. Pharmaceuticals, engineering goods, electronic components, and agricultural products have all genuinely expanded their share of the export basket over the eight-year window, and India's export HHI has drifted marginally lower as a result. Basmati rice alone brought in USD 34.5 billion cumulatively — a top-ten export commodity in its own right, and a reminder that agricultural trade is not a footnote in this dataset.
+
+But scale it against the numbers above: the top five HS chapters still account for over 60% of total exports. Diversification is happening at the margin, not at the core. The core is still petroleum, gems, and machinery, exactly as it was in 2018.
+
+## The import line that's actually new
+
+If there's a genuinely fresh structural pressure in this dataset — something that wasn't as prominent in earlier decades of India's trade history — it's electronics. Monolithic integrated circuits alone account for USD 75.7 billion in cumulative imports, and the electronics import bill overall has grown faster than any other major category across the eight years, driven simultaneously by consumer demand (smartphones, laptops) and by the assembly requirements of India's own Production-Linked Incentive manufacturers, who import components to build finished electronics domestically. It's an uncomfortable irony: a policy designed to reduce import dependence over the long run is, in the short run, adding to the import bill it's meant to eventually shrink.
+
+## What the ledger says about the next decade
+
+Three forces will determine whether India's trade deficit narrows or keeps widening through the next cycle. The energy transition should, mechanically, reduce both crude imports and refined-product exports over time — shrinking the two biggest lines on both sides of the ledger simultaneously, a wash on the trade balance but a genuine reduction in exposure to oil-price shocks. The success (or failure) of import-substitution manufacturing in electronics and capital goods will determine whether the fastest-growing import category keeps growing. And market diversification — away from a trading system still centred on the US and China, toward partners in Africa, the Middle East, and Southeast Asia — will determine how much of any future export growth actually shows up as diversification, rather than just more of the same commodities sold to more of the same three buyers.
+
+None of that changes the headline fact sitting at the bottom of eight years of tariff-line data: USD 1,755.4 billion of cumulative deficit, in a straight, unbroken line, through a pandemic, a war, and a manufacturing push that hasn't yet turned the trend around.
+
+## Literature Review
+
+The empirical literature on India's trade deficit has a long-running methodological debate at its core: is the deficit a sustainable feature of a fast-growing, capital-importing economy, or a structural imbalance that eventually forces a reckoning? An early and still-cited contribution applying structural-break cointegration techniques to India's exports and imports found no stable long-run equilibrium relationship between the two series across six decades — evidence, the authors argued, that India's trade position has not historically been self-correcting through the channels standard trade theory would predict, and that policy intervention rather than automatic adjustment has done most of the work in any period of narrowing. That finding, now over a decade old, sits comfortably alongside this analysis's own three-phase reading of the 2018–2025 data: each phase break (2020 contraction, 2021–22 expansion, 2023 plateau) tracks an external shock or policy response, not a gradual equilibrium adjustment.
+
+A second, more policy-oriented strand of literature — including recurring bilateral-trade-performance studies — has focused on the fact that India runs deficits with nine of its ten largest trading partners simultaneously, attributing this less to any single bilateral relationship than to the commodity concentration this piece quantifies via the HHI framework: energy, gold, and increasingly electronics import dependence that no single trade agreement or partner-diversification strategy can fully offset. Where this literature remains comparatively thin is on the electronics-import paradox highlighted above — the tension between PLI-driven component imports in the short run and import-substitution goals in the long run — an area that would benefit from more granular, HS-8-digit-level research as India's electronics manufacturing base matures.
+
+## References
+
+- The Sustainability of Trade Deficits in the Presence of Endogenous Structural Breaks: Evidence from the Indian Economy. *North American Journal of Economics and Finance* (ScienceDirect).
+- India's Bilateral Trade Performance with Major Trading Partners. (2026). *The Academic* (peer-reviewed working paper).
+- India's Trade Deficit: Increasing Fast but Still Manageable. Indian Council for Research on International Economic Relations (ICRIER)-affiliated commentary.
+- Directorate General of Commercial Intelligence and Statistics (DGCI&S), Ministry of Commerce & Industry — monthly 8-digit HS code export/import series.
+- Directorate General of Foreign Trade (DGFT) — trade policy and licensing data.
+
+---
+
+*Data: DGCI&S / DGFT monthly 8-digit HS code series, April 2018–March 2026 (11,993 export codes, 11,551 import codes). Analysis by Pawan. A companion interactive dashboard is available [here](../data_vizs/trade_dashboard_v2.html).*

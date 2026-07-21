@@ -1,0 +1,106 @@
+---
+title: "Twenty-Five Years, One Barrel at a Time"
+subtitle: "What a quarter-century of the Indian Crude Oil Basket reveals about the real price of the tank you just filled"
+author: "Pawan"
+date: "2026/07/20"
+date-modified: last-modified
+categories:
+  - "Fuel"
+  - "Energy"
+  - "Articles"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: litera
+    css: |
+      body { font-family: "Source Serif 4", Georgia, serif; color:#1c1c1c; background:#faf7f0; line-height:1.75; }
+      h1, h2, h3 { font-family: "Fraunces", "Georgia", serif; color:#1f2a1a; }
+      .drop { float:left; font-family:"Fraunces",serif; font-size:4.2rem; line-height:0.8; padding-right:0.35rem; padding-top:0.15rem; color:#8a5a2b; font-weight:700; }
+      blockquote { border-left: 4px solid #8a5a2b; background:#f2ead9; padding: 0.8rem 1.2rem; font-style: italic; }
+      table { font-size: 0.92rem; }
+      code { color:#8a5a2b; }
+---
+
+<span class="drop">I</span>n mid-July 2026, Brent crude touched its highest level in nearly a month, and Indian equity markets opened lower the same morning. The proximate cause was familiar to anyone who has watched an oil chart for more than a decade: a flare-up between the United States and Iran near the Strait of Hormuz, the narrow waterway through which roughly a fifth of the world's oil physically passes on its way to buyers like India. It is, in one sense, an old story wearing a new date. It is also the cleanest possible illustration of a fact that a full quarter-century of Indian Crude Oil Basket data makes brutally obvious: India's fuel bill is not really set in Delhi. It is set wherever the last tanker was most recently threatened.
+
+## The basket, explained without the jargon
+
+Every day, the Petroleum Planning & Analysis Cell publishes a number called the Indian Crude Oil Basket — a weighted average of Oman/Dubai sour crude (the heavier, cheaper-to-trade, harder-to-refine grade that dominates India's Gulf imports) and Brent sweet crude (the lighter international benchmark). It typically trades 2–5% below Brent itself, and since 2022 that discount has widened further because of one specific development: India began buying large volumes of sanctioned-but-discounted Russian Urals crude, at times $20–35 a barrel cheaper than the prevailing international price.
+
+Twenty-five years of this number, laid end to end, does not describe a market finding equilibrium. It describes a market lurching from shock to shock, with brief plateaus in between.
+
+| Period | Basket Price (USD/bbl) | What Happened |
+|---|---|---|
+| ~2000–2003 | $20–30 | Low, stable supply |
+| 2004–2008 | $30–133 | China demand boom; commodity supercycle |
+| 2009 | Falls to $40 | Global Financial Crisis |
+| 2010–2014 | $80–110 | Sustained "century oil" era |
+| 2015–2016 | Falls to $30 | US shale boom; OPEC supply surge |
+| 2017–2019 | $50–80 | Gradual recovery |
+| Apr 2020 | Near $20 | COVID-19 demand collapse |
+| 2021–2022 | $80–125+ | Post-COVID rebound + Russia-Ukraine war |
+| 2023–2025 | $70–90 | Stabilisation with geopolitical risk premium |
+| 2026 | Spikes above $110 | US-Iran conflict, Strait of Hormuz disruption |
+
+India now imports over 85% of the crude it consumes — the world's third-largest crude importer by volume — and that dependence has essentially tripled since 1998-99, from roughly 75,000 thousand metric tonnes a year to over 230,000. Every $10 move in the basket price adds or subtracts approximately ₹1.25 lakh crore from India's annual import bill. There is no other single commodity price that moves India's macroeconomy this directly, this fast.
+
+## Why cheap oil didn't make petrol cheap in 2020
+
+Here is the detail that most retellings of the COVID oil crash leave out. When the basket price collapsed to near $20 a barrel in April 2020 — so low that some US contracts briefly traded *negative*, sellers paying buyers to take oil off their hands — petrol prices at Indian pumps barely moved. The reason wasn't refining costs or currency effects. It was policy: the government raised excise duty on petrol by ₹10 a litre and on diesel by ₹13 a litre during exactly this window, capturing the windfall from cheap global oil as tax revenue rather than passing it to consumers.
+
+Then the mirror image happened two years later. When the basket surged past $120 a barrel after Russia's invasion of Ukraine, the government cut excise duty by ₹8 a litre on petrol and ₹6 a litre on diesel in May 2022, absorbing some of the shock rather than letting it flow through to the pump.
+
+The pattern is consistent enough to be treated as a rule rather than an anomaly: **the government is the actual price-smoothing mechanism in India's fuel market, not the international crude cycle.** Dynamic daily pricing, introduced in June 2017, made the pump price mechanically follow the international benchmark day by day — and academic research on India's pass-through mechanism had already anticipated exactly this shift, finding that transmission from global to domestic prices strengthens sharply once administered pricing gives way to market-linked formulas (Bhattacharya & Sen, 2012). What that research could not fully anticipate was how deliberately the tax lever would then be used to work against that same transmission, in both directions, whenever it suited the exchequer.
+
+## Where every rupee of your ₹103 actually goes
+
+Break down a litre of Delhi petrol at current prices and the picture is stark:
+
+| Component | ₹ per Litre | Share |
+|---|---:|---:|
+| Base price (crude + refining + OMC margin) | ~₹54 | ~52% |
+| Central Excise Duty | ~₹20 | ~19% |
+| State VAT and local levies (Delhi) | ~₹19 | ~18% |
+| Dealer commission | ~₹4 | ~4% |
+| Freight, insurance, other | ~₹6 | ~6% |
+
+Roughly ₹45 of every ₹103 you pay for petrol in Delhi is tax. The crude oil itself — the thing everyone blames when prices rise — accounts for only about ₹25–30. Policy-institute research on India's petroleum tax revenue has documented this asymmetry in detail: had the 2015–2020 fall in global crude prices been fully passed through, retail prices would have been meaningfully lower than they were; instead, much of that windfall was captured as excise revenue (ORF, 2024). This is also why petrol prices across Indian metros diverge so much despite drawing on the same refineries and the same crude: Maharashtra's higher VAT rate keeps Mumbai consistently the most expensive of the four major metros, while Delhi's comparatively moderate VAT has kept it the cheapest.
+
+| City | 2025 (₹/L) | 2022 Peak | 2018 Level | Rise since 2018 |
+|---|---:|---:|---:|---:|
+| Delhi | 103.50 | ~107 | ~74 | +₹29.50 |
+| Mumbai | 105.01 | ~111 | ~83 | +₹22.01 |
+| Chennai | 100.80 | ~108 | ~80 | +₹20.80 |
+| Kolkata | 94.77 | ~114 | ~80 | +₹14.77 |
+
+Kolkata's numbers are the most interesting in that table: the highest 2022 peak of any metro, but the smallest cumulative rise since 2018 — evidence of a state government leaning harder on VAT relief than its peers once the acute crisis passed.
+
+## The household arithmetic
+
+For a household with one two-wheeler commuter doing 20 km a day at roughly 40 km/litre, a ₹10 rise in petrol adds about ₹150 a month — not dramatic in isolation, but compounding. A commuter using 15 litres a month paid about ₹1,110 in 2018 at ₹74/litre; at 2025 prices of ₹103.50/litre, the same 15 litres costs ₹1,553 — an extra ₹443 a month, ₹5,310 a year, and more than ₹37,000 cumulatively across seven years, before accounting for anything else fuel prices touch indirectly: freight costs baked into vegetable prices, diesel costs baked into farming, ATF costs baked into flight fares.
+
+## The 2026 test
+
+Which brings the story back to this year. The Strait of Hormuz tensions that pushed Brent above $110–115 in parts of 2026 are not a new category of risk — the basket has weathered the 2008 supercycle, the 2020 demand collapse, and the 2022 war-driven spike. What is new is India's position going into this shock: a Russian crude relationship built over four years that has, at various points, supplied over a third of India's imports at a discount, a strategic petroleum reserve programme that has matured since its early pilot phase, and — for the first time in the Basket's 25-year history — a genuinely fast-growing electric vehicle fleet absorbing some of the marginal fuel-demand growth that would otherwise have made this shock even more expensive.
+
+None of that insulates India from the current spike. It does mean the country is entering its latest oil shock with more shock absorbers than it had in 2008, 2014, or even 2022. Whether those absorbers are enough is now, as it has been for twenty-five years running, mostly a question of what happens in the Gulf — not in Delhi.
+
+## Literature Review
+
+The empirical literature on India's fuel-price pass-through has a clear before-and-after hinge point: 2010, when petrol pricing was formally deregulated (diesel followed in 2014). Bhattacharya and Sen's foundational study on oil-price transmission found that pass-through to Indian retail prices strengthened markedly once administered pricing began giving way to market-linked formulas — precisely the mechanism this piece traces through the tax-versus-crude build-up of a Delhi litre. More recent work extends the same question to the asymmetry angle explored above: a 2022 study on diesel price reforms found India's crude-import demand has become steadily more price- and income-inelastic over time relative to earlier estimates, consistent with the pattern this analysis documents of taxation, not crude cost, absorbing most of the swing in any given price cycle.
+
+A parallel strand of policy-institute research — most usefully summarised in ORF's recurring analyses of petroleum tax revenue — has quantified precisely how much of the 2015–2020 low-crude window was captured as excise revenue rather than passed to consumers, the same asymmetry this piece identifies independently from the raw price data. That literature also flags a genuine equity tension this piece does not resolve: fuel taxation is mildly regressive in incidence terms, even as it functions as a de facto carbon price — India's implicit fuel excise tax per tonne of CO2 has been estimated to exceed comparable rates in the US and China. Whether that trade-off is being managed well, as opposed to simply being convenient for the exchequer, remains a live and under-researched question as India's 2026 oil shock forces a fresh round of tax-versus-pass-through decisions.
+
+## References
+
+- Bhattacharya, K., & Sen, P. (2012). Is the Oil Price Pass-Through in India Any Different? *Energy Policy*.
+- Diesel Price Reforms and Asymmetric Oil Price Pass-Through to Inflation: An Indian Perspective. (2022). *ScienceDirect / IIMB Management Review*-affiliated study.
+- Observer Research Foundation. (2024). *India's Tax Revenue from Petroleum Products: Golden Eggs That May Kill the Goose?*
+- Petroleum Planning & Analysis Cell (PPAC), Government of India — monthly Indian Crude Oil Basket and retail price bulletins.
+- Indian Oil Corporation (IOC) — retail selling price data, four-metro series.
+- U.S. Energy Information Administration (EIA) — historical Brent crude series.
+
+---
+
+*Data: Petroleum Planning & Analysis Cell (PPAC), Indian Oil Corporation, U.S. Energy Information Administration. Analysis by Pawan. A companion interactive dashboard is available [here](../data_vizs/fuel_dashboard_v2.html).*

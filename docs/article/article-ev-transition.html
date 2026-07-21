@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Pawan">
+<meta name="dcterms.date" content="2026-07-20">
+
+<title>From 323 Units to a National Security Question – Pawan</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-81b024a9742a8637bf01ef4cba2e7b63.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4af4e12625706c88bad3bec465191990.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="body { font-family: " source="" serif="" 4",="" georgia,="" serif;="" color:#1c1c1c;="" background:#faf7f0;="" line-height:1.75;="" }="" h1,="" h2,="" h3="" {="" font-family:="" "fraunces",="" "georgia",="" color:#173427;="" .drop="" float:left;="" font-family:"fraunces",serif;="" font-size:4.2rem;="" line-height:0.8;="" padding-right:0.35rem;="" padding-top:0.15rem;="" color:#1f7a5c;="" font-weight:700;="" blockquote="" border-left:="" 4px="" solid="" #1f7a5c;="" background:#e9f2ec;="" padding:="" 0.8rem="" 1.2rem;="" font-style:="" italic;="" table="" font-size:="" 0.92rem;="" code="" }"="">
+<meta property="og:title" content="Pawan — Data Analyst &amp; Economic Researcher">
+<meta property="og:description" content="Survey methodology, statistical analysis, and data storytelling using R and Quarto.">
+<meta property="og:site_name" content="Pawan">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Pawan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-content" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Content</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-content">    
+        <li>
+    <a class="dropdown-item" href="../data_vizs.html">
+ <span class="dropdown-text">📊 Data Visualizations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../blog.html">
+ <span class="dropdown-text">✍️ Blog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../article.html">
+ <span class="dropdown-text">📄 Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../statistics-with-r.html">
+ <span class="dropdown-text">📚 Statistics with R</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../skills.html"> 
+<span class="menu-text">Skills &amp; Projects</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/pawanjangra1198"> <i class="bi bi-twitter-x" role="img" aria-label="Twitter">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#the-number-that-took-a-quarter-century-to-matter" id="toc-the-number-that-took-a-quarter-century-to-matter" class="nav-link active" data-scroll-target="#the-number-that-took-a-quarter-century-to-matter">The number that took a quarter-century to matter</a></li>
+  <li><a href="#six-forces-that-had-to-line-up" id="toc-six-forces-that-had-to-line-up" class="nav-link" data-scroll-target="#six-forces-that-had-to-line-up">Six forces that had to line up</a></li>
+  <li><a href="#the-number-that-makes-this-a-macro-story-not-a-green-one" id="toc-the-number-that-makes-this-a-macro-story-not-a-green-one" class="nav-link" data-scroll-target="#the-number-that-makes-this-a-macro-story-not-a-green-one">The number that makes this a macro story, not a green one</a></li>
+  <li><a href="#three-gaps-that-could-still-stall-it" id="toc-three-gaps-that-could-still-stall-it" class="nav-link" data-scroll-target="#three-gaps-that-could-still-stall-it">Three gaps that could still stall it</a></li>
+  <li><a href="#what-the-data-actually-settles" id="toc-what-the-data-actually-settles" class="nav-link" data-scroll-target="#what-the-data-actually-settles">What the data actually settles</a></li>
+  <li><a href="#literature-review" id="toc-literature-review" class="nav-link" data-scroll-target="#literature-review">Literature Review</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">From 323 Units to a National Security Question</h1>
+<p class="subtitle lead">Twenty-six years of vehicle registration data explain why an oil shock in the Gulf turned India’s slow-burning EV story into urgent policy</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">Electric Vehicles</div>
+    <div class="quarto-category">Energy Policy</div>
+    <div class="quarto-category">Articles</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Pawan </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 20, 2026</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">July 21, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span class="drop">I</span>n the spring of 2026, as Iranian strikes and a US-led response turned the Strait of Hormuz into a genuine shipping hazard, India’s crude oil basket briefly cleared $113 a barrel — more than double where it had started the year. Oil marketing companies were absorbing losses of roughly ₹13 a litre on diesel. The rupee had already shed close to a tenth of its value against the dollar over the fiscal year. And at a public event in Secunderabad, the Prime Minister did something Indian heads of government almost never do: he stood in front of a crowd and asked citizens, directly, to stop driving their petrol cars.</p>
+<p>It made headlines as a dramatic, of-the-moment appeal. It wasn’t, really. It was the visible tip of a trend that twenty-six years of Ministry of Road Transport and Highways registration data had been quietly building toward, one fiscal year at a time.</p>
+<section id="the-number-that-took-a-quarter-century-to-matter" class="level2">
+<h2 class="anchored" data-anchor-id="the-number-that-took-a-quarter-century-to-matter">The number that took a quarter-century to matter</h2>
+<p>In FY2000-01, India registered 323 electric vehicles. In FY2025-26, registrations crossed roughly 25 lakh — a compound annual growth rate above 40% sustained across a quarter-century, through two recessions, a pandemic, and five changes of government. EV market share, essentially flat for the entire 2000s, crossed the 5% threshold that analysts treat as the marker of mainstream adoption in FY2022-23, and reached approximately 8.5% by the close of FY2025-26, up from 7.7% a year earlier.</p>
+<p>That headline number understates how lopsided the Indian story is compared with the rest of the world. In Europe and the US, the EV conversation is dominated by passenger cars. In India, electric two-wheelers alone account for roughly 58% of all EV sales, and India commands more than half of <em>global</em> electric three-wheeler sales. These are not aspirational purchases by early adopters with driveways and home chargers. They are cost calculations made by gig-economy delivery riders, e-rickshaw operators, and small logistics fleets who do the fuel-savings math in their heads before they walk into a showroom — which is exactly why a fuel-price shock moves this market faster than it moves wealthier ones.</p>
+</section>
+<section id="six-forces-that-had-to-line-up" class="level2">
+<h2 class="anchored" data-anchor-id="six-forces-that-had-to-line-up">Six forces that had to line up</h2>
+<p>No single scheme produced a 40%-plus CAGR sustained over decades. It took several forces compounding in the same direction.</p>
+<p><strong>Policy layering.</strong> India’s EV incentive architecture has been built in stages: FAME-I from 2015, FAME-II from 2019 to 2024 (₹11,500 crore, supporting roughly 16.29 lakh EVs), a Production Linked Incentive scheme worth ₹26,058 crore for component manufacturing, and the current PM E-Drive scheme, which targets 2.5 million subsidised electric two-wheelers and 320,000 three-wheelers, backed by roughly $315 million in vehicle and charging-infrastructure subsidies. Choice-model research evaluating FAME’s actual counterfactual impact — rather than simply its uptake numbers — found the scheme genuinely induced incremental EV sales that would not otherwise have happened, rather than merely subsidising purchases already in the pipeline (Sheldon et al., 2019). It’s the stacking of demand-side subsidies on top of supply-side manufacturing incentives, sustained over a decade, that bent the curve — not any one of them alone.</p>
+<p><strong>A battery-cost collapse that happened to arrive at the right moment.</strong> Global lithium-ion battery prices have fallen more than 90% since 2010. That’s not an India story specifically, but its consequences are outsized in India because it pushes electric two- and three-wheelers past cost-parity with petrol equivalents inside a payback period an ordinary buyer can actually do the arithmetic on.</p>
+<p><strong>Charging infrastructure finally showing up where it’s needed.</strong> Public charging stations crossed roughly 27,000–29,000 by early-to-mid 2026, from near zero in 2019, with the PM E-Drive scheme explicitly targeting Tier-2 and Tier-3 city expansion — the geography where the next wave of buyers actually lives, and where range anxiety remains the sharpest barrier.</p>
+<p><strong>Legacy manufacturers finally showing up too.</strong> In electric two-wheelers, established players TVS, Bajaj, and Hero MotoCorp now control roughly 61% of the market, leaning on dealer networks and after-sales infrastructure that pure-EV startups can’t match overnight. In electric cars, the picture is actually getting <em>more</em> competitive rather than less: Tata Motors’ share of the electric passenger vehicle market fell from around 57% in FY2024-25 to roughly 39% in FY2025-26 as JSW MG Motor, Mahindra, and Hyundai expanded their own line-ups — a healthy sign for a market that was, until recently, close to a one-brand story.</p>
+<p><strong>The freight and logistics pivot.</strong> Electric goods vehicles — light, medium, and heavy trucks — grew 172% year-on-year in FY2025-26, the fastest-growing segment in the market, as e-commerce fleets converted for cost and ESG reasons and PM E-Drive incentives extended to trucks for the first time.</p>
+<p><strong>And then, the oil shock.</strong> A 2023 study in <em>Energy Policy</em> by Garg, Mishra and Sinha found that India’s crude-price elasticity is low in the short run — price signals alone don’t move behaviour fast. The 2026 Strait of Hormuz crisis changed the <em>political</em> economy of that finding. When a Prime Minister publicly urges citizens toward EVs and public transport, the oil shock has crossed into territory no subsidy programme alone had reached: direct political urgency, applied at the top.</p>
+</section>
+<section id="the-number-that-makes-this-a-macro-story-not-a-green-one" class="level2">
+<h2 class="anchored" data-anchor-id="the-number-that-makes-this-a-macro-story-not-a-green-one">The number that makes this a macro story, not a green one</h2>
+<p>India spent an estimated USD 134.7 billion on crude oil imports in FY2025-26. The International Energy Agency projects EV adoption and efficiency gains will avoid roughly 480,000 barrels a day of additional oil demand by 2030 (IEA, 2025–2026) — at current prices, an annual saving in the range of USD 18 billion, more than a full year’s worth of the entire cumulative FAME programme spend, recovered in avoided imports alone.</p>
+<p>That reframes the EV transition for anyone still filing it under “environmental policy.” At the scale India now operates, it is an import-substitution and current-account story first, and a climate story second — which may be precisely why it has survived five changes of government intact.</p>
+</section>
+<section id="three-gaps-that-could-still-stall-it" class="level2">
+<h2 class="anchored" data-anchor-id="three-gaps-that-could-still-stall-it">Three gaps that could still stall it</h2>
+<p>The trajectory looks close to inevitable from a distance, but three specific weaknesses remain exposed at close range.</p>
+<p><em>Geographic mismatch.</em> Charging infrastructure is still concentrated in metros, while the buyers with the strongest cost-of-ownership case increasingly come from smaller cities. The infrastructure needs to arrive before that cohort reaches the showroom, not after — a sequencing problem, not a capacity one.</p>
+<p><em>Shallow supply chains.</em> India’s EV growth still rests substantially on imported battery cells, with China dominating global cell manufacturing. A demand shock originating in China would expose a vulnerability structurally similar to the one that produced the Secunderabad appeal in the first place — just routed through a different chokepoint.</p>
+<p><em>A financing gap that isn’t really about interest rates.</em> Electric two- and three-wheelers are disproportionately bought by micro-entrepreneurs and gig workers whose credit profiles don’t clear conventional auto-loan underwriting. Consumer-behaviour research on Indian EV adoption consistently ranks purchase price and financing access alongside range anxiety as the dominant barriers to uptake (Rathore et al., 2024; Singh et al., 2023), even as the same literature finds environmental concern playing a comparatively minor role in actual buying decisions for this segment. Until a targeted guarantee scheme closes the financing gap, a segment of buyers who are economically rational — the fuel savings genuinely pencil out — is locked out by the banking system rather than by preference.</p>
+</section>
+<section id="what-the-data-actually-settles" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-data-actually-settles">What the data actually settles</h2>
+<p>Twenty-six years of registration data and a sustained 40%-plus CAGR have already answered the question of <em>whether</em> India’s EV transition happens. What remains open, entering FY2026-27 with EV penetration near 8.5% against a 2030 government target of 30%, is whether the supporting ecosystem — the charging grid, the battery supply chain, the loan desk for a three-wheeler operator in a Tier-3 town — can move at the same speed as a market that has already made up its mind. The Strait of Hormuz crisis didn’t create that market’s momentum. It just made the cost of ignoring the remaining gaps considerably more visible, to a Prime Minister and everyone else, all at once.</p>
+</section>
+<section id="literature-review" class="level2">
+<h2 class="anchored" data-anchor-id="literature-review">Literature Review</h2>
+<p>Academic work on Indian EV adoption splits along the same supply/demand line the article traces above. On the demand side, a substantial body of consumer-behaviour research — much of it applying the Technology Acceptance Model or the Theory of Planned Behaviour to Indian survey samples — consistently identifies purchase price, charging-infrastructure availability, and range anxiety as the dominant psychological barriers, with financial incentives and perceived environmental benefit as the leading pull factors. What this literature tends to under-weight, and what the two- and three-wheeler registration data foregrounds instead, is that for the majority of India’s actual EV buyers, adoption isn’t primarily an attitudinal decision at all — it’s a fleet-economics calculation made by gig workers and small operators, closer to a total-cost-of-ownership problem than a green-consumption one.</p>
+<p>On the supply and policy side, Sheldon, Cui and colleagues’ choice-model analysis of the FAME scheme found the subsidy programme to be genuinely effective at inducing incremental EV sales rather than merely subsidising purchases that would have happened anyway — an important empirical anchor, since counterfactual effectiveness is notoriously hard to establish for vehicle subsidies internationally. More recent 2024–2025 studies applying Fuzzy AHP and structural equation modelling to expert and consumer panels have begun disaggregating barriers by segment (two-wheeler vs.&nbsp;four-wheeler, Tier-1 vs.&nbsp;Tier-2/3 city), a useful methodological shift given how differently those segments behave in the registration data. The literature has not yet, as of this writing, produced a rigorous causal estimate of how acute fuel-price shocks — of the kind India experienced in 2026 — shift adoption in the short run; the IEA’s demand-avoidance projections remain the best available approximation, and are treated as such in this piece.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Sheldon, T. L., DeShazo, J. R., et al.&nbsp;(2019). Studies on FAME scheme effectiveness and counterfactual EV sales simulation, <em>Energy Economics</em> / related working papers.</li>
+<li>Rathore, A., et al.&nbsp;(2024). Barriers to EV Adoption in India: A Fuzzy Analytical Hierarchy Process Study. <em>ScienceDirect</em>.</li>
+<li>Singh, V., et al.&nbsp;(2023). Factors Affecting Adoption Intention of Electric Vehicles: A Cross-Cultural Study. <em>Environment, Development and Sustainability</em> (Springer).</li>
+<li>Enablers and Disablers to Plug-in Electric Vehicle Adoption in India: Insights from a Survey of Experts. (2021). <em>ScienceDirect</em>.</li>
+<li>The Dynamics of Electrified Vehicle Adoption: An Indian Market Analysis. (2026). <em>ScienceDirect</em>.</li>
+<li>An Empirical Study on Electric Vehicle Adoption in India: A Step Towards a Greener Environment. (2024). <em>ScienceDirect</em>.</li>
+<li>International Energy Agency. (2025–2026). <em>Global EV Outlook</em> — India country projections, oil-demand avoidance estimates.</li>
+<li>Ministry of Road Transport and Highways (MoRTH) / NITI Aayog — Vahan and ICED registration databases.</li>
+<li>JMK Research &amp; Analytics — segment-wise EV sales tracking reports, FY2024-25 and FY2025-26.</li>
+</ul>
+<hr>
+<p><em>Data: MoRTH / NITI Aayog ICED database (FY2000-01–FY2025-26); JMK Research &amp; Analytics; International Energy Agency. Analysis by Pawan. A companion interactive dashboard is available <a href="../data_vizs/ev_dashboard.html">here</a>.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<script src="assets/site.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pawan1198\.github\.io\/portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2025 Pawan</p>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://quarto.org">
+<p>Built with Quarto</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/">
+      <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:pawanjangra1198@gmail.com">
+      <i class="bi bi-envelope" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

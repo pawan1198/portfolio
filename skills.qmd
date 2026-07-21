@@ -114,8 +114,6 @@ listing:
 
 ## Projects
 
-Drop a `.qmd` file into the `projects/` folder — it appears here automatically.
-
 ::: {#project-listing}
 :::
 

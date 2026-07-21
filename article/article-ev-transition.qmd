@@ -1,0 +1,91 @@
+---
+title: "From 323 Units to a National Security Question"
+subtitle: "Twenty-six years of vehicle registration data explain why an oil shock in the Gulf turned India's slow-burning EV story into urgent policy"
+author: "Pawan"
+date: "2026/07/20"
+date-modified: last-modified
+categories:
+  - "Electric Vehicles"
+  - "Energy Policy"
+  - "Articles"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: litera
+    css: |
+      body { font-family: "Source Serif 4", Georgia, serif; color:#1c1c1c; background:#faf7f0; line-height:1.75; }
+      h1, h2, h3 { font-family: "Fraunces", "Georgia", serif; color:#173427; }
+      .drop { float:left; font-family:"Fraunces",serif; font-size:4.2rem; line-height:0.8; padding-right:0.35rem; padding-top:0.15rem; color:#1f7a5c; font-weight:700; }
+      blockquote { border-left: 4px solid #1f7a5c; background:#e9f2ec; padding: 0.8rem 1.2rem; font-style: italic; }
+      table { font-size: 0.92rem; }
+      code { color:#1f7a5c; }
+---
+
+<span class="drop">I</span>n the spring of 2026, as Iranian strikes and a US-led response turned the Strait of Hormuz into a genuine shipping hazard, India's crude oil basket briefly cleared $113 a barrel — more than double where it had started the year. Oil marketing companies were absorbing losses of roughly ₹13 a litre on diesel. The rupee had already shed close to a tenth of its value against the dollar over the fiscal year. And at a public event in Secunderabad, the Prime Minister did something Indian heads of government almost never do: he stood in front of a crowd and asked citizens, directly, to stop driving their petrol cars.
+
+It made headlines as a dramatic, of-the-moment appeal. It wasn't, really. It was the visible tip of a trend that twenty-six years of Ministry of Road Transport and Highways registration data had been quietly building toward, one fiscal year at a time.
+
+## The number that took a quarter-century to matter
+
+In FY2000-01, India registered 323 electric vehicles. In FY2025-26, registrations crossed roughly 25 lakh — a compound annual growth rate above 40% sustained across a quarter-century, through two recessions, a pandemic, and five changes of government. EV market share, essentially flat for the entire 2000s, crossed the 5% threshold that analysts treat as the marker of mainstream adoption in FY2022-23, and reached approximately 8.5% by the close of FY2025-26, up from 7.7% a year earlier.
+
+That headline number understates how lopsided the Indian story is compared with the rest of the world. In Europe and the US, the EV conversation is dominated by passenger cars. In India, electric two-wheelers alone account for roughly 58% of all EV sales, and India commands more than half of *global* electric three-wheeler sales. These are not aspirational purchases by early adopters with driveways and home chargers. They are cost calculations made by gig-economy delivery riders, e-rickshaw operators, and small logistics fleets who do the fuel-savings math in their heads before they walk into a showroom — which is exactly why a fuel-price shock moves this market faster than it moves wealthier ones.
+
+## Six forces that had to line up
+
+No single scheme produced a 40%-plus CAGR sustained over decades. It took several forces compounding in the same direction.
+
+**Policy layering.** India's EV incentive architecture has been built in stages: FAME-I from 2015, FAME-II from 2019 to 2024 (₹11,500 crore, supporting roughly 16.29 lakh EVs), a Production Linked Incentive scheme worth ₹26,058 crore for component manufacturing, and the current PM E-Drive scheme, which targets 2.5 million subsidised electric two-wheelers and 320,000 three-wheelers, backed by roughly $315 million in vehicle and charging-infrastructure subsidies. Choice-model research evaluating FAME's actual counterfactual impact — rather than simply its uptake numbers — found the scheme genuinely induced incremental EV sales that would not otherwise have happened, rather than merely subsidising purchases already in the pipeline (Sheldon et al., 2019). It's the stacking of demand-side subsidies on top of supply-side manufacturing incentives, sustained over a decade, that bent the curve — not any one of them alone.
+
+**A battery-cost collapse that happened to arrive at the right moment.** Global lithium-ion battery prices have fallen more than 90% since 2010. That's not an India story specifically, but its consequences are outsized in India because it pushes electric two- and three-wheelers past cost-parity with petrol equivalents inside a payback period an ordinary buyer can actually do the arithmetic on.
+
+**Charging infrastructure finally showing up where it's needed.** Public charging stations crossed roughly 27,000–29,000 by early-to-mid 2026, from near zero in 2019, with the PM E-Drive scheme explicitly targeting Tier-2 and Tier-3 city expansion — the geography where the next wave of buyers actually lives, and where range anxiety remains the sharpest barrier.
+
+**Legacy manufacturers finally showing up too.** In electric two-wheelers, established players TVS, Bajaj, and Hero MotoCorp now control roughly 61% of the market, leaning on dealer networks and after-sales infrastructure that pure-EV startups can't match overnight. In electric cars, the picture is actually getting *more* competitive rather than less: Tata Motors' share of the electric passenger vehicle market fell from around 57% in FY2024-25 to roughly 39% in FY2025-26 as JSW MG Motor, Mahindra, and Hyundai expanded their own line-ups — a healthy sign for a market that was, until recently, close to a one-brand story.
+
+**The freight and logistics pivot.** Electric goods vehicles — light, medium, and heavy trucks — grew 172% year-on-year in FY2025-26, the fastest-growing segment in the market, as e-commerce fleets converted for cost and ESG reasons and PM E-Drive incentives extended to trucks for the first time.
+
+**And then, the oil shock.** A 2023 study in *Energy Policy* by Garg, Mishra and Sinha found that India's crude-price elasticity is low in the short run — price signals alone don't move behaviour fast. The 2026 Strait of Hormuz crisis changed the *political* economy of that finding. When a Prime Minister publicly urges citizens toward EVs and public transport, the oil shock has crossed into territory no subsidy programme alone had reached: direct political urgency, applied at the top.
+
+## The number that makes this a macro story, not a green one
+
+India spent an estimated USD 134.7 billion on crude oil imports in FY2025-26. The International Energy Agency projects EV adoption and efficiency gains will avoid roughly 480,000 barrels a day of additional oil demand by 2030 (IEA, 2025–2026) — at current prices, an annual saving in the range of USD 18 billion, more than a full year's worth of the entire cumulative FAME programme spend, recovered in avoided imports alone.
+
+That reframes the EV transition for anyone still filing it under "environmental policy." At the scale India now operates, it is an import-substitution and current-account story first, and a climate story second — which may be precisely why it has survived five changes of government intact.
+
+## Three gaps that could still stall it
+
+The trajectory looks close to inevitable from a distance, but three specific weaknesses remain exposed at close range.
+
+*Geographic mismatch.* Charging infrastructure is still concentrated in metros, while the buyers with the strongest cost-of-ownership case increasingly come from smaller cities. The infrastructure needs to arrive before that cohort reaches the showroom, not after — a sequencing problem, not a capacity one.
+
+*Shallow supply chains.* India's EV growth still rests substantially on imported battery cells, with China dominating global cell manufacturing. A demand shock originating in China would expose a vulnerability structurally similar to the one that produced the Secunderabad appeal in the first place — just routed through a different chokepoint.
+
+*A financing gap that isn't really about interest rates.* Electric two- and three-wheelers are disproportionately bought by micro-entrepreneurs and gig workers whose credit profiles don't clear conventional auto-loan underwriting. Consumer-behaviour research on Indian EV adoption consistently ranks purchase price and financing access alongside range anxiety as the dominant barriers to uptake (Rathore et al., 2024; Singh et al., 2023), even as the same literature finds environmental concern playing a comparatively minor role in actual buying decisions for this segment. Until a targeted guarantee scheme closes the financing gap, a segment of buyers who are economically rational — the fuel savings genuinely pencil out — is locked out by the banking system rather than by preference.
+
+## What the data actually settles
+
+Twenty-six years of registration data and a sustained 40%-plus CAGR have already answered the question of *whether* India's EV transition happens. What remains open, entering FY2026-27 with EV penetration near 8.5% against a 2030 government target of 30%, is whether the supporting ecosystem — the charging grid, the battery supply chain, the loan desk for a three-wheeler operator in a Tier-3 town — can move at the same speed as a market that has already made up its mind. The Strait of Hormuz crisis didn't create that market's momentum. It just made the cost of ignoring the remaining gaps considerably more visible, to a Prime Minister and everyone else, all at once.
+
+## Literature Review
+
+Academic work on Indian EV adoption splits along the same supply/demand line the article traces above. On the demand side, a substantial body of consumer-behaviour research — much of it applying the Technology Acceptance Model or the Theory of Planned Behaviour to Indian survey samples — consistently identifies purchase price, charging-infrastructure availability, and range anxiety as the dominant psychological barriers, with financial incentives and perceived environmental benefit as the leading pull factors. What this literature tends to under-weight, and what the two- and three-wheeler registration data foregrounds instead, is that for the majority of India's actual EV buyers, adoption isn't primarily an attitudinal decision at all — it's a fleet-economics calculation made by gig workers and small operators, closer to a total-cost-of-ownership problem than a green-consumption one.
+
+On the supply and policy side, Sheldon, Cui and colleagues' choice-model analysis of the FAME scheme found the subsidy programme to be genuinely effective at inducing incremental EV sales rather than merely subsidising purchases that would have happened anyway — an important empirical anchor, since counterfactual effectiveness is notoriously hard to establish for vehicle subsidies internationally. More recent 2024–2025 studies applying Fuzzy AHP and structural equation modelling to expert and consumer panels have begun disaggregating barriers by segment (two-wheeler vs. four-wheeler, Tier-1 vs. Tier-2/3 city), a useful methodological shift given how differently those segments behave in the registration data. The literature has not yet, as of this writing, produced a rigorous causal estimate of how acute fuel-price shocks — of the kind India experienced in 2026 — shift adoption in the short run; the IEA's demand-avoidance projections remain the best available approximation, and are treated as such in this piece.
+
+## References
+
+- Sheldon, T. L., DeShazo, J. R., et al. (2019). Studies on FAME scheme effectiveness and counterfactual EV sales simulation, *Energy Economics* / related working papers.
+- Rathore, A., et al. (2024). Barriers to EV Adoption in India: A Fuzzy Analytical Hierarchy Process Study. *ScienceDirect*.
+- Singh, V., et al. (2023). Factors Affecting Adoption Intention of Electric Vehicles: A Cross-Cultural Study. *Environment, Development and Sustainability* (Springer).
+- Enablers and Disablers to Plug-in Electric Vehicle Adoption in India: Insights from a Survey of Experts. (2021). *ScienceDirect*.
+- The Dynamics of Electrified Vehicle Adoption: An Indian Market Analysis. (2026). *ScienceDirect*.
+- An Empirical Study on Electric Vehicle Adoption in India: A Step Towards a Greener Environment. (2024). *ScienceDirect*.
+- International Energy Agency. (2025–2026). *Global EV Outlook* — India country projections, oil-demand avoidance estimates.
+- Ministry of Road Transport and Highways (MoRTH) / NITI Aayog — Vahan and ICED registration databases.
+- JMK Research & Analytics — segment-wise EV sales tracking reports, FY2024-25 and FY2025-26.
+
+---
+
+*Data: MoRTH / NITI Aayog ICED database (FY2000-01–FY2025-26); JMK Research & Analytics; International Energy Agency. Analysis by Pawan. A companion interactive dashboard is available [here](../data_vizs/ev_dashboard.html).*

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Pawan">
+<meta name="dcterms.date" content="2026-07-20">
+
+<title>The Machine That Ate India’s Cash Economy – Pawan</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../assets/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-81b024a9742a8637bf01ef4cba2e7b63.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4af4e12625706c88bad3bec465191990.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&amp;family=DM+Mono:wght@400;500&amp;family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="body { font-family: " source="" serif="" 4",="" georgia,="" serif;="" color:#1c1c1c;="" background:#faf7f0;="" line-height:1.75;="" }="" h1,="" h2,="" h3="" {="" font-family:="" "fraunces",="" "georgia",="" color:#0f1f1a;="" h1.title="" font-weight:="" 700;="" .drop="" float:left;="" font-family:"fraunces",serif;="" font-size:4.2rem;="" line-height:0.8;="" padding-right:0.35rem;="" padding-top:0.15rem;="" color:#8a5a2b;="" font-weight:700;="" blockquote="" border-left:="" 4px="" solid="" #8a5a2b;="" background:#f2ead9;="" padding:="" 0.8rem="" 1.2rem;="" font-style:="" italic;="" table="" font-size:="" 0.92rem;="" .stat="" display:inline-block;="" background:#0f1f1a;="" color:#f2ead9;="" padding:0.15rem="" 0.5rem;="" border-radius:4px;="" monospace;="" code="" }"="">
+<meta property="og:title" content="Pawan — Data Analyst &amp; Economic Researcher">
+<meta property="og:description" content="Survey methodology, statistical analysis, and data storytelling using R and Quarto.">
+<meta property="og:site_name" content="Pawan">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Pawan</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-content" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Content</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-content">    
+        <li>
+    <a class="dropdown-item" href="../data_vizs.html">
+ <span class="dropdown-text">📊 Data Visualizations</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../blog.html">
+ <span class="dropdown-text">✍️ Blog</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../article.html">
+ <span class="dropdown-text">📄 Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../statistics-with-r.html">
+ <span class="dropdown-text">📚 Statistics with R</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../skills.html"> 
+<span class="menu-text">Skills &amp; Projects</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/pawanjangra1198"> <i class="bi bi-twitter-x" role="img" aria-label="Twitter">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#the-line-that-keeps-climbing" id="toc-the-line-that-keeps-climbing" class="nav-link active" data-scroll-target="#the-line-that-keeps-climbing">The line that keeps climbing</a></li>
+  <li><a href="#what-october-2025-quietly-did-to-the-numbers" id="toc-what-october-2025-quietly-did-to-the-numbers" class="nav-link" data-scroll-target="#what-october-2025-quietly-did-to-the-numbers">What October 2025 quietly did to the numbers</a></li>
+  <li><a href="#the-refund-machine-got-faster-not-just-bigger" id="toc-the-refund-machine-got-faster-not-just-bigger" class="nav-link" data-scroll-target="#the-refund-machine-got-faster-not-just-bigger">The refund machine got faster, not just bigger</a></li>
+  <li><a href="#eight-crore-taxpayers-and-0.5-of-them-carry-the-load" id="toc-eight-crore-taxpayers-and-0.5-of-them-carry-the-load" class="nav-link" data-scroll-target="#eight-crore-taxpayers-and-0.5-of-them-carry-the-load">Eight crore taxpayers, and 0.5% of them carry the load</a></li>
+  <li><a href="#the-e-way-bill-is-now-a-better-gdp-proxy-than-gdp" id="toc-the-e-way-bill-is-now-a-better-gdp-proxy-than-gdp" class="nav-link" data-scroll-target="#the-e-way-bill-is-now-a-better-gdp-proxy-than-gdp">The e-way bill is now a better GDP proxy than GDP</a></li>
+  <li><a href="#maharashtras-lead-is-not-shrinking-but-the-chase-is-getting-interesting" id="toc-maharashtras-lead-is-not-shrinking-but-the-chase-is-getting-interesting" class="nav-link" data-scroll-target="#maharashtras-lead-is-not-shrinking-but-the-chase-is-getting-interesting">Maharashtra’s lead is not shrinking — but the chase is getting interesting</a></li>
+  <li><a href="#eight-years-in-what-the-ledger-actually-says" id="toc-eight-years-in-what-the-ledger-actually-says" class="nav-link" data-scroll-target="#eight-years-in-what-the-ledger-actually-says">Eight years in, what the ledger actually says</a></li>
+  <li><a href="#literature-review" id="toc-literature-review" class="nav-link" data-scroll-target="#literature-review">Literature Review</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The Machine That Ate India’s Cash Economy</h1>
+<p class="subtitle lead">Eight years and ₹118 lakh crore into GST, the tax that was supposed to simplify everything has quietly become India’s best economic sensor</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">GST</div>
+    <div class="quarto-category">Public Finance</div>
+    <div class="quarto-category">Articles</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Pawan </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 20, 2026</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">July 21, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span class="drop">O</span>n the morning of 1 July 2017, a tax reform that had taken seventeen years to negotiate — through three prime ministers, a constitutional amendment, and more state-finance-minister meetings than anyone cared to count — went live at midnight in the Central Hall of Parliament. Critics called it rushed. Small traders called it a nightmare. Eight years and 26.18 lakh crore rupees of revenue later, in a single financial year, GST has become something nobody quite predicted at launch: not just a tax, but India’s most granular, most current window into the real economy.</p>
+<p>This is the story that eight years of collection data tells — not the political story of GST, but the economic one, told entirely in the numbers the system generates every single month.</p>
+<p>GST’s most eloquent modern defenders, before it launched, had already sketched the trade-off it would face: Michael Keen’s work on VAT design for the IMF argued that a single-rate structure is administratively simpler and less distortionary, but that most countries — India very much included — end up trading some of that simplicity for political feasibility on sensitive goods (Keen, 2009; Keen, 2013). The Chief Economic Advisor’s own 2015 committee report on the Revenue Neutral Rate is the reference point every subsequent collection number gets measured against (Government of India, 2015), and it’s worth noting just how far actual collections have outrun those original projections.</p>
+<section id="the-line-that-keeps-climbing" class="level2">
+<h2 class="anchored" data-anchor-id="the-line-that-keeps-climbing">The line that keeps climbing</h2>
+<p>Strip away the debates and the headline is simple. Gross GST collection has grown from ₹7.41 lakh crore in its first, partial year (FY2017-18) to ₹22.09 lakh crore in FY2024-25 — essentially a tripling in eight years. FY2025-26, still eleven months in as this is written, has already logged ₹26.18 lakh crore.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Fiscal Year</th>
+<th style="text-align: right;">Gross Collection</th>
+<th style="text-align: right;">YoY Growth</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2017-18</td>
+<td style="text-align: right;">₹7.41 L Cr</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr class="even">
+<td>2018-19</td>
+<td style="text-align: right;">₹11.77 L Cr</td>
+<td style="text-align: right;">+59.0%</td>
+</tr>
+<tr class="odd">
+<td>2019-20</td>
+<td style="text-align: right;">₹12.22 L Cr</td>
+<td style="text-align: right;">+3.8%</td>
+</tr>
+<tr class="even">
+<td>2020-21</td>
+<td style="text-align: right;">₹11.37 L Cr</td>
+<td style="text-align: right;">−7.0%</td>
+</tr>
+<tr class="odd">
+<td>2021-22</td>
+<td style="text-align: right;">₹14.88 L Cr</td>
+<td style="text-align: right;">+30.9%</td>
+</tr>
+<tr class="even">
+<td>2022-23</td>
+<td style="text-align: right;">₹18.08 L Cr</td>
+<td style="text-align: right;">+21.5%</td>
+</tr>
+<tr class="odd">
+<td>2023-24</td>
+<td style="text-align: right;">₹20.18 L Cr</td>
+<td style="text-align: right;">+11.6%</td>
+</tr>
+<tr class="even">
+<td>2024-25</td>
+<td style="text-align: right;">₹22.09 L Cr</td>
+<td style="text-align: right;">+9.4%</td>
+</tr>
+<tr class="odd">
+<td>2025-26 (Apr–Feb)</td>
+<td style="text-align: right;">₹26.18 L Cr</td>
+<td style="text-align: right;">+18.5%</td>
+</tr>
+</tbody>
+</table>
+<p>Two things jump out. The first is the V-shape around FY2020-21 — a 7% pandemic-year contraction followed by a 30.9% rebound, the sharpest single-year swing in the dataset, and a reminder that GST collection is really just a proxy for how much India is buying, selling, and building in any given month. The second is that growth has been <em>decelerating</em> in percentage terms even as the absolute numbers get larger — 59% in year two, 9.4% in year eight. That’s not decline; it’s a large base doing what large bases do. A tax system covering ₹22 lakh crore cannot keep growing at the pace of one covering ₹8 lakh crore.</p>
+</section>
+<section id="what-october-2025-quietly-did-to-the-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="what-october-2025-quietly-did-to-the-numbers">What October 2025 quietly did to the numbers</h2>
+<p>Anyone squinting at FY2025-26’s monthly figures will notice something odd: growth, which had been running at 9–20% for most of the year, suddenly turns negative in October, November, and December 2025 — minus 0.3%, minus 8.0%, minus 4.2% — before recovering in January.</p>
+<p>The explanation isn’t a slowdown in the economy. It’s a policy switch. The GST Compensation Cess — the special levy on tobacco, aerated drinks, and automobiles that was supposed to fund states’ revenue guarantees for exactly five years after GST launch — finally began its scheduled wind-down in October 2025. Cess collections that had run at roughly ₹23,449 crore in October 2024 fell to ₹14,340 crore in October 2025, then to ₹8,001 crore in November and ₹8,515 crore in December. The core taxes — CGST, SGST, IGST — kept climbing through this period. The headline number just stopped reflecting it, because one of its four components was being switched off in real time.</p>
+<p>It’s a useful lesson in reading tax data: a “decline” in gross collection and a decline in <em>economic activity</em> are not always the same statement.</p>
+</section>
+<section id="the-refund-machine-got-faster-not-just-bigger" class="level2">
+<h2 class="anchored" data-anchor-id="the-refund-machine-got-faster-not-just-bigger">The refund machine got faster, not just bigger</h2>
+<p>A less-discussed but genuinely striking trend sits in the refund data. Annual GST refunds grew from ₹3.21 lakh crore in FY2020-21 to ₹6.43 lakh crore in FY2024-25 — a 5.94× increase — and the refund-to-gross ratio climbed steadily from 8.4% to 11.6% over the same period.</p>
+<p>That sounds like the tax department giving away more money, but read the other way, it’s the opposite story. IGST refunds — overwhelmingly claims from exporters filing under the Letter of Undertaking scheme — dominate the refund book. A rising refund rate alongside <em>rising</em> net collections means India’s export base is growing and the GSTN’s processing pipeline is keeping pace with it, rather than sitting on exporters’ working capital the way it did in the system’s chaotic early years. Compliance data backs this up directly: GSTR-3B filing compliance, a rough proxy for how functional the return-filing machinery actually is, sat at 89.2% in FY2018-19 and has held above 98.9% since FY2023-24 — a genuine turnaround from the administrative gaps the Comptroller and Auditor General’s own 2019 compliance audit had flagged in the system’s early years (CAG, 2019).</p>
+</section>
+<section id="eight-crore-taxpayers-and-0.5-of-them-carry-the-load" class="level2">
+<h2 class="anchored" data-anchor-id="eight-crore-taxpayers-and-0.5-of-them-carry-the-load">Eight crore taxpayers, and 0.5% of them carry the load</h2>
+<p>If there’s one table in the GST dataset that deserves to be printed and pinned to a wall in North Block, it’s the taxpayer-constitution breakdown. As of June 2025, India had 1.53 crore active GST registrations. Proprietorships — the corner shop, the single-owner trading firm, the neighbourhood parlour — make up 80.14% of that base. Public Limited Companies make up 0.50%.</p>
+<p>Proprietorships contribute 13.27% of GST revenue. Public Limited Companies contribute 33.83%.</p>
+<p>Run the leverage ratio — revenue share divided by taxpayer share — and a Public Limited Company contributes <strong>67.7 times</strong> its population share to the tax base. A Proprietorship contributes 0.2 times its share. Public Sector Undertakings, a mere 3,475 entities, punch in at an extraordinary 469.5× leverage, contributing 9.39% of all GST revenue from 0.02% of registrants.</p>
+<p>This is not a scandal — large, formal, capital-intensive businesses have always paid disproportionate tax everywhere in the world, and the IMF’s own periodic assessments of India’s GST have argued its multi-rate structure does more to protect low-income consumers than a single-rate alternative would (IMF, 2018). But it does put a number on something that’s often asserted impressionistically in Indian tax-policy debates: GST’s revenue base is extremely concentrated at the top of the formal economy, even though its <em>compliance burden</em> — filing, invoicing, e-way bills — falls on all 1.53 crore registrants roughly equally. That asymmetry is arguably the single biggest unresolved design tension in GST as it enters its ninth year.</p>
+</section>
+<section id="the-e-way-bill-is-now-a-better-gdp-proxy-than-gdp" class="level2">
+<h2 class="anchored" data-anchor-id="the-e-way-bill-is-now-a-better-gdp-proxy-than-gdp">The e-way bill is now a better GDP proxy than GDP</h2>
+<p>Buried in section 8 of the underlying dataset is a number that deserves far more attention than it gets: e-way bill generation — the digital permission slip required to move goods worth over ₹50,000 across state lines or within them — has grown 3.24× since FY2018-19, from 43.35 crore bills a year to 140.71 crore in FY2025-26 (11 months). The assessable value of goods covered has crossed ₹32.7 lakh crore.</p>
+<p>Because e-way bills are generated in real time, at the point goods actually move, they arguably tell you what’s happening in the goods economy faster and more honestly than any survey-based indicator India publishes. When intra-state EWB growth outpaces inter-state growth, as it has in recent years, it’s a signal of shorter, more localised supply chains — plausibly linked to warehousing decentralisation under GST’s own “One Nation, One Tax” logic finally removing the incentive to route goods through fewer, larger interstate hubs.</p>
+</section>
+<section id="maharashtras-lead-is-not-shrinking-but-the-chase-is-getting-interesting" class="level2">
+<h2 class="anchored" data-anchor-id="maharashtras-lead-is-not-shrinking-but-the-chase-is-getting-interesting">Maharashtra’s lead is not shrinking — but the chase is getting interesting</h2>
+<p>Maharashtra alone contributes north of 21% of all state-level domestic GST — more than the bottom fifteen states combined. But the fastest-growing large states in FY2024-25 were not the usual suspects: Haryana grew 16.0% year-on-year and Delhi grew 15.9%, both comfortably outpacing Maharashtra’s own growth and reflecting the expansion of services-sector activity — IT, finance, logistics — around the National Capital Region rather than manufacturing.</p>
+</section>
+<section id="eight-years-in-what-the-ledger-actually-says" class="level2">
+<h2 class="anchored" data-anchor-id="eight-years-in-what-the-ledger-actually-says">Eight years in, what the ledger actually says</h2>
+<p>None of this requires anyone to have an opinion about GST as a political project. The eight-year dataset simply says: revenue has nearly tripled; compliance infrastructure that was genuinely broken in 2018-19 now works; refunds move faster; the formal, large-enterprise economy carries a wildly disproportionate share of the tax base; and a real-time logistics indicator now exists inside the tax system that didn’t exist before it. Whatever else GST turns out to have been — messy launch, contested rate structure, endless Council meetings — it has, almost as a side effect, built India one of its best pieces of high-frequency economic infrastructure. The next test, as the Compensation Cess fully sunsets through 2026, is whether the system’s next chapter is written with the same discipline as its recovery from a pandemic-year collapse.</p>
+</section>
+<section id="literature-review" class="level2">
+<h2 class="anchored" data-anchor-id="literature-review">Literature Review</h2>
+<p>GST’s academic literature divides fairly cleanly into two eras. The pre-2017 era was dominated by revenue-neutral-rate modelling — the Chief Economic Advisor’s 2015 committee report on the RNR remains the reference point, and it’s worth noting how far actual collections have outrun its original projections. International public-finance scholars writing before implementation, most influentially Michael Keen’s work on VAT design for the IMF, framed GST’s central design tension well in advance: a single-rate VAT is administratively simpler and less distortionary, but India’s multi-slab structure was always going to trade some of that simplicity for political feasibility and revenue protection on sensitive goods. The dataset examined here is, in a sense, eight years of evidence on how that trade-off actually played out.</p>
+<p>The post-implementation literature has grown into a genuinely large body of work — a 2023 bibliometric review counted over 400 Scopus-indexed publications on GST between 2017 and 2022 alone — but it skews heavily toward compliance-cost and revenue-collection studies, with comparatively little research on the taxpayer-concentration question this piece foregrounds. The 2019 Comptroller and Auditor General compliance audit remains one of the few official assessments to document GSTN’s early-years administrative gaps in granular detail, gaps that the filing-compliance improvement documented above (89.2% to 98.9%+) suggests have been substantially closed. On the specific question of who actually bears India’s indirect tax burden, the IMF’s periodic Selected Issues papers on India have consistently argued that GST’s multi-rate structure, imperfect as it is, does more to protect low-income consumers than a single-rate alternative would — a finding that sits somewhat in tension with the stark taxpayer-leverage numbers in this analysis, and a genuine open question for future incidence research using GSTN microdata.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Government of India, Ministry of Finance. (2015). <em>Report on the Revenue Neutral Rate and Structure of Rates for the Goods and Services Tax</em>. Chief Economic Advisor’s Committee (Chairman: Arvind Subramanian).</li>
+<li>Comptroller and Auditor General of India. (2019). <em>Report No.&nbsp;11 of 2019: Compliance Audit — Department of Revenue: Goods and Services Tax</em>.</li>
+<li>Keen, M. (2013). The Anatomy of the VAT. <em>National Tax Journal</em>, 66(2), 423–446.</li>
+<li>Keen, M. (2009). What Do (and Don’t) We Know About the Value Added Tax? <em>Journal of Economic Literature</em>, 47(1), 157–170.</li>
+<li>International Monetary Fund. (2018). <em>India: Selected Issues</em>. IMF Country Report No.&nbsp;18/255.</li>
+<li>GSTN / gstIndia R package documentation and release notes, v2.1.0.</li>
+<li>Ministry of Finance, Government of India — monthly GST collection press releases, April 2018–February 2026.</li>
+</ul>
+<hr>
+<p><em>Data: gstIndia R package (v2.1.0), aggregating Ministry of Finance and GSTN releases, through February 2026. Analysis and R code (data.table) by Pawan. A companion interactive dashboard is available <a href="../data_vizs/gst_dashboard_v2.html">here</a>.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<button id="back-to-top" aria-label="Back to top">↑</button>
+<script src="assets/site.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/pawan1198\.github\.io\/portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2025 Pawan</p>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://quarto.org">
+<p>Built with Quarto</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pawan1198">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/pawanjangra1198/">
+      <i class="bi bi-linkedin" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:pawanjangra1198@gmail.com">
+      <i class="bi bi-envelope" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

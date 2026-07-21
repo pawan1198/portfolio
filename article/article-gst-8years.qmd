@@ -1,0 +1,107 @@
+---
+title: "The Machine That Ate India's Cash Economy"
+subtitle: "Eight years and ₹118 lakh crore into GST, the tax that was supposed to simplify everything has quietly become India's best economic sensor"
+author: "Pawan"
+date: "2026/07/20"
+date-modified: last-modified
+categories:
+  - "GST"
+  - "Public Finance"
+  - "Articles"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: litera
+    css: |
+      body { font-family: "Source Serif 4", Georgia, serif; color:#1c1c1c; background:#faf7f0; line-height:1.75; }
+      h1, h2, h3 { font-family: "Fraunces", "Georgia", serif; color:#0f1f1a; }
+      h1.title { font-weight: 700; }
+      .drop { float:left; font-family:"Fraunces",serif; font-size:4.2rem; line-height:0.8; padding-right:0.35rem; padding-top:0.15rem; color:#8a5a2b; font-weight:700; }
+      blockquote { border-left: 4px solid #8a5a2b; background:#f2ead9; padding: 0.8rem 1.2rem; font-style: italic; }
+      table { font-size: 0.92rem; }
+      .stat { display:inline-block; background:#0f1f1a; color:#f2ead9; padding:0.15rem 0.5rem; border-radius:4px; font-family: monospace; }
+      code { color:#8a5a2b; }
+---
+
+<span class="drop">O</span>n the morning of 1 July 2017, a tax reform that had taken seventeen years to negotiate — through three prime ministers, a constitutional amendment, and more state-finance-minister meetings than anyone cared to count — went live at midnight in the Central Hall of Parliament. Critics called it rushed. Small traders called it a nightmare. Eight years and 26.18 lakh crore rupees of revenue later, in a single financial year, GST has become something nobody quite predicted at launch: not just a tax, but India's most granular, most current window into the real economy.
+
+This is the story that eight years of collection data tells — not the political story of GST, but the economic one, told entirely in the numbers the system generates every single month.
+
+GST's most eloquent modern defenders, before it launched, had already sketched the trade-off it would face: Michael Keen's work on VAT design for the IMF argued that a single-rate structure is administratively simpler and less distortionary, but that most countries — India very much included — end up trading some of that simplicity for political feasibility on sensitive goods (Keen, 2009; Keen, 2013). The Chief Economic Advisor's own 2015 committee report on the Revenue Neutral Rate is the reference point every subsequent collection number gets measured against (Government of India, 2015), and it's worth noting just how far actual collections have outrun those original projections.
+
+## The line that keeps climbing
+
+Strip away the debates and the headline is simple. Gross GST collection has grown from ₹7.41 lakh crore in its first, partial year (FY2017-18) to ₹22.09 lakh crore in FY2024-25 — essentially a tripling in eight years. FY2025-26, still eleven months in as this is written, has already logged ₹26.18 lakh crore.
+
+| Fiscal Year | Gross Collection | YoY Growth |
+|---|---:|---:|
+| 2017-18 | ₹7.41 L Cr | — |
+| 2018-19 | ₹11.77 L Cr | +59.0% |
+| 2019-20 | ₹12.22 L Cr | +3.8% |
+| 2020-21 | ₹11.37 L Cr | −7.0% |
+| 2021-22 | ₹14.88 L Cr | +30.9% |
+| 2022-23 | ₹18.08 L Cr | +21.5% |
+| 2023-24 | ₹20.18 L Cr | +11.6% |
+| 2024-25 | ₹22.09 L Cr | +9.4% |
+| 2025-26 (Apr–Feb) | ₹26.18 L Cr | +18.5% |
+
+Two things jump out. The first is the V-shape around FY2020-21 — a 7% pandemic-year contraction followed by a 30.9% rebound, the sharpest single-year swing in the dataset, and a reminder that GST collection is really just a proxy for how much India is buying, selling, and building in any given month. The second is that growth has been *decelerating* in percentage terms even as the absolute numbers get larger — 59% in year two, 9.4% in year eight. That's not decline; it's a large base doing what large bases do. A tax system covering ₹22 lakh crore cannot keep growing at the pace of one covering ₹8 lakh crore.
+
+## What October 2025 quietly did to the numbers
+
+Anyone squinting at FY2025-26's monthly figures will notice something odd: growth, which had been running at 9–20% for most of the year, suddenly turns negative in October, November, and December 2025 — minus 0.3%, minus 8.0%, minus 4.2% — before recovering in January.
+
+The explanation isn't a slowdown in the economy. It's a policy switch. The GST Compensation Cess — the special levy on tobacco, aerated drinks, and automobiles that was supposed to fund states' revenue guarantees for exactly five years after GST launch — finally began its scheduled wind-down in October 2025. Cess collections that had run at roughly ₹23,449 crore in October 2024 fell to ₹14,340 crore in October 2025, then to ₹8,001 crore in November and ₹8,515 crore in December. The core taxes — CGST, SGST, IGST — kept climbing through this period. The headline number just stopped reflecting it, because one of its four components was being switched off in real time.
+
+It's a useful lesson in reading tax data: a "decline" in gross collection and a decline in *economic activity* are not always the same statement.
+
+## The refund machine got faster, not just bigger
+
+A less-discussed but genuinely striking trend sits in the refund data. Annual GST refunds grew from ₹3.21 lakh crore in FY2020-21 to ₹6.43 lakh crore in FY2024-25 — a 5.94× increase — and the refund-to-gross ratio climbed steadily from 8.4% to 11.6% over the same period.
+
+That sounds like the tax department giving away more money, but read the other way, it's the opposite story. IGST refunds — overwhelmingly claims from exporters filing under the Letter of Undertaking scheme — dominate the refund book. A rising refund rate alongside *rising* net collections means India's export base is growing and the GSTN's processing pipeline is keeping pace with it, rather than sitting on exporters' working capital the way it did in the system's chaotic early years. Compliance data backs this up directly: GSTR-3B filing compliance, a rough proxy for how functional the return-filing machinery actually is, sat at 89.2% in FY2018-19 and has held above 98.9% since FY2023-24 — a genuine turnaround from the administrative gaps the Comptroller and Auditor General's own 2019 compliance audit had flagged in the system's early years (CAG, 2019).
+
+## Eight crore taxpayers, and 0.5% of them carry the load
+
+If there's one table in the GST dataset that deserves to be printed and pinned to a wall in North Block, it's the taxpayer-constitution breakdown. As of June 2025, India had 1.53 crore active GST registrations. Proprietorships — the corner shop, the single-owner trading firm, the neighbourhood parlour — make up 80.14% of that base. Public Limited Companies make up 0.50%.
+
+Proprietorships contribute 13.27% of GST revenue. Public Limited Companies contribute 33.83%.
+
+Run the leverage ratio — revenue share divided by taxpayer share — and a Public Limited Company contributes **67.7 times** its population share to the tax base. A Proprietorship contributes 0.2 times its share. Public Sector Undertakings, a mere 3,475 entities, punch in at an extraordinary 469.5× leverage, contributing 9.39% of all GST revenue from 0.02% of registrants.
+
+This is not a scandal — large, formal, capital-intensive businesses have always paid disproportionate tax everywhere in the world, and the IMF's own periodic assessments of India's GST have argued its multi-rate structure does more to protect low-income consumers than a single-rate alternative would (IMF, 2018). But it does put a number on something that's often asserted impressionistically in Indian tax-policy debates: GST's revenue base is extremely concentrated at the top of the formal economy, even though its *compliance burden* — filing, invoicing, e-way bills — falls on all 1.53 crore registrants roughly equally. That asymmetry is arguably the single biggest unresolved design tension in GST as it enters its ninth year.
+
+## The e-way bill is now a better GDP proxy than GDP
+
+Buried in section 8 of the underlying dataset is a number that deserves far more attention than it gets: e-way bill generation — the digital permission slip required to move goods worth over ₹50,000 across state lines or within them — has grown 3.24× since FY2018-19, from 43.35 crore bills a year to 140.71 crore in FY2025-26 (11 months). The assessable value of goods covered has crossed ₹32.7 lakh crore.
+
+Because e-way bills are generated in real time, at the point goods actually move, they arguably tell you what's happening in the goods economy faster and more honestly than any survey-based indicator India publishes. When intra-state EWB growth outpaces inter-state growth, as it has in recent years, it's a signal of shorter, more localised supply chains — plausibly linked to warehousing decentralisation under GST's own "One Nation, One Tax" logic finally removing the incentive to route goods through fewer, larger interstate hubs.
+
+## Maharashtra's lead is not shrinking — but the chase is getting interesting
+
+Maharashtra alone contributes north of 21% of all state-level domestic GST — more than the bottom fifteen states combined. But the fastest-growing large states in FY2024-25 were not the usual suspects: Haryana grew 16.0% year-on-year and Delhi grew 15.9%, both comfortably outpacing Maharashtra's own growth and reflecting the expansion of services-sector activity — IT, finance, logistics — around the National Capital Region rather than manufacturing.
+
+## Eight years in, what the ledger actually says
+
+None of this requires anyone to have an opinion about GST as a political project. The eight-year dataset simply says: revenue has nearly tripled; compliance infrastructure that was genuinely broken in 2018-19 now works; refunds move faster; the formal, large-enterprise economy carries a wildly disproportionate share of the tax base; and a real-time logistics indicator now exists inside the tax system that didn't exist before it. Whatever else GST turns out to have been — messy launch, contested rate structure, endless Council meetings — it has, almost as a side effect, built India one of its best pieces of high-frequency economic infrastructure. The next test, as the Compensation Cess fully sunsets through 2026, is whether the system's next chapter is written with the same discipline as its recovery from a pandemic-year collapse.
+
+## Literature Review
+
+GST's academic literature divides fairly cleanly into two eras. The pre-2017 era was dominated by revenue-neutral-rate modelling — the Chief Economic Advisor's 2015 committee report on the RNR remains the reference point, and it's worth noting how far actual collections have outrun its original projections. International public-finance scholars writing before implementation, most influentially Michael Keen's work on VAT design for the IMF, framed GST's central design tension well in advance: a single-rate VAT is administratively simpler and less distortionary, but India's multi-slab structure was always going to trade some of that simplicity for political feasibility and revenue protection on sensitive goods. The dataset examined here is, in a sense, eight years of evidence on how that trade-off actually played out.
+
+The post-implementation literature has grown into a genuinely large body of work — a 2023 bibliometric review counted over 400 Scopus-indexed publications on GST between 2017 and 2022 alone — but it skews heavily toward compliance-cost and revenue-collection studies, with comparatively little research on the taxpayer-concentration question this piece foregrounds. The 2019 Comptroller and Auditor General compliance audit remains one of the few official assessments to document GSTN's early-years administrative gaps in granular detail, gaps that the filing-compliance improvement documented above (89.2% to 98.9%+) suggests have been substantially closed. On the specific question of who actually bears India's indirect tax burden, the IMF's periodic Selected Issues papers on India have consistently argued that GST's multi-rate structure, imperfect as it is, does more to protect low-income consumers than a single-rate alternative would — a finding that sits somewhat in tension with the stark taxpayer-leverage numbers in this analysis, and a genuine open question for future incidence research using GSTN microdata.
+
+## References
+
+- Government of India, Ministry of Finance. (2015). *Report on the Revenue Neutral Rate and Structure of Rates for the Goods and Services Tax*. Chief Economic Advisor's Committee (Chairman: Arvind Subramanian).
+- Comptroller and Auditor General of India. (2019). *Report No. 11 of 2019: Compliance Audit — Department of Revenue: Goods and Services Tax*.
+- Keen, M. (2013). The Anatomy of the VAT. *National Tax Journal*, 66(2), 423–446.
+- Keen, M. (2009). What Do (and Don't) We Know About the Value Added Tax? *Journal of Economic Literature*, 47(1), 157–170.
+- International Monetary Fund. (2018). *India: Selected Issues*. IMF Country Report No. 18/255.
+- GSTN / gstIndia R package documentation and release notes, v2.1.0.
+- Ministry of Finance, Government of India — monthly GST collection press releases, April 2018–February 2026.
+
+---
+
+*Data: gstIndia R package (v2.1.0), aggregating Ministry of Finance and GSTN releases, through February 2026. Analysis and R code (data.table) by Pawan. A companion interactive dashboard is available [here](../data_vizs/gst_dashboard_v2.html).*

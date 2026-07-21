@@ -1,0 +1,98 @@
+---
+title: "The Seven Years When Everyone Got Richer and No One Got More Equal"
+subtitle: "What two rounds of India's most detailed household survey reveal about who actually gained between 2004-05 and 2011-12 — and what changed since"
+author: "Pawan"
+date: "2026/07/20"
+date-modified: last-modified
+categories:
+  - "IHDS"
+  - "Human Development"
+  - "Articles"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: litera
+    css: |
+      body { font-family: "Source Serif 4", Georgia, serif; color:#1c1c1c; background:#faf7f0; line-height:1.75; }
+      h1, h2, h3 { font-family: "Fraunces", "Georgia", serif; color:#3a1f47; }
+      .drop { float:left; font-family:"Fraunces",serif; font-size:4.2rem; line-height:0.8; padding-right:0.35rem; padding-top:0.15rem; color:#7a4a9c; font-weight:700; }
+      blockquote { border-left: 4px solid #7a4a9c; background:#f0e8f5; padding: 0.8rem 1.2rem; font-style: italic; }
+      table { font-size: 0.9rem; }
+      code { color:#7a4a9c; }
+---
+
+<span class="drop">B</span>etween 2004-05 and 2011-12, mean household income per person in India rose from ₹11,816 a year to ₹29,402 — nominally, a two-and-a-half-fold increase. The share of households classified as poor fell from 19.6% to 16.4%. By almost any single-number summary, those seven years were a genuine success story, and the two waves of the India Human Development Survey — 41,554 households in the first round, 42,152 in the second, jointly fielded by NCAER and the University of Maryland — capture it in more granular detail than perhaps any other Indian dataset of the period.
+
+But sit with the data a little longer and a second, less flattering number appears right next to the first one. The Gini coefficient for per-capita income — the standard 0-to-1 measure of inequality, where 0 is perfect equality and 1 is one household owning everything — rose over the same seven years, from 0.537 to 0.544. Incomes grew. Poverty fell. Inequality did not improve. It got, very slightly, worse.
+
+That combination — broad-based nominal gains, real poverty reduction, and *unmoved or worsening* inequality — is the thread that runs through everything else in the IHDS data, once you look past the headline averages and start asking who, specifically, gained.
+
+## Rural India did not get the memo urban India got
+
+The national poverty numbers hide a split that matters more than the national average itself. Urban poverty nearly halved over the seven years, from 17.7% to 10.2%. Rural poverty barely moved: 20.6% to 19.7%, a decline so small it is close to statistically indistinguishable from no change at all. Whatever growth engine powered India's income gains between 2004-05 and 2011-12, it was disproportionately an urban engine, and rural India — where roughly two-thirds of the surveyed households live — largely watched from outside it.
+
+## The social-group gap that a national average erases completely
+
+If urban-rural is the first fault line the data exposes, social group is the second, and it's sharper. By 2011-12, Adivasi (tribal) households had a poverty rate of 34.8% — more than three times the Forward Caste rate of 7.1%, and still the highest of any group in the survey, exactly as it had been seven years earlier. Dalit households (21.6%) and Muslim households (18.3%) both sat roughly double the national average.
+
+| Social Group | 2004-05 Poverty | 2011-12 Poverty | 2011-12 Mean Income/Capita |
+|---|---:|---:|---:|
+| Christian/Sikh/Jain | 6.3% | 3.7% | ₹57,163 |
+| Brahmin | 6.9% | 6.8% | ₹47,115 |
+| Forward Caste | 8.1% | 7.1% | ₹43,167 |
+| OBC | 18.5% | 15.0% | ₹26,257 |
+| Muslim | 25.6% | 18.3% | ₹21,775 |
+| Dalit | 25.1% | 21.6% | ₹22,569 |
+| Adivasi | 40.7% | 34.8% | ₹22,053 |
+
+Every group's poverty rate fell over the seven years — this is not a story of some groups gaining while others lost ground in absolute terms. But the *relative* gap barely narrowed, echoing Vanneman and Dubey's influential distinction between "vertical" inequality (income-quintile gaps) and "horizontal" inequality (caste and religious-group gaps), drawn from these same two IHDS waves: India's growth narrowed the former only modestly while leaving much of the latter intact (Vanneman & Dubey, 2013). Adivasi households were 5.0 times as likely to be poor as Christian/Sikh/Jain households in 2004-05, and 9.4 times as likely in 2011-12 — the ratio actually widened, even as every group's absolute poverty rate declined. Growth, in other words, was a rising tide, but it did not lift all boats by the same amount, and the boats that started lowest gained the least in relative terms.
+
+## Migration is what poor households do, not what anyone chooses casually
+
+IHDS-II asked, specifically, about seasonal labour migration — household members who left temporarily, typically for one to six months, to work elsewhere. The pattern that emerges is stark and consistent across every way the data can be cut. Rural households were more than four times as likely to have a recent out-migrant as urban households (8.8% vs. 2.1%). Migration prevalence fell steadily and steeply as income rose: 12.4% of the poorest fifth of households had a recent migrant, against just 2.0% of the richest fifth.
+
+| Income Quintile | Share with Recent Out-Migrant |
+|---|---:|
+| Q1 (poorest) | 12.4% |
+| Q2 | 8.2% |
+| Q3 | 6.1% |
+| Q4 | 3.9% |
+| Q5 (richest) | 2.0% |
+
+The same disadvantage pattern that shows up in poverty repeats almost exactly in migration: Adivasi (10.9%) and Dalit (8.4%) households were roughly four times as likely to send a migrant as Forward Caste (2.7%) or Brahmin (3.7%) households. And migrant-sending households were significantly more likely to be poor overall — 26.2% versus 15.7% for households without a migrant (chi-square = 201.8, p < 0.001), a statistically decisive gap.
+
+None of this proves which way the causal arrow points, and the report is careful to say so: poverty could push a household to send a migrant, the disruption of a household member leaving could itself contribute to poverty, or both could stem from a shared underlying disadvantage. A 2022 study using the same two IHDS waves with propensity score matching and instrumental variable regression found that permanent migration's effect on household income follows an approximate U-shaped pattern, while seasonal migration's effect declines more uniformly (*Population Research and Policy Review*, 2022) — a genuine causal refinement that the cross-sectional prevalence statistics above cannot themselves provide. What the cross-sectional data *can* establish is the association, cleanly: seasonal migration in India is overwhelmingly a strategy of the rural poor, not a lifestyle choice of the mobile middle class, and it is disproportionately male — roughly 89% of recent migrants recorded in the data were men, moving more often to another state (56%) than staying within their own (41%), most commonly through contractor-arranged placement (53%) rather than a self-arranged job, a gendered pattern first documented in detail by Desai and Banerji's earlier work on male migration and left-behind wives using IHDS-I alone (Desai & Banerji, 2008).
+
+## Whose children benefit when a father migrates — a sharper question than it first appears
+
+A useful complication comes from outside the IHDS report itself. Kriti Vikram's peer-reviewed 2021 study, using the same two IHDS waves with more rigorous causal methods (propensity score matching, which approximates a controlled comparison by matching migrant and non-migrant households on observed characteristics), asks a narrower and different question: among households where a *father* migrates long-term — over six months, not the seasonal one-to-six-month migration IHDS-II measures broadly — do sons and daughters benefit equally in school?
+
+They do not. Vikram finds that when fathers migrate for extended work, sons show more consistent gains in reading and arithmetic achievement than daughters do — a finding that adds real nuance to the seasonal-migration story above. It also, at first glance, seems to sit oddly next to IHDS-II's broader finding that migration is concentrated among poorer, Adivasi and Dalit households: Vikram's long-term-migrant fathers skew, if anything, slightly *more* likely to be Brahmin and less likely to be Scheduled Tribe. The two findings aren't actually in conflict — they describe two different populations of migrants (short seasonal moves versus long-term paternal absence), which is worth remembering any time "migration" gets treated as a single, uniform category in policy discussions.
+
+## Illness follows poverty as closely as migration does
+
+The health module, available only for IHDS-II, adds a third strand to the same pattern. Chronic illness climbs sharply with age, as expected — but it is also significantly more common among poor households than non-poor ones (chi-square = 925.0, p < 0.001), a relationship that plausibly runs in both directions: illness reduces earning capacity and pushes a household toward poverty, while poverty itself limits access to preventive care and raises exposure to health risks in the first place. Disability, measured separately as functional difficulty with walking, hearing, or vision, rises just as sharply with age (from under 2% under 35 to 29.6% at 60-plus) but shows almost no income gradient — a genuinely different pattern from chronic illness, and a reminder that "poor health" is not one thing in this data; disability and chronic illness behave differently, and conflating them would obscure exactly the distinction that matters for targeting policy.
+
+## What a decade-old survey still has to say to 2026
+
+IHDS-II is now itself over a decade old, and the report is candid about what that means: nominal income comparisons across the two waves overstate real gains, because they aren't adjusted for inflation, and none of the associations here — migration and poverty, illness and poverty — can be read as proof of causation from a cross-sectional snapshot alone. But the structural pattern the two waves jointly establish — genuine, broad income growth; real but incomplete poverty reduction; social-group and rural-urban gaps that improved in absolute terms but not in relative ones — is exactly the pattern most subsequent Indian survey data, from PLFS to NSS consumption rounds, has continued to describe in the years since. The two IHDS rounds may be old data. The shape of the inequality they documented has proven considerably more durable than the survey itself.
+
+## Literature Review
+
+IHDS has generated one of the largest secondary-research literatures of any Indian household survey, and the inequality strand of that literature anticipates almost exactly the tension this piece foregrounds. Vanneman and Dubey's widely cited chapter on horizontal and vertical inequalities in India, built on the same two IHDS waves used here, distinguishes between "vertical" inequality (the income-quintile gaps) and "horizontal" inequality (the caste and religious-group gaps) and finds that India's growth story of the 2000s narrowed the former only modestly while leaving much of the latter intact — the same asymmetry this analysis documents through poverty ratios rather than Gini decomposition. Desai and Banerji's earlier work on male migration and "left-behind" wives, using IHDS-I alone, established the gendered household-disruption dimension of migration that this piece's aggregate migration statistics necessarily flatten out.
+
+On migration specifically, more recent work has moved past simple prevalence statistics toward causal identification: a 2022 study in *Population Research and Policy Review*, using propensity score matching and instrumental variable regression on the same two IHDS waves, found that permanent migration's effect on household income follows an approximate U-shaped pattern while seasonal migration's effect is more uniformly declining — a nuance the cross-sectional migration-poverty association in this piece cannot itself establish, and a useful caution against reading any single migration statistic as evidence of a uniform "migration effect." Taken together, the IHDS secondary literature consistently supports this piece's central claim: that broad-based income growth and persistent horizontal inequality are not contradictory findings requiring reconciliation, but the two halves of the same well-documented story.
+
+## References
+
+- Vanneman, R., & Dubey, A. (2013). Horizontal and Vertical Inequalities in India. In J. Gornick & M. Jäntti (Eds.), *Income Inequality: Economic Disparities and the Middle Class in Affluent Countries*. Stanford University Press.
+- Desai, S., & Banerji, M. (2008). Negotiated Identities: Male Migration and Left-Behind Wives in India. *Journal of Population Research*, 25(3), 337–355.
+- Desai, S., Dubey, A., Joshi, B. L., Sen, M., Shariff, A., & Vanneman, R. (2012). *India Human Development Survey: Technical Paper No. 1*. NCAER & University of Maryland.
+- Internal Migration and Rural Inequalities in India. (2022). *Population Research and Policy Review* (Springer).
+- Vikram, K. (2021). Fathers' Migration and Children's Educational Outcomes: Evidence from India. *International Migration Review*.
+- Desai, S., Vanneman, R., & National Council of Applied Economic Research. *India Human Development Survey (IHDS), 2005* [ICPSR 22626] and *IHDS-II, 2011-12* [ICPSR 36151]. Inter-university Consortium for Political and Social Research.
+
+---
+
+*Data: India Human Development Survey I (ICPSR 22626, 2004-05) and II (ICPSR 36151, 2011-12), NCAER & University of Maryland. External validation: Vikram (2021), *International Migration Review*. Analysis by Pawan. A companion interactive dashboard is available [here](../data_vizs/ihds_dashboard.html).*

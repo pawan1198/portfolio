@@ -75,7 +75,7 @@ listing:
               <div class="tl-role">Research Assistant</div>
               <div class="tl-org">Society for Social and Economic Research (SSER)</div>
             </div>
-            <div class="tl-date">2020 – 2022</div>
+            <div class="tl-date">2018 – 2022</div>
           </div>
           <ul class="tl-points">
             <li>Coordinated large-scale household surveys across multiple Indian states</li>
@@ -95,7 +95,7 @@ listing:
               <div class="tl-role">Independent Economic Researcher & Data Analyst</div>
               <div class="tl-org">Freelance / Self-employed</div>
             </div>
-            <div class="tl-date">2018 – Present</div>
+            <div class="tl-date">2024 – Present</div>
           </div>
           <ul class="tl-points">
             <li>Data analysis, statistical programming, and survey research for academic and policy clients</li>

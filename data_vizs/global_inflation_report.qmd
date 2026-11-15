@@ -1,0 +1,289 @@
+---
+title: "Global Consumer Price Inflation, 1960–2025"
+subtitle: "World, world powers, income groups and regions"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    embed-resources: true
+execute:
+  warning: false
+  message: false
+---
+
+## 1. Purpose and data
+
+This report analyses annual consumer price inflation (`FP.CPI.TOTL.ZG`, annual % change in the consumer price index) from the World Bank World Development Indicators (WDI). The source file is the WDI Excel export and contains three sheets: `Data` (inflation series), `Metadata - Countries` (region and income group) and `Metadata - Indicators`.
+
+The analysis is organised in four parts:
+
+1. **World**: the global aggregate.
+2. **World powers**: nine large economies, namely five G7 members (USA, UK, France, Germany, Japan) and four other large economies (China, India, Brazil, Russia).
+3. **Income groups**: World Bank income classification.
+4. **Regions**: World Bank regional classification.
+
+Medians are used for groups and regions because the distribution of inflation is heavily skewed by hyperinflation episodes.
+
+## 2. Setup
+
+```{r}
+#| label: setup
+#| include: false
+library(data.table)
+library(readxl)
+library(ggplot2)
+library(ggthemes)
+library(plotly)
+library(knitr)
+
+src <- "~/world_bank/global_inflation/API_FP_CPI_TOTL_ZG_DS2_en_excel_v2_1926.xls"
+
+power   <- c("USA", "CHN", "IND", "DEU", "JPN", "GBR", "FRA", "BRA", "RUS")
+inc_lvl <- c("Low income", "Lower middle income", "Upper middle income", "High income")
+pal9    <- c(economist_pal()(7), "#8c564b", "#e377c2")
+show_html <- knitr::is_html_output()
+
+plt_theme <- theme_economist(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    legend.title    = element_blank(),
+    plot.title      = element_text(face = "bold"),
+    plot.subtitle   = element_text(size = 10)
+  )
+```
+
+## 3. Load, reshape and reconcile
+
+```{r}
+#| label: load
+wide <- as.data.table(read_excel(src, sheet = "Data", skip = 3))
+meta <- as.data.table(read_excel(src, sheet = "Metadata - Countries"))
+meta <- meta[!is.na(`Country Code`), .(`Country Code`, Region, IncomeGroup)]
+yrs  <- grep("^[0-9]{4}$", names(wide), value = TRUE)
+
+long <- melt(wide,
+             id.vars       = c("Country Name", "Country Code"),
+             measure.vars  = yrs,
+             variable.name = "year",
+             value.name    = "cpi")
+long[, year := as.integer(as.character(year))]
+setnames(long, "Country Name", "Country")
+
+long <- meta[long, on = "Country Code"]
+long[, type := fifelse(is.na(Region) & is.na(IncomeGroup), "Aggregate", "Country")]
+long[, IncomeGroup := factor(IncomeGroup, levels = inc_lvl)]
+long[, Region := factor(Region)]
+```
+
+### Reconciliation checks
+
+```{r}
+#| label: reconcile
+miss_data <- setdiff(wide$`Country Code`, meta$`Country Code`)
+miss_meta <- setdiff(meta$`Country Code`, wide$`Country Code`)
+
+recon <- data.table(
+  Check = c("Rows in Data sheet",
+            "Duplicate country codes",
+            "Year columns (1960 to 2025)",
+            "Codes in Data but not in metadata",
+            "Codes in metadata but not in Data",
+            "Countries (region and income group set)",
+            "Aggregates (World, regions, income groups, other)",
+            "Country-year cells with a value",
+            "Country-year cells missing"),
+  Result = c(
+    as.character(nrow(wide)),
+    as.character(sum(duplicated(wide$`Country Code`))),
+    as.character(length(yrs)),
+    if (length(miss_data) == 0) "none" else paste(miss_data, collapse = ", "),
+    if (length(miss_meta) == 0) "none" else paste(miss_meta, collapse = ", "),
+    as.character(long[type == "Country", uniqueN(`Country Code`)]),
+    as.character(long[type == "Aggregate", uniqueN(`Country Code`)]),
+    format(long[, sum(!is.na(cpi))], big.mark = ","),
+    format(long[, sum(is.na(cpi))], big.mark = ",")
+  )
+)
+kable(recon, align = "lr", caption = "Reconciliation of the Data sheet against the metadata")
+```
+
+Every series in the `Data` sheet is matched to metadata except `INX`, which the World Bank uses for the "not classified" group. It is treated as an aggregate. Missing values are kept as `NA` and are not imputed.
+
+```{r}
+#| label: coverage
+cov <- long[type == "Country", .(Countries_reporting = sum(!is.na(cpi))), by = year]
+p_cov <- ggplot(cov, aes(year, Countries_reporting)) +
+  geom_col(fill = "#014d64", width = 0.8) +
+  labs(title = "Country coverage by year",
+       subtitle = "Number of countries reporting inflation",
+       x = NULL, y = "Countries") +
+  plt_theme
+if (show_html) ggplotly(p_cov) else p_cov
+```
+
+Coverage is thin before the 1970s, so trends are read from 1970 onward and summary statistics focus on recent decades.
+
+## 4. World
+
+```{r}
+#| label: world-data
+world <- long[`Country Code` == "WLD" & !is.na(cpi), .(year, cpi)]
+world_dec <- world[, .(mean_cpi = round(mean(cpi), 2), years = .N),
+                   by = .(decade = year %/% 10 * 10)]
+world_peak <- world[which.max(cpi), .(year, cpi = round(cpi, 2))]
+world_last <- world[.N, .(year, cpi = round(cpi, 2))]
+kable(world_dec, col.names = c("Decade", "Mean inflation (%)", "Years"),
+      caption = "World average inflation by decade")
+```
+
+```{r}
+#| label: world-plot
+p_world <- ggplot(world, aes(year, cpi)) +
+  geom_hline(yintercept = 0, colour = "grey60") +
+  geom_line(colour = "#014d64", linewidth = 0.9) +
+  labs(title = "World consumer price inflation",
+       subtitle = "Annual % change in CPI, World aggregate",
+       x = NULL, y = "%",
+       caption = "Source: World Bank WDI (FP.CPI.TOTL.ZG)") +
+  plt_theme
+if (show_html) ggplotly(p_world) else p_world
+```
+
+The World aggregate is available from 1981. Its peak is `r world_peak$cpi`% in `r world_peak$year`, and the latest value is `r world_last$cpi`% in `r world_last$year`.
+
+## 5. World powers
+
+```{r}
+#| label: power-summary
+pw_sum <- long[`Country Code` %in% power & year >= 2000,
+               .(Mean_2000_2025 = round(mean(cpi, na.rm = TRUE), 2),
+                 SD             = round(sd(cpi, na.rm = TRUE), 2),
+                 Min            = round(min(cpi, na.rm = TRUE), 2),
+                 Max            = round(max(cpi, na.rm = TRUE), 2),
+                 Value_2025     = round(cpi[year == 2025][1], 2)),
+               by = .(Country)]
+setorder(pw_sum, -Mean_2000_2025)
+kable(pw_sum, caption = "Inflation summary for the world powers, 2000 to 2025")
+```
+
+The US 2025 value is blank in the source file, so it is shown as `NA` and excluded from averages that include 2025.
+
+```{r}
+#| label: power-note
+#| include: false
+```
+
+```{r}
+#| label: power-plot
+p_power <- ggplot(long[`Country Code` %in% power & year >= 1995 & !is.na(cpi)],
+                  aes(year, cpi, colour = Country)) +
+  geom_hline(yintercept = 0, colour = "grey60") +
+  geom_line(linewidth = 0.7) +
+  scale_colour_manual(values = pal9) +
+  labs(title = "Inflation in the world powers",
+       subtitle = "Annual % change in CPI, 1995 to 2025",
+       x = NULL, y = "%",
+       caption = "Source: World Bank WDI") +
+  plt_theme
+if (show_html) ggplotly(p_power) else p_power
+```
+
+## 6. Income groups
+
+```{r}
+#| label: income-data
+inc_dec <- long[type == "Country" & !is.na(cpi) & !is.na(IncomeGroup),
+                .(median_cpi = round(median(cpi), 2), n = .N),
+                by = .(IncomeGroup, decade = year %/% 10 * 10)]
+inc_wide <- dcast(inc_dec, IncomeGroup ~ decade, value.var = "median_cpi")
+kable(inc_wide, caption = "Median country inflation by income group and decade (%)")
+```
+
+```{r}
+#| label: income-plot
+inc_yr <- long[type == "Country" & !is.na(cpi) & !is.na(IncomeGroup) & year >= 1970,
+               .(median_cpi = median(cpi), n = .N),
+               by = .(IncomeGroup, year)]
+p_inc <- ggplot(inc_yr, aes(year, median_cpi, colour = IncomeGroup)) +
+  geom_hline(yintercept = 0, colour = "grey60") +
+  geom_line(linewidth = 0.8) +
+  scale_colour_economist() +
+  labs(title = "Median inflation by income group",
+       subtitle = "Median annual % change in CPI across countries, 1970 to 2025",
+       x = NULL, y = "%",
+       caption = "Source: World Bank WDI; income groups from WB classification") +
+  plt_theme
+if (show_html) ggplotly(p_inc) else p_inc
+```
+
+```{r}
+#| label: income-box
+p_box <- ggplot(long[type == "Country" & !is.na(cpi) & !is.na(IncomeGroup) & year >= 2010],
+                aes(IncomeGroup, cpi, fill = IncomeGroup)) +
+  geom_boxplot(outlier.alpha = 0.3, show.legend = FALSE) +
+  scale_y_continuous(trans = scales::pseudo_log_trans(base = 10),
+                     breaks = c(-10, 0, 10, 100, 1000, 10000)) +
+  scale_fill_economist() +
+  labs(title = "Distribution of inflation by income group, 2010 to 2025",
+       subtitle = "Pseudo-log scale to show hyperinflation outliers",
+       x = NULL, y = "% (pseudo-log)") +
+  plt_theme
+if (show_html) ggplotly(p_box) else p_box
+```
+
+## 7. Regions
+
+```{r}
+#| label: region-data
+reg_dec <- long[type == "Country" & !is.na(cpi) & !is.na(Region),
+                .(median_cpi = round(median(cpi), 2), n = .N),
+                by = .(Region, decade = year %/% 10 * 10)]
+reg_wide <- dcast(reg_dec, Region ~ decade, value.var = "median_cpi")
+kable(reg_wide, caption = "Median country inflation by region and decade (%)")
+```
+
+```{r}
+#| label: region-heat
+p_heat <- ggplot(reg_dec, aes(factor(decade), Region, fill = median_cpi)) +
+  geom_tile(colour = "white") +
+  geom_text(aes(label = round(median_cpi, 1)), size = 3) +
+  scale_fill_gradient2(low = "#00887d", mid = "white", high = "#d9534f",
+                       midpoint = 5, limits = c(-2, 20), oob = scales::squish) +
+  labs(title = "Median inflation by region and decade",
+       subtitle = "Median annual % change in CPI; colour capped at -2 and 20",
+       x = "Decade", y = NULL, fill = "%") +
+  plt_theme +
+  theme(legend.position = "right", legend.title = element_text())
+if (show_html) ggplotly(p_heat) else p_heat
+```
+
+```{r}
+#| label: region-plot
+reg_yr <- long[type == "Country" & !is.na(cpi) & !is.na(Region) & year >= 1970,
+               .(median_cpi = median(cpi), n = .N),
+               by = .(Region, year)]
+p_reg <- ggplot(reg_yr, aes(year, median_cpi, colour = Region)) +
+  geom_hline(yintercept = 0, colour = "grey60") +
+  geom_line(linewidth = 0.8) +
+  scale_colour_manual(values = economist_pal()(7)) +
+  labs(title = "Median inflation by region",
+       subtitle = "Median annual % change in CPI across countries, 1970 to 2025",
+       x = NULL, y = "%",
+       caption = "Source: World Bank WDI; regions from WB classification") +
+  plt_theme
+if (show_html) ggplotly(p_reg) else p_reg
+```
+
+## 8. Key findings
+
+**World.** Average world inflation has fallen by decade, from about 8.0% in the 1980s to 2.7% in the 2010s. The 2020s average of 4.2% covers only six years and includes the 2022 price spike, when the cross-country median reached 8.0%, up from 3.5% in 2021. By 2025 the World aggregate had fallen back to 3.0%.
+
+**World powers.** Russia has the highest average inflation for 2000 to 2025 (9.8%), followed by Brazil (6.2%) and India (6.0%). France (1.7%), Germany (1.9%), China (1.9%) and the UK (2.5%) sit in the middle, and Japan has the lowest average (0.5%) and a minimum of -1.4%.
+
+**Income groups.** Inflation rises as income falls. For 2010 to 2025, the median country in the low-income group had 6.1% inflation, against 2.0% in high-income countries. The same ordering holds in 2025: 4.4% for low income, 3.6% for lower middle income, 3.3% for upper middle income and 2.3% for high income.
+
+**Regions.** Latin America & Caribbean had the highest median inflation in the 1980s (12.5%) and has since converged to the low-single-digit range. Sub-Saharan Africa recorded a median of 5.4% in the 2020s, and South Asia 5.3%. In 2025 the regional medians range from 2.0% (East Asia & Pacific) to 3.7% (Europe & Central Asia).
+
+**Data caveats.** Regional medians for 2024 to 2025 rest on few countries in some regions. South Asia has six countries and North America has only Canada, because the US 2025 value is missing. Series before the 1970s cover few countries, so long-run comparisons should be read with caution.

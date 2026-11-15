@@ -1,0 +1,461 @@
+---
+title: "Trade Openness of Nations, 1960–2025"
+subtitle: "Exports and imports of goods and services (% of GDP): world, major powers, countries, income groups and regions"
+date: today
+author: "Trade Data Analysis"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    embed-resources: true
+    theme: cosmo
+    df-print: paged
+    code-fold: false
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+International trade is one of the most visible links between national economies. Countries export goods and services to earn foreign currency and to specialise in what they produce most efficiently, and they import goods and services to meet domestic demand, access inputs and technology, and smooth consumption. Because economies differ enormously in size, the most useful common yardstick is the value of trade expressed as a share of gross domestic product (GDP). This normalisation makes a small island economy and a continental giant directly comparable.
+
+This report uses two indicators from the World Bank World Development Indicators (WDI):
+
+- **Exports of goods and services (% of GDP)**, series code `NE.EXP.GNFS.ZS`
+- **Imports of goods and services (% of GDP)**, series code `NE.IMP.GNFS.ZS`
+
+From these two series we derive two further measures that are standard in trade economics:
+
+$$
+\text{Openness}_{i,t} = X_{i,t} + M_{i,t}, \qquad
+\text{Balance}_{i,t} = X_{i,t} - M_{i,t}
+$$
+
+where $X_{i,t}$ is the export share and $M_{i,t}$ the import share of GDP for economy $i$ in year $t$. Openness (also called the trade-to-GDP ratio) indicates how strongly an economy is integrated with the rest of the world; a positive balance indicates a net exporter of goods and services, and a negative balance a net importer. Because the variables are shares of GDP, the balance is not the same as a current-account balance, which also includes primary income and transfers, but it is closely related to it.
+
+The objectives of this report are to:
+
+1. verify that the two source files are consistent with each other and fit for analysis (data reconciliation);
+2. describe how trade openness has evolved globally between 1960 and 2025;
+3. compare the trade profile of the world's major economic powers;
+4. rank individual economies and examine their balance of trade;
+5. compare World Bank income groups and geographic regions.
+
+The benchmark year for cross-sectional comparisons is **2023**. The 2024 and 2025 columns of the source files are only partly populated, while 2023 offers the most recent year in which a large share of economies report both series. The full time series from 1960 onward is used for trend analysis.
+
+The report is organised as follows. Section 2 describes the data and the methods, including the reconciliation checks. Section 3 analyses the world aggregate and the major powers. Section 4 examines individual countries. Section 5 compares income groups and Section 6 compares regions. Section 7 concludes.
+
+# Data and Methods
+
+## Source files
+
+Two Excel files were supplied, each with a `Data` sheet (one row per economy or aggregate, years as columns) and two metadata sheets. The country metadata provides the **region** and **income group** for each economy. Aggregates such as *World*, *High income* or *East Asia & Pacific* carry no region and are identified separately.
+
+## Reconciliation approach
+
+Before any analysis the two files were reconciled. The checks cover row counts, identity of country codes, duplicate codes, coverage of codes by the metadata sheet, identity of the year columns and completeness of the series. After reshaping into long format, exports and imports were matched on country code and year, and the balance identity was tested. All reshaping and joins use `data.table`; plots use `ggplot2`. The analysis deliberately avoids user-defined functions, so each step is written out explicitly.
+
+```{r}
+#| label: setup
+library(data.table)
+library(readxl)
+library(ggplot2)
+library(plotly)
+library(knitr)
+library(scales)
+
+src_dir <- "/home/veronica/world_bank/trade/"
+f_exp   <- "API_NE_EXP_GNFS_ZS_DS2_en_excel_v2_1043.xls"
+f_imp   <- "API_NE_IMP_GNFS_ZS_DS2_en_excel_v2_3427.xls"
+YEARS   <- as.character(1960:2025)
+Y       <- 2023L   # benchmark year for cross-sectional comparisons
+
+# Economic plot theme: a ggplot2 theme object (no function is defined)
+econ_theme <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title       = element_text(face = "bold", colour = "#1B2A41", size = 14),
+    plot.subtitle    = element_text(colour = "#4A5568"),
+    plot.caption     = element_text(colour = "#718096", size = 8, hjust = 0),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(colour = "#E2E8F0", linewidth = 0.3),
+    axis.title       = element_text(colour = "#2D3748"),
+    legend.position  = "bottom",
+    legend.title     = element_blank(),
+    plot.background  = element_rect(fill = "white", colour = NA)
+  )
+```
+
+## Import
+
+```{r}
+#| label: import
+exp_raw <- as.data.table(read_excel(paste0(src_dir, f_exp), sheet = "Data", skip = 3, col_types = "text"))
+imp_raw <- as.data.table(read_excel(paste0(src_dir, f_imp), sheet = "Data", skip = 3, col_types = "text"))
+meta    <- as.data.table(read_excel(paste0(src_dir, f_exp), sheet = "Metadata - Countries"))
+```
+
+## Reconciliation
+
+```{r}
+#| label: tbl-reconcile
+#| tbl-cap: "Data reconciliation checks on the two source files"
+codes_ex <- exp_raw[["Country Code"]]
+codes_im <- imp_raw[["Country Code"]]
+rec <- data.table(
+  Check = c("Rows in exports file", "Rows in imports file",
+            "Country codes identical across files",
+            "Duplicate codes in exports file", "Duplicate codes in imports file",
+            "Codes absent from metadata sheet",
+            "Year columns identical across files",
+            "Non-missing cells, exports (1960–2025)",
+            "Non-missing cells, imports (1960–2025)"),
+  Result = c(as.character(nrow(exp_raw)), as.character(nrow(imp_raw)),
+             as.character(identical(sort(codes_ex), sort(codes_im))),
+             as.character(anyDuplicated(codes_ex)), as.character(anyDuplicated(codes_im)),
+             paste(setdiff(codes_ex, meta[["Country Code"]]), collapse = ", "),
+             as.character(identical(names(exp_raw)[5:70], names(imp_raw)[5:70])),
+             format(sum(!is.na(exp_raw[, ..YEARS])), big.mark = ","),
+             format(sum(!is.na(imp_raw[, ..YEARS])), big.mark = ","))
+)
+kable(rec, align = "lr")
+```
+
+The two files share identical codes and year columns, contain no duplicates, and all codes are present in the metadata except `INX` (*Not classified*), which is treated as an aggregate.
+
+## Reshaping and classification
+
+```{r}
+#| label: reshape
+long_ex <- melt(exp_raw, id.vars = c("Country Code", "Country Name"), measure.vars = YEARS,
+                variable.name = "year", value.name = "exports", variable.factor = FALSE)
+long_im <- melt(imp_raw, id.vars = "Country Code", measure.vars = YEARS,
+                variable.name = "year", value.name = "imports", variable.factor = FALSE)
+
+dt <- merge(long_ex, long_im, by = c("Country Code", "year"), all = TRUE)
+dt[, `:=`(year = as.integer(year), exports = as.numeric(exports), imports = as.numeric(imports))]
+dt <- merge(dt, meta[, .(`Country Code`, Region, IncomeGroup)], by = "Country Code", all.x = TRUE)
+
+region_codes <- c(EAS = "East Asia & Pacific", ECS = "Europe & Central Asia",
+                  LCN = "Latin America & Caribbean",
+                  MEA = "Middle East, North Africa, Afghanistan & Pakistan",
+                  NAC = "North America", SAS = "South Asia", SSF = "Sub-Saharan Africa")
+income_codes <- c(LIC = "Low income", LMC = "Lower middle income",
+                  UMC = "Upper middle income", HIC = "High income")
+major_powers <- c(USA = "United States", CHN = "China", DEU = "Germany", JPN = "Japan",
+                  GBR = "United Kingdom", FRA = "France", ITA = "Italy", CAN = "Canada",
+                  IND = "India", RUS = "Russian Federation", BRA = "Brazil")
+
+dt[, level := fifelse(`Country Code` == "WLD", "World",
+               fifelse(`Country Code` %in% names(region_codes), "Region",
+               fifelse(`Country Code` %in% names(income_codes), "Income group",
+               fifelse(!is.na(Region) & Region != "", "Country", "Other aggregate"))))]
+dt[level == "Region",       group := region_codes[`Country Code`]]
+dt[level == "Income group", group := income_codes[`Country Code`]]
+dt[, power := `Country Code` %in% names(major_powers)]
+
+dt[, openness := exports + imports]
+dt[, balance  := exports - imports]
+dt[, review   := fifelse(!is.na(balance) & abs(balance) > 15, TRUE, FALSE)]
+```
+
+```{r}
+#| label: tbl-levels
+#| tbl-cap: "Classification of series in the cleaned panel (rows, economy-years)"
+lv <- dt[, .(Rows = .N, Series_with_data = sum(!is.na(openness))), by = level][order(-Rows)]
+kable(lv, align = "lrr")
+```
+
+Each row in the panel is one series-year. Aggregates are kept only where they match one of the groups used in the analysis (the World, seven regions and four income groups); other aggregates such as *IDA* or *Euro area* are retained in the panel but not analysed.
+
+## Balance identity and world reconciliation
+
+A useful internal check is the global identity: world exports must equal world imports, since every export is somebody else's import. In practice the two aggregates differ slightly because of valuation and timing differences (for example, exports are recorded free-on-board while imports include freight and insurance). The residual is therefore expected to be small and close to zero.
+
+```{r}
+#| label: fig-wld-balance
+#| fig-cap: "World balance of goods and services, % of GDP (residual of the global identity)"
+wld_bal <- dt[level == "World" & !is.na(balance) & year >= 1970, .(year, balance)]
+p_wbal <- ggplot(wld_bal, aes(year, balance)) +
+  geom_hline(yintercept = 0, colour = "#718096", linetype = "dashed") +
+  geom_col(fill = "#1F4E79", width = 0.8) +
+  labs(title = "Global balance is close to zero",
+       subtitle = "World exports minus world imports, percentage points of GDP",
+       x = NULL, y = "Percentage points of GDP",
+       caption = "Source: World Bank WDI (NE.EXP.GNFS.ZS, NE.IMP.GNFS.ZS). Residual reflects valuation differences.") +
+  econ_theme
+ggplotly(p_wbal) |> layout(hovermode = "x unified")
+```
+
+Across 1970–2025 the world balance stays within about one percentage point of zero in every year, which is consistent with the global identity and gives confidence in the pairing of the two files.
+
+## Data quality flags
+
+Some economies display balances beyond 15 percentage points of GDP in either direction. These are usually small economies with very large re-export, shipping or aid-financed flows, but they are flagged for review.
+
+```{r}
+#| label: tbl-flags
+#| tbl-cap: "Number of economy-years flagged for review (|balance| > 15 pp), by benchmark year"
+flags <- dt[level == "Country", .(Flagged_economies = sum(review, na.rm = TRUE)),
+            by = .(Year = year)][Year %in% c(1990, 2000, 2010, 2020, Y)]
+kable(flags, align = "lr")
+```
+
+# World Trade Trends and Major Powers
+
+## Global openness over time
+
+```{r}
+#| label: fig-world
+#| fig-cap: "Global exports and imports of goods and services, % of GDP, 1970–2025"
+wld <- melt(dt[level == "World" & year >= 1970, .(year, Exports = exports, Imports = imports)],
+            id.vars = "year", variable.name = "flow", value.name = "pct_gdp")
+p_world <- ggplot(wld, aes(year, pct_gdp, colour = flow)) +
+  geom_line(linewidth = 1) +
+  scale_colour_manual(values = c("#1F4E79", "#C0392B")) +
+  scale_y_continuous(labels = label_number(suffix = "%")) +
+  labs(title = "World trade flows have roughly doubled as a share of GDP",
+       subtitle = "Exports and imports of goods and services, World aggregate",
+       x = NULL, y = "% of GDP",
+       caption = "Source: World Bank WDI.") +
+  econ_theme
+ggplotly(p_world) |> layout(hovermode = "x unified")
+```
+
+```{r}
+#| label: tbl-world
+#| tbl-cap: "World trade openness at selected years"
+wld_tbl <- dt[level == "World" & year %in% c(1970, 1990, 2000, 2010, 2020, Y, 2025),
+              .(Year = year, Exports = exports, Imports = imports,
+                Openness = openness, Balance = balance)]
+kable(wld_tbl, digits = 2, align = "lrrrr")
+```
+
+World openness, the sum of exports and imports, rose from about 26% of GDP in 1970 to about 57% in 2023, and was roughly the same in 2025. Most of the increase came between 1970 and 2010, a period of falling tariffs, containerisation and the integration of China and other emerging economies into global value chains. Since 2010 the ratio has plateaued, which is consistent with slower growth in global trade relative to output.
+
+## Major powers
+
+For this report, *major powers* are defined as the G7 economies together with China, India, Russia and Brazil. The WDI extract does not include GDP in current dollars, so economic size is taken from this group definition rather than from a size ranking.
+
+```{r}
+#| label: tbl-powers
+#| tbl-cap: "Trade profile of major powers, 2023 (% of GDP)"
+pw <- dt[power == TRUE & year == Y,
+         .(Country = `Country Name`, Exports = exports, Imports = imports,
+           Openness = openness, Balance = balance)][order(-Openness)]
+kable(pw, digits = 2, align = "lrrrr")
+```
+
+```{r}
+#| label: fig-powers-open
+#| fig-cap: "Trade openness of major powers, 1990–2023 (% of GDP)"
+pw_tr <- dt[power == TRUE & year >= 1990 & year <= Y, .(year, Country = `Country Name`, openness)]
+p_pw <- ggplot(pw_tr, aes(year, openness, colour = Country)) +
+  geom_line(linewidth = 0.9) +
+  scale_colour_brewer(palette = "Paired") +
+  scale_y_continuous(labels = label_number(suffix = "%")) +
+  labs(title = "Openness of the major powers",
+       subtitle = "Exports plus imports, % of GDP",
+       x = NULL, y = "% of GDP", caption = "Source: World Bank WDI.") +
+  econ_theme
+ggplotly(p_pw) |> layout(hovermode = "x unified")
+```
+
+```{r}
+#| label: fig-powers-bal
+#| fig-cap: "Net trade balance of major powers, 2023 (percentage points of GDP)"
+pw_bal <- copy(pw)[, Position := fifelse(Balance >= 0, "Surplus", "Deficit")]
+p_pwb <- ggplot(pw_bal, aes(reorder(Country, Balance), Balance, fill = Position)) +
+  geom_col(width = 0.7) +
+  geom_hline(yintercept = 0, colour = "#4A5568") +
+  coord_flip() +
+  scale_fill_manual(values = c(Deficit = "#C0392B", Surplus = "#2E8B57")) +
+  labs(title = "Who runs surpluses among the major powers?",
+       subtitle = "Net balance of goods and services, 2023",
+       x = NULL, y = "Percentage points of GDP", caption = "Source: World Bank WDI.") +
+  econ_theme
+ggplotly(p_pwb)
+```
+
+Among the major powers, Germany combines the highest openness (about 82% of GDP) with a surplus of about 4 points of GDP, while the United States has the lowest openness (about 25%) and a deficit of about 2.8 points of GDP. Russia and Germany record the largest surpluses in the group. China is a net exporter by about 2 points of GDP, and India, Japan, the United Kingdom and France are net importers. The contrast between the largest and smallest openness ratios in this group shows that the size of an economy's domestic market matters: large continental economies trade proportionally less than small open ones.
+
+# Country Analysis
+
+## Most open economies
+
+```{r}
+#| label: fig-top-open
+#| fig-cap: "Fifteen most open economies, 2023 (exports plus imports, % of GDP)"
+top15 <- dt[level == "Country" & year == Y & !is.na(openness)][order(-openness)][1:15]
+p_top <- ggplot(top15, aes(reorder(`Country Name`, openness), openness, fill = IncomeGroup)) +
+  geom_col(width = 0.7) +
+  coord_flip() +
+  scale_fill_manual(values = c("High income" = "#1F4E79", "Upper middle income" = "#2E8B57",
+                               "Lower middle income" = "#D68910", "Low income" = "#C0392B")) +
+  labs(title = "The most open economies are small, service-rich or entrepôts",
+       subtitle = "Openness = exports + imports, % of GDP, 2023",
+       x = NULL, y = "% of GDP", caption = "Source: World Bank WDI and country metadata.") +
+  econ_theme
+ggplotly(p_top)
+```
+
+```{r}
+#| label: tbl-top-open
+#| tbl-cap: "Top ten economies by openness and the ten least open economies, 2023"
+top10 <- dt[level == "Country" & year == Y & !is.na(openness)][order(-openness)][1:10,
+            .(Rank = 1:10, Economy = `Country Name`, Exports = exports, Imports = imports,
+              Openness = openness, Balance = balance)]
+low10 <- dt[level == "Country" & year == Y & !is.na(openness)][order(openness)][1:10,
+            .(Rank = 1:10, Economy = `Country Name`, Exports = exports, Imports = imports,
+              Openness = openness, Balance = balance)]
+kable(top10, digits = 2, caption = "Top ten by openness")
+kable(low10, digits = 2, caption = "Ten least open economies")
+```
+
+Luxembourg, Hong Kong SAR, San Marino, Singapore and Djibouti top the ranking, with trade exceeding 280% of GDP in each case. These are small economies that act as financial, logistics or re-export hubs, so gross trade is large relative to domestic output. At the other end, the ten least open economies all have openness below 35% of GDP. They include large economies with big domestic markets, such as the United States, and low-income or conflict-affected economies with limited integration into global supply chains and some data limitations. Sudan's very low value should be read with caution because of data quality in that economy.
+
+## Economies with the largest surpluses and deficits
+
+```{r}
+#| label: tbl-balance
+#| tbl-cap: "Largest net surpluses and deficits, 2023 (% of GDP)"
+bal_rank <- dt[level == "Country" & year == Y & !is.na(balance)][order(balance)]
+bal_tab <- rbind(bal_rank[1:5, .(Type = "Deficit", Economy = `Country Name`, Balance = balance)],
+                 bal_rank[(.N - 4):.N][order(-balance), .(Type = "Surplus", Economy = `Country Name`, Balance = balance)])
+kable(bal_tab, digits = 2, align = "llr")
+```
+
+The largest deficits are concentrated in small island and low-income economies such as Kiribati and Somalia, which import far more than they export. Surpluses are concentrated in financial and export hubs such as Macao SAR, Singapore and Ireland, and in resource exporters such as Gabon. These values combine trade in goods and services, so service exports such as tourism, finance and shipping play a large role.
+
+# Income Groups
+
+```{r}
+#| label: fig-income-trend
+#| fig-cap: "Trade openness by World Bank income group, 1970–2025 (% of GDP)"
+inc <- dt[level == "Income group" & year >= 1970 & !is.na(openness),
+          .(year, Group = group, openness)]
+p_inc <- ggplot(inc, aes(year, openness, colour = Group)) +
+  geom_line(linewidth = 1) +
+  scale_colour_manual(values = c("#1F4E79", "#2E8B57", "#D68910", "#C0392B")) +
+  scale_y_continuous(labels = label_number(suffix = "%")) +
+  labs(title = "Openness has risen in every income group since 1970",
+       subtitle = "Exports plus imports, % of GDP, World Bank income group aggregates",
+       x = NULL, y = "% of GDP", caption = "Source: World Bank WDI and income group classification.") +
+  econ_theme
+ggplotly(p_inc) |> layout(hovermode = "x unified")
+```
+
+```{r}
+#| label: tbl-income
+#| tbl-cap: "Income groups in 2023: aggregate values and median economy values"
+inc_agg <- dt[level == "Income group" & year == Y,
+              .(Group = group, Exports = exports, Imports = imports,
+                Openness = openness, Balance = balance)]
+inc_med <- dt[level == "Country" & year == Y & !is.na(openness),
+              .(Economies = .N, Median_openness = median(openness),
+                Median_balance = median(balance)), by = .(Group = IncomeGroup)]
+kable(inc_agg, digits = 2, caption = "World Bank aggregate values")
+kable(inc_med[order(-Median_openness)], digits = 2, caption = "Median across economies")
+```
+
+High-income economies are the most open in the aggregate, at about 63% of GDP, and run a small surplus that reflects a broad mix of services and manufactured trade. Openness has risen in every group since 1970, but since 2010 it has eased in the middle-income groups and in the low-income group, where it fell from about 59% to about 52%. Low-income economies display the sharpest contrast: their imports are about 32% of GDP against exports of about 20%, a structural deficit of roughly 12.6 points. Such gaps are typically financed by official development assistance, remittances and foreign direct investment, and they are a key vulnerability in debt sustainability analysis. The median economy tells a slightly different story from the aggregate because the aggregate is dominated by the largest economies in each group.
+
+# Regions
+
+```{r}
+#| label: fig-region-bars
+#| fig-cap: "Exports and imports by region, 2023 (% of GDP)"
+reg <- dt[level == "Region" & year == Y, .(Region = group, Exports = exports, Imports = imports)]
+reg_m <- melt(reg, id.vars = "Region", variable.name = "flow", value.name = "pct_gdp")
+p_reg <- ggplot(reg_m, aes(reorder(Region, pct_gdp), pct_gdp, fill = flow)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  coord_flip() +
+  scale_fill_manual(values = c("Exports" = "#1F4E79", "Imports" = "#C0392B")) +
+  scale_y_continuous(labels = label_number(suffix = "%")) +
+  labs(title = "Europe & Central Asia and MENA trade the most relative to GDP",
+       subtitle = "Exports and imports of goods and services, % of GDP, 2023",
+       x = NULL, y = "% of GDP", caption = "Source: World Bank WDI, regional aggregates.") +
+  econ_theme
+ggplotly(p_reg)
+```
+
+```{r}
+#| label: tbl-region
+#| tbl-cap: "Regional trade profile, 2023 (% of GDP)"
+reg_tab <- dt[level == "Region" & year == Y,
+              .(Region = group, Exports = exports, Imports = imports,
+                Openness = openness, Balance = balance)][order(-Openness)]
+kable(reg_tab, digits = 2, align = "lrrrr")
+```
+
+```{r}
+#| label: fig-region-trend
+#| fig-cap: "Regional trade openness, 1970–2025 (% of GDP)"
+reg_tr <- dt[level == "Region" & year >= 1970 & !is.na(openness), .(year, Region = group, openness)]
+p_regtr <- ggplot(reg_tr, aes(year, openness, colour = Region)) +
+  geom_line(linewidth = 0.9) +
+  scale_colour_brewer(palette = "Set2") +
+  scale_y_continuous(labels = label_number(suffix = "%")) +
+  labs(title = "Regional integration has deepened over five decades",
+       subtitle = "Exports plus imports, % of GDP, regional aggregates",
+       x = NULL, y = "% of GDP", caption = "Source: World Bank WDI.") +
+  econ_theme
+ggplotly(p_regtr) |> layout(hovermode = "x unified")
+```
+
+Europe & Central Asia is the most open region in 2023, with openness close to 90% of GDP, followed by the Middle East, North Africa, Afghanistan & Pakistan at about 78%, a figure that reflects in part its energy exports. North America is the least open region at about 28%, reflecting a large continental market. The region-level balances show a clear pattern: the Middle East and North Africa and Europe & Central Asia run surpluses, while North America and South Asia run deficits. The trend chart shows that Europe & Central Asia and the Middle East have been the most consistently integrated regions over the period, while South Asia has increased its openness sharply since the 1990s.
+
+# Interactive Economic Dashboard
+
+The following chart combines the three main dimensions of the analysis in one interactive view. Hovering reveals exact values; the legend can be used to isolate series.
+
+```{r}
+#| label: fig-interactive
+#| fig-cap: "Interactive view: openness of the world, the major powers and the income groups, 1990–2025"
+dash <- rbind(
+  dt[level == "World" & year >= 1990, .(year, Series = "World", openness)],
+  dt[level == "Income group" & year >= 1990, .(year, Series = paste("Income:", group), openness)],
+  dt[power == TRUE & `Country Code` %in% c("DEU", "USA", "CHN") & year >= 1990,
+     .(year, Series = `Country Name`, openness)]
+)
+p_dash <- ggplot(dash, aes(year, openness, colour = Series, group = Series)) +
+  geom_line(linewidth = 0.9) +
+  scale_colour_manual(values = c("#1B2A41", "#1F4E79", "#C0392B", "#2E8B57", "#D68910",
+                                 "#7D3C98", "#117A8B", "#5D6D7E")) +
+  scale_y_continuous(labels = label_number(suffix = "%")) +
+  labs(title = "Interactive trade openness dashboard",
+       subtitle = "Exports plus imports, % of GDP",
+       x = NULL, y = "% of GDP", caption = "Source: World Bank WDI.") +
+  econ_theme
+ggplotly(p_dash, tooltip = c("x", "y", "colour")) |>
+  layout(hovermode = "closest")
+```
+
+# Conclusions
+
+The two World Bank series reconcile well. Their codes, years and coverage match, and the global identity holds within about one percentage point of GDP in every year since 1970. The analysis yields five main findings.
+
+First, world trade openness has roughly doubled since 1970 and has stabilised at around 57% of GDP since 2010. Second, the major powers differ markedly: Germany is the most open large economy, while the United States is the least open and the largest net importer of goods and services in the group. Third, the most open economies are small financial, logistics and re-export hubs, where gross trade exceeds annual output. Fourth, low-income economies carry the largest structural deficits, a sign of external financing dependence. Fifth, Europe & Central Asia and the Middle East & North Africa are the most integrated regions, whereas North America is the least integrated.
+
+The main limitation is that the analysis uses shares of GDP rather than absolute values, so the size of each economy is not captured directly. Future work could combine these ratios with GDP in current US dollars to compute absolute trade volumes, and with bilateral partner data to study trade networks.
+
+# Appendix: Session Information
+
+```{r}
+#| label: session
+R.version.string
+packageVersion("data.table")
+packageVersion("ggplot2")
+packageVersion("plotly")
+```
+
+```{r}
+#| label: export-tables
+#| include: false
+fwrite(dt, "trade_clean_long.csv")
+fwrite(dt[level == "Country" & year == Y, .(Country = `Country Name`, Code = `Country Code`,
+        Region, IncomeGroup, Exports = exports, Imports = imports,
+        Openness = openness, Balance = balance)], "trade_countries_2023.csv")
+```

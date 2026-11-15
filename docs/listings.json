@@ -2,6 +2,7 @@
   {
     "listing": "/data_vizs.html",
     "items": [
+      "/data_vizs/input_survey_report.html",
       "/data_vizs/world_trade_report.html",
       "/data_vizs/procurement_report.html",
       "/data_vizs/global_inflation_report.html",

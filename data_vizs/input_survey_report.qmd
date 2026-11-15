@@ -1,0 +1,677 @@
+---
+title: "Input Survey Report: Land Concentration, Irrigation, Fertiliser and Credit by Size Group, 1996-97 to 2016-17"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    embed-resources: true
+    code-fold: true
+    code-summary: "Show code"
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Scope and Data
+
+This report analyses the combined Input Survey tables produced by `combine_input_survey.R`. The data covers five survey rounds (1996-97, 2001-02, 2006-07, 2011-12 and 2016-17) and eleven table families. The analysis uses five size groups plus an `ALL GROUPS` total, and, where the table reports it, the irrigated (`I`), unirrigated (`UI`) and total (`T`) regimes.
+
+**What the data cannot answer.** The archive is a single national survey of Indian agriculture. It contains no countries, no world regions and no cross-country series. The requested comparison of "world powers, countries, groups and regions" is therefore only partly possible. The report compares the **groups** the data does contain (size groups, irrigation regimes and survey rounds). "Power" is measured as control of land: how much of the operated area a group holds relative to its share of holdings. A cross-country comparison would need a second external source, which is not mixed in here to avoid combining sources with different definitions.
+
+The only package code used is `data.table` for data work, `ggplot2` and `ggiraph` for plots, and `gt` for display tables.
+
+# Data Preparation and Inspection
+
+## Loading and standardising
+
+The combined long file has one row per value. The code adds a numeric `Year`, a short size-group label, and an irrigation `Regime` label.
+
+```{r}
+#| label: load-data
+library(data.table)
+library(ggplot2)
+library(ggiraph)
+library(gt)
+
+dt <- fread("/home/pawan/input_survey/Combined_Input_Survey_Long.csv", na.strings = c("", "NA"))
+
+dt[, Year := as.integer(substr(Survey_Round, 1, 4))]
+
+dt[, Group := fcase(
+  grepl("^MARGINAL", Size_Group), "Marginal (<1 ha)",
+  grepl("^SMALL", Size_Group),    "Small (1-2 ha)",
+  grepl("^SEMI", Size_Group),     "Semi-medium (2-4 ha)",
+  grepl("^MEDIUM", Size_Group),   "Medium (4-10 ha)",
+  grepl("^LARGE", Size_Group),    "Large (10+ ha)",
+  Size_Group == "ALL GROUPS",     "All groups"
+)]
+
+GROUP_LEVELS <- c("Marginal (<1 ha)", "Small (1-2 ha)", "Semi-medium (2-4 ha)",
+                  "Medium (4-10 ha)", "Large (10+ ha)")
+ROUNDS <- c("1996-1997", "2001-2002", "2006-2007", "2011-2012", "2016-2017")
+
+dt[, Group := factor(Group, levels = c(GROUP_LEVELS, "All groups"))]
+dt[, Regime := fcase(
+  Sub_Group == "I",  "Irrigated",
+  Sub_Group == "UI", "Unirrigated",
+  Sub_Group == "T",  "All",
+  default = NA_character_
+)]
+```
+
+## Structure check
+
+```{r}
+#| label: inspect-structure
+dim(dt)
+str(dt)
+```
+
+```{r}
+#| label: inspect-counts
+inv <- dcast(dt[!is.na(Value), .N, by = .(Table, Survey_Round)],
+             Table ~ Survey_Round, value.var = "N", fill = 0)
+
+gt(inv) |>
+  tab_header(title = "Numeric values by table family and survey round") |>
+  cols_label(Table = "Table")
+```
+
+## Duplicate check
+
+A value should be unique for each table, round, sheet, size group, regime and column. Duplicates would double-count when rows are summed.
+
+```{r}
+#| label: duplicate-check
+dup <- dt[!is.na(Value), .N, by = .(Table, Survey_Round, Sheet, Size_Group, Sub_Group, Column_Name)][N > 1]
+nrow(dup)
+```
+
+The count is zero, so the sums in the rest of the report are safe.
+
+# Reconciliation
+
+## Why reconcile
+
+A summary table is only trustworthy if its parts add up to its reported totals. The `ALL GROUPS` row is the reported total. The reconciliation sums the five size groups and compares the result with that total. The same logic checks that the irrigated and unirrigated fertiliser rows add up to the total regime, and that the holdings count in the credit table (5) matches the holdings count in the land table (1A).
+
+## How it is calculated
+
+For each metric $m$, round $t$:
+
+$$
+\delta_{m,t} = \sum_{g \in \text{groups}} X_{g,m,t} - X_{\text{ALL},m,t}
+$$
+
+A value of zero means the parts tie exactly to the total.
+
+```{r}
+#| label: reconcile-land
+rec_land <- dt[Table == "1A" & Column_Name %chin% c("NUMBER OF HOLDINGS", "OPERATED AREA"),
+  .(Sum_of_groups = sum(Value[Group != "All groups"]),
+    Reported_total = Value[Group == "All groups"][1]),
+  by = .(Survey_Round, Metric = Column_Name)]
+rec_land[, Difference := Sum_of_groups - Reported_total]
+rec_land[, Difference_pct := round(100 * Difference / Reported_total, 4)]
+
+gt(rec_land) |>
+  tab_header(title = "Table 1A: size groups vs reported ALL GROUPS total") |>
+  fmt_number(columns = c(Sum_of_groups, Reported_total, Difference), decimals = 0) |>
+  cols_label(Sum_of_groups = "Sum of groups", Reported_total = "Reported total",
+             Difference = "Difference", Difference_pct = "Difference (%)")
+```
+
+```{r}
+#| label: reconcile-regime
+rec_regime <- dcast(dt[Table == "2A" & Column_Name == "GROSS CROPPED AREA" & Group == "All groups"],
+                    Survey_Round ~ Regime, value.var = "Value", fun.aggregate = sum)
+rec_regime[, Difference_I_plus_UI_minus_T := Irrigated + Unirrigated - All]
+
+gt(rec_regime) |>
+  tab_header(title = "Table 2A: gross cropped area, irrigated + unirrigated vs total") |>
+  fmt_number(columns = c(Irrigated, Unirrigated, All, Difference_I_plus_UI_minus_T), decimals = 0)
+```
+
+```{r}
+#| label: reconcile-cross-table
+rec_cross <- merge(
+  dt[Table == "1A" & Column_Name == "NUMBER OF HOLDINGS" & Group == "All groups",
+     .(Survey_Round, Holdings_1A = Value)],
+  dt[Table == "5" & Column_Name == "TOTAL NO OF OPERATIONAL HOLDING" & Group == "All groups",
+     .(Survey_Round, Holdings_T5 = Value)],
+  by = "Survey_Round"
+)
+rec_cross[, Difference := Holdings_T5 - Holdings_1A]
+
+gt(rec_cross) |>
+  tab_header(title = "Holdings count: Table 5 vs Table 1A") |>
+  fmt_number(columns = c(Holdings_1A, Holdings_T5, Difference), decimals = 0)
+```
+
+The land and cross-table checks tie exactly in every round. The regime check on gross cropped area also ties, showing that the irrigated and unirrigated rows are consistent with the reported total.
+
+# Statistical Analysis
+
+## Land concentration: shares, average size and the Lorenz curve
+
+### Why it was calculated
+
+The central economic question is whether agricultural land is becoming more or less concentrated. Holdings count farms; area measures how much land each group controls. The gap between the two shows whether a few large holders control a disproportionate share of land. The Lorenz curve and the Gini coefficient are standard tools for this. A Lorenz curve plots cumulative share of holdings (smallest first) against cumulative share of area. The more it sags below the diagonal, the more unequal the land distribution.
+
+### How it is calculated
+
+Share of holdings and share of area for group $g$ in round $t$ are
+
+$$
+h_{g,t} = \frac{H_{g,t}}{\sum_g H_{g,t}}, \qquad a_{g,t} = \frac{A_{g,t}}{\sum_g A_{g,t}}
+$$
+
+where $H$ is the number of holdings and $A$ is operated area. Average size is $\bar{a}_{g,t} = A_{g,t}/H_{g,t}$. The cumulative shares $P_k$ and $L_k$ are running sums of $h$ and $a$ when groups are ordered from smallest to largest.
+
+Because the data is grouped into five classes, the Gini coefficient is computed with the trapezoidal rule on the cumulative points:
+
+$$
+G_t = 1 - \sum_{k=1}^{K} (P_k - P_{k-1})(L_k + L_{k-1})
+$$
+
+$G = 0$ means perfect equality. $G$ near 1 means all land sits with very few holders. Grouped data tends to understate the true Gini slightly, so the values are best read as trends and comparisons.
+
+```{r}
+#| label: land-shares
+land <- dcast(dt[Table == "1A" & Group != "All groups" &
+                 Column_Name %chin% c("NUMBER OF HOLDINGS", "OPERATED AREA"),
+                 .(Survey_Round, Year, Group, Column_Name, Value)],
+              Survey_Round + Year + Group ~ Column_Name, value.var = "Value")
+setnames(land, c("NUMBER OF HOLDINGS", "OPERATED AREA"), c("Holdings", "Area"))
+setorder(land, Year, Group)
+
+land[, `:=`(h_share = Holdings / sum(Holdings),
+            a_share = Area / sum(Area),
+            avg_size = Area / Holdings), by = Year]
+land[, `:=`(cum_h = cumsum(h_share), cum_a = cumsum(a_share)), by = Year]
+land[, `:=`(cum_h0 = shift(cum_h, fill = 0), cum_a0 = shift(cum_a, fill = 0)), by = Year]
+
+gini_land <- land[, .(Gini_land = 1 - sum((cum_h - cum_h0) * (cum_a + cum_a0))),
+                  by = .(Survey_Round, Year)]
+
+gt(gini_land) |>
+  tab_header(title = "Land Gini coefficient by survey round (grouped data)") |>
+  fmt_number(columns = Gini_land, decimals = 3)
+```
+
+```{r}
+#| label: land-shares-table
+land_tbl <- land[, .(Group, Survey_Round, Year,
+                     Holdings_pct = 100 * h_share,
+                     Area_pct = 100 * a_share,
+                     Avg_size_ha = avg_size)]
+
+gt(land_tbl[Year %in% c(1996, 2016)]) |>
+  tab_header(title = "Share of holdings, share of area and average size, 1996-97 vs 2016-17") |>
+  fmt_number(columns = c(Holdings_pct, Area_pct), decimals = 1) |>
+  fmt_number(columns = Avg_size_ha, decimals = 2) |>
+  cols_label(Holdings_pct = "Share of holdings (%)", Area_pct = "Share of area (%)",
+             Avg_size_ha = "Average size (ha)")
+```
+
+### Land power: who controls the area
+
+The power premium of a group is the difference between its share of area and its share of holdings:
+
+$$
+\pi_{g,t} = a_{g,t} - h_{g,t}
+$$
+
+A positive premium means the group holds more land than its numbers would suggest. The large-holding premium is the clearest measure of power in this data.
+
+```{r}
+#| label: power-premium
+power <- land[Group == "Large (10+ ha)", .(Survey_Round, Year,
+                                           Holdings_pct = 100 * h_share,
+                                           Area_pct = 100 * a_share,
+                                           Premium_pts = 100 * (a_share - h_share))]
+
+gt(power) |>
+  tab_header(title = "Large holdings (10+ ha): share of holdings, share of area and power premium") |>
+  fmt_number(columns = c(Holdings_pct, Area_pct, Premium_pts), decimals = 2) |>
+  cols_label(Holdings_pct = "Holdings (%)", Area_pct = "Area (%)",
+             Premium_pts = "Power premium (pts)")
+```
+
+## Institutional credit: access and concentration
+
+### Why it was calculated
+
+Institutional credit is an important input for farm investment. A credit access rate shows what share of holdings in each group borrow from formal sources. A Gini on credit recipients measures whether credit is spread in proportion to holdings. If access rises fastest in large groups, credit can widen the gap in land productivity even while overall access rises.
+
+### How it is calculated
+
+Access in group $g$ and round $t$ is
+
+$$
+\alpha_{g,t} = \frac{C_{g,t}}{H^{(5)}_{g,t}}
+$$
+
+where $C$ is the estimated number of holdings that took institutional credit and $H^{(5)}$ is the total holdings count from Table 5. The credit Gini uses the same trapezoidal formula as the land Gini, with cumulative shares of holdings and of credit recipients.
+
+```{r}
+#| label: credit-access
+cred <- dcast(dt[Table == "5" & Group != "All groups" &
+                 Column_Name %chin% c("TOTAL NO OF OPERATIONAL HOLDING",
+                                      "ESTIMATED NO OF OPERATIONAL HOLDINGS THAT TOOK INSTITUTIONAL CREDIT"),
+                 .(Survey_Round, Year, Group, Column_Name, Value)],
+              Survey_Round + Year + Group ~ Column_Name, value.var = "Value")
+setnames(cred, c("TOTAL NO OF OPERATIONAL HOLDING",
+                 "ESTIMATED NO OF OPERATIONAL HOLDINGS THAT TOOK INSTITUTIONAL CREDIT"),
+         c("Holdings5", "Credit"))
+setorder(cred, Year, Group)
+
+cred[, Access := Credit / Holdings5]
+cred[, `:=`(h_s = Holdings5 / sum(Holdings5), c_s = Credit / sum(Credit)), by = Year]
+cred[, `:=`(cum_h = cumsum(h_s), cum_c = cumsum(c_s)), by = Year]
+cred[, `:=`(cum_h0 = shift(cum_h, fill = 0), cum_c0 = shift(cum_c, fill = 0)), by = Year]
+
+gini_credit <- cred[, .(Gini_credit = 1 - sum((cum_h - cum_h0) * (cum_c + cum_c0))),
+                    by = .(Survey_Round, Year)]
+
+gt(cred[, .(Group, Survey_Round, Year, Access_pct = 100 * Access)]) |>
+  tab_header(title = "Institutional credit access rate by size group") |>
+  fmt_number(columns = Access_pct, decimals = 1) |>
+  cols_label(Access_pct = "Holdings with credit (%)")
+```
+
+## Irrigation divide
+
+### Why it was calculated
+
+Irrigation determines whether a farm can grow a second crop and how exposed it is to rainfall. The irrigated share of net sown area shows how far each size group has access to this input.
+
+### How it is calculated
+
+$$
+\iota_{g,t} = \frac{I_{g,t}}{I_{g,t} + U_{g,t}}
+$$
+
+where $I$ and $U$ are irrigated and unirrigated net sown area from Table 1A.
+
+```{r}
+#| label: irrigation-share
+irr <- dcast(dt[Table == "1A" & Group != "All groups" &
+                Column_Name %chin% c("NET SOWN AREA | IRRIGATED", "NET SOWN AREA | UNIRRIGATED"),
+                .(Survey_Round, Year, Group, Column_Name, Value)],
+             Survey_Round + Year + Group ~ Column_Name, value.var = "Value")
+setnames(irr, c("NET SOWN AREA | IRRIGATED", "NET SOWN AREA | UNIRRIGATED"), c("Irr", "Unirr"))
+irr[, Irr_share := Irr / (Irr + Unirr)]
+
+gt(irr[, .(Group, Survey_Round, Year, Irrigated_pct = 100 * Irr_share)][Year %in% c(1996, 2016)]) |>
+  tab_header(title = "Irrigated share of net sown area by size group") |>
+  fmt_number(columns = Irrigated_pct, decimals = 1) |>
+  cols_label(Irrigated_pct = "Irrigated share (%)")
+```
+
+## Fertiliser coverage by irrigation regime
+
+### Why it was calculated
+
+Fertiliser is applied more where land is irrigated and where farmers can afford it. The coverage ratio shows how much of the cropped land receives fertiliser. The gap between irrigated and unirrigated coverage measures how much irrigation changes input use within each group. A shrinking gap suggests that unirrigated farmers are catching up.
+
+### How it is calculated
+
+Coverage for group $g$, regime $r$ and round $t$ is
+
+$$
+c_{g,r,t} = \frac{T_{g,r,t}}{G_{g,r,t}}
+$$
+
+where $T$ is area treated with fertilisers and $G$ is gross cropped area. The irrigation gap is $\Delta_{g,t} = c_{g,\text{Irr},t} - c_{g,\text{Unirr},t}$, in percentage points.
+
+```{r}
+#| label: fertiliser-coverage
+fert <- dcast(dt[Table == "2A" & Group != "All groups" &
+                 Column_Name %chin% c("GROSS CROPPED AREA", "AREA TREATED WITH FERTILIZERS"),
+                 .(Survey_Round, Year, Group, Regime, Column_Name, Value)],
+              Survey_Round + Year + Group + Regime ~ Column_Name, value.var = "Value")
+setnames(fert, c("GROSS CROPPED AREA", "AREA TREATED WITH FERTILIZERS"), c("GCA", "Treated"))
+fert[, Coverage := Treated / GCA]
+
+fert_gap <- dcast(fert[Regime %chin% c("Irrigated", "Unirrigated")],
+                  Survey_Round + Year + Group ~ Regime, value.var = "Coverage")
+fert_gap[, Gap_pts := 100 * (Irrigated - Unirrigated)]
+
+gt(fert_gap[Year %in% c(1996, 2016), .(Group, Survey_Round,
+                                       Irrigated_pct = 100 * Irrigated,
+                                       Unirrigated_pct = 100 * Unirrigated,
+                                       Gap_pts)]) |>
+  tab_header(title = "Fertiliser coverage: irrigated vs unirrigated, 1996-97 and 2016-17") |>
+  fmt_number(columns = c(Irrigated_pct, Unirrigated_pct, Gap_pts), decimals = 1) |>
+  cols_label(Irrigated_pct = "Irrigated (%)", Unirrigated_pct = "Unirrigated (%)",
+             Gap_pts = "Gap (pts)")
+```
+
+## Comparisons across groups and rounds
+
+**Reading the comparisons.** Three contrasts matter most. First, across size groups, the land Gini and the credit Gini both measure how a resource is spread against holdings, so they can be read side by side. Second, across rounds, each indicator is compared in its first and last year to show the direction of change. Third, across irrigation regimes, the gap between irrigated and unirrigated coverage shows how much irrigation changes input use within a group.
+
+### Why it was calculated
+
+A single round says little about change. The comparison asks how each group's holdings, area and average size changed between the first and last rounds, and whether the land picture and the credit picture point the same way.
+
+### How it is calculated
+
+The percentage change for group $g$ between 1996 and 2016 is
+
+$$
+\%\Delta_g = 100 \left( \frac{X_{g,2016}}{X_{g,1996}} - 1 \right)
+$$
+
+applied to holdings $H$ and area $A$. The ratio of large-to-marginal credit access compares the two ends of the size distribution directly.
+
+```{r}
+#| label: group-changes
+comp <- dcast(land[Year %in% c(1996, 2016)], Group ~ Year, value.var = c("Holdings", "Area"))
+comp[, `:=`(Holdings_change_pct = 100 * (Holdings_2016 / Holdings_1996 - 1),
+            Area_change_pct = 100 * (Area_2016 / Area_1996 - 1))]
+
+gt(comp[, .(Group, Holdings_1996, Holdings_2016, Holdings_change_pct,
+            Area_1996, Area_2016, Area_change_pct)]) |>
+  tab_header(title = "Change in holdings and area by size group, 1996-97 to 2016-17") |>
+  fmt_number(columns = c(Holdings_1996, Holdings_2016, Area_1996, Area_2016), decimals = 0) |>
+  fmt_number(columns = c(Holdings_change_pct, Area_change_pct), decimals = 1) |>
+  cols_label(Holdings_1996 = "Holdings 1996", Holdings_2016 = "Holdings 2016",
+             Holdings_change_pct = "Holdings change (%)", Area_1996 = "Area 1996",
+             Area_2016 = "Area 2016", Area_change_pct = "Area change (%)")
+```
+
+```{r}
+#| label: kpi-summary
+land_kpi <- land[, .(Holdings_m = sum(Holdings) / 1e6,
+                     Area_m_ha = sum(Area) / 1e6,
+                     Avg_size_ha = sum(Area) / sum(Holdings),
+                     Marginal_share_holdings = h_share[Group == "Marginal (<1 ha)"],
+                     Large_share_area = a_share[Group == "Large (10+ ha)"]),
+                 by = .(Survey_Round, Year)]
+
+kpi <- merge(land_kpi, gini_land[, .(Year, Gini_land)], by = "Year")
+kpi <- merge(kpi, gini_credit[, .(Year, Gini_credit)], by = "Year")
+kpi <- merge(kpi, irr[, .(Irrigated_share = sum(Irr) / sum(Irr + Unirr)), by = Year], by = "Year")
+kpi <- merge(kpi, cred[, .(Credit_access = sum(Credit) / sum(Holdings5)), by = Year], by = "Year")
+kpi <- merge(kpi, fert[Regime == "All", .(Fert_coverage = sum(Treated) / sum(GCA)), by = Year], by = "Year")
+setorder(kpi, Year)
+
+gt(kpi[, .(Survey_Round, Holdings_m, Area_m_ha, Avg_size_ha, Marginal_share_holdings,
+           Large_share_area, Gini_land, Gini_credit, Irrigated_share, Credit_access,
+           Fert_coverage)]) |>
+  tab_header(title = "Key indicators by survey round") |>
+  fmt_number(columns = c(Holdings_m, Area_m_ha, Avg_size_ha), decimals = 2) |>
+  fmt_percent(columns = c(Marginal_share_holdings, Large_share_area, Irrigated_share,
+                          Credit_access, Fert_coverage), decimals = 1) |>
+  fmt_number(columns = c(Gini_land, Gini_credit), decimals = 3) |>
+  cols_label(Holdings_m = "Holdings (m)", Area_m_ha = "Area (m ha)",
+             Avg_size_ha = "Avg size (ha)", Marginal_share_holdings = "Marginal, % holdings",
+             Large_share_area = "Large, % area", Gini_land = "Land Gini",
+             Gini_credit = "Credit Gini", Irrigated_share = "Irrigated, % sown area",
+             Credit_access = "Credit access", Fert_coverage = "Fertiliser coverage")
+```
+
+```{r}
+#| label: scalars
+g96 <- kpi[Year == 1996]
+g16 <- kpi[Year == 2016]
+cr96 <- cred[Year == 1996]
+cr16 <- cred[Year == 2016]
+large96 <- cr96[Group == "Large (10+ ha)", Access]
+marg96  <- cr96[Group == "Marginal (<1 ha)", Access]
+large16 <- cr16[Group == "Large (10+ ha)", Access]
+marg16  <- cr16[Group == "Marginal (<1 ha)", Access]
+gap_marg96 <- fert_gap[Year == 1996 & Group == "Marginal (<1 ha)", Gap_pts]
+gap_marg16 <- fert_gap[Year == 2016 & Group == "Marginal (<1 ha)", Gap_pts]
+```
+
+# Interactive Visualisations
+
+## Economic plot theme
+
+The theme below is set once and applies to every plot. It uses a light background, a bold navy title, a bottom legend, and no minor grid lines. The tooltip style matches the theme.
+
+```{r}
+#| label: theme
+econ_theme <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", colour = "#1B365D", size = 14),
+    plot.subtitle = element_text(colour = "grey30"),
+    plot.caption = element_text(colour = "grey50", size = 9, hjust = 0),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#FBFBF8", colour = NA),
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold"),
+    axis.title = element_text(colour = "grey25")
+  )
+theme_set(econ_theme)
+
+ROUND_PAL <- c("1996-1997" = "#A8C3D6", "2001-2002" = "#6C9BC0", "2006-2007" = "#3A74A8",
+               "2011-2012" = "#1B4F7A", "2016-2017" = "#D1603D")
+TIP_CSS <- "background:#1B365D;color:#ffffff;padding:6px 8px;border-radius:4px;font-family:sans-serif;font-size:12px;line-height:1.35;"
+PCT_BREAKS <- seq(0, 1, 0.2)
+PCT_LABELS <- paste0(seq(0, 100, 20), "%")
+```
+
+## Lorenz curve: land
+
+The Lorenz curve starts at the origin and ends at (1, 1). A curve that lies on the diagonal would mean perfect equality. Hovering over a round highlights its curve, and hovering over a point shows its cumulative shares.
+
+```{r}
+#| label: plot-lorenz-land
+origin <- unique(land[, .(Survey_Round, Year)])
+origin[, `:=`(cum_h = 0, cum_a = 0)]
+
+lor <- rbind(origin, land[, .(Survey_Round, Year, cum_h, cum_a)], fill = TRUE)
+setorder(lor, Year, cum_h)
+lor[, Round := factor(Survey_Round, levels = ROUNDS)]
+lor[, pid := paste(Survey_Round, sprintf("%.4f", cum_h))]
+lor[, tip := sprintf("%s\nCumulative holdings: %.1f%%\nCumulative area: %.1f%%",
+                     Survey_Round, 100 * cum_h, 100 * cum_a)]
+
+gini_sub <- paste(sprintf("%s: %.3f", gini_land$Survey_Round, gini_land$Gini_land), collapse = "  |  ")
+
+p_lorenz <- ggplot(lor, aes(x = cum_h, y = cum_a, colour = Round)) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "grey55") +
+  geom_line(aes(group = Round)) +
+  geom_point_interactive(aes(data_id = pid, tooltip = tip), size = 3.2) +
+  scale_colour_manual(values = ROUND_PAL) +
+  scale_x_continuous(breaks = PCT_BREAKS, labels = PCT_LABELS) +
+  scale_y_continuous(breaks = PCT_BREAKS, labels = PCT_LABELS) +
+  labs(title = "Lorenz curves of operated area by survey round",
+       subtitle = paste("Land Gini:", gini_sub),
+       x = "Cumulative share of holdings (smallest first)",
+       y = "Cumulative share of operated area",
+       colour = "Survey round",
+       caption = "Source: Input Survey Table 1A. Grouped data, five size classes.")
+
+girafe(ggobj = p_lorenz, width_svg = 8, height_svg = 5.5,
+       options = list(opts_tooltip(css = TIP_CSS),
+                      opts_hover(css = "opacity:0.6;"),
+                      opts_toolbar(position = "topright")))
+```
+
+## Lorenz curve: institutional credit
+
+The same construction applied to credit recipients. If credit is spread in proportion to holdings, this curve would sit on the diagonal.
+
+```{r}
+#| label: plot-lorenz-credit
+origin_c <- unique(cred[, .(Survey_Round, Year)])
+origin_c[, `:=`(cum_h = 0, cum_c = 0)]
+
+lorc <- rbind(origin_c, cred[, .(Survey_Round, Year, cum_h, cum_c)], fill = TRUE)
+setorder(lorc, Year, cum_h)
+lorc[, Round := factor(Survey_Round, levels = ROUNDS)]
+lorc[, pid := paste(Survey_Round, sprintf("%.4f", cum_h))]
+lorc[, tip := sprintf("%s\nCumulative holdings: %.1f%%\nCumulative credit recipients: %.1f%%",
+                      Survey_Round, 100 * cum_h, 100 * cum_c)]
+
+p_lorenz_credit <- ggplot(lorc, aes(x = cum_h, y = cum_c, colour = Round)) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "grey55") +
+  geom_line(aes(group = Round)) +
+  geom_point_interactive(aes(data_id = pid, tooltip = tip), size = 3.2) +
+  scale_colour_manual(values = ROUND_PAL) +
+  scale_x_continuous(breaks = PCT_BREAKS, labels = PCT_LABELS) +
+  scale_y_continuous(breaks = PCT_BREAKS, labels = PCT_LABELS) +
+  labs(title = "Lorenz curves of institutional credit recipients",
+       x = "Cumulative share of holdings (smallest first)",
+       y = "Cumulative share of credit recipients",
+       colour = "Survey round",
+       caption = "Source: Input Survey Table 5.")
+
+girafe(ggobj = p_lorenz_credit, width_svg = 8, height_svg = 5.5,
+       options = list(opts_tooltip(css = TIP_CSS),
+                      opts_hover(css = "opacity:0.6;"),
+                      opts_toolbar(position = "topright")))
+```
+
+## Gini comparison: land and credit
+
+```{r}
+#| label: plot-gini-bars
+kpi[, Round := factor(Survey_Round, levels = ROUNDS)]
+gl <- melt(kpi, id.vars = c("Survey_Round", "Round"),
+           measure.vars = c("Gini_land", "Gini_credit"),
+           variable.name = "Measure", value.name = "Gini")
+gl[, Measure := fifelse(Measure == "Gini_land", "Land (operated area)", "Credit (institutional)")]
+gl[, tip := sprintf("%s\n%s: %.3f", Survey_Round, Measure, Gini)]
+
+p_gini <- ggplot(gl, aes(x = Round, y = Gini, fill = Measure)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  geom_text_interactive(aes(label = sprintf("%.3f", Gini), data_id = paste(Survey_Round, Measure), tooltip = tip),
+                        position = position_dodge(width = 0.8), vjust = -0.4, size = 3.2) +
+  scale_fill_manual(values = c("Land (operated area)" = "#1B4F7A",
+                               "Credit (institutional)" = "#D1603D")) +
+  labs(title = "Gini coefficient: land and credit, by survey round",
+       x = "Survey round", y = "Gini coefficient", fill = NULL,
+       caption = "Higher values mean more unequal distribution.")
+
+girafe(ggobj = p_gini, width_svg = 8, height_svg = 4.8,
+       options = list(opts_tooltip(css = TIP_CSS),
+                      opts_hover(css = "opacity:0.6;"),
+                      opts_toolbar(position = "topright")))
+```
+
+## Land power: share of holdings vs share of area
+
+```{r}
+#| label: plot-power
+share_l <- melt(land, id.vars = c("Survey_Round", "Year", "Group"),
+                measure.vars = c("h_share", "a_share"),
+                variable.name = "Metric", value.name = "Share")
+share_l[, Metric := fifelse(Metric == "h_share", "Share of holdings", "Share of operated area")]
+share_l[, Round := factor(Survey_Round, levels = ROUNDS)]
+share_l[, tip := sprintf("%s | %s\n%s: %.1f%%", Survey_Round, Group, Metric, 100 * Share)]
+
+p_power <- ggplot(share_l, aes(x = Group, y = Share, fill = Metric)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  geom_text_interactive(aes(label = sprintf("%.0f%%", 100 * Share), data_id = paste(Survey_Round, Group, Metric), tooltip = tip),
+                        position = position_dodge(width = 0.8), vjust = -0.4, size = 2.8) +
+  facet_wrap(~ Round, nrow = 1) +
+  scale_y_continuous(breaks = PCT_BREAKS, labels = PCT_LABELS) +
+  scale_fill_manual(values = c("Share of holdings" = "#A8C3D6",
+                               "Share of operated area" = "#1B4F7A")) +
+  labs(title = "Share of holdings and share of operated area by size group",
+       x = NULL, y = NULL, fill = NULL,
+       caption = "Source: Input Survey Table 1A.") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, size = 8))
+
+girafe(ggobj = p_power, width_svg = 10, height_svg = 5,
+       options = list(opts_tooltip(css = TIP_CSS),
+                      opts_hover(css = "opacity:0.6;"),
+                      opts_toolbar(position = "topright")))
+```
+
+## Irrigation divide: heatmap
+
+```{r}
+#| label: plot-irrigation
+irr[, Round := factor(Survey_Round, levels = ROUNDS)]
+irr[, Group := factor(Group, levels = GROUP_LEVELS)]
+irr[, tip := sprintf("%s | %s\nIrrigated share of sown area: %.1f%%",
+                     Survey_Round, Group, 100 * Irr_share)]
+irr[, lab := sprintf("%.0f%%", 100 * Irr_share)]
+
+p_irr <- ggplot(irr, aes(x = Round, y = Group, fill = Irr_share)) +
+  geom_tile(colour = "white") +
+  geom_text_interactive(aes(label = lab, data_id = paste(Survey_Round, Group, "label"),
+                            tooltip = tip), size = 3.4, colour = "grey10") +
+  scale_fill_gradient(low = "#F3E9D2", high = "#1B4F7A", name = "Irrigated share") +
+  scale_y_discrete(limits = rev(GROUP_LEVELS)) +
+  labs(title = "Irrigated share of net sown area by size group and round",
+       x = "Survey round", y = NULL,
+       caption = "Source: Input Survey Table 1A. Share = irrigated / (irrigated + unirrigated).")
+
+girafe(ggobj = p_irr, width_svg = 8.5, height_svg = 4.8,
+       options = list(opts_tooltip(css = TIP_CSS),
+                      opts_hover(css = "opacity:0.7;"),
+                      opts_toolbar(position = "topright")))
+```
+
+## Fertiliser coverage by regime
+
+```{r}
+#| label: plot-fertiliser
+fert_plot <- fert[Regime %chin% c("Irrigated", "Unirrigated")]
+fert_plot[, Group := factor(Group, levels = GROUP_LEVELS)]
+fert_plot[, tip := sprintf("%s | %s | %s\nArea treated: %.1f%% of gross cropped area",
+                           Survey_Round, Group, Regime, 100 * Coverage)]
+
+p_fert <- ggplot(fert_plot, aes(x = Year, y = Coverage, colour = Regime)) +
+  geom_line(aes(group = paste(Group, Regime))) +
+  geom_point_interactive(aes(data_id = paste(Survey_Round, Group, Regime), tooltip = tip),
+                         size = 2.6) +
+  facet_wrap(~ Group, nrow = 1) +
+  scale_colour_manual(values = c("Irrigated" = "#1B4F7A", "Unirrigated" = "#D1603D")) +
+  scale_y_continuous(breaks = PCT_BREAKS, labels = PCT_LABELS) +
+  scale_x_continuous(breaks = c(1996, 2006, 2016)) +
+  labs(title = "Fertiliser coverage by size group and irrigation regime",
+       x = "Survey year (start of round)", y = "Area treated, % of gross cropped area",
+       colour = NULL,
+       caption = "Source: Input Survey Table 2A.") +
+  theme(axis.text.x = element_text(size = 8))
+
+girafe(ggobj = p_fert, width_svg = 10, height_svg = 4.8,
+       options = list(opts_tooltip(css = TIP_CSS),
+                      opts_hover(css = "opacity:0.6;"),
+                      opts_toolbar(position = "topright")))
+```
+
+## Average farm size over time
+
+```{r}
+#| label: plot-avg-size
+land[, Group := factor(Group, levels = GROUP_LEVELS)]
+land[, tip := sprintf("%s | %s\nAverage size: %.2f ha", Survey_Round, Group, avg_size)]
+
+p_size <- ggplot(land, aes(x = Year, y = avg_size, colour = Group)) +
+  geom_line(aes(group = Group)) +
+  geom_point_interactive(aes(data_id = paste(Survey_Round, Group), tooltip = tip), size = 2.8) +
+  scale_y_log10() +
+  scale_x_continuous(breaks = c(1996, 2001, 2006, 2011, 2016)) +
+  labs(title = "Average operated area per holding, by size group (log scale)",
+       x = "Survey year (start of round)", y = "Average size (ha, log scale)",
+       colour = NULL,
+       caption = "Source: Input Survey Table 1A.")
+
+girafe(ggobj = p_size, width_svg = 8.5, height_svg = 4.8,
+       options = list(opts_tooltip(css = TIP_CSS),
+                      opts_hover(css = "opacity:0.6;"),
+                      opts_toolbar(position = "topright")))
+```
+
+# Key Findings and Summary
+
+- **Grouped land inequality fell, but through fragmentation, not redistribution.** The land Gini fell from `r sprintf("%.3f", g96$Gini_land)` in 1996-97 to `r sprintf("%.3f", g16$Gini_land)` in 2016-17, a decline in every round. Marginal holdings (below 1 ha) rose from `r sprintf("%.1f", 100 * land[Year == 1996 & Group == "Marginal (<1 ha)", h_share])`% to `r sprintf("%.1f", 100 * land[Year == 2016 & Group == "Marginal (<1 ha)", h_share])`% of holdings, and from `r sprintf("%.1f", 100 * land[Year == 1996 & Group == "Marginal (<1 ha)", a_share])`% to `r sprintf("%.1f", 100 * land[Year == 2016 & Group == "Marginal (<1 ha)", a_share])`% of operated area. Their number grew by `r sprintf("%.0f", comp[Group == "Marginal (<1 ha)", Holdings_change_pct])`% while their average size fell, so the land is spread across more, smaller holdings. The Gini tells us the distribution is more even; it does not tell us that each farmer holds more land.
+- **Large holdings are losing ground.** Holdings of 10 ha and above fell from `r sprintf("%.1f", 100 * land[Year == 1996 & Group == "Large (10+ ha)", h_share])`% to `r sprintf("%.1f", 100 * land[Year == 2016 & Group == "Large (10+ ha)", h_share])`% of holdings. Their share of area fell from `r sprintf("%.1f", 100 * land[Year == 1996 & Group == "Large (10+ ha)", a_share])`% to `r sprintf("%.1f", 100 * land[Year == 2016 & Group == "Large (10+ ha)", a_share])`%. The power premium shrank from `r sprintf("%.1f", 100 * (land[Year == 1996 & Group == "Large (10+ ha)", a_share] - land[Year == 1996 & Group == "Large (10+ ha)", h_share]))` to `r sprintf("%.1f", 100 * (land[Year == 2016 & Group == "Large (10+ ha)", a_share] - land[Year == 2016 & Group == "Large (10+ ha)", h_share]))` points. The large group's power is weakening, not strengthening.
+- **Credit access rose for every group, but the gap in relative terms narrowed.** Overall access rose from `r sprintf("%.1f", 100 * g96$Credit_access)`% to `r sprintf("%.1f", 100 * g16$Credit_access)`%. Large holdings went from `r sprintf("%.1f", 100 * large96)`% to `r sprintf("%.1f", 100 * large16)`%, and marginal holdings from `r sprintf("%.1f", 100 * marg96)`% to `r sprintf("%.1f", 100 * marg16)`%. Large holdings' access was `r sprintf("%.1f", large96 / marg96)` times the marginal rate in 1996 and `r sprintf("%.1f", large16 / marg16)` times in 2016. The absolute gap widened, from `r sprintf("%.1f", 100 * (large96 - marg96))` to `r sprintf("%.1f", 100 * (large16 - marg16))` points.
+- **Credit is spread far more evenly across holdings than land.** The credit Gini was `r sprintf("%.3f", g16$Gini_credit)` in 2016-17, against a land Gini of `r sprintf("%.3f", g16$Gini_land)`. Both are measured the same way, as a resource share against the share of holdings, so the comparison is direct. Marginal holdings are `r sprintf("%.1f", 100 * cred[Year == 2016 & Group == "Marginal (<1 ha)", h_s])`% of holdings but receive `r sprintf("%.1f", 100 * cred[Year == 2016 & Group == "Marginal (<1 ha)", c_s])`% of credit recipients, so they receive less credit than their numbers would imply.
+- **Irrigation is unevenly spread, and the pattern shifted.** The irrigated share of sown area for marginal holdings was `r sprintf("%.1f", 100 * irr[Year == 1996 & Group == "Marginal (<1 ha)", Irr_share])`% in 1996 and `r sprintf("%.1f", 100 * irr[Year == 2016 & Group == "Marginal (<1 ha)", Irr_share])`% in 2016. For large holdings it rose from `r sprintf("%.1f", 100 * irr[Year == 1996 & Group == "Large (10+ ha)", Irr_share])`% to `r sprintf("%.1f", 100 * irr[Year == 2016 & Group == "Large (10+ ha)", Irr_share])`%. Large holdings' irrigated share rose, but marginal holdings still have the higher irrigated share of sown area, and it slipped over the period.
+- **Fertiliser coverage rose sharply, and the irrigation gap narrowed for marginal holdings.** Overall coverage rose from `r sprintf("%.1f", 100 * g96$Fert_coverage)`% to `r sprintf("%.1f", 100 * g16$Fert_coverage)`% of gross cropped area. For marginal holdings the gap between irrigated and unirrigated coverage fell from `r sprintf("%.1f", gap_marg96)` to `r sprintf("%.1f", gap_marg16)` points, as unirrigated coverage rose faster than irrigated coverage.
+- **The totals hold together.** Every size-group sum matches its reported total exactly, and the holdings count in Table 5 matches Table 1A. The results can be trusted for comparison.
+- **Scope limit.** The data has no countries or world regions, so a world-power or cross-country comparison is not part of this report. Within the national data, the strongest comparisons are between size groups, between irrigation regimes and across survey rounds.

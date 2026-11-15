@@ -1,0 +1,826 @@
+---
+title: "Health and Education Indicators: Countries, Income Groups, Regions and World Powers"
+subtitle: "Analysis of World Development Indicators extracts (API_4 and API_8)"
+date: "2026-10-31"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    embed-resources: true
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+**Packages:** data.table, readxl, ggplot2, ggiraph, maps, gt. **Data:** the two WDI `.xls` files at the paths set in the import chunk.
+
+This report analyses health and education outcomes across the countries of the world using the two World Development Indicators (WDI) extracts supplied as Excel files. It answers five questions. How is the data structured, and do the two files agree? How are health and education indicators distributed across countries? How do the world's major powers compare? How do income groups and regions differ? Are countries improving over time, and how do the indicators move together?
+
+Together the files hold 402 unique indicators for 266 entities. Of these entities, 217 are countries with regional and income-group metadata; the other 48 are aggregates such as the World, regions and income groups. Aggregates are excluded from all country analysis so that no country is counted twice.
+
+The analysis uses data.table for every data manipulation step, ggplot2 with ggiraph for interactive charts, the maps package for the world map, and gt for tables. The code avoids custom functions, loops and apply-family calls.
+
+## 1. Data preparation and inspection
+
+**Note on packages.** The brief allows data.table, ggplot2 and ggiraph. Two further packages are used for narrow, necessary tasks: `readxl` reads the legacy `.xls` format, which data.table cannot open, and `maps` and `gt` are required by the brief for the world map and tables. If a strictly data.table-only pipeline is needed, export each sheet from Excel to CSV and replace `read_excel()` with `fread()`.
+
+```{r c-setup}
+library(data.table)
+library(readxl)
+library(ggplot2)
+library(ggiraph)
+library(maps)
+library(gt)
+```
+
+```{r c-import}
+path_a <- "~/world_bank/health_and_education/API_4_DS2_en_excel_v2_9270.xls"
+path_b <- "~/world_bank/health_and_education/API_8_DS2_en_excel_v2_102330.xls"
+year_cols <- as.character(1960:2025)
+
+raw_a        <- as.data.table(read_excel(path_a, sheet = "Data", skip = 3))
+raw_b        <- as.data.table(read_excel(path_b, sheet = "Data", skip = 3))
+meta_country <- as.data.table(read_excel(path_a, sheet = "Metadata - Countries"))
+meta_ind     <- unique(rbindlist(list(
+                  as.data.table(read_excel(path_a, sheet = "Metadata - Indicators")),
+                  as.data.table(read_excel(path_b, sheet = "Metadata - Indicators")))),
+                  by = "INDICATOR_CODE")
+
+# ============================================================
+# 2. Data preparation and inspection
+# ============================================================
+```
+
+**Why.** Before any calculation we confirm the shape of the data, the year columns and the presence of aggregate rows. Each WDI sheet has three header rows above the table, so the import skips three lines.
+
+**How.** `dim()` returns the number of rows and columns. Printing the first rows and the metadata counts shows that the country metadata has 265 non-empty records, of which 217 carry a region and an income group.
+
+```{r c-inspect}
+dim(raw_a)
+dim(raw_b)
+raw_a[1:3, 1:6]
+meta_country[, .N, by = .(has_region = !is.na(Region) & Region != "")]
+
+# ============================================================
+# 3. Data reconciliation between the two files
+# ============================================================
+```
+
+**Why.** The two files overlap on two population indicators (`SP.POP.1564.TO.ZS` and `SP.POP.0014.TO.ZS`). Before combining them we must confirm that the overlapping values agree. If they did not, stacking the files would double-count observations silently.
+
+**How.** Both files are melted to long form and joined on country, indicator and year. A cell disagrees if exactly one side is missing, or if the two values differ by more than $10^{-9}$. The check compares 35,112 entity-year cells and finds no disagreements, so one copy of each shared indicator is kept.
+
+The reconciliation also surfaces one code (`INX`) that appears in the data but has no metadata entry. The inner join in Section 1.4 drops it automatically.
+
+```{r c-reconcile}
+shared_codes <- intersect(raw_a[["Indicator Code"]], raw_b[["Indicator Code"]])
+
+shared_a <- melt(raw_a[`Indicator Code` %in% shared_codes],
+                 id.vars = c("Country Code", "Indicator Code"),
+                 measure.vars = year_cols, variable.name = "year", value.name = "value")
+shared_b <- melt(raw_b[`Indicator Code` %in% shared_codes],
+                 id.vars = c("Country Code", "Indicator Code"),
+                 measure.vars = year_cols, variable.name = "year", value.name = "value")
+shared_a[, value := suppressWarnings(as.numeric(value))]
+shared_b[, value := suppressWarnings(as.numeric(value))]
+shared_cmp <- merge(shared_a, shared_b,
+                    by = c("Country Code", "Indicator Code", "year"),
+                    suffixes = c("_a", "_b"))
+
+recon <- data.table(
+  check = c("Countries in file A", "Countries in file B",
+            "Indicators in file A", "Indicators in file B",
+            "Indicators present in both files",
+            "Shared country-year cells compared",
+            "Shared cells that disagree"),
+  result = c(uniqueN(raw_a[["Country Code"]]), uniqueN(raw_b[["Country Code"]]),
+             uniqueN(raw_a[["Indicator Code"]]), uniqueN(raw_b[["Indicator Code"]]),
+             length(shared_codes), nrow(shared_cmp),
+             shared_cmp[, sum(xor(is.na(value_a), is.na(value_b)) |
+                              (!is.na(value_a) & !is.na(value_b) &
+                               abs(value_a - value_b) > 1e-9))])
+)
+recon
+
+# Keep one copy of shared indicators (verified identical above)
+```
+
+**Result.** Stacking the two files and removing the 2 × 266 duplicate rows gives $43{,}624 + (63{,}840 - 532) = 106{,}932$ rows, one per indicator and entity.
+
+```{r c-combine}
+raw_all <- rbindlist(list(raw_a, raw_b[!`Indicator Code` %in% shared_codes]),
+                     use.names = TRUE, fill = TRUE)
+raw_all[, .N]
+
+# ============================================================
+# 4. Reshape to long format and keep country rows only
+# ============================================================
+```
+
+**Why.** A tidy, long layout with one row per entity, indicator and year is the natural shape for data.table grouping and for ggplot2. Each year is currently a column, which is hard to group.
+
+**How.** `melt()` converts the 66 year columns (1960 to 2025) into rows. Empty cells are dropped, which removes the many gaps in early years and in sparse indicators. Values are coerced to numbers, with any stray text treated as missing.
+
+```{r c-reshape}
+long <- melt(raw_all,
+             id.vars = c("Country Name", "Country Code", "Indicator Name", "Indicator Code"),
+             measure.vars = year_cols, variable.name = "year", value.name = "value")
+long[, `:=`(year  = as.integer(as.character(year)),
+            value = suppressWarnings(as.numeric(value)))]
+long <- long[!is.na(value)]
+```
+
+**Why.** Aggregates would distort every average, because the World and the income-group rows contain the same countries as the individual rows.
+
+**How.** The country list is taken from the metadata as entities with a non-empty region. The inner join keeps only those rows. The result is 2,218,106 non-missing country-year observations.
+
+```{r c-countries}
+countries <- meta_country[!is.na(Region) & Region != "",
+                          .(`Country Code`, Region, IncomeGroup)]
+n_countries <- nrow(countries)
+long_c <- long[countries, on = "Country Code", nomatch = NULL]
+long_c[, .N]
+
+# ============================================================
+# 5. Coverage audit for ALL indicators
+# ============================================================
+```
+
+**Why.** A cross-country comparison is only as reliable as the number of countries that report an indicator. This audit is the only place where all 402 indicators are assessed, so it is the basis for choosing which indicators to analyse in depth.
+
+**How.** For each indicator we count the countries with at least one observation, the countries reporting since 2020, and the first and latest years. Coverage is the share of the 217 countries with data.
+
+**Result.** The median indicator is observed for 88.9% of countries, but 28 indicators are observed for fewer than half. The full table is written to `indicator_coverage_all.csv`. Indicators such as life expectancy, fertility and net migration reach all 217 countries, whereas many education-attainment and gender-disaggregated series are sparse.
+
+```{r c-coverage}
+indicator_names <- unique(raw_all[, .(`Indicator Code`, `Indicator Name`)])
+coverage <- long_c[, .(countries = uniqueN(`Country Code`),
+                       countries_since_2020 = uniqueN(`Country Code`[year >= 2020]),
+                       first_year = min(year),
+                       latest_year = max(year)),
+                   by = .(`Indicator Code`)]
+coverage <- merge(coverage, indicator_names, by = "Indicator Code")
+coverage[, coverage_pct := round(100 * countries / n_countries, 1)]
+setorder(coverage, -countries)
+fwrite(coverage, "~/world_bank/health_and_education/indicator_coverage_all.csv")
+coverage[1:10]
+coverage[, .(indicators = .N,
+             median_coverage_pct = median(coverage_pct),
+             under_50pct = sum(coverage_pct < 50))]
+
+# ============================================================
+# 6. Focus indicators: health and education
+# ============================================================
+```
+
+**Why.** Forty-plus indicators cannot all be interpreted in one report, so we select the 28 that best cover the health and education themes and the population weights needed for weighted averages.
+
+**Selection.** Sixteen health indicators cover life expectancy, child and maternal mortality, health spending, workforce, infrastructure and disease burden. Eleven education indicators cover spending, enrolment at each level, literacy, completion and teacher supply. Population is kept as a weight.
+
+**Direction.** Each indicator carries a `higher_better` flag. A value of 1 means a higher figure is better (for example life expectancy); 0 means lower is better (for example mortality). Fertility is left undirected because a high or low rate can be either a burden or a choice. Health and education spending are treated as directionally positive, meaning more investment, which is a convention rather than a verdict on efficiency.
+
+```{r c-focus}
+focus <- data.table(
+  code = c("SP.DYN.LE00.IN", "SH.DYN.MORT", "SH.DYN.NMRT", "SH.STA.MMRT",
+           "SH.XPD.CHEX.GD.ZS", "SH.XPD.CHEX.PC.CD", "SH.MED.PHYS.ZS", "SH.MED.BEDS.ZS",
+           "SH.IMM.IDPT", "SH.IMM.MEAS", "SH.H2O.SMDW.ZS", "SH.STA.SMSS.ZS",
+           "SH.STA.STNT.ZS", "SH.PRV.SMOK", "SH.TBS.INCD", "SP.DYN.TFRT.IN",
+           "SE.XPD.TOTL.GD.ZS", "SE.PRM.ENRR", "SE.SEC.ENRR", "SE.TER.ENRR",
+           "SE.ADT.LITR.ZS", "SE.ADT.LITR.FE.ZS", "SE.ADT.LITR.MA.ZS", "SE.ADT.1524.LT.ZS",
+           "SE.PRM.CMPT.ZS", "SE.PRM.ENRL.TC.ZS", "SE.PRM.UNER.ZS", "SP.POP.TOTL"),
+  label = c("Life expectancy", "Under-5 mortality", "Neonatal mortality", "Maternal mortality",
+            "Health spend % GDP", "Health spend per capita (US$)", "Physicians per 1,000",
+            "Hospital beds per 1,000", "DPT immunisation %", "Measles immunisation %",
+            "Safe drinking water %", "Safe sanitation %", "Stunting %", "Tobacco use %",
+            "TB incidence per 100k", "Fertility rate",
+            "Education spend % GDP", "Primary enrolment (gross, %)", "Secondary enrolment (gross, %)",
+            "Tertiary enrolment (gross, %)", "Adult literacy %", "Female adult literacy %",
+            "Male adult literacy %", "Youth literacy %", "Primary completion %",
+            "Pupil-teacher ratio, primary", "Primary out-of-school %", "Population"),
+  domain = c(rep("Health", 16), rep("Education", 11), "Context"),
+  higher_better = c(1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, NA,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, NA)
+)
+focus[!code %in% unique(long_c[["Indicator Code"]])]   # should return 0 rows
+focus[, .N, by = domain]
+
+# ============================================================
+# 7. Panel and latest value per country
+# ============================================================
+```
+
+**How.** The focus table is joined onto the country data by indicator code, which adds a readable label, a domain and the direction flag. Rows are sorted by indicator, country and year so that the last row of each group is the most recent observation.
+
+```{r c-panel}
+panel <- long_c[focus, on = .(`Indicator Code` = code), nomatch = NULL]
+setorder(panel, `Indicator Code`, `Country Code`, year)
+```
+
+**Why.** A cross-sectional comparison needs one value per country. Using the most recent available value maximises coverage, but the years differ, so the year is kept with every value.
+
+**How.** For each country and indicator we take the last non-missing observation, `value[.N]`. A `stale` flag marks values older than 2015. The score for ranking is `value` for higher-is-better indicators and `-value` for lower-is-better ones, so that a larger score is always better. `rank_best` ranks countries on that score, with 1 as the best.
+
+**Recency.** Health indicators are mostly current: the median latest year is 2021 to 2024 for most of them, and under-five mortality, life expectancy and safe water have no stale values. Education and literacy series are older. For adult literacy, 51 of 170 countries have a last observation before 2015, and hospital beds has 43 stale values. These cases should be read with their year in mind.
+
+```{r c-latest}
+latest <- panel[, .(year = year[.N], value = value[.N]),
+                by = .(`Indicator Code`, label, domain, higher_better,
+                       `Country Code`, `Country Name`, Region, IncomeGroup)]
+latest[, stale := year < 2015]
+latest[, score := fifelse(higher_better == 1, value, -value)]
+latest[, rank_best := frank(-score, ties.method = "min", na.last = "keep"), by = `Indicator Code`]
+latest[, n_ranked := sum(!is.na(score)), by = `Indicator Code`]
+fwrite(latest, "~/world_bank/health_and_education/latest_values_focus.csv")
+
+# Data-quality check on recency
+latest[, .(countries = .N, stale_countries = sum(stale), median_year = as.numeric(median(year))),
+       by = label][order(-stale_countries)]
+
+# ============================================================
+# 8. Descriptive statistics by indicator
+# ============================================================
+```
+
+## 2. Statistical analysis and explanations
+
+### 2.1 Descriptive statistics
+
+**Why.** Descriptive statistics answer three questions for each indicator: what is the typical country, how spread out are countries, and is the distribution skewed? The mean and median are both reported because they diverge when a few extreme values pull the average.
+
+**How.** For $n$ countries with values $x_i$:
+
+$$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i, \qquad s = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(x_i - \bar{x})^2}, \qquad \mathrm{CV} = 100 \cdot \frac{s}{\bar{x}}$$
+
+The coefficient of variation (CV) expresses spread as a share of the mean, which makes indicators with different units comparable. The 10th and 90th percentiles show the range that contains 80% of countries and are less sensitive to outliers than the standard deviation.
+
+**Reading the table.**
+
+- **Life expectancy** is tightly clustered. The mean is 74.0 years, the median 74.7, and the central 80% of countries lie between 63.9 and 83.0 years (CV 9.6%).
+- **Under-five mortality** is strongly right-skewed. The mean is 24.2 deaths per 1,000 births but the median is 15.0, and the 90th percentile is 60.8. A minority of countries with very high child mortality pull the average up (CV 103%).
+- **Maternal mortality** shows the same pattern more sharply, with a mean of 116 against a median of 47 per 100,000 births.
+- **Health spending per capita** is the most unequal indicator in the health block. The mean is US$1,459, the median US$470, and the 90th percentile US$4,803 (CV 163%).
+- **Physicians per 1,000** has a mean of 2.0 and a median of 1.6, with the bottom 10% below 0.16. Workforce scarcity is concentrated, not spread evenly.
+- **Safe drinking water** and **safe sanitation** are both left-skewed: most countries serve the majority of their population, but the bottom tenth serve under a quarter.
+- **Stunting** has a median of 13.9% against a mean of 17.3%, with a long tail above 35% in the highest-burden countries.
+- **Tuberculosis incidence** shows a mean of 99 per 100,000 against a median of 43, confirming a concentrated burden.
+- **Adult literacy** is high for most countries (median 93.9%) but has a long lower tail, with the 10th percentile at 59.4%. Its CV of 21% reflects this.
+- **Secondary enrolment** has a mean of 85.2% and a median of 91.3%, and gross enrolment can exceed 100% when older pupils are counted.
+- **Primary out-of-school** has the highest spread of the education block (CV 148%). The mean is 9.6% but the median is 4.0%, which means a small group of countries accounts for most children out of school.
+
+**Overall.** Outcome indicators with strong floors, such as life expectancy and primary enrolment, are compressed near the top. Indicators that capture disadvantage, such as mortality, out-of-school rates and per-capita spending, are highly skewed, and their means overstate the typical country.
+
+```{r c-descriptive}
+ind_summary <- latest[domain != "Context",
+                      .(countries = .N,
+                        mean = mean(value), median = median(value), sd = sd(value),
+                        p10 = quantile(value, 0.10), p90 = quantile(value, 0.90),
+                        cv_pct = 100 * sd(value) / mean(value),
+                        median_year = as.numeric(median(year))),
+                      by = .(domain, label, `Indicator Code`)]
+setorder(ind_summary, domain, label)
+ind_summary[, .(domain, label, countries, mean = round(mean, 2), median = round(median, 2),
+                sd = round(sd, 2), p10 = round(p10, 2), p90 = round(p90, 2),
+                cv_pct = round(cv_pct, 1), median_year)]
+```
+
+**Why.** Averages hide who is at the top and bottom. Naming the extremes grounds the statistics and shows where the policy gaps are.
+
+**How.** Within each indicator, countries are sorted by value, and the first and last rows of the sorted group give the highest and lowest country.
+
+**Reading the table.**
+
+- **Life expectancy** ranges from Monaco (86.5 years) to Nigeria (54.6 years), a gap of more than 30 years.
+- **Under-five mortality** runs from 115.6 deaths per 1,000 in Nigeria to 1.3 in San Marino, a ratio of nearly 90 to 1.
+- **Maternal mortality** is highest in Nigeria, at 993 per 100,000 births.
+- **Physicians per 1,000** range from 9.5 in Cuba to 0.04 in Niger.
+- **Health spending per capita** peaks in the United States at US$13,473 and bottoms out in Madagascar at US$17. This is a ratio of about 770 to 1.
+- **Primary out-of-school** is highest in Somalia (85.3% of children) and lowest in the United Arab Emirates (0%).
+- **Adult literacy** reaches 100% in several countries, so the top is a tie rather than a single leader, while South Sudan has the lowest figure (26.8%).
+
+**Caution.** Several top performers are very small states, such as Monaco, San Marino, Gibraltar and Kiribati. Their values are reliable but their populations are small, so they should not be read as evidence about large countries. Population weighting in Section 2.3 addresses this.
+
+```{r c-extremes}
+extremes <- latest[domain != "Context"][order(`Indicator Code`, -value),
+                   .(highest = `Country Name`[1], highest_value = round(value[1], 2),
+                     lowest = `Country Name`[.N], lowest_value = round(value[.N], 2)),
+                   by = .(domain, label)]
+setorder(extremes, domain, label)
+extremes
+
+# ============================================================
+# 9. World powers
+# ============================================================
+```
+
+### 2.2 World powers
+
+**Why.** Global power is a useful lens. The eleven countries analysed here, seven G7 members and four BRICS members (Brazil, Russia, India and China), together account for a large share of world output and population, so their outcomes shape global averages.
+
+**How.** The `powers` table maps each country to its group. For each indicator the percentile score is
+
+$$\text{pct} = 100 \times \left(1 - \frac{r - 1}{n}\right)$$
+
+where $r$ is the country's rank on the directed score and $n$ is the number of countries with a value. A score of 90 means the country performs at least as well as 90% of countries that report the indicator.
+
+```{r c-powers}
+powers <- data.table(
+  `Country Code` = c("USA", "CHN", "IND", "RUS", "DEU", "JPN", "GBR", "FRA", "BRA", "ITA", "CAN"),
+  power_group    = c("G7", "BRICS", "BRICS", "BRICS", "G7", "G7", "G7", "G7", "BRICS", "G7", "G7")
+)
+power_codes <- powers[["Country Code"]]
+
+power_latest <- latest[`Country Code` %in% power_codes]
+power_latest <- merge(power_latest, powers, by = "Country Code")
+
+key_labels <- c("Life expectancy", "Under-5 mortality", "Health spend per capita (US$)",
+                "Physicians per 1,000", "Secondary enrolment (gross, %)", "Adult literacy %")
+```
+
+```{r c-power_table}
+power_table <- dcast(power_latest[label %in% key_labels],
+                     `Country Name` + power_group ~ label, value.var = "value")
+power_table
+```
+
+**Reading the table.**
+
+- **Life expectancy.** Japan and Italy (84.0 years each) and France (83.0) lead the group. The United States (78.9 years) sits below every other G7 member, including Canada (82.1) and the UK (81.4). Among the BRICS, Brazil (76.0) and China (78.0) are above India (72.2) and Russia (73.4).
+- **Under-five mortality.** The United States (6.5 per 1,000) has the highest rate among G7 members, although Japan (2.4) and Italy (2.7) are much lower. India, at 26.6, is the highest of all eleven.
+- **Health spending per capita.** The United States spends US$13,473, roughly twice Germany (US$6,849) and Canada (US$6,378), and about 160 times India (US$85). Despite this, its life expectancy is the lowest in the G7.
+- **Physicians.** Germany (4.5 per 1,000) and Russia (5.1) have the most physicians, and India the fewest (0.7).
+- **Secondary enrolment.** The UK (112.1%) and Japan (101.5%) lead; India (79.6%) is lowest.
+- **Adult literacy.** Russia (99.9%), Italy (99.4%), China (96.7%) and Brazil (94.7%) are high. India (78.2%) is the outlier. Most G7 countries show no value because the indicator is not reported for them.
+
+**Interpretation.** The United States is the clearest case of spending that is not converting into outcomes. Its per-capita health spending is the highest in the group by a wide margin, yet it has the lowest life expectancy and the highest under-five mortality among the G7. This points to differences in the distribution of care and in population health drivers, not simply to the volume of spending. India is the reverse: it is the lowest spender per head and has the weakest outcomes on mortality and literacy, but it is improving fastest (Section 2.4).
+
+```{r c-power_rank}
+power_rank <- power_latest[domain != "Context",
+                           .(label, `Country Name`, rank_best, n_ranked,
+                             pct_rank = round(100 * (1 - (rank_best - 1) / n_ranked), 1))]
+dcast(power_rank, `Country Name` ~ label, value.var = "pct_rank")
+
+# ============================================================
+# 10. Income groups and regions (unweighted and population-weighted)
+# ============================================================
+```
+
+**Reading the percentile table.** Each cell gives the share of countries a power equals or beats on that indicator. Scores close to 100 indicate top-decile performance; scores near 0 indicate bottom-decile performance. Because percentiles are relative, they can differ sharply from the raw value: a country with a respectable value can still rank low if most peers are much higher.
+
+### 2.3 Income groups and regions
+
+**Why.** Income group and region are the standard ways to explain cross-country gaps. This section tests how large the gaps are and whether they change when large countries are given their population weight.
+
+**How.** Each group's unweighted mean and median are calculated from the latest country values. The population-weighted mean gives each country a weight equal to its latest population:
+
+$$\bar{x}_w = \frac{\sum_{i} w_i x_i}{\sum_{i} w_i}, \qquad w_i = \text{population}_i$$
+
+**Income groups.** Life expectancy rises from 65.2 years in low-income countries to 69.5 in lower-middle, 76.0 in upper-middle and 80.4 in high-income countries on a population-weighted basis. Under-five mortality falls from 61.6 to 39.1, 11.2 and 4.8 per 1,000. The largest gap is in health spending: high-income countries average US$6,215 per head against US$38 in low-income countries, a population-weighted ratio of about 165 to 1. Physicians show a ratio of about 11 to 1 on the same basis, and literacy runs from 59.5% to 98.5%.
+
+**Regions.** On population-weighted life expectancy, Sub-Saharan Africa is lowest at 62.8 years, followed by South Asia (72.6) and the Middle East and North Africa (72.3). North America (79.2) and Europe and Central Asia (78.6) are highest, with East Asia and Pacific at 76.7.
+
+**Effect of weighting.** Weighting changes the picture for two regions. South Asia's unweighted life expectancy of 75.0 years falls to 72.6 once India's large population is counted, and its under-five mortality rises from 18.5 to 26.7 per 1,000. The Middle East and North Africa moves in the same direction, with under-five mortality rising from 19.6 to 31.6 once its most populous countries are weighted in. East Asia and Pacific moves the other way: its unweighted average (74.1 years) is pulled down by small Pacific island states, and the weighted average (76.7) reflects China and other large economies.
+
+**Caveat.** North America contains only three entities, so its averages are based on a very small sample.
+
+```{r c-groups}
+pop_latest <- latest[label == "Population", .(`Country Code`, pop = value)]
+wl <- merge(latest[domain != "Context"], pop_latest, by = "Country Code", all.x = TRUE)
+
+group_income <- wl[!is.na(IncomeGroup),
+                   .(countries = .N, mean = mean(value), median = median(value),
+                     pop_weighted = weighted.mean(value, pop, na.rm = TRUE)),
+                   by = .(label, IncomeGroup)]
+group_region <- wl[!is.na(Region),
+                   .(countries = .N, mean = mean(value), median = median(value),
+                     pop_weighted = weighted.mean(value, pop, na.rm = TRUE)),
+                   by = .(label, Region)]
+```
+
+**Why.** A single ratio summarises how far the poorest income group lags the richest. It makes the size of the gap comparable across indicators.
+
+**How.** The gap ratio is $G = \bar{x}_{\text{high}} / \bar{x}_{\text{low}}$, using unweighted means. For indicators where lower is better (such as mortality), $G$ is below 1 and its reciprocal gives the multiple by which the outcome is worse in low-income countries.
+
+**Result.** Health spending per capita has the widest gap (G = 85.8). Physicians (9.8), adult literacy (1.7), life expectancy (1.24) and secondary enrolment (2.3) show narrower ones. For under-five mortality, $G = 0.10$, meaning that low-income countries have about ten times the high-income rate. Gaps in spending and workforce are therefore far larger than the gap in life expectancy: outcomes are much more equal than the resources behind them. This is consistent with the large gains that basic services deliver even at low income levels.
+
+```{r c-gap}
+gap_income <- dcast(group_income[label %in% key_labels], label ~ IncomeGroup, value.var = "mean")
+gap_income[, gap_ratio_high_vs_low := round(`High income` / `Low income`, 2)]
+gap_income
+
+dcast(group_income[label %in% key_labels], label ~ IncomeGroup, value.var = "pop_weighted")
+```
+
+**Reading the regional table.** Sub-Saharan Africa is the outlier on almost every indicator: life expectancy of 64.8 years (unweighted), under-five mortality of 56.8 per 1,000, 0.39 physicians per 1,000 and secondary enrolment of 53.6%. North America and Europe and Central Asia are at the other end, with health spending per capita of about US$9,900 and US$3,300 respectively. South Asia has the lowest physician density after Sub-Saharan Africa, at 1.06 per 1,000, despite life expectancy close to the global middle.
+
+```{r c-region}
+dcast(group_region[label %in% key_labels], label ~ Region, value.var = "mean")
+dcast(group_region[label %in% key_labels], label ~ Region, value.var = "pop_weighted")
+
+# ============================================================
+# 11. Trends: slope of each country's series, 2000-2023
+#     slope = Cov(year, value) / Var(year)
+# ============================================================
+```
+
+### 2.4 Trends over time
+
+**Why.** A level comparison shows where countries are, but not how fast they are moving. Two countries at the same level may be on very different trajectories.
+
+**How.** For each country, the trend is the slope of a least-squares line through its values from 2000 to 2023, computed directly from the covariance and variance:
+
+$$\hat{\beta} = \frac{\operatorname{Cov}(t, y)}{\operatorname{Var}(t)}$$
+
+where $t$ is the year and $y$ the indicator value. A country needs at least ten observations to be included. The slope is the change per year. For under-five mortality a negative slope is an improvement.
+
+**Results by income group (mean slope per year).**
+
+- **Under-five mortality:** low-income countries fall by 3.3 deaths per 1,000 per year, lower-middle by 2.2, upper-middle by 0.8 and high-income by 0.2. The poorest countries are improving fastest in absolute terms, which narrows the gap in levels.
+- **Life expectancy:** low-income countries gain 0.43 years per year, lower-middle 0.36, upper-middle 0.19 and high-income 0.18. The catch-up is consistent with the mortality results.
+- **Secondary enrolment:** lower-middle countries add 1.35 percentage points per year and low-income countries 1.14, compared with 0.54 in high-income countries. Expansion is fastest where the base is lowest.
+- **Adult literacy:** low-income countries rise by 0.9 points per year, though this rests on a single country. High-income countries rise by only 0.15, which reflects a ceiling effect.
+
+**Power countries, 1990 to 2024.** Life expectancy has risen in every power country. India gained 13.6 years (from 58.6 to 72.2), followed by Brazil with 10.2 years and China with 9.9. Among the G7, Italy gained 7.0 years and France 6.4, while the United States gained only 3.7, the smallest increase in the group. The United States began 1990 just below the G7 average, at 75.2 years, and by 2024 was the lowest of the seven.
+
+**Caveat.** The group trend lines in Section 3 are unweighted means across whichever countries report in each year. Because the set of reporting countries changes, shifts in those lines can reflect composition as well as real change.
+
+```{r c-slopes}
+trend_labels <- c("Life expectancy", "Under-5 mortality", "Secondary enrolment (gross, %)",
+                  "Adult literacy %")
+slopes <- panel[label %in% trend_labels & year >= 2000 & year <= 2023,
+                .(years = .N, slope = cov(year, value) / var(year)),
+                by = .(label, `Country Code`, `Country Name`, IncomeGroup, Region)]
+slopes <- slopes[years >= 10]
+slope_group <- slopes[!is.na(IncomeGroup),
+                      .(countries = .N, mean_slope = mean(slope), median_slope = median(slope)),
+                      by = .(label, IncomeGroup)]
+slope_group
+```
+
+```{r c-trend_panels}
+group_trend <- panel[label == "Under-5 mortality" & year >= 1990 & year <= 2023 & !is.na(IncomeGroup),
+                     .(mean = mean(value), countries = .N), by = .(IncomeGroup, year)]
+
+power_trend <- panel[`Country Code` %in% power_codes & label == "Life expectancy" &
+                     year >= 1990 & year <= 2024]
+power_change <- power_trend[, .(v1990 = value[year == 1990], v2024 = value[year == 2024]), by = `Country Name`]
+power_change[, change := round(v2024 - v1990, 1)]
+setorder(power_change, -change)
+power_change
+
+# ============================================================
+# 12. Correlations among key indicators (cross-country, latest values)
+# ============================================================
+```
+
+### 2.5 Correlations
+
+**Why.** Correlation shows which indicators move together across countries. It helps identify the systemic drivers of health and education outcomes, and which indicators are proxies for one another.
+
+**How.** Pearson's correlation coefficient measures linear association between two indicators across countries, using only the countries that have both values:
+
+$$r_{xy} = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_i (x_i - \bar{x})^2 \sum_i (y_i - \bar{y})^2}}$$
+
+Values range from $-1$ to $+1$. Correlation does not show causation, and every pair here is also shaped by income.
+
+**Results.**
+
+- Life expectancy is most strongly associated with under-five mortality ($r = -0.87$) and with safe drinking water ($r = 0.85$). Maternal mortality ($r = -0.81$) follows.
+- Adult literacy correlates with life expectancy ($r = 0.69$) and with under-five mortality ($r = -0.79$), consistent with the education-health link.
+- Physicians per 1,000 correlate at $r = 0.69$ with life expectancy.
+- Health spending per capita has a linear correlation of $r = 0.62$ with life expectancy. The relationship is curved, however: on a logarithmic scale of spending the correlation rises to $r = 0.83$. The first few hundred dollars of spending per head matter most, and the gains flatten at higher levels.
+- Education spending as a share of GDP has almost no relation to life expectancy ($r = 0.08$). What matters is how much is spent per person and on what, not the share of national output devoted to education.
+
+**Interpretation.** Access indicators (safe water, literacy, physicians) and mortality indicators move together strongly. This pattern supports integrated investment in water, education and workforce rather than single-sector programmes.
+
+```{r c-corr}
+snap <- dcast(latest[domain != "Context", .(`Country Code`, `Country Name`, IncomeGroup, Region, label, value)],
+              `Country Code` + `Country Name` + IncomeGroup + Region ~ label, value.var = "value")
+
+wide <- dcast(latest[domain != "Context", .(`Country Code`, label, value)],
+              `Country Code` ~ label, value.var = "value")
+corr_labels <- c("Life expectancy", "Under-5 mortality", "Maternal mortality",
+                 "Physicians per 1,000", "Health spend per capita (US$)",
+                 "Safe drinking water %", "Secondary enrolment (gross, %)",
+                 "Adult literacy %", "Primary completion %", "Education spend % GDP")
+cor_m <- cor(as.matrix(wide[, ..corr_labels]), use = "pairwise.complete.obs")
+round(cor_m, 2)
+
+cor(snap[["Life expectancy"]], snap[["Health spend per capita (US$)"]], use = "complete.obs")
+cor(snap[["Life expectancy"]], log(snap[["Health spend per capita (US$)"]]), use = "complete.obs")
+
+cor_long <- melt(as.data.table(cor_m, keep.rownames = "indicator"),
+                 id.vars = "indicator", variable.name = "indicator2", value.name = "r")
+cor_long[, `:=`(indicator  = factor(indicator, levels = rev(corr_labels)),
+                indicator2 = factor(indicator2, levels = corr_labels))]
+
+# ============================================================
+# 13. Map join (maps package names differ from WDI names)
+# ============================================================
+```
+
+## 3. Interactive visualisations
+
+**Design choices.** The `econ_theme` object is built once and added to every plot, so all charts share one look. It uses a light paper-coloured background, horizontal gridlines only, no minor gridlines and a bold title with a source caption, which follows common economic-publishing conventions. Log scales are used where a variable is strongly skewed (health spending, child mortality) so that differences across countries are visible without a few extreme values dominating the chart.
+
+**Interactivity.** Each mark is an interactive geom from ggiraph (for example `geom_point_interactive`). The `tooltip` aesthetic sets the text shown on hover, and `data_id` identifies the element so that hover highlighting works. `girafe()` converts the ggplot object into an SVG widget, and `opts_tooltip()` and `opts_hover()` control the styling.
+
+```{r c-theme}
+econ_theme <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", colour = "#1B263B"),
+    plot.subtitle = element_text(colour = "#415A77"),
+    plot.caption = element_text(colour = "grey40", size = 9),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(colour = "grey88"),
+    plot.background = element_rect(fill = "#FBFAF7", colour = NA),
+    panel.background = element_rect(fill = "#FBFAF7", colour = NA),
+    legend.position = "bottom"
+  )
+
+tip_css   <- "background-color:#1B263B;color:#FFFFFF;padding:6px;border-radius:4px;font-size:12px;"
+hover_css <- "fill:#E67E22;stroke:#E67E22;cursor:pointer;"
+ggi_opts  <- list(opts_tooltip(css = tip_css), opts_hover(css = hover_css))
+
+# ---- Plot 1: life expectancy, world powers ----
+```
+
+**Reading the chart.** Each bar is a country's latest life expectancy, coloured by group. The G7 bars sit mostly at the top, with Japan and Italy highest. The BRICS bars are mixed: China and Brazil sit in the lower half of the range, above India and Russia, which are at the bottom. The United States is the lowest of the G7 bars. Hover over any bar for the exact value and the year it refers to.
+
+```{r c-plot1}
+p1_data <- power_latest[label == "Life expectancy"]
+p1 <- ggplot(p1_data, aes(x = reorder(`Country Name`, value), y = value, fill = power_group,
+                          tooltip = paste0(`Country Name`, ": ", round(value, 1), " years (", year, ")"),
+                          data_id = `Country Code`)) +
+  geom_col_interactive(width = 0.7) +
+  coord_flip() +
+  scale_fill_manual(values = c("G7" = "#1B4F72", "BRICS" = "#D68910")) +
+  labs(title = "Life expectancy at birth: world powers",
+       subtitle = "Latest available value per country", x = NULL, y = "Years",
+       fill = "Group", caption = "Source: World Bank WDI") +
+  econ_theme
+girafe(ggobj = p1, width_svg = 8, height_svg = 5, options = ggi_opts)
+
+# ---- Plot 2: life expectancy vs health spending (log x) ----
+```
+
+**Reading the chart.** Each point is a country. The relationship between health spending per person and life expectancy is steep at low spending and flattens above a few thousand dollars per head. Low-income countries (green) cluster at the lower left. The high-income countries (red) occupy the upper right, but the spread among them is wide, so spending alone does not fix the position of a country within that group. The logarithmic x-axis is what makes the pattern appear close to linear in the middle range.
+
+```{r c-plot2}
+p2_data <- snap[!is.na(`Health spend per capita (US$)`) & !is.na(`Life expectancy`) & !is.na(IncomeGroup)]
+p2 <- ggplot(p2_data, aes(x = `Health spend per capita (US$)`, y = `Life expectancy`,
+                          colour = IncomeGroup,
+                          tooltip = paste0(`Country Name`, "<br>Health spend: US$",
+                                           round(`Health spend per capita (US$)`), "<br>Life expectancy: ",
+                                           round(`Life expectancy`, 1)),
+                          data_id = `Country Code`)) +
+  geom_point_interactive(size = 2.2, alpha = 0.75) +
+  scale_x_log10() +
+  labs(title = "Health spending and life expectancy",
+       subtitle = "Each point is a country; x-axis on log scale",
+       x = "Health spend per capita, US$ (log scale)", y = "Life expectancy (years)",
+       colour = "Income group", caption = "Source: World Bank WDI") +
+  econ_theme
+girafe(ggobj = p2, width_svg = 8, height_svg = 5, options = ggi_opts)
+
+# ---- Plot 3: under-5 mortality vs access to safe water ----
+```
+
+**Reading the chart.** Under-five mortality on a logarithmic scale falls steeply as access to safe water rises. The Sub-Saharan African countries (one region colour) form the upper-left cluster of low water access and high mortality. Countries with near-universal water access sit in the lower-right corner with single-digit mortality. The log scale spreads out the low-mortality countries so that small differences among them remain visible.
+
+```{r c-plot3}
+p3_data <- snap[!is.na(`Under-5 mortality`) & !is.na(`Safe drinking water %`) & !is.na(IncomeGroup)]
+p3 <- ggplot(p3_data, aes(x = `Safe drinking water %`, y = `Under-5 mortality`,
+                          colour = Region,
+                          tooltip = paste0(`Country Name`, "<br>Safe water: ",
+                                           round(`Safe drinking water %`, 1), "%<br>Under-5 deaths: ",
+                                           round(`Under-5 mortality`, 1), " per 1,000"),
+                          data_id = `Country Code`)) +
+  geom_point_interactive(size = 2, alpha = 0.75) +
+  scale_y_log10() +
+  labs(title = "Safe drinking water and child survival",
+       subtitle = "Under-5 mortality on log scale", x = "Safe drinking water (%)",
+       y = "Under-5 deaths per 1,000 births (log)", colour = "Region",
+       caption = "Source: World Bank WDI") +
+  econ_theme
+girafe(ggobj = p3, width_svg = 8, height_svg = 5, options = ggi_opts)
+
+# ---- Plot 4: life expectancy trend, world powers ----
+```
+
+**Reading the chart.** Each line traces one power's life expectancy from 1990 to 2024. The steepest rise is India's, which moves from the bottom of the group to second-lowest, just below Russia. Brazil and China also rise sharply. Japan, Italy and France sit at the top of the group throughout and rise more gently, as their starting levels were already high. Hovering over any point gives the exact value for that year.
+
+```{r c-plot4}
+p4 <- ggplot(power_trend, aes(x = year, y = value, colour = `Country Name`)) +
+  geom_line(linewidth = 0.8) +
+  geom_point_interactive(aes(tooltip = paste0(`Country Name`, " (", year, "): ",
+                                              round(value, 1), " years"),
+                             data_id = paste(`Country Code`, year)), size = 1.2) +
+  scale_colour_brewer(palette = "Paired") +
+  labs(title = "Life expectancy trend, 1990-2024: world powers",
+       x = "Year", y = "Years", colour = NULL, caption = "Source: World Bank WDI") +
+  econ_theme
+girafe(ggobj = p4, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+
+# ---- Plot 5: under-5 mortality trend by income group ----
+```
+
+**Reading the chart.** The four income groups fall at different speeds. Low-income countries start with the highest mortality and fall fastest in absolute terms. High-income countries are already low and change little. The gap between the top and bottom lines narrows over time. Because the mean covers only countries that report in each year, a line can move when the group's membership changes, so the chart should be read as an overall pattern rather than a precise trajectory.
+
+```{r c-plot5}
+p5 <- ggplot(group_trend, aes(x = year, y = mean, colour = IncomeGroup)) +
+  geom_line(linewidth = 0.9) +
+  geom_point_interactive(aes(tooltip = paste0(IncomeGroup, ", ", year, ": ",
+                                              round(mean, 1), " per 1,000 (", countries, " countries)"),
+                             data_id = paste(IncomeGroup, year)), size = 1.1) +
+  labs(title = "Under-5 mortality by income group, 1990-2023",
+       subtitle = "Unweighted mean of countries reporting in each year",
+       x = "Year", y = "Deaths per 1,000 live births", colour = "Income group",
+       caption = "Source: World Bank WDI") +
+  econ_theme
+girafe(ggobj = p5, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+
+# ---- Plot 6: income group means across key indicators ----
+```
+
+**Reading the chart.** Each facet is one key indicator, with its own axis scale so that each panel is readable. The panels show the same ordering across almost every indicator: high-income, then upper-middle, lower-middle and low-income. The exception is mortality, where the order is reversed, so that the lowest bar is the best outcome. Health spending per capita and physicians show the steepest slopes between groups.
+
+```{r c-plot6}
+p6_data <- group_income[label %in% key_labels & !is.na(IncomeGroup)]
+p6 <- ggplot(p6_data, aes(x = IncomeGroup, y = mean, fill = IncomeGroup,
+                          tooltip = paste0(label, "<br>", IncomeGroup, ": ", round(mean, 1)),
+                          data_id = paste(label, IncomeGroup))) +
+  geom_col_interactive(width = 0.7, show.legend = FALSE) +
+  facet_wrap(~label, scales = "free_y", ncol = 3) +
+  scale_fill_brewer(palette = "Blues") +
+  labs(title = "Income group averages on key indicators",
+       subtitle = "Unweighted means of latest values", x = NULL, y = NULL,
+       caption = "Source: World Bank WDI") +
+  econ_theme +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1))
+girafe(ggobj = p6, width_svg = 9, height_svg = 7, options = ggi_opts)
+
+# ---- Plot 7: world map, life expectancy (maps package) ----
+```
+
+**Why.** The `maps` package identifies countries by its own names, which differ from WDI names for 43 countries (for example "Russian Federation" in WDI versus "Russia" in maps, or "Korea, Rep." versus "South Korea").
+
+**How.** A crosswalk table maps each WDI name to its map name. Values are then joined onto the polygon data with a left join, so every polygon is kept. Six small territories (British Virgin Islands, Channel Islands, Gibraltar, Hong Kong SAR, Macao SAR and Tuvalu) have no polygon in the base map and so appear blank. The polygon rows are sorted by `group` and `order` after the join, because drawing polygons in the wrong order would produce broken shapes.
+
+```{r c-map_join}
+name_map <- data.table(
+  `Country Name` = c("Antigua and Barbuda", "Bahamas, The", "Brunei Darussalam", "Cote d'Ivoire",
+                     "Congo, Dem. Rep.", "Congo, Rep.", "Cabo Verde", "Czechia",
+                     "Egypt, Arab Rep.", "Micronesia, Fed. Sts.", "United Kingdom", "Gambia, The",
+                     "Iran, Islamic Rep.", "Kyrgyz Republic", "St. Kitts and Nevis", "Korea, Rep.",
+                     "Lao PDR", "St. Lucia", "St. Martin (French part)", "Naoero",
+                     "Puerto Rico (US)", "Korea, Dem. People's Rep.", "West Bank and Gaza",
+                     "Russian Federation", "Somalia, Fed. Rep.", "Slovak Republic",
+                     "Sint Maarten (Dutch part)", "Syrian Arab Republic", "Trinidad and Tobago",
+                     "Turkiye", "United States", "St. Vincent and the Grenadines",
+                     "Venezuela, RB", "Virgin Islands (U.S.)", "Viet Nam", "Yemen, Rep.",
+                     "Eswatini"),
+  map_name = c("Antigua", "Bahamas", "Brunei", "Ivory Coast",
+               "Democratic Republic of the Congo", "Republic of Congo", "Cape Verde", "Czech Republic",
+               "Egypt", "Micronesia", "UK", "Gambia",
+               "Iran", "Kyrgyzstan", "Saint Kitts", "South Korea",
+               "Laos", "Saint Lucia", "Saint Martin", "Nauru",
+               "Puerto Rico", "North Korea", "Palestine",
+               "Russia", "Somalia", "Slovakia",
+               "Sint Maarten", "Syria", "Trinidad",
+               "Turkey", "USA", "Saint Vincent",
+               "Venezuela", "Virgin Islands", "Vietnam", "Yemen",
+               "Swaziland")
+)
+le_latest <- latest[label == "Life expectancy", .(`Country Name`, value, year)]
+le_latest <- merge(le_latest, name_map, by = "Country Name", all.x = TRUE)
+le_latest[is.na(map_name), map_name := `Country Name`]
+
+world <- as.data.table(map_data("world"))
+world_regions <- unique(world[["region"]])
+le_latest[!map_name %in% world_regions, .(`Country Name`, map_name)]  # unmatched names
+
+le_map <- merge(world, le_latest[, .(map_name, value, year, `Country Name`)],
+                by.x = "region", by.y = "map_name", all.x = TRUE)
+setorder(le_map, group, order)
+le_map[!is.na(value), .N]
+
+# ============================================================
+# 14. Output tables and charts
+# ============================================================
+```
+
+**Reading the map.** Colour runs from red (lowest life expectancy) through yellow to green (highest). The clearest pattern is the belt of red concentrated in the Sahel and much of central and eastern Africa, where life expectancy is lowest. North America, Western Europe, Japan, Australia and New Zealand are green. Latin America and most of Asia sit in the yellow-green middle. Hovering over a country shows its value and name.
+
+```{r c-plot7}
+p7 <- ggplot(le_map, aes(x = long, y = lat, group = group, fill = value,
+                         tooltip = paste0(`Country Name`, ": ", round(value, 1), " years"),
+                         data_id = region)) +
+  geom_polygon_interactive(colour = "grey60", linewidth = 0.1) +
+  scale_fill_distiller(palette = "RdYlGn", direction = 1, na.value = "grey90") +
+  coord_quickmap() +
+  labs(title = "Life expectancy at birth, latest year", fill = "Years",
+       caption = "Source: World Bank WDI; base map: maps package") +
+  econ_theme +
+  theme(axis.text = element_blank(), axis.title = element_blank(),
+        panel.grid.major = element_blank(), panel.grid.major.y = element_blank())
+girafe(ggobj = p7, width_svg = 9, height_svg = 5, options = ggi_opts)
+
+# ---- Plot 8: correlation heatmap ----
+```
+
+**Reading the heatmap.** Each cell is the correlation between two indicators, with red for negative and blue for positive associations. The strongest blocks are the mortality group (life expectancy, under-five mortality and maternal mortality, which are correlated at magnitudes of 0.8 and above) and the access group (safe water, literacy, enrolment and physicians). Education spending as a share of GDP sits apart from the rest, with correlations close to zero, confirming the finding in Section 2.5. Hover over any cell for the exact value.
+
+```{r c-plot8}
+p8 <- ggplot(cor_long, aes(x = indicator2, y = indicator, fill = r,
+                           tooltip = paste0(indicator, " vs ", indicator2, ": r = ", round(r, 2)),
+                           data_id = paste(indicator, indicator2))) +
+  geom_tile_interactive(colour = "white") +
+  geom_text(aes(label = round(r, 2)), size = 2.8) +
+  scale_fill_gradient2(low = "#B03A2E", mid = "white", high = "#1F618D", limits = c(-1, 1)) +
+  labs(title = "Correlation among key indicators", subtitle = "Pearson r across countries, latest values",
+       x = NULL, y = NULL, fill = "r", caption = "Source: World Bank WDI") +
+  econ_theme +
+  theme(axis.text.x = element_text(angle = 40, hjust = 1))
+girafe(ggobj = p8, width_svg = 9, height_svg = 7, options = ggi_opts)
+
+# ============================================================
+# 15. gt tables
+# ============================================================
+```
+
+## 4. Tables
+
+**Table 1** gives the descriptive statistics for every focus indicator: the number of countries, the mean, median, standard deviation, 10th and 90th percentiles, and the coefficient of variation. It is the reference for the figures quoted in Section 2.1.
+
+```{r c-table1}
+gt(ind_summary[, .(Domain = domain, Indicator = label, Countries = countries,
+                   Mean = round(mean, 2), Median = round(median, 2), SD = round(sd, 2),
+                   P10 = round(p10, 2), P90 = round(p90, 2), `CV %` = round(cv_pct, 1))]) |>
+  tab_header(title = "Table 1. Descriptive statistics, all focus indicators",
+             subtitle = "Latest available value per country") |>
+  fmt_number(columns = c("Mean", "Median", "SD", "P10", "P90", "CV %"), decimals = 2)
+```
+
+**Table 2** shows the key indicators for each world power. Use it to compare countries side by side, and read the blank cells as indicators that the source does not report for that country.
+
+```{r c-table2}
+gt(power_table) |>
+  tab_header(title = "Table 2. World powers: key indicators",
+             subtitle = "Latest available value") |>
+  fmt_number(columns = setdiff(names(power_table), c("Country Name", "power_group")), decimals = 1)
+```
+
+**Table 3** compares the four income groups on the key indicators, with the high-to-low gap ratio in the final column.
+
+```{r c-table3}
+gt(gap_income) |>
+  tab_header(title = "Table 3. Income-group averages and high-to-low gap",
+             subtitle = "Unweighted means of latest values") |>
+  fmt_number(columns = setdiff(names(gap_income), "label"), decimals = 2)
+```
+
+**Table 4** gives regional unweighted averages, followed by the population-weighted averages. The gap between the two columns shows which regions depend most on their largest countries.
+
+```{r c-table4}
+gt(dcast(group_region[label %in% key_labels], label ~ Region, value.var = "mean")) |>
+  tab_header(title = "Table 4. Regional averages on key indicators") |>
+  fmt_number(columns = setdiff(names(dcast(group_region[label %in% key_labels], label ~ Region, value.var = "mean")), "label"), decimals = 1)
+```
+
+**Table 5** lists the reconciliation checks. The most important result is the final row: no shared observation disagrees between the two files.
+
+```{r c-table5}
+gt(recon) |>
+  tab_header(title = "Table 5. Data reconciliation checks")
+```
+
+## 5. Key findings and summary
+
+- **Health gaps are large and mainly reflect resources.** Health spending per capita varies by about 165 times between high- and low-income countries on a population-weighted basis, against a life expectancy gap of about 15 years. Spending is the most unequal input, and the outcome gap is much smaller.
+- **Child survival tracks access, not spending share.** Under-five mortality correlates at $r = -0.79$ with adult literacy and $r = -0.76$ with safe drinking water. Education spending as a percentage of GDP has almost no link to life expectancy ($r = 0.08$).
+- **Spending per head matters, with diminishing returns.** Life expectancy rises steeply with health spending per capita at low levels, and the log-scale correlation of $r = 0.83$ is much stronger than the linear $r = 0.62$.
+- **The United States is an outlier among the G7.** It spends about US$13,500 per person, roughly twice Germany and Canada, yet has the lowest life expectancy of the G7 (78.9 years) and the highest under-five mortality of the group (6.5 per 1,000).
+- **India is the fastest improver among the powers.** Its life expectancy rose by 13.6 years between 1990 and 2024, but it remains the lowest among the powers on health spending (US$85 per head) and has the highest under-five mortality of the eleven (26.6 per 1,000).
+- **Sub-Saharan Africa is the clear regional laggard.** Population-weighted life expectancy is 62.8 years and under-five mortality is 69.0 per 1,000, both the worst of any region. The region has 0.39 physicians per 1,000 and secondary enrolment of 53.6%.
+- **Population weighting changes regional rankings.** South Asia and the Middle East and North Africa look better on unweighted averages than their largest countries warrant. Weighted life expectancy in South Asia is 72.6 years rather than 75.0.
+- **Low-income countries are catching up in absolute terms.** They reduce under-five mortality by 3.3 deaths per 1,000 per year and gain 0.43 years of life expectancy per year, against 0.2 and 0.18 in high-income countries. The gap is narrowing, though it remains large.
+- **Secondary education is expanding fastest where it started lowest.** Lower-middle income countries add 1.35 percentage points of enrolment per year, compared with 0.54 in high-income countries.
+- **Data recency varies by indicator.** Mortality and life expectancy are current for almost every country, but literacy and hospital bed figures include many values older than 2015, so cross-country comparisons of those indicators should note the year.
+- **Coverage limits the analysis.** The median indicator covers 89% of countries, and 28 of 402 indicators cover under half. Gender-disaggregated and attainment series are particularly sparse.
+
+## Appendix: outputs and limitations
+
+**Files written.**
+
+- `indicator_coverage_all.csv`: coverage and recency for all 402 indicators.
+- `latest_values_focus.csv`: latest value, year, rank and percentile score for every focus indicator and country.
+
+**Limitations.**
+
+- The latest-value approach compares countries at different points in time. The year is recorded so the reader can judge comparability.
+- Unweighted averages treat a country of 1 million people the same as one of 1 billion. Population-weighted figures are shown alongside wherever this matters.
+- WDI series are modelled estimates for many countries, particularly for maternal mortality, under-five mortality and literacy. Differences of a few percentage points between countries should not be over-interpreted.
+- Correlations and slopes describe association across countries and time. They do not establish cause.
+- The interactive ggiraph and gt outputs require those packages to be installed; they are not available in every environment.

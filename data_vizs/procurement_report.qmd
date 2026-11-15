@@ -1,0 +1,837 @@
+---
+title: "Food Grain Procurement in India: Data Analysis Report"
+subtitle: "Paddy, Rice and Wheat, marketing years 2001-02 to 2026-27"
+date: today
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# 1. Data Preparation and Inspection
+
+## 1.1 Scope and approach
+
+This report analyses `Procurement of Paddy/Rice and Wheat`, a Statewise Year record of government food grain procurement. The analysis report use data from `Department of Food & Public Distribution` `Central Food Grains Procurement Portal` . 
+
+Each row is one crop, one state and one marketing year. The columns are:
+
+- **Crop**: Paddy, Rice or Wheat.
+- **State**: the procuring state.
+- **FCI**: quantity procured by the Food Corporation of India, the central agency.
+- **StateAgency**: quantity procured by state agencies.
+- **Total**: overall procurement quantity. Values are assumed to be in lakh metric tonnes (LMT).
+- **MarketingYear** and **MarketingSeason**: the procurement year and season (KMS for Kharif, RMS for Rabi).
+
+## 1.2 Setup
+
+```{r setup}
+library(data.table)
+library(ggplot2)
+library(ggiraph)
+library(gt)
+
+# Colour palette for crops, in the style of an economics magazine
+crop_cols <- c(Paddy = "#E3120B", Rice = "#3EBCD2", Wheat = "#006BA2")
+
+# Economist-style theme: blue-grey background, horizontal gridlines only,
+# no axis titles, bold left-aligned title, source line in the caption
+econ_theme <- theme_minimal(base_size = 12) +
+  theme(
+    plot.background = element_rect(fill = "#D5E4EB", colour = NA),
+    panel.background = element_rect(fill = "#D5E4EB", colour = NA),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(colour = "#c1dae7", linewidth = 0.4),
+    axis.title = element_blank(),
+    axis.ticks = element_blank(),
+    plot.title = element_text(face = "bold", size = 15, hjust = 0),
+    plot.subtitle = element_text(size = 11, hjust = 0, margin = margin(b = 10)),
+    plot.caption = element_text(size = 8, colour = "grey30", hjust = 0, margin = margin(t = 10)),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    legend.position = "top",
+    legend.justification = "left",
+    legend.title = element_blank(),
+    strip.text = element_text(face = "bold", hjust = 0),
+    plot.margin = margin(12, 16, 12, 12)
+  )
+```
+
+## 1.3 Loading and structure
+
+```{r load}
+t <- fread("/home/veronica/Procurement/procurement.csv")
+str(t)
+t[, .(rows = .N, columns = ncol(t))]
+gt(t[, .(first_year = min(MarketingYear), last_year = max(MarketingYear), rows = .N), by = Crop])
+```
+
+**Why:** Before any statistics analysis, we need to confirm that the data we loaded or read is correctly, the column types are right and the coverage of each variable is known.
+
+**How:** `fread()` reads the file quickly and returns a data.table. `str()` lists the structure of column types. The last statement groups by crop and returns the first year, last year and row count for each. This shows that Paddy is recorded from 2007-08, Rice from 2012-13 and Wheat from 2001-02.
+
+## 1.4 Missing values
+
+```{r missing}
+t[, .(
+    rows = .N,
+    FCI_missing = sum(is.na(FCI)),
+    StateAgency_missing = sum(is.na(StateAgency)),
+    Total_missing = sum(is.na(Total))), by = Crop]
+```
+
+**Why:** Missing values can bias totals and averages. If the gaps are concentrated in one crop or period, that affects which comparisons are valid.
+
+**How:** `is.na()` returns TRUE for each missing cell. Summing those TRUE values gives the count of gaps per column, and `by = Crop` splits the count by crop.
+
+**Finding:** Rice has no FCI or StateAgency split at all, so only its Total can be analysed. Wheat has no split for most of its rows. Paddy has a split only up to 2021-22. These gaps determine which analyses are possible for each crop.
+
+## 1.5 Cleaning State Names
+
+State names are written in inconsistent cases, for example "PUNJAB" and "Punjab". One state is also misspelt as "Uttrakhand". Grouping by state would therefore split one state into several groups.
+
+```{r clean-states}
+t[, state_key := toupper(State)]
+
+# Build a lookup from each upper-case key to its mixed-case label
+state_labels <- t[State != toupper(State), .(State = State[1]), by = .(state_key = toupper(State))]
+
+# Replace every spelling with the mixed-case label
+t[state_labels, State := i.State, on = "state_key"]
+t[State == "Uttrakhand", State := "Uttarakhand"]
+t[, state_key := NULL]
+
+unique(t$State)
+```
+
+One Telangana row for Paddy 2010-11 appears twice: once as "TELANGANA" with blank values and once as "Telangana" with zeros. We list duplicate keys first, then keep the row with values where one exists.
+
+```{r dedupe}
+t[, .N, by = .(Crop, State, MarketingYear)][N > 1]
+
+# Keep the row with non-missing Total when a key is duplicated
+t <- unique(t[order(is.na(Total))], by = c("Crop", "State", "MarketingYear"))
+t[, .N, by = .(Crop, State, MarketingYear)][N > 1]
+```
+
+**Why:** A duplicated state would be counted twice in every total.
+
+**How:** `order(is.na(Total))` sorts rows so that rows with a value come first. `unique(..., by = ...)` then keeps the first row for each Crop State and Year key.
+
+**Why:** Clean labels are needed so that each state is counted once.
+
+**How:** The key is the state name in capitals, so "PUNJAB" and "Punjab" share one key. The lookup takes the mixed-case spelling for each key. The join with `on = "state_key"` then rewrites every row with that spelling. The misspelling is corrected by hand.
+
+## 1.6 Repairing and Deriving variables
+
+```{r clean-values}
+# Fill Total from its components where Total is blank but both parts exist
+t[is.na(Total) & !is.na(FCI) & !is.na(StateAgency), Total := FCI + StateAgency]
+
+# Round-off produced a tiny negative state-agency value; set to zero
+t[StateAgency < 0, StateAgency := 0]
+
+# Numeric start year for sorting and charting
+t[, start_year := as.integer(substr(MarketingYear, 1, 4))]
+
+# Flag the season still in progress
+t[, provisional := MarketingYear == "2026-27"]
+
+# Label blank seasons (Rice) explicitly
+t[is.na(MarketingSeason) | MarketingSeason == "", MarketingSeason := "Not reported"]
+
+t[, .(Total_missing_after = sum(is.na(Total)), provisional_rows = sum(provisional))]
+```
+
+**Why:**
+
+- Filling Total from its parts recovers rows that would otherwise drop out of every total.
+- The negative value is a rounding artefact (for Chandigarh, 2008-09), so zeroing it is harmless.
+- The start year lets us sort seasons in order and draw time axes.
+- 2026-27 is still in progress, so it must not be compared with completed seasons.
+
+**How:** `:=` with a row filter changes only the matching cells, by reference and without copying the table.
+
+## 1.7 Reconciliation check
+
+Total should equal sum of FCI and StateAgency. Where it does not, either the source has an extra agency or the figures contain an error.
+
+```{r reconcile}
+recon <- t[!is.na(FCI) & !is.na(StateAgency) & !is.na(Total) & abs(FCI + StateAgency - Total) > 0.05]
+recon[, .(Crop, State, MarketingYear, FCI, StateAgency, Total, gap = round(Total - (FCI + StateAgency), 2))]
+```
+
+**Why:** Mismatches show where the components cannot be trusted and should be flagged in the findings.
+
+**How:** The absolute gap between Total and FCI + StateAgency is computed for each row. Gaps above 0.05 LMT, the rounding tolerance, are kept.
+
+**Finding:** There are nine mismatches. One of them is Andhra Pradesh, Paddy, 2021-22, where FCI is zero, StateAgency is 66.98 and Total is 66.58. Total is smaller than one of its own parts, which is impossible and points to a source error. These rows are kept but flagged.
+
+## 1.8 Data Quality Summary
+
+```{r dq}
+t[, .(
+  rows = .N,
+  duplicate_keys = .N - uniqueN(t[, .(Crop, State, MarketingYear)]),
+  states = uniqueN(State),
+  years = uniqueN(MarketingYear),
+  missing_Total = sum(is.na(Total)),
+  negative_values = sum(Total < 0, na.rm = TRUE)
+)]
+```
+
+**Why:** A short summary tells the reader how far the figures can be trusted.
+
+**How:** `uniqueN()` counts distinct values. A duplicate is any row whose Crop, State and MarketingYear combination appears more than once, so the difference between total rows and unique combinations gives the duplicate count.
+
+# 2. Statistical Analysis
+
+## 2.1 Descriptive Statistics by crop
+
+```{r desc}
+d <- t[!is.na(Total), .(
+    n = .N,
+    mean = round(mean(Total), 2),
+    median = round(median(Total), 2),
+    sd = round(sd(Total), 2),
+    p10 = round(quantile(Total, 0.10, names = FALSE), 2),
+    q1 = round(quantile(Total, 0.25, names = FALSE), 2),
+    q3 = round(quantile(Total, 0.75, names = FALSE), 2),
+    p90 = round(quantile(Total, 0.90, names = FALSE), 2),
+    max = round(max(Total), 2),
+    zero_share_pct = round(100 * mean(Total == 0), 1)), by = Crop]
+d[, iqr := round(q3 - q1, 2)]
+gt(d) |>
+    tab_header(title = "Descriptive Statistics by Crop",
+     subtitle = "Procurement, in lakh metric tonnes (LMT)") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+ 
+```
+
+**Why these metrics:**
+
+- **Mean** is the average procurement. It shows typical scale but is pulled upward by a few large states.
+- **Median** is the middle value. Comparing it with the mean reveals skew. If the mean is much higher, a small number of states carry most of the volume.
+- **Standard deviation** measures how spread out the values are around the mean. It is sensitive to extreme values.
+- **Interquartile range (IQR)** is the distance between the 25th and 75th percentiles. It describes the spread of the middle half of states and is not affected by outliers.
+- **Percentiles (P10, P90)** show the lower and upper tails. They indicate how far the largest and smallest contributors sit from the typical state.
+- **Zero share** is the percentage with no procurement. It shows how many states are non-participants.
+
+**How:** Each statistic is calculated inside one `DT[, .(...), by = Crop]` statement. `mean()`, `median()`, `sd()` and `max()` run on the Total column within each crop. `quantile(..., names = FALSE)` returns the percentile values without labels. `mean(Total == 0)` counts zeros as TRUE and divides by the number of rows. `desc[, iqr := q3 - q1]` then adds the IQR as a new column.
+
+**Reading the result:** Where the mean is well above the median and the IQR is small compared with the maximum, the distribution is right-skewed. In that case the mean overstates what a typical state procures.
+
+## 2.2 National Totals and year-on-year growth
+
+```{r nat}
+nat <- t[!is.na(Total), .(
+  total = sum(Total),
+  states = .N
+), by = .(Crop, MarketingYear, start_year, provisional)]
+setorder(nat, Crop, start_year)
+nat[, yoy_growth_pct := round(100 * (total / shift(total) - 1), 1), by = Crop]
+gt(nat[,.(Crop, MarketingYear, Procurement = total, Growth = yoy_growth_pct)]) |>
+  tab_header(title = "National Total Procument of Paddy, Rice and Wheat", 
+  subtitle = "Crop Year Procurement, lakh metric tonnes (LMT)") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+ 
+nat[, .(total = round(total, 1), states, yoy_growth_pct), by = .(Crop, MarketingYear)][Crop == "Paddy"][c(1:3, .N-2, .N)]
+```
+
+**Why:** National totals show the direction and scale of procurement over time. Year-on-year growth shows how quickly it is changing. Economically, this tracks food security policy, minimum support price decisions and harvest conditions.
+
+**How:**
+
+- `sum(Total)` adds all states in each crop-year.
+- `setorder()` sorts the table by crop and year, which is needed before any growth calculation.
+- `shift(total)` moves each value down one row, so `total / shift(total) - 1` gives the growth rate from the previous year. `by = Crop` stops growth from being calculated across two different crops.
+
+**Caution:** The number of reporting states changes over time. The **states** column shows this. A rise in the total can partly reflect more states reporting, not only more procurement. Section 2.4 addresses this.
+
+## 2.3 Rice and Paddy: are they separate crops?
+
+**Why:** Rice and Paddy appear as separate crops. Rice is milled grain, and paddy converts to rice at a roughly fixed yield of 67%. If Rice is simply a converted Paddy series, adding the two would double count, and their growth rates would look alike for the wrong reason.
+
+**How:** Only state-years where both crops report are kept. `uniqueN(Crop)` marks those state-years, and the sums are taken for each year. The ratio of Rice to Paddy is then computed for every year.
+
+```{r rice-paddy}
+matched <- t[Crop %in% c("Paddy", "Rice") & !is.na(Total)]
+matched[, n_crops := uniqueN(Crop), by = .(State, MarketingYear)]
+pr <- matched[n_crops == 2, .(
+  paddy = sum(Total[Crop == "Paddy"]),
+  rice = sum(Total[Crop == "Rice"]),
+  states = .N / 2
+), by = .(MarketingYear, start_year)]
+pr[, rice_to_paddy := round(rice / paddy, 3)]
+setorder(pr, start_year)
+##pr[, .(MarketingYear, Paddy = round(paddy, 1), Rice = round(rice, 1), Ricet_to_Paddy = rice_to_paddy)]
+gt(pr[, .(MarketingYear, Paddy = round(paddy, 1), Rice = round(rice, 1), Ricet_to_Paddy = rice_to_paddy)]) |>
+  tab_header(title = "Rice to Paddy ratio by year", subtitle = "Only state-years where both crops report") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+ 
+```
+
+**Reading the result:** From 2017-18 to 2023-24 the national ratio sits at about 0.67, close to the commonly cited paddy-to-rice milling yield. Outside those years it moves away from 0.67. State-level ratios are far more erratic, and some state-years show values well above 1 or close to zero. So Rice behaves like a milled-equivalent of Paddy in aggregate, but it is not a clean re-labelling state by state. We do not add Rice to Paddy, and we read Rice growth and correlation with this link in mind.
+
+## 2.4 Compound Growth on a Consistent State Panel
+
+To compare growth fairly, we use only states that report in every year of the window 2012-13 to 2024-25.
+
+```{r panel}
+win <- t[start_year >= 2012 & start_year <= 2026 & !is.na(Total)]
+
+# Count the years each state reports, per crop
+cov_check <- win[, .(years_present = uniqueN(MarketingYear)), by = .(Crop, State)]
+
+# Keep states that report in every year of the window for their crop
+cov_check[, full := years_present == max(years_present), by = Crop]
+
+# Balanced panel: the same states across all years
+panel <- win[cov_check[full == TRUE], on = .(Crop, State), nomatch = NULL]
+
+bal_nat <- panel[, .(total = sum(Total), states = uniqueN(State)), by = .(Crop, start_year)]
+setorder(bal_nat, Crop, start_year)
+bal_nat[, growth := total / shift(total) - 1, by = Crop]
+
+panel[, uniqueN(State), by = Crop]
+```
+
+**Why:** Adding or dropping states would otherwise distort growth. A balanced panel holds the sample constant, so the growth rate reflects change in procurement rather than change in coverage.
+
+**How:** `uniqueN(MarketingYear)` counts the years each state appears in. Within each crop, the states whose count equals the maximum are kept. The join `win[cov_check[full == TRUE], on = ...]` returns only those states. The rest of the code is the same as in Section 2.2.
+
+## 2.5 Compound Annual Growth Rate (CAGR)
+
+**Why:** The CAGR is the constant yearly rate that takes the starting value to the ending value. It summarises long-run growth in one number and is the standard measure for comparing growth across crops.
+
+**Formula:** CAGR = (End / Start)^(1 / years) − 1, where years is the number of yearly steps.
+
+```{r cagr}
+cagr <- bal_nat[, .(
+  states_in_panel = max(states),
+  start_total = round(total[1], 1),
+  end_total = round(total[.N], 1),
+  years = .N - 1,
+  cagr_pct = round(100 * ((total[.N] / total[1])^(1 / (.N - 1)) - 1), 2)
+), by = Crop]
+gt(cagr) |>
+  tab_header(title = "Compound annual growth rate", subtitle = "Balanced state panel, 2012-13 to 2025-26") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+```
+
+**How:** `total[1]` is the first year's value and `total[.N]` is the last. `.N` counts rows, so `.N - 1` gives the number of yearly steps. The CAGR is computed inside the `by = Crop` group, so each crop gets its own rate.
+
+**Caution:** Paddy and Rice use different state sets on the balanced panel (19 against 22 states), and Rice's ratio to Paddy shifts over time (Section 2.3). Their CAGRs should therefore be compared with care. The wheat panel has only nine states, so its CAGR describes those states, not all of wheat procurement.
+
+## 2.6 Log-linear Trend Growth
+
+**Why:** A regression of log procurement on time gives a trend growth rate that uses every year, not just the endpoints. This is a standard econometric approach to estimating a steady growth rate.
+
+**How:** Taking logs turns constant percentage growth into a straight line. The slope of `log(total) ~ start_year` is the average log growth per year. Applying `exp(slope) − 1` converts it into a percentage. R² reports how closely the line fits, where 1 is a perfect fit.
+
+```{r trend}
+trend_fit <- bal_nat[, .(
+  log_trend_pct = round(100 * (exp(coef(lm(log(total) ~ start_year))[2]) - 1), 2),
+  r_squared = round(summary(lm(log(total) ~ start_year))$r.squared, 3)
+), by = Crop]
+
+gt(trend_fit) |>
+  tab_header(title = "Log-linear Trend Growth", 
+  subtitle = "Annual growth rate and fit (R²) on the balanced panel") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+
+```
+
+
+## 2.7 Volatility of Year-on-Year Growth
+
+**Why:** Procurement is a policy-driven buffer against harvest shocks. Volatility tells us how stable that buffer is. A crop with stable growth is easier to plan for than one with large swings.
+
+**How:** The mean and median of the growth rates describe the typical year. The standard deviation and IQR describe the spread. The IQR is more reliable here because one extreme year can inflate the standard deviation.
+
+```{r vol}
+vol <- bal_nat[!is.na(growth), .(
+  mean_growth_pct = round(100 * mean(growth), 2),
+  median_growth_pct = round(100 * median(growth), 2),
+  sd_growth_pct = round(100 * sd(growth), 2),
+  iqr_growth_pct = round(100 * IQR(growth), 2)
+), by = Crop]
+
+gt(vol) |>
+  tab_header(title = "Volatility of year-on-year growth", subtitle = "Percentages, balanced state panel") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+```
+
+## 2.8 Co-movement between Crops
+
+**Why:** If Paddy and Wheat procurement rise and fall together, a common shock such as monsoon conditions or a policy change may be driving both. If they move independently, the crops are shielded from each other's shocks.
+
+**How:** The growth rates are reshaped so that each crop is a column and each year a row. `cor()` then computes the Pearson correlation between each pair of columns. Values near 1 mean strong positive co-movement, near 0 mean none, and near −1 mean they move in opposite directions. Correlating growth rates rather than levels avoids the spurious correlation that arises when two series simply share an upward trend.
+
+```{r cor}
+gw <- dcast(bal_nat[!is.na(growth)], start_year ~ Crop, value.var = "growth")
+cor_tab <- as.data.table(round(cor(gw[, .(Paddy, Rice, Wheat)], use = "pairwise.complete.obs"), 2), keep.rownames = "crop")
+gt(cor_tab) |>
+  tab_header(title = "Correlation of year-on-year growth rates", subtitle = "Pearson correlation between crops") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+
+```
+
+## 2.9 Market Concentration (Herfindahl-Hirschman Index)
+
+**Why:** Concentration measures how much of the total comes from a few states. A highly concentrated procurement system depends on a few states, which raises both bargaining power for those states and policy risk for the system. The Herfindahl-Hirschman Index (HHI) is the standard measure used in industrial economics and competition policy.
+
+**Formula:** HHI = sum of each state's squared percentage share. It ranges from near 0 (many equal sellers) to 10,000 (one seller). A common reading from the 2010 US merger guidelines is: below 1,500 is unconcentrated, 1,500 to 2,500 is moderately concentrated, and above 2,500 is highly concentrated. These are used here as a reference scale only.
+
+**How:** A reference year is chosen where all three crops have full state coverage. Shares are computed within each crop. Squaring and summing them gives the HHI. The **effective number of states** is 10,000 divided by the HHI. It is the number of equal-sized states that would produce the same HHI.
+
+```{r shares}
+ref <- t[MarketingYear == "2025-26" & !is.na(Total)]
+ref[, share := 100 * Total / sum(Total), by = Crop]
+setorder(ref, Crop, -Total)
+ref[, rank := seq_len(.N), by = Crop]
+
+conc <- ref[, .(
+  states = .N,
+  HHI = round(sum(share^2), 0),
+  top5_share_pct = round(sum(share[rank <= 5]), 1),
+  top_state = State[1],
+  top_state_share_pct = round(share[1], 1)
+), by = Crop]
+conc[, effective_states := round(10000 / HHI, 1)]
+gt(conc) |>
+  tab_header(title = "Market concentration by crop, 2022-23", subtitle = "HHI, top-five share and effective number of states") |>
+  opt_interactive(use_search = TRUE, use_sorting = TRUE, use_filters = TRUE, use_compact_mode = TRUE)
+ 
+```
+
+**Reading the result:** A high top-5 share with a low effective number of states means procurement depends on a few states. The top-state column shows which state dominates each crop.
+
+## 2.10 Concentration Over Time
+
+**Why:** Concentration can change over time. Knowing whether procurement has become more or less concentrated tells us whether the system is broadening or narrowing.
+
+**How:** The same HHI is computed for every crop-year. Because the number of states differs across years, the change should be read alongside the states column.
+
+```{r hhi-time}
+hhi_t <- t[!is.na(Total), .(
+  HHI = sum((100 * Total / sum(Total))^2),
+  states = .N
+), by = .(Crop, MarketingYear, start_year)]
+setorder(hhi_t, Crop, start_year)
+hhi_t[, .(HHI = round(HHI, 0)), by = Crop][, .(first_HHI = HHI[1], last_HHI = HHI[.N], min_HHI = min(HHI), max_HHI = max(HHI)), by = Crop]
+```
+
+## 2.11 Procurement Channel: FCI vs State Agencies
+
+**Why:** Procurement can be run centrally through the FCI or devolved to state agencies. A rising state-agency share indicates decentralisation, which affects costs, storage, and the flow of funds between the centre and the states.
+
+**How:** For Paddy, rows with both FCI and StateAgency values are summed by year. The state-agency share is StateAgency divided by the sum of the two. `melt()` reshapes the table into long format so that both channels can be drawn as stacked bars.
+
+```{r channel}
+chan <- t[Crop == "Paddy" & !is.na(FCI) & !is.na(StateAgency), .(
+  FCI = sum(FCI),
+  StateAgency = sum(StateAgency)
+), by = .(start_year, MarketingYear)]
+setorder(chan, start_year)
+chan[, sa_share := 100 * StateAgency / (FCI + StateAgency)]
+
+chan_long <- melt(chan,
+  id.vars = c("start_year", "MarketingYear", "sa_share"),
+  measure.vars = c("FCI", "StateAgency"),
+  variable.name = "Agency", value.name = "qty",
+  variable.factor = FALSE)
+
+chan[, .(MarketingYear, FCI = round(FCI, 1), StateAgency = round(StateAgency, 1), sa_share = round(sa_share, 1))][c(1, 2, .N - 1, .N)]
+```
+
+# 3. Interactive Visualisations
+
+Hover over any element to see its values. The figures are interactive HTML.
+
+## 3.1 National Procurement Trend
+
+**Why:** The trend shows the overall trajectory and any structural breaks.
+
+```{r fig-trend}
+trend <- copy(nat)
+trend <- trend[MarketingYear != "2026-27"]
+trend[, tip := sprintf("%s (%s)<br>Total: %.1f LMT<br>States reporting: %d", Crop, MarketingYear, total, states)]
+trend[, id := paste(Crop, MarketingYear)]
+trend[, is_last := start_year == max(start_year), by = Crop]
+
+p1 <- ggplot(trend, aes(x = start_year, y = total, colour = Crop, group = Crop)) +
+  geom_line(linewidth = 0.9) +
+  geom_point_interactive(aes(tooltip = tip, data_id = id), size = 2.2) +
+  geom_text(data = trend[is_last == TRUE], aes(label = round(total, 0)),
+    hjust = -0.35, size = 3.2, show.legend = FALSE) +
+  scale_colour_manual(values = crop_cols) +
+  scale_x_continuous(breaks = seq(2002, 2026, by = 4), expand = expansion(mult = c(0.02, 0.08))) +
+  labs(
+    title = "Food Grain Procurement",
+    subtitle = "National Procurement by Marketing Year, lakh metric tonnes (LMT). Labels show the latest year",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. 
+    Totals sum the reporting states, so coverage changes affect levels. 2026-27 is provisional."
+  ) +
+  econ_theme
+
+girafe(ggobj = p1, width_svg = 9, height_svg = 4.8)
+```
+
+## 3.2 Distribution of state-level procurement
+
+**Why:** The box shows the middle half of state-year values. The dots show each state, so outliers and clusters are visible.
+
+```{r fig-box}
+box_dt <- t[!is.na(Total)]
+box_dt[, tip := sprintf("%s, %s (%s)<br>%.2f LMT", Crop, State, MarketingYear, Total)]
+box_dt[, id := paste(Crop, State, MarketingYear)]
+
+p2 <- ggplot(box_dt, aes(x = Crop, y = Total, colour = Crop)) +
+  geom_boxplot(outlier.shape = NA, fill = NA, linewidth = 0.6) +
+  geom_jitter_interactive(aes(tooltip = tip, data_id = id), width = 0.18, height = 0, size = 1.6, alpha = 0.6) +
+  scale_colour_manual(values = crop_cols, guide = "none") +
+  labs(
+    title = "Distribution of State Level Procurement",
+    subtitle = "A few states carry most of the volume, lakh metric tonnes (LMT)",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. Box shows the 25th to 75th percentile with the median line."
+  ) +
+  econ_theme +
+  theme(legend.position = "none")
+
+girafe(ggobj = p2, width_svg = 8, height_svg = 4.8)
+```
+
+## 3.3 Top 10 States, reference year 2025-26
+
+```{r fig-top}
+top10 <- ref[rank <= 10]
+top10[, tip := sprintf("%s<br>%.1f LMT (%.1f%% of crop total)", State, Total, share)]
+top10[, id := paste(Crop, State)]
+
+p3 <- ggplot(top10, aes(x = reorder(State, Total), y = Total, fill = Crop)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = id), width = 0.7) +
+  geom_text(aes(label = sprintf("%.0f", Total)), hjust = -0.2, size = 3) +
+  coord_flip() +
+  facet_wrap(~Crop, scales = "free") +
+  scale_fill_manual(values = crop_cols, guide = "none") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Top ten states by volume",
+    subtitle = "Procurement is led by a small group of states, 2025-26, lakh metric tonnes (LMT)",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. Shares are of each crop's national total in the same year."
+  ) +
+  econ_theme +
+  theme(
+    panel.grid.major.x = element_line(colour = "#A9BFCB", linewidth = 0.4),
+    panel.grid.major.y = element_blank()
+  )
+
+girafe(ggobj = p3, width_svg = 9, height_svg = 5.5)
+```
+
+## 3.4 Concentration Over Time
+
+```{r fig-hhi}
+hhi_t[, tip := sprintf("%s (%s)<br>HHI: %.0f<br>States reporting: %d", Crop, MarketingYear, HHI, states)]
+hhi_t[, id := paste(Crop, MarketingYear)]
+
+p4 <- ggplot(hhi_t, aes(x = start_year, y = HHI, colour = Crop, group = Crop)) +
+  geom_hline(yintercept = 1500, linetype = "dashed", colour = "grey40", linewidth = 0.4) +
+  geom_line(linewidth = 0.9) +
+  geom_point_interactive(aes(tooltip = tip, data_id = id), size = 2) +
+  geom_text(data = hhi_t[, .SD[.N], by = Crop], aes(label = round(HHI, 0)),
+    hjust = -0.35, size = 3.2, show.legend = FALSE) +
+  scale_colour_manual(values = crop_cols) +
+  scale_x_continuous(breaks = seq(2002, 2026, by = 4), expand = expansion(mult = c(0.02, 0.08))) +
+  labs(
+    title = "Herfindahl-Hirschman Index by year",
+    subtitle = "Paddy procurement has spread across more states; wheat stays concentrated. 
+    Dashed line = 1,500 (unconcentrated threshold). Labels show the latest year",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. Higher values mean procurement is dominated by fewer states."
+  ) +
+  econ_theme
+
+girafe(ggobj = p4, width_svg = 9, height_svg = 4.8)
+```
+
+## 3.5 Paddy Procurement by Channel
+
+```{r fig-channel}
+chan_long[, tip := sprintf("%s<br>%s: %.1f LMT<br>State agency share: %.1f%%",
+  MarketingYear, ifelse(Agency == "FCI", "FCI", "State agency"), qty, sa_share)]
+chan_long[, id := paste(MarketingYear, Agency)]
+
+p5 <- ggplot(chan_long, aes(x = start_year, y = qty, fill = Agency)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = id), width = 0.8) +
+  geom_text(data = chan, inherit.aes = FALSE,
+    aes(x = start_year, y = FCI + StateAgency, label = sprintf("%.0f%%", sa_share)),
+    vjust = -0.4, size = 2.8) +
+  scale_fill_manual(values = c(FCI = "#006BA2", StateAgency = "#E3120B"),
+    labels = c(FCI = "FCI", StateAgency = "State agency")) +
+  scale_x_continuous(breaks = seq(2008, 2022, by = 2)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  labs(
+    title = "Paddy Procurement",
+    subtitle = "State agencies now handle almost all Paddy procurement
+    Unit in lakh metric tonnes (LMT). Labels show the state-agency share",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. The split is available up to 2021-22."
+  ) +
+  econ_theme
+
+girafe(ggobj = p5, width_svg = 9, height_svg = 4.8)
+```
+
+## 3.6 Statewise time series, with low-share states grouped as "Others"
+
+**Why:** A line per state shows how each state's procurement has moved over time. Plotting all 20-odd states at once would be unreadable, so states that each hold less than 5% of their crop's total over the period are summed into a single "Others" series. The large states stay visible, and the grouped series still shows the full quantity.
+
+**How:** The share of each state in its crop's total is computed over all years. States at or above 5% keep their own name. The rest are relabelled "Others" with `fifelse()`. Totals are then summed by crop, series and year. Provisional 2026-27 data is excluded so that partial figures do not affect the lines. Labels at the right end of each line are placed with `geom_text()`.
+
+```{r state-prep}
+ts_all <- t[!is.na(Total) & provisional == FALSE & Crop != "Rice", .(Crop, State, MarketingYear, start_year, Total)]
+
+# Share of each state in its crop's total over all years
+st_share <- ts_all[, .(total = sum(Total)), by = .(Crop, State)]
+st_share[, share_pct := round(100 * total / sum(total), 1), by = Crop]
+st_share[, id := paste(Crop, State)]
+st_share[, tip := sprintf("%s, %s<br>Cumulative: %.0f LMT<br>Share of crop total: %.1f%%", Crop, State, total, share_pct)]
+
+# Keep states at or above 5%; sum the rest into "Others"
+ts_all <- st_share[, .(Crop, State, keep = share_pct >= 5)][ts_all, on = .(Crop, State)]
+ts_all[, series := fifelse(keep, State, "Others (each below 5%)")]
+
+state_ts <- ts_all[, .(
+  Total = sum(Total),
+  states_in_series = uniqueN(State)
+), by = .(Crop, series, MarketingYear, start_year)]
+setorder(state_ts, Crop, series, start_year)
+state_ts[, is_last := start_year == max(start_year), by = .(Crop, series)]
+state_ts[, tip := sprintf("%s, %s (%s)<br>%.1f LMT<br>States in series: %d", Crop, series, MarketingYear, Total, states_in_series)]
+state_ts[, id := paste(Crop, series, MarketingYear)]
+
+state_ts[Crop == "Paddy", .(Total = round(sum(Total), 0)), by = series][order(-Total)]
+```
+
+```{r fig-statewise}
+p6 <- ggplot(state_ts, aes(x = start_year, y = Total, colour = series, group = series)) +
+  geom_line(linewidth = 0.8) +
+  geom_point_interactive(aes(tooltip = tip, data_id = id), size = 1.6) +
+  geom_text(data = state_ts[is_last == TRUE], aes(label = series),
+    hjust = -0.05, size = 2.8, show.legend = FALSE, check_overlap = TRUE) +
+  facet_wrap(~Crop, scales = "free_y", ncol = 1) +
+  scale_x_continuous(breaks = seq(2002, 2026, by = 4), expand = expansion(mult = c(0.02, 0.4))) +
+  labs(
+    title = "Paddy and wheat procurement by state",
+    subtitle = "Lakh metric tonnes (LMT). States below 5% of their crop's total are summed as Others",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. Provisional 2026-27 data excluded. Rice is omitted because it is a milled-equivalent of Paddy."
+  ) +
+  econ_theme +
+  theme(legend.position = "none")
+
+girafe(ggobj = p6, width_svg = 9, height_svg = 9)
+```
+
+## 3.7 Area chart: Composition of Wheat and Paddy Procurement over time
+
+**Why:** A stacked area chart shows the total and its composition at the same time. It answers how much each state contributes to the national total each year.
+
+**How:** The same state series used above are stacked. Each band's height is that series' quantity for the year, and the top edge is the national total. `geom_area_interactive()` draws the bands, and the tooltip shows the series name.
+
+```{r fig-area-wheat}
+area_wheat <- state_ts[Crop == "Wheat"]
+
+p7 <- ggplot(area_wheat, aes(x = start_year, y = Total, fill = series)) +
+  geom_area_interactive(aes(tooltip = series, data_id = series),
+    colour = "white", linewidth = 0.2, alpha = 0.9) +
+  scale_x_continuous(breaks = seq(2008, 2026, by = 2), expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(
+    title = "Wheat Procurement: State Composition of the National Total",
+    subtitle = "Stacked area, lakh metric tonnes (LMT). Top edge equals National Paddy Procurement",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. Provisional 2026-27 data excluded."
+  ) +
+  econ_theme +
+  theme(legend.position = "right", legend.justification = "top")
+
+girafe(ggobj = p7, width_svg = 9, height_svg = 5)
+```
+
+```{r fig-area-paddy}
+area_paddy <- state_ts[Crop == "Paddy"]
+
+p7a <- ggplot(area_paddy, aes(x = start_year, y = Total, fill = series)) +
+  geom_area_interactive(aes(tooltip = series, data_id = series),
+    colour = "white", linewidth = 0.2, alpha = 0.9) +
+  scale_x_continuous(breaks = seq(2008, 2026, by = 2), expand = expansion(mult = c(0.01, 0.01))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(
+    title = "Paddy Procurement: State Composition of the National Total",
+    subtitle = "Stacked area, lakh metric tonnes (LMT). Top edge equals National Paddy Procurement",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. Provisional 2026-27 data excluded."
+  ) +
+  econ_theme +
+  theme(legend.position = "right", legend.justification = "top")
+
+girafe(ggobj = p7a, width_svg = 9, height_svg = 5)
+```
+
+
+## 3.8 Bar chart: each state's share of cumulative procurement
+
+**Why:** A bar chart ranks states directly. Showing each state's share of the crop's cumulative procurement, with the percentage printed on the bar, makes the concentration from Section 2.9 easy to read at a glance.
+
+**How:** `st_share` already holds each state's cumulative total and its share within the crop. Bars are sorted with `reorder()`, and `geom_text()` prints the share on each bar.
+
+```{r fig-bar}
+p8 <- ggplot(st_share, aes(x = reorder(State, share_pct), y = share_pct, fill = Crop)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = id), width = 0.7) +
+  geom_text(aes(label = sprintf("%.1f%%", share_pct)), hjust = -0.15, size = 2.9) +
+  coord_flip() +
+  facet_wrap(~Crop, scales = "free") +
+  scale_fill_manual(values = crop_cols, guide = "none") +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2))) +
+  labs(
+    title = "Share of each crop's cumulative procurement, 2001-02 to 2025-26",
+    subtitle = "Punjab and a few other states supply most of the cumulative total (provisional 2026-27 excluded). Rice omitted",
+    caption = "Source: DFPD Central Food Grains Procurement Portal. Cumulative totals sum all reporting years, so states with longer coverage weigh more."
+  ) +
+  econ_theme +
+  theme(
+    panel.grid.major.x = element_line(colour = "#A9BFCB", linewidth = 0.4),
+    panel.grid.major.y = element_blank()
+  )
+
+girafe(ggobj = p8, width_svg = 9, height_svg = 6)
+```
+
+# 4. Indian Food Grain Procurement: Policy and Background
+
+This section gives background on how food grain procurement works in India. It is written from general knowledge of the policy framework, not from the uploaded file, and it describes the system as broadly understood. Scheme names, eligibility rules and quantities change over time, so check current figures on the official sites listed in the references before relying on any detail.
+
+## 4.1 Why the government procures grain
+
+Procurement is the government buying grain directly from farmers at a set price. It serves three purposes. It guarantees farmers a floor price for their harvest. It builds a central stock of grain that feeds the public food distribution system and cushions prices in lean years. And it gives the state a way to respond to food shortages and inflation by releasing stock to the market.
+
+In economic terms, procurement at a guaranteed price works like a price floor combined with a buyer of last resort. When the market price falls below the floor, the government absorbs the surplus. This protects farm incomes and reduces the risk farmers face when they plant, but it also creates a fiscal cost and can encourage production of the crops that are procured.
+
+## 4.2 Institutions
+
+- **Department of Food and Public Distribution (DFPD)**, under the Ministry of Consumer Affairs, Food and Public Distribution, runs procurement operations, the central pool and the public distribution system.
+- **Commission for Agricultural Costs and Prices (CACP)** recommends the Minimum Support Price (MSP) for the mandated crops after studying costs of cultivation, market prices and other factors. Its recommendations are published in its Price Policy reports for each season.
+- **Cabinet Committee on Economic Affairs (CCEA)** approves the MSP for each crop before each marketing season.
+- **Food Corporation of India (FCI)** is the central agency. It was set up under the Food Corporations Act, 1964 and began operating in 1965. It procures, stores, moves and distributes grain.
+- **State governments and their agencies**, such as state civil supplies corporations and marketing federations, procure grain under state procurement arrangements. Their role has grown over time, as the data in Section 2.11 shows.
+
+## 4.3 Marketing seasons and the MSP
+
+India has two main procurement seasons, which appear in the file as the MarketingSeason column.
+
+- **Kharif Marketing Season (KMS)**, labelled KMS in the file, runs from October to September. Paddy is procured in this season, after the monsoon harvest.
+- **Rabi Marketing Season (RMS)**, labelled RMS, runs from April to March. Wheat is procured in this season, after the winter harvest.
+
+Each season the government announces an MSP for every mandated crop before sowing. Farmers who sell at designated procurement centres, which are usually regulated markets (mandis) or government procurement points, receive the MSP. Registration, quality checks and payment rules vary by state and by year.
+
+## 4.4 Procurement channels: central and decentralised
+
+Historically, the FCI procured most grain directly. Under the **Decentralised Procurement (DCP)** arrangement, which dates from the late 1990s, states procure rice and wheat themselves, and the grain is then taken into the central pool. Under this model, state agencies do the buying and bear part of the procurement cost, and the grain is accounted for in the central system.
+
+The shift toward state agencies shown in Section 2.11 mainly reflects a change in who does the buying, not necessarily a change in how much grain is grown. Whether procurement is centralised or decentralised affects who handles storage, transport and payment, and how costs are shared between the centre and the states.
+
+## 4.5 Rice, milling and the paddy-to-rice link
+
+Farmers sell paddy, which is unmilled rice. Millers process it into rice. The government procures rice in the form of **Custom Milled Rice (CMR)**, where a miller processes paddy supplied by the state and delivers milled rice to the central pool. Milling yields are roughly two-thirds of paddy by weight, which is why the national Rice series in the file sits near 67% of Paddy in most recent years (Section 2.3). For that reason, Rice and Paddy should not be added together.
+
+## 4.6 Stock management and buffer norms
+
+The central pool must hold enough grain to meet three needs: the public distribution system, the Open Market Sale Scheme (OMSS), which sells grain at reserve prices to ease market prices, and emergencies such as droughts or floods. **Buffer norms** set the minimum stock the pool should hold on fixed dates each quarter. When stocks exceed these norms, the surplus is sold or exported under policy rules. When stocks fall below them, procurement and allocations are tightened.
+
+Storage losses, interest costs on loans for procurement and transport costs are all part of the economic cost of holding stock. These costs are one reason procurement policy is a continuing topic of debate.
+
+## 4.7 Distribution: from procurement to consumers
+
+- **Public Distribution System (PDS)** supplies subsidised grain through fair price shops. It operates under the Essential Commodities Act, 1955.
+- **National Food Security Act, 2013 (NFSA)** gives a legal entitlement to subsidised grain to about two-thirds of the population. Eligible households receive up to 5 kg per person per month, with priority and general households receiving different subsidies.
+- **Pradhan Mantri Garib Kalyan Anna Yojana (PMGKAY)** began in April 2020 to provide free grain to eligible people during the COVID-19 pandemic. It has been extended several times since, so its current status should be checked.
+- **One Nation One Ration Card** lets eligible beneficiaries draw their entitlement at any fair price shop in the country, which supports migrant workers in particular.
+
+## 4.8 Economic issues in the policy
+
+Several issues are central to the debate, and the data in this report bears on some of them.
+
+- **Regional concentration.** Procurement is heavily concentrated in a few states, notably Punjab for wheat and Paddy (Sections 2.9 and 3.8). Because the MSP applies everywhere, the benefits of guaranteed procurement are also concentrated.
+- **Crop choice and water use.** Guaranteed procurement of paddy has encouraged cultivation in regions with limited groundwater. Critics argue this distorts cropping patterns, while supporters point to the income security it provides.
+- **Fiscal cost.** The cost of procurement, the MSP and the food subsidy is large. Its size depends on the MSP, the quantity procured and the stock held.
+- **Leakages and efficiency.** Inclusion errors, exclusion errors and diversion in the PDS are long-standing concerns, and digital ration systems were introduced partly to address them.
+- **Legal guarantee of MSP.** Farmer organisations and some economists have asked for MSP to be guaranteed in law. Others argue this would be costly and would further distort crop choices. This is an open policy question.
+
+## 4.9 Glossary
+
+| Term | Meaning |
+|---|---|
+| MSP | Minimum Support Price, the floor price announced for each mandated crop |
+| CACP | Commission for Agricultural Costs and Prices, which recommends the MSP |
+| FCI | Food Corporation of India, the central procurement and storage agency |
+| DFPD | Department of Food and Public Distribution |
+| KMS / RMS | Kharif (October to September) and Rabi (April to March) marketing seasons |
+| DCP | Decentralised Procurement, where states procure rice and wheat themselves |
+| CMR | Custom Milled Rice, milled grain delivered by millers to the central pool |
+| OMSS | Open Market Sale Scheme, which sells pool grain to stabilise prices |
+| PDS | Public Distribution System, which supplies subsidised grain to households |
+| NFSA | National Food Security Act, 2013 |
+| PMGKAY | Pradhan Mantri Garib Kalyan Anna Yojana |
+| HHI | Herfindahl-Hirschman Index, the concentration measure used in Section 2.9 |
+
+# 5. Key Findings and Summary
+
+The results below come from the code above. Read them with the data caveats in mind.
+
+- **Paddy has grown steadily.** National procurement rose from 246.6 LMT in 2007-08 to 972.3 LMT in 2025-26, nearly fourfold, while the number of reporting states barely changed (22 to 23). On a balanced panel of 19 states the CAGR is 8.8% a year. The log-linear trend is 10.2% a year with an R² of 0.91, so the growth is persistent rather than driven by a few years.
+- **Wheat shows no clear trend.** On its balanced panel of nine states the log-linear trend is about −0.4% a year with an R² of 0.004, which means there is no meaningful trend. The −2.9% CAGR reflects the endpoints rather than a sustained decline. Wheat fell to about 188 LMT in 2022-23 before recovering to about 300 LMT in 2025-26, and its year-on-year growth varies far more than Paddy's (standard deviation of 26.1% against 10.3%).
+- **Rice is not an independent crop.** Nationally Rice is about 67% of Paddy in most years from 2017-18 to 2023-24, close to the paddy-to-rice milling yield. Adding Rice to Paddy would double count, and the Paddy–Rice growth correlation of 0.61 mostly reflects this link.
+- **Wheat is highly concentrated; Paddy is not.** In 2022-23 Punjab supplied 51.2% of wheat, the top five states supplied almost all of it, and the HHI was 3,730 with an effective number of states of 2.7. Paddy's HHI was 1,100 with an effective number of 9.1 states, and Punjab's share was 20.6%. Paddy concentration has fallen since 2007-08, with the HHI moving from 2,238 to 1,058.
+- **State agencies now handle almost all Paddy.** The state-agency share was 88.8% in 2007-08 and 99.2% in 2021-22. The central FCI's share of Paddy procurement has fallen to about 1%, a sign of near-complete decentralisation.
+- **Paddy and wheat move almost independently.** The correlation between their year-on-year growth rates is 0.11, so a shock to one crop is unlikely to show up in the other.
+- **Statewise pattern.** Over the full period, Punjab is the largest Paddy state with 25.6% of the cumulative total, followed by Chhattisgarh (12.4%) and Telangana (10.1%). Seventeen Paddy states, each below 5%, together make up 22.7% and are shown as Others in Section 3.6. For wheat, Punjab, Haryana and Madhya Pradesh together supply about 86%.
+- **Policy context.** Section 4 sets out the institutions and rules behind these figures. The shift toward state-agency procurement and the high state concentration both reflect how the MSP, the central pool and the decentralised procurement arrangements work in practice.
+- **Data limitations.** Rice has no channel split. Paddy's split stops at 2021-22. Wheat coverage fell from 15 states to 10 to 11 in recent years, so national wheat totals for those years are understated. Nine reconciliation mismatches were found, one of which has a Total smaller than one of its components. One duplicate Telangana row for Paddy in 2010-11 was removed. The 2026-27 wheat season is provisional and is excluded from all trend fits.
+- **Units.** Values are assumed to be lakh metric tonnes. This should be confirmed against the original source before publication.
+
+# References
+
+Dowle, M., & Srinivasan, A. (2024). *data.table: Extension of `data.frame`* (R package). https://CRAN.R-project.org/package=data.table
+
+Gohel, D., & Skintzos, P. (2024). *ggiraph: Make 'ggplot2' graphics interactive* (R package). https://CRAN.R-project.org/package=ggiraph
+
+Wickham, H. (2016). *ggplot2: Elegant graphics for data analysis* (2nd ed.). Springer. https://ggplot2.tidyverse.org
+
+Allaire, J. J., et al. *Quarto: An open-source scientific and technical publishing system*. https://quarto.org
+
+R Core Team. (2025). *R: A language and environment for statistical computing*. R Foundation for Statistical Computing. https://www.R-project.org
+
+Tukey, J. W. (1977). *Exploratory data analysis*. Addison-Wesley.
+
+Wooldridge, J. M. (2016). *Introductory econometrics: A modern approach* (6th ed.). Cengage Learning. (Log-linear trend and growth-rate interpretation.)
+
+Herfindahl, O. C. (1950). *Concentration in the U.S. steel industry* [Doctoral dissertation, Columbia University].
+
+Hirschman, A. O. (1964). The paternity of an index. *American Economic Review, 54*(5), 761.
+
+U.S. Department of Justice & Federal Trade Commission. (2010). *Horizontal merger guidelines*. https://www.justice.gov
+
+Department of Food and Public Distribution, Government of India. Food procurement data. https://dfpd.gov.in (confirm this is the origin of the uploaded file).
+
+Commission for Agricultural Costs and Prices (CACP), Government of India. Price Policy reports for Kharif and Rabi crops. https://cacp.dacnet.nic.in
+Food Corporations Act, 1964 (Government of India). Establishes the Food Corporation of India.
+
+Essential Commodities Act, 1955 (Government of India). Legal basis for the public distribution system.
+
+National Food Security Act, 2013 (Act No. 20 of 2013), Government of India. https://dfpd.gov.in
+

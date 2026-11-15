@@ -1,0 +1,659 @@
+---
+title: "Global Poverty and Inequality Report"
+subtitle: "World Bank Poverty and Inequality Platform indicators: world, regions, income groups, countries and world powers"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+    code-summary: "Show code"
+    embed-resources: true
+    theme: cosmo
+execute:
+  warning: false
+  message: false
+---
+
+# Introduction and method
+
+This report analyses all 21 poverty, inequality, shared-prosperity and slum indicators in the World Bank file `API_11_DS2_en_excel_v2_2638.xls` (World Development Indicators extract, 266 economies and aggregates, 1960--2025). All data work uses `data.table`, all graphics use `ggplot2`, and every plot is interactive through `ggiraph` (hover for tooltips and highlighting, use the toolbar to save a PNG) under one shared economic plot theme.
+
+Poverty lines are in 2021 PPP dollars per person per day: $3.00 (extreme poverty), $4.20 (lower-middle-income line) and $8.30 (upper-middle-income line). The poverty measures belong to the Foster--Greer--Thorbecke family:
+
+$$P_\alpha = \frac{1}{N}\sum_{i=1}^{q}\left(\frac{z-y_i}{z}\right)^{\alpha}$$
+
+where $z$ is the poverty line, $y_i$ is income or consumption of poor person $i$, $q$ is the number of poor and $N$ the population. $\alpha=0$ gives the headcount ratio and $\alpha=1$ the poverty gap. Further measures used below:
+
+$$\text{Depth}=\frac{P_1}{P_0},\qquad \text{Palma}=\frac{S_{\text{top }10\%}}{S_{\text{bottom }40\%}},\qquad \text{Premium}=g_{\text{bottom }40}-g_{\text{mean}}$$
+
+The Gini index is $G=\sum_i\sum_j |y_i-y_j| / (2n^2\bar y)$. A positive shared-prosperity premium means the bottom 40% grew faster than the average. Survey data are irregular, so cross-country comparisons use each country's **latest observation since 2015**. No population weights are in the file, so group averages across countries are unweighted medians; the World, region and income-group poverty series are the World Bank's population-weighted aggregates.
+
+# Data preparation and reconciliation
+
+```{r}
+library(data.table)
+library(ggplot2)
+library(ggiraph)
+options(datatable.print.nrows = 60, datatable.print.class = FALSE, datatable.print.keys = FALSE, width = 150)
+
+f     <- "~/world_bank/global_poverty/API_11_DS2_en_excel_v2_2638.xls"
+since <- 2015
+
+econ_cols <- c("#006BA2", "#3EBCD2", "#379A8B", "#EBB434", "#B4BA39", "#9A607F", "#D1B07C", "#E3120B")
+theme_econ <- theme_minimal(base_size = 12, base_family = "sans") +
+  theme(
+    plot.title.position = "plot",
+    plot.title    = element_text(face = "bold", size = 15, hjust = 0),
+    plot.subtitle = element_text(colour = "grey35", size = 11, margin = margin(b = 8)),
+    plot.caption  = element_text(colour = "grey50", size = 8, hjust = 0),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_line(colour = "grey85"),
+    axis.title    = element_text(colour = "grey30", size = 10),
+    legend.position = "top", legend.justification = "left", legend.title = element_blank(),
+    strip.text = element_text(face = "bold", hjust = 0),
+    plot.margin = margin(10, 14, 8, 10),
+    plot.background = element_rect(fill = "white", colour = NA),
+    panel.background = element_rect(fill = "white", colour = NA)
+  )
+theme_set(theme_econ)
+gopts <- list(
+  opts_hover(css = "fill:#E3120B;stroke:#E3120B;stroke-width:2px;"),
+  opts_hover_inv(css = "opacity:0.2;"),
+  opts_tooltip(css = "background:#111827;color:#fff;padding:6px 10px;border-radius:4px;font-size:12px;font-family:sans-serif;", opacity = 0.95, use_fill = FALSE),
+  opts_sizing(rescale = TRUE),
+  opts_toolbar(saveaspng = TRUE, position = "topright")
+)
+
+raw    <- as.data.table(readxl::read_excel(f, sheet = "Data", skip = 3))
+meta_c <- as.data.table(readxl::read_excel(f, sheet = "Metadata - Countries"))
+meta_i <- as.data.table(readxl::read_excel(f, sheet = "Metadata - Indicators"))
+setnames(raw, c("Country Name", "Country Code", "Indicator Name", "Indicator Code"), c("country", "code", "ind_name", "ind"))
+setnames(meta_c, c("Country Code", "TableName", "Region", "IncomeGroup"), c("code", "name", "region", "income"))
+meta_c <- meta_c[, .(code, name, region, income)]
+yrs <- grep("^[0-9]{4}$", names(raw), value = TRUE)
+raw[, (yrs) := lapply(.SD, as.numeric), .SDcols = yrs]
+
+lab <- data.table(
+  ind = c("SI.POV.DDAY", "SI.POV.LMIC", "SI.POV.UMIC", "SI.POV.NAHC",
+          "SI.POV.GAPS", "SI.POV.LMIC.GP", "SI.POV.UMIC.GP",
+          "SI.POV.GINI", "SI.DST.50MD",
+          "SI.DST.FRST.10", "SI.DST.FRST.20", "SI.DST.02ND.20", "SI.DST.03RD.20", "SI.DST.04TH.20", "SI.DST.05TH.20", "SI.DST.10TH.10",
+          "SI.SPR.PCAP", "SI.SPR.PC40", "SI.SPR.PCAP.ZG", "SI.SPR.PC40.ZG",
+          "EN.POP.SLUM.UR.ZS"),
+  var = c("p300", "p420", "p830", "pnat", "gap300", "gap420", "gap830", "gini", "rel50",
+          "b10", "b20", "q2", "q3", "q4", "t20", "t10",
+          "mean_inc", "mean_b40", "g_mean", "g_b40", "slum"),
+  short = c("Poverty rate $3.00/day", "Poverty rate $4.20/day", "Poverty rate $8.30/day", "Poverty rate, national lines",
+            "Poverty gap $3.00/day", "Poverty gap $4.20/day", "Poverty gap $8.30/day",
+            "Gini index", "Below 50% of median income",
+            "Income share, lowest 10%", "Income share, lowest 20%", "Income share, 2nd 20%", "Income share, 3rd 20%", "Income share, 4th 20%", "Income share, highest 20%", "Income share, highest 10%",
+            "Mean income per capita ($/day)", "Mean income, bottom 40% ($/day)", "Growth of mean income (% p.a.)", "Growth of bottom 40% (% p.a.)",
+            "Slum population (% of urban)"),
+  theme = c(rep("Poverty rate", 4), rep("Poverty gap", 3), rep("Inequality", 2), rep("Income shares", 7), rep("Shared prosperity", 4), "Housing")
+)
+lab[, ord := .I]
+
+dt <- melt(raw, id.vars = c("country", "code", "ind_name", "ind"), measure.vars = yrs,
+           variable.name = "year", value.name = "value", variable.factor = FALSE)
+dt[, year := as.integer(year)]
+dt <- dt[!is.na(value)]
+dt <- merge(dt, meta_c[, .(code, region, income)], by = "code", all.x = TRUE)
+dt <- merge(dt, lab[, .(ind, var, short, theme)], by = "ind", all.x = TRUE)
+dt[, type := fcase(
+  !is.na(region), "Country",
+  code == "WLD", "World",
+  code %in% c("HIC", "UMC", "LMC", "LIC"), "Income group",
+  code %in% c("EAS", "ECS", "LCN", "MEA", "NAC", "SAS", "SSF"), "Region",
+  default = "Other aggregate")]
+
+g7    <- c("USA", "JPN", "DEU", "GBR", "FRA", "ITA", "CAN")
+brics <- c("BRA", "RUS", "IND", "CHN", "ZAF", "EGY", "ETH", "IRN", "ARE", "IDN")
+g20x  <- c("ARG", "AUS", "KOR", "MEX", "SAU", "TUR")
+p5    <- c("USA", "GBR", "FRA", "RUS", "CHN")
+pw <- data.table(code = c(g7, brics, g20x))
+pw[, bloc := fcase(code %in% g7, "G7", code %in% brics, "BRICS", default = "Other G20")]
+pw <- merge(pw, meta_c[, .(code, name)], by = "code")
+bloc_levels <- c("G7", "BRICS", "Other G20", "Rest of world")
+dt[pw, bloc := i.bloc, on = "code"]
+
+latest <- dt[order(year), .SD[.N], by = .(code, ind)]
+cw <- dcast(latest[type == "Country" & year >= since], code + country + region + income ~ var, value.var = "value")
+cw <- merge(cw, latest[ind == "SI.POV.LMIC", .(code, pov_year = year)], by = "code", all.x = TRUE)
+cw[, `:=`(b40 = b20 + q2, palma = t10 / (b20 + q2), s80s20 = t20 / b20, premium = g_b40 - g_mean)]
+cw[pw, bloc := i.bloc, on = "code"]
+cw[is.na(bloc), bloc := "Rest of world"]
+cw[, bloc := factor(bloc, levels = bloc_levels)]
+cw[, income := factor(income, levels = c("Low income", "Lower middle income", "Upper middle income", "High income"))]
+```
+
+## Structure of the file
+
+```{r}
+dt[, .(entities = uniqueN(code), observations = .N), by = type][order(-entities)]
+lab[, .(ind, var, short, theme)]
+```
+
+## Reconciliation checks
+
+The checks below test that the file is complete, that entities match the metadata, and that the indicators are internally consistent (shares add up, nested poverty lines are ordered, gaps never exceed headcounts, the world rate lies within the regional range).
+
+```{r}
+n_ent <- uniqueN(raw$code)
+n_ind <- uniqueN(raw$ind)
+w <- dcast(dt, code + year ~ ind, value.var = "value")
+w[, q_sum := SI.DST.FRST.20 + SI.DST.02ND.20 + SI.DST.03RD.20 + SI.DST.04TH.20 + SI.DST.05TH.20]
+pct_inds <- lab[!var %in% c("mean_inc", "mean_b40", "g_mean", "g_b40"), ind]
+reg_rng <- dt[type == "Region" & ind == "SI.POV.DDAY", .(rmin = min(value), rmax = max(value), nreg = .N), by = year]
+wld <- merge(dt[code == "WLD" & ind == "SI.POV.DDAY", .(year, value)], reg_rng[nreg == 7], by = "year")
+
+recon <- rbindlist(list(
+  data.table(check = "Rows = entities x indicators", tested = nrow(raw), violations = abs(nrow(raw) - n_ent * n_ind)),
+  data.table(check = "Data codes missing from country metadata", tested = n_ent, violations = length(setdiff(raw$code, meta_c$code))),
+  data.table(check = "Metadata codes missing from data", tested = nrow(meta_c), violations = length(setdiff(meta_c$code, raw$code))),
+  data.table(check = "Indicators without a label", tested = n_ind, violations = length(setdiff(raw$ind, lab$ind))),
+  data.table(check = "Duplicate entity-indicator-year", tested = nrow(dt), violations = dt[, .N, by = .(code, ind, year)][N > 1, .N]),
+  data.table(check = "Percent indicators outside 0-100", tested = dt[ind %in% pct_inds, .N], violations = dt[ind %in% pct_inds & (value < 0 | value > 100), .N]),
+  data.table(check = "Five income quintiles sum to 100 (+/-0.6)", tested = w[!is.na(q_sum), .N], violations = w[abs(q_sum - 100) > 0.6, .N]),
+  data.table(check = "Lowest 10% share <= lowest 20% share", tested = w[!is.na(SI.DST.FRST.10) & !is.na(SI.DST.FRST.20), .N], violations = w[SI.DST.FRST.10 > SI.DST.FRST.20, .N]),
+  data.table(check = "Top 10% share <= top 20% share", tested = w[!is.na(SI.DST.10TH.10) & !is.na(SI.DST.05TH.20), .N], violations = w[SI.DST.10TH.10 > SI.DST.05TH.20, .N]),
+  data.table(check = "Rate $3.00 <= $4.20 <= $8.30", tested = w[!is.na(SI.POV.DDAY) & !is.na(SI.POV.LMIC) & !is.na(SI.POV.UMIC), .N], violations = w[SI.POV.DDAY > SI.POV.LMIC | SI.POV.LMIC > SI.POV.UMIC, .N]),
+  data.table(check = "Poverty gap <= poverty rate (all 3 lines)", tested = w[!is.na(SI.POV.GAPS), .N], violations = w[SI.POV.GAPS > SI.POV.DDAY | SI.POV.LMIC.GP > SI.POV.LMIC | SI.POV.UMIC.GP > SI.POV.UMIC, .N]),
+  data.table(check = "World $3.00 rate within regional range", tested = nrow(wld), violations = wld[value < rmin - 0.05 | value > rmax + 0.05, .N])
+))
+recon[, status := fifelse(violations == 0, "PASS", "REVIEW")]
+recon
+```
+
+```{r}
+rec_plot <- copy(recon)
+rec_plot[, rate := round(100 * violations / tested, 2)]
+p <- ggplot(rec_plot, aes(reorder(check, -rate), rate, fill = status)) +
+  geom_col_interactive(aes(tooltip = paste0(check, "<br/>", violations, " of ", tested, " tests failed"), data_id = check), width = 0.7) +
+  scale_fill_manual(values = c(PASS = "#379A8B", REVIEW = "#E3120B")) +
+  coord_flip() +
+  labs(title = "Reconciliation: share of tests failed", subtitle = "Zero means the file is internally consistent on that rule", x = NULL, y = "% of tests failed")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5)
+```
+
+## Fixing what the checks found
+
+Two checks need explanation. `INX` is the World Bank's "Not classified" placeholder: it has no observations and no metadata row, so it is harmless. The 21 failed quintile sums are real source anomalies: early observations for the United States, United Kingdom, France and Italy where every income share is recorded as 1.0.
+
+```{r}
+bad <- w[abs(q_sum - 100) > 0.6, .(code, year)]
+bad[, key := paste(code, year)]
+dt[paste(code, year) %in% bad$key & theme == "Income shares", .(code, year, var, value)][var %in% c("b20", "t20")][order(code, year)][1:10]
+n_before <- nrow(dt)
+dt <- dt[!(theme == "Income shares" & paste(code, year) %in% bad$key)]
+w2 <- dcast(dt[theme == "Income shares"], code + year ~ var, value.var = "value")
+data.table(observations_removed = n_before - nrow(dt), quintile_sum_failures_after = w2[!is.na(b20) & !is.na(q2) & !is.na(q3) & !is.na(q4) & !is.na(t20) & abs(b20 + q2 + q3 + q4 + t20 - 100) > 0.6, .N])
+```
+
+All removed observations are from 1963--1978, so the latest-observation tables used later (built from 2015 onwards) are unaffected.
+
+## Reconciling countries, aggregates and years
+
+```{r}
+ent <- unique(dt[, .(code, type)])
+data.table(
+  entity_type = c("Country", "World", "Income group", "Region", "Other aggregate"),
+  in_metadata = c(meta_c[!is.na(region), .N], 1, 4, 7, meta_c[is.na(region), .N] - 12),
+  with_data   = ent[, .N, by = type][match(c("Country", "World", "Income group", "Region", "Other aggregate"), type), N]
+)
+cw[, .(countries_with_recent_data = .N, with_poverty_rate = sum(!is.na(p420)), with_gini = sum(!is.na(gini)), with_slums = sum(!is.na(slum)), median_survey_year = median(pov_year, na.rm = TRUE))]
+```
+
+Reconciliation decisions: (1) empty cells are dropped, not zero-filled; (2) entities are classified by the metadata (`Region` is blank for aggregates); (3) the seven World Bank regions, four income groups and the world total are analysed as aggregates and never mixed with countries; (4) the latest observation since 2015 is kept per country and indicator.
+
+# Headline findings
+
+```{r}
+#| results: asis
+wl <- dcast(dt[code == "WLD" & ind %in% c("SI.POV.DDAY", "SI.POV.LMIC", "SI.POV.UMIC", "SI.POV.GAPS")], year ~ var, value.var = "value")
+w90 <- wl[year == 1990]
+wlast <- wl[year == max(year)]
+rg <- dt[type == "Region" & ind == "SI.POV.DDAY"][order(year), .SD[.N], by = country][order(-value)]
+ig <- dt[type == "Income group" & ind == "SI.POV.DDAY"][order(year), .SD[.N], by = country][order(-value)]
+cat(sprintf("- **World:** extreme poverty ($3.00/day) fell from %.1f%% in 1990 to %.1f%% in %d; the $8.30 rate is still %.1f%%.", w90$p300, wlast$p300, wlast$year, wlast$p830), sep = "\n")
+cat(sprintf("- **Regions:** %s has the highest extreme-poverty rate (%.1f%% in %d); %s the lowest (%.1f%%).", rg$country[1], rg$value[1], rg$year[1], rg$country[nrow(rg)], rg$value[nrow(rg)]), sep = "\n")
+cat(sprintf("- **Income groups:** %s %.1f%% versus %s %.1f%% at $3.00/day.", ig$country[1], ig$value[1], ig$country[nrow(ig)], ig$value[nrow(ig)]), sep = "\n")
+cat(sprintf("- **Countries:** %d countries have recent data; %s is the poorest at $3.00/day (%.1f%%) and %s the most unequal (Gini %.1f).", cw[!is.na(p300), .N], cw[which.max(p300), country], cw[, max(p300, na.rm = TRUE)], cw[which.max(gini), country], cw[, max(gini, na.rm = TRUE)]), sep = "\n")
+cat(sprintf("- **Shared prosperity:** the bottom 40%% grew faster than the mean in %d of %d countries.", cw[premium > 0, .N], cw[!is.na(premium), .N]), sep = "\n")
+bt <- cw[, .(gini = median(gini, na.rm = TRUE)), by = bloc][order(bloc)]
+cat(sprintf("- **World powers:** median Gini is %s.", paste0(bt$bloc, " ", bt$gini, collapse = ", ")), sep = "\n")
+```
+
+# Indicator coverage
+
+```{r}
+cov <- dt[, .(countries = uniqueN(code[type == "Country"]), aggregates = uniqueN(code[type != "Country"]),
+              first_year = min(year), last_year = max(year), observations = .N), by = ind]
+cov <- merge(lab[, .(ind, ord, theme, short)], cov, by = "ind")
+setorder(cov, ord)
+cov[, .(theme, indicator = short, countries, aggregates, first_year, last_year, observations)]
+```
+
+```{r}
+p <- ggplot(cov, aes(reorder(short, countries), countries, fill = theme)) +
+  geom_col_interactive(aes(tooltip = paste0(short, "<br/>", countries, " countries, ", first_year, "-", last_year), data_id = ind), width = 0.7) +
+  scale_fill_manual(values = econ_cols[1:6]) +
+  coord_flip() +
+  labs(title = "Coverage differs sharply by indicator", subtitle = "Countries with at least one observation", x = NULL, y = "Countries", caption = "Source: World Bank Poverty and Inequality Platform; UN-Habitat")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 6.5)
+```
+
+# The world
+
+```{r}
+world <- dt[code == "WLD" & ind %in% c("SI.POV.DDAY", "SI.POV.LMIC", "SI.POV.UMIC")]
+world[, short := factor(short, levels = c("Poverty rate $3.00/day", "Poverty rate $4.20/day", "Poverty rate $8.30/day"))]
+p <- ggplot(world, aes(year, value, colour = short, group = short)) +
+  geom_line_interactive(aes(data_id = short), linewidth = 1.1) +
+  geom_point_interactive(aes(tooltip = paste0(short, "<br/>", year, ": ", value, "%"), data_id = short), size = 1.8) +
+  scale_colour_manual(values = econ_cols[1:3]) +
+  labs(title = "World poverty has fallen at every line", subtitle = "Share of world population below each line", x = NULL, y = "% of population", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5)
+```
+
+```{r}
+wl_tab <- dcast(dt[code == "WLD" & ind %in% lab[theme %in% c("Poverty rate", "Poverty gap"), ind]], year ~ var, value.var = "value")
+wl_tab[, depth300 := round(gap300 / p300, 2)]
+wl_tab[year %in% c(1981, 1990, 2000, 2010, 2015, 2020, 2024)]
+w0 <- wl_tab[year == 1990]
+w1 <- wl_tab[year == max(year)]
+data.table(indicator = c("p300", "p420", "p830", "gap300"),
+           y1990 = unlist(w0[, .(p300, p420, p830, gap300)]),
+           latest = unlist(w1[, .(p300, p420, p830, gap300)]))[, `:=`(change_pts = round(latest - y1990, 1), change_pct = round(100 * (latest / y1990 - 1), 1))]
+```
+
+```{r}
+gp <- dt[code == "WLD" & ind %in% c("SI.POV.GAPS", "SI.POV.LMIC.GP", "SI.POV.UMIC.GP")]
+p <- ggplot(gp, aes(year, value, colour = short, group = short)) +
+  geom_line_interactive(aes(data_id = short), linewidth = 1.1) +
+  geom_point_interactive(aes(tooltip = paste0(short, "<br/>", year, ": ", value, "%"), data_id = short), size = 1.8) +
+  scale_colour_manual(values = econ_cols[1:3]) +
+  labs(title = "The depth of poverty has also fallen", subtitle = "Average shortfall below the line, as % of the line, across the whole population", x = NULL, y = "Poverty gap (%)", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5)
+```
+
+```{r}
+#| results: asis
+cat(sprintf("- Depth of poverty: the average shortfall of the extreme poor (gap / rate) was %.0f%% of the line in 1990 and %.0f%% in %d.", 100 * w0$depth300, 100 * w1$depth300, w1$year), sep = "\n")
+cat(sprintf("- The $8.30 rate fell only %.1f points (%.0f%%) since 1990, against %.1f points (%.0f%%) at $3.00/day: higher lines are far harder to escape.", w0$p830 - w1$p830, 100 * (1 - w1$p830 / w0$p830), w0$p300 - w1$p300, 100 * (1 - w1$p300 / w0$p300)), sep = "\n")
+```
+
+# Regions
+
+```{r}
+reg <- dt[type == "Region" & ind %in% c("SI.POV.DDAY", "SI.POV.LMIC", "SI.POV.UMIC")]
+reg[, short := factor(short, levels = c("Poverty rate $3.00/day", "Poverty rate $4.20/day", "Poverty rate $8.30/day"))]
+p <- ggplot(reg, aes(year, value, colour = country, group = country)) +
+  geom_line_interactive(aes(data_id = country), linewidth = 1) +
+  geom_point_interactive(aes(tooltip = paste0(country, "<br/>", year, ": ", value, "%"), data_id = country), size = 1.2) +
+  facet_wrap(~short, ncol = 1, scales = "free_y") +
+  scale_colour_manual(values = econ_cols[1:7]) +
+  labs(title = "Poverty by world region", subtitle = "Hover a line to follow one region across all three poverty lines", x = NULL, y = "% of population", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 9.5)
+```
+
+```{r}
+reg_latest <- reg[order(year), .SD[.N], by = .(country, ind)]
+reg_tab <- dcast(reg_latest, country ~ var, value.var = "value")
+reg_tab <- merge(reg_tab, reg_latest[ind == "SI.POV.DDAY", .(country, year)], by = "country")
+reg_tab <- merge(reg_tab, dt[type == "Region" & ind %in% c("SI.POV.GAPS", "EN.POP.SLUM.UR.ZS")][order(year), .SD[.N], by = .(country, var)][, .(country, var, value)] |> dcast(country ~ var, value.var = "value"), by = "country", all.x = TRUE)
+reg_tab[, `:=`(depth300 = round(gap300 / p300, 2), slum = round(slum, 1))]
+setorder(reg_tab, -p300)
+reg_tab
+reg_first <- dt[type == "Region" & ind == "SI.POV.DDAY" & year >= 1990][order(year), .(y0 = year[1], v0 = value[1], y1 = year[.N], v1 = value[.N]), by = country]
+reg_first[, `:=`(change_pts = round(v1 - v0, 1), pts_per_year = round((v1 - v0) / (y1 - y0), 2), pct_change = round(100 * (v1 / v0 - 1), 1))]
+reg_first[order(change_pts)]
+```
+
+```{r}
+p <- ggplot(reg_tab, aes(reorder(country, p300), p300, fill = country)) +
+  geom_col_interactive(aes(tooltip = paste0(country, "<br/>$3.00: ", p300, "%<br/>$4.20: ", p420, "%<br/>$8.30: ", p830, "% (", year, ")"), data_id = country), width = 0.7) +
+  scale_fill_manual(values = econ_cols[1:7], guide = "none") +
+  coord_flip() +
+  labs(title = "Extreme poverty is concentrated in a few regions", subtitle = "Share below $3.00/day, latest year", x = NULL, y = "% of population", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 4.5)
+```
+
+```{r}
+#| results: asis
+rf <- reg_first[order(change_pts)]
+cat(sprintf("- Largest fall since 1990: %s (%.1f points, from %.1f%% to %.1f%%).", rf$country[1], rf$change_pts[1], rf$v0[1], rf$v1[1]), sep = "\n")
+cat(sprintf("- Sub-Saharan Africa still has %.0f%% of its population below $3.00/day and fell only %.0f%% since 1990, compared with %.0f%% in East Asia & Pacific.", reg_tab[country == "Sub-Saharan Africa", p300], -reg_first[country == "Sub-Saharan Africa", pct_change], -reg_first[country == "East Asia & Pacific", pct_change]), sep = "\n")
+```
+
+## Inequality across regions (country-level)
+
+Regional aggregates exist only for poverty lines and slums, so inequality by region is built from country observations. Note that in this release the aggregate is named "Middle East, North Africa, Afghanistan & Pakistan", whereas the country metadata still assigns countries to "Middle East & North Africa" and "South Asia"; the two are shown as published and are not forced to match.
+
+```{r}
+reg_ineq <- cw[, .(countries = sum(!is.na(gini)), gini = median(gini, na.rm = TRUE), top10 = median(t10, na.rm = TRUE),
+                   bottom20 = median(b20, na.rm = TRUE), palma = round(median(palma, na.rm = TRUE), 2),
+                   rel50 = median(rel50, na.rm = TRUE), slum = round(median(slum, na.rm = TRUE), 1)), by = region][order(-gini)]
+reg_ineq
+```
+
+```{r}
+cg <- cw[!is.na(gini)]
+p <- ggplot(cg, aes(reorder(region, gini, FUN = median), gini)) +
+  geom_boxplot(outlier.shape = NA, fill = "grey95", colour = "grey50") +
+  geom_jitter_interactive(aes(colour = region, tooltip = paste0(country, "<br/>Gini ", gini, " (", pov_year, ")"), data_id = code), width = 0.15, size = 2.3) +
+  scale_colour_manual(values = econ_cols[1:7], guide = "none") +
+  coord_flip() +
+  labs(title = "Income inequality by region", subtitle = "Gini index, each dot a country, latest survey since 2015", x = NULL, y = "Gini index", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5.5)
+```
+
+```{r}
+#| results: asis
+cat(sprintf("- Most unequal region (median Gini): %s (%.1f); least unequal: %s (%.1f).", reg_ineq$region[1], reg_ineq$gini[1], reg_ineq$region[nrow(reg_ineq)], reg_ineq$gini[nrow(reg_ineq)]), sep = "\n")
+```
+
+## Slum population by region
+
+```{r}
+sl <- dt[ind == "EN.POP.SLUM.UR.ZS" & type %in% c("Region", "World")]
+sl_tab <- sl[order(year), .SD[.N], by = country][, .(country, year, slum_pct = round(value, 1))][order(-slum_pct)]
+sl_tab
+sl12 <- sl[country %in% sl[, .N, by = country][N >= 5, country]]
+p <- ggplot(sl12, aes(year, value, colour = country, group = country)) +
+  geom_line_interactive(aes(data_id = country), linewidth = 1) +
+  geom_point_interactive(aes(tooltip = paste0(country, "<br/>", year, ": ", value, "%"), data_id = country), size = 1.8) +
+  scale_colour_manual(values = econ_cols[1:6]) +
+  labs(title = "Slum living is falling but remains high where poverty is high", subtitle = "% of urban population living in slums (regions with a full series)", x = NULL, y = "% of urban population", caption = "Source: UN-Habitat Urban Indicators Database")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5)
+```
+
+# Income groups
+
+```{r}
+ig <- dt[type == "Income group" & ind %in% c("SI.POV.DDAY", "SI.POV.LMIC", "SI.POV.UMIC")]
+ig[, `:=`(short = factor(short, levels = c("Poverty rate $3.00/day", "Poverty rate $4.20/day", "Poverty rate $8.30/day")),
+          country = factor(country, levels = c("Low income", "Lower middle income", "Upper middle income", "High income")))]
+p <- ggplot(ig, aes(year, value, colour = country, group = country)) +
+  geom_line_interactive(aes(data_id = country), linewidth = 1.1) +
+  geom_point_interactive(aes(tooltip = paste0(country, "<br/>", year, ": ", value, "%"), data_id = country), size = 1.3) +
+  facet_wrap(~short, ncol = 1, scales = "free_y") +
+  scale_colour_manual(values = econ_cols[c(8, 4, 2, 1)]) +
+  labs(title = "Poverty by country income group", subtitle = "Population-weighted World Bank aggregates", x = NULL, y = "% of population", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 9.5)
+```
+
+```{r}
+ig_latest <- ig[order(year), .SD[.N], by = .(country, ind)]
+ig_tab <- dcast(ig_latest, country ~ var, value.var = "value")
+ig_tab <- merge(ig_tab, ig_latest[ind == "SI.POV.DDAY", .(country, year)], by = "country")
+ig_tab[order(country)]
+cw[!is.na(income), .(countries = .N, gini = median(gini, na.rm = TRUE), top10 = median(t10, na.rm = TRUE), bottom20 = median(b20, na.rm = TRUE),
+                     palma = round(median(palma, na.rm = TRUE), 2), rel50 = median(rel50, na.rm = TRUE), premium = round(median(premium, na.rm = TRUE), 2),
+                     slum = round(median(slum, na.rm = TRUE), 1)), by = income][order(income)]
+```
+
+```{r}
+ig_cty <- cw[!is.na(income) & !is.na(gini)]
+p <- ggplot(ig_cty, aes(income, gini)) +
+  geom_boxplot(outlier.shape = NA, fill = "grey95", colour = "grey50") +
+  geom_jitter_interactive(aes(colour = income, tooltip = paste0(country, "<br/>Gini ", gini, "<br/>Top 10% share ", t10, "%"), data_id = code), width = 0.15, size = 2.3) +
+  scale_colour_manual(values = econ_cols[c(8, 4, 2, 1)], guide = "none") +
+  labs(title = "Inequality is not simply a function of income", subtitle = "Gini index by income group, each dot a country", x = NULL, y = "Gini index", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5)
+```
+
+```{r}
+#| results: asis
+it <- ig_tab[order(-p300)]
+cat(sprintf("- %s has %.1f%% of people below $3.00/day and %.1f%% below $8.30/day; %s has %.1f%% and %.1f%%.", it$country[1], it$p300[1], it$p830[1], it$country[nrow(it)], it$p300[nrow(it)], it$p830[nrow(it)]), sep = "\n")
+cat("- Inequality varies widely within every income group, so average income alone does not determine how evenly income is shared.", sep = "\n")
+```
+
+# Countries
+
+## Extreme poverty
+
+```{r}
+top <- cw[!is.na(p300)][order(-p300)][1:15]
+top[, .(country, region, survey_year = pov_year, p300, p420, p830, gap300, gini)]
+p <- ggplot(top, aes(reorder(country, p300), p300, fill = region)) +
+  geom_col_interactive(aes(tooltip = paste0(country, " (", pov_year, ")<br/>$3.00: ", p300, "%<br/>$4.20: ", p420, "%<br/>$8.30: ", p830, "%"), data_id = code), width = 0.7) +
+  scale_fill_manual(values = econ_cols[c(1, 2, 3, 4, 6, 7, 5)]) +
+  coord_flip() +
+  labs(title = "The 15 countries with the highest extreme poverty", subtitle = "Share below $3.00/day, latest survey since 2015", x = NULL, y = "% of population", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 6)
+```
+
+## Progress since 1990
+
+```{r}
+ct <- dt[type == "Country" & ind == "SI.POV.DDAY" & year >= 1990][order(year), .(y0 = year[1], v0 = value[1], y1 = year[.N], v1 = value[.N], n = .N), by = .(code, country, region)]
+ct <- ct[n >= 3 & y1 >= since & y1 - y0 >= 10]
+ct[, `:=`(change = round(v1 - v0, 1), per_year = round((v1 - v0) / (y1 - y0), 2))]
+setorder(ct, change)
+ct[c(1:10, (.N - 9):.N), .(country, region, y0, v0, y1, v1, change, per_year)]
+ct_plot <- ct[c(1:12, (.N - 7):.N)]
+ct_plot[, `:=`(direction = fifelse(change < 0, "Fell", "Rose"), tip = paste0(country, "<br/>", y0, ": ", v0, "%  to  ", y1, ": ", v1, "%"))]
+p <- ggplot(ct_plot, aes(y = reorder(country, -change))) +
+  geom_segment_interactive(aes(x = v0, xend = v1, yend = reorder(country, -change), tooltip = tip, data_id = code), colour = "grey70", linewidth = 1.2) +
+  geom_point_interactive(aes(x = v0, tooltip = tip, data_id = code), colour = "grey55", size = 2.6) +
+  geom_point_interactive(aes(x = v1, colour = direction, tooltip = tip, data_id = code), size = 3.2) +
+  scale_colour_manual(values = c(Fell = "#006BA2", Rose = "#E3120B")) +
+  labs(title = "Biggest falls and rises in extreme poverty", subtitle = "Share below $3.00/day: first observation since 1990 (grey) to latest (colour)", x = "% of population", y = NULL, caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 7)
+```
+
+## Poverty, inequality and income
+
+```{r}
+p <- ggplot(cw[!is.na(p420) & !is.na(gini)], aes(gini, p420)) +
+  geom_smooth(method = "lm", se = FALSE, colour = "grey60", linewidth = 0.7) +
+  geom_point_interactive(aes(colour = region, tooltip = paste0(country, " (", pov_year, ")<br/>Gini ", gini, "<br/>$4.20 rate ", p420, "%"), data_id = code), size = 2.6) +
+  scale_colour_manual(values = econ_cols[1:7]) +
+  labs(title = "Higher inequality goes with more poverty", subtitle = "Poverty rate at $4.20/day against the Gini index", x = "Gini index", y = "% below $4.20/day", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5.5)
+m1 <- lm(p420 ~ gini, data = cw)
+m2 <- lm(p420 ~ log(mean_inc) + gini, data = cw)
+round(summary(m2)$coefficients, 3)
+data.table(model = c("p420 ~ gini", "p420 ~ log(mean income) + gini"), r_squared = round(c(summary(m1)$r.squared, summary(m2)$r.squared), 3), countries = c(nobs(m1), nobs(m2)))
+```
+
+```{r}
+p <- ggplot(cw[!is.na(p420) & !is.na(mean_inc)], aes(mean_inc, p420)) +
+  geom_point_interactive(aes(colour = region, tooltip = paste0(country, "<br/>Mean income $", mean_inc, "/day<br/>$4.20 rate ", p420, "%"), data_id = code), size = 2.6) +
+  scale_x_log10() +
+  scale_colour_manual(values = econ_cols[1:7]) +
+  labs(title = "Poverty falls steeply as average income rises", subtitle = "Poverty rate at $4.20/day against mean income per person (log scale)", x = "Mean income or consumption, $/day (log scale)", y = "% below $4.20/day", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5.5)
+```
+
+## National versus international poverty lines
+
+```{r}
+nat <- cw[!is.na(pnat) & !is.na(p420)]
+nat[, gap_pts := round(pnat - p420, 1)]
+nat[order(-gap_pts)][c(1:8, (.N - 4):.N), .(country, region, pnat, p420, gap_pts)]
+p <- ggplot(nat, aes(p420, pnat)) +
+  geom_abline(slope = 1, intercept = 0, colour = "grey60", linetype = "dashed") +
+  geom_point_interactive(aes(colour = income, tooltip = paste0(country, "<br/>National line ", pnat, "%<br/>$4.20 line ", p420, "%"), data_id = code), size = 2.6) +
+  scale_colour_manual(values = econ_cols[c(8, 4, 2, 1)]) +
+  labs(title = "National poverty lines versus the $4.20 line", subtitle = "Above the dashed line a country's own line classifies more people as poor", x = "% below $4.20/day", y = "% below national poverty line", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5.5)
+```
+
+## Income distribution
+
+```{r}
+ineq <- cw[!is.na(gini) & !is.na(palma)][order(-gini)]
+ineq[1:10, .(country, region, survey_year = pov_year, gini, top10 = t10, bottom20 = b20, palma = round(palma, 2), s80s20 = round(s80s20, 1), rel50)]
+ineq[.N:(.N - 9), .(country, region, survey_year = pov_year, gini, top10 = t10, bottom20 = b20, palma = round(palma, 2), s80s20 = round(s80s20, 1), rel50)]
+```
+
+```{r}
+pick <- rbind(ineq[1:12][, grp := "Most unequal"], ineq[.N:(.N - 11)][, grp := "Least unequal"])
+dist <- melt(pick, id.vars = c("code", "country", "grp", "gini"), measure.vars = c("b20", "q2", "q3", "q4", "t20"), variable.name = "quintile", value.name = "share")
+dist[, quintile := factor(quintile, levels = c("t20", "q4", "q3", "q2", "b20"), labels = c("Top 20%", "4th 20%", "3rd 20%", "2nd 20%", "Lowest 20%"))]
+p <- ggplot(dist, aes(reorder(country, gini), share, fill = quintile)) +
+  geom_col_interactive(aes(tooltip = paste0(country, "<br/>", quintile, ": ", share, "% of income<br/>Gini ", gini), data_id = code), width = 0.75) +
+  facet_wrap(~grp, scales = "free_y", ncol = 1) +
+  scale_fill_manual(values = c("#006BA2", "#3EBCD2", "#9AC7DF", "#EBB434", "#E3120B")) +
+  coord_flip() +
+  labs(title = "Who gets the income?", subtitle = "Income or consumption shares by quintile, 12 most and 12 least unequal countries", x = NULL, y = "% of total income", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 9)
+```
+
+## Shared prosperity
+
+```{r}
+sp <- cw[!is.na(g_mean) & !is.na(g_b40)]
+sp[, pro_poor := fifelse(g_b40 > g_mean, "Bottom 40% grew faster", "Bottom 40% grew slower")]
+sp[, .(countries = .N, median_mean_growth = median(g_mean), median_bottom40_growth = median(g_b40), median_premium = round(median(premium), 2)), by = pro_poor]
+sp[order(-premium)][c(1:8, (.N - 7):.N), .(country, region, g_mean, g_b40, premium = round(premium, 2), mean_inc, mean_b40)]
+p <- ggplot(sp, aes(g_mean, g_b40, colour = pro_poor)) +
+  geom_abline(slope = 1, intercept = 0, colour = "grey60", linetype = "dashed") +
+  geom_point_interactive(aes(tooltip = paste0(country, "<br/>Mean income growth ", g_mean, "% p.a.<br/>Bottom 40% growth ", g_b40, "% p.a."), data_id = code), size = 2.6) +
+  scale_colour_manual(values = c("Bottom 40% grew faster" = "#006BA2", "Bottom 40% grew slower" = "#E3120B")) +
+  labs(title = "Did growth reach the bottom 40%?", subtitle = "Annualised growth of real per-capita income or consumption", x = "Growth of mean income (% p.a.)", y = "Growth of bottom 40% income (% p.a.)", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5.5)
+```
+
+## Slum population and relative poverty
+
+```{r}
+sc <- cw[!is.na(slum)][order(-slum)][1:15]
+sc[, .(country, region, slum = round(slum, 1), p420)]
+p <- ggplot(sc, aes(reorder(country, slum), slum, fill = region)) +
+  geom_col_interactive(aes(tooltip = paste0(country, "<br/>", slum, "% of urban population in slums"), data_id = code), width = 0.7) +
+  scale_fill_manual(values = econ_cols[c(1, 2, 3, 4, 6, 7, 5)]) +
+  coord_flip() +
+  labs(title = "Slums: the 15 highest urban shares", subtitle = "% of urban population living in slums, latest since 2015", x = NULL, y = "% of urban population", caption = "Source: UN-Habitat Urban Indicators Database")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 6)
+```
+
+```{r}
+rl <- cw[!is.na(rel50)][order(-rel50)]
+rl[1:10, .(country, region, rel50, gini, pov_year)]
+p <- ggplot(rl, aes(gini, rel50)) +
+  geom_smooth(method = "lm", se = FALSE, colour = "grey60", linewidth = 0.7) +
+  geom_point_interactive(aes(colour = income, tooltip = paste0(country, "<br/>Gini ", gini, "<br/>", rel50, "% below half the median"), data_id = code), size = 2.6) +
+  scale_colour_manual(values = econ_cols[c(8, 4, 2, 1)]) +
+  labs(title = "Relative poverty tracks inequality", subtitle = "% of people living below 50% of median income against the Gini index", x = "Gini index", y = "% below half the median", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5.5)
+```
+
+## How the 21 indicators relate
+
+```{r}
+vars <- lab$var
+cm <- cor(cw[, ..vars], use = "pairwise.complete.obs")
+cl <- melt(as.data.table(cm, keep.rownames = "a"), id.vars = "a", variable.name = "b", value.name = "r")
+cl[, `:=`(a = factor(a, levels = vars), b = factor(b, levels = rev(vars)), r = round(r, 2))]
+p <- ggplot(cl, aes(a, b, fill = r)) +
+  geom_tile_interactive(aes(tooltip = paste0(a, " vs ", b, "<br/>r = ", r), data_id = paste(a, b)), colour = "white") +
+  geom_text(aes(label = r), size = 2.2) +
+  scale_fill_gradient2(low = "#006BA2", mid = "white", high = "#E3120B", limits = c(-1, 1), na.value = "grey90") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), panel.grid = element_blank(), legend.position = "right") +
+  labs(title = "Correlation of all country indicators", subtitle = "Pearson r, pairwise complete country observations (variable codes in the table above)", x = NULL, y = NULL)
+girafe(ggobj = p, options = gopts, width_svg = 10, height_svg = 9)
+cl[a == "gini" & b != "gini", .(indicator = b, r_with_gini = r)][order(-abs(r_with_gini))]
+```
+
+# World powers
+
+World powers are defined as the **G7**, the **BRICS** (original five plus members that joined in 2024--25: Egypt, Ethiopia, Iran, UAE, Indonesia) and the six **other G20** economies. The UN Security Council permanent five (P5) are flagged. The comparison group is the rest of the countries with recent data.
+
+```{r}
+pw_tab <- cw[bloc != "Rest of world", .(bloc, country, survey_year = pov_year, p300, p420, p830, pnat, gini, top10 = t10, bottom20 = b20, palma = round(palma, 2), premium = round(premium, 2), slum = round(slum, 1))]
+pw_tab[, p5 := country %in% meta_c[code %in% p5, name]]
+setorder(pw_tab, bloc, -gini)
+pw_tab
+```
+
+```{r}
+num_cols <- c("gini", "p300", "p420", "p830", "top10", "bottom20", "palma", "premium", "slum")
+bloc_tab <- cw[, .(countries = .N, gini = median(gini, na.rm = TRUE), p300 = median(p300, na.rm = TRUE), p420 = median(p420, na.rm = TRUE),
+                   p830 = median(p830, na.rm = TRUE), top10 = median(t10, na.rm = TRUE), bottom20 = median(b20, na.rm = TRUE),
+                   palma = median(palma, na.rm = TRUE), premium = median(premium, na.rm = TRUE), slum = median(slum, na.rm = TRUE)), by = bloc]
+bloc_tab[, (num_cols) := lapply(.SD, round, 1), .SDcols = num_cols]
+setorder(bloc_tab, bloc)
+bloc_tab
+bl <- melt(bloc_tab, id.vars = c("bloc", "countries"), measure.vars = c("gini", "p420", "p830", "top10", "palma"), variable.name = "measure", value.name = "median")
+bl[, measure := factor(measure, labels = c("Gini index", "Poverty $4.20 (%)", "Poverty $8.30 (%)", "Top 10% share (%)", "Palma ratio"))]
+p <- ggplot(bl, aes(bloc, median, fill = bloc)) +
+  geom_col_interactive(aes(tooltip = paste0(bloc, "<br/>", measure, ": ", median, "<br/>", countries, " countries"), data_id = bloc), width = 0.7) +
+  facet_wrap(~measure, scales = "free_y", nrow = 1) +
+  scale_fill_manual(values = econ_cols[c(1, 2, 4, 7)], guide = "none") +
+  theme(axis.text.x = element_text(angle = 40, hjust = 1)) +
+  labs(title = "Power blocs compared", subtitle = "Median across countries in each bloc", x = NULL, y = NULL, caption = "Source: World Bank PIP; unweighted medians")
+girafe(ggobj = p, options = gopts, width_svg = 10, height_svg = 4.5)
+```
+
+```{r}
+pg <- cw[bloc != "Rest of world" & !is.na(gini)]
+p <- ggplot(pg, aes(reorder(country, gini), gini, fill = bloc)) +
+  geom_col_interactive(aes(tooltip = paste0(country, " (", pov_year, ")<br/>Gini ", gini, "<br/>Top 10% share ", t10, "%<br/>Palma ", round(palma, 2)), data_id = code), width = 0.7) +
+  scale_fill_manual(values = econ_cols[c(1, 2, 4)]) +
+  coord_flip() +
+  labs(title = "Income inequality among world powers", subtitle = "Gini index, latest survey since 2015", x = NULL, y = "Gini index", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 7)
+```
+
+```{r}
+p <- ggplot(pg[!is.na(p830)], aes(gini, p830, colour = bloc)) +
+  geom_point_interactive(aes(tooltip = paste0(country, "<br/>Gini ", gini, "<br/>$8.30 rate ", p830, "%"), data_id = code), size = 3.2) +
+  geom_text(aes(label = code), vjust = -1, size = 2.8, show.legend = FALSE, check_overlap = TRUE) +
+  scale_colour_manual(values = econ_cols[c(1, 2, 4)]) +
+  labs(title = "Inequality and prosperity among world powers", subtitle = "Share below $8.30/day against the Gini index", x = "Gini index", y = "% below $8.30/day", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 5.5)
+```
+
+```{r}
+ts <- dt[!is.na(bloc) & ind == "SI.POV.GINI"]
+ts[, bloc := factor(bloc, levels = bloc_levels[1:3])]
+p <- ggplot(ts, aes(year, value, group = country, colour = bloc)) +
+  geom_line_interactive(aes(data_id = country), linewidth = 0.8) +
+  geom_point_interactive(aes(tooltip = paste0(country, "<br/>", year, ": Gini ", value), data_id = country), size = 1.2) +
+  facet_wrap(~bloc, ncol = 1) +
+  scale_colour_manual(values = econ_cols[c(1, 2, 4)], guide = "none") +
+  labs(title = "Inequality trends in the world powers", subtitle = "Gini index over time; hover to follow a country", x = NULL, y = "Gini index", caption = "Source: World Bank PIP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 9)
+```
+
+```{r}
+ts2 <- dt[!is.na(bloc) & ind == "SI.POV.UMIC"]
+ts2[, bloc := factor(bloc, levels = bloc_levels[1:3])]
+p <- ggplot(ts2, aes(year, value, group = country, colour = bloc)) +
+  geom_line_interactive(aes(data_id = country), linewidth = 0.8) +
+  geom_point_interactive(aes(tooltip = paste0(country, "<br/>", year, ": ", value, "% below $8.30"), data_id = country), size = 1.2) +
+  facet_wrap(~bloc, ncol = 1) +
+  scale_colour_manual(values = econ_cols[c(1, 2, 4)], guide = "none") +
+  labs(title = "Poverty at the upper-middle-income line, world powers", subtitle = "Share below $8.30/day; hover to follow a country", x = NULL, y = "% of population", caption = "Source: World Bank PIP, 2021 PPP")
+girafe(ggobj = p, options = gopts, width_svg = 9, height_svg = 9)
+```
+
+```{r}
+#| results: asis
+pgs <- pg[order(-gini)]
+cat(sprintf("- Most unequal world power: %s (Gini %.1f); least unequal: %s (Gini %.1f).", pgs$country[1], pgs$gini[1], pgs$country[nrow(pgs)], pgs$gini[nrow(pgs)]), sep = "\n")
+cat(sprintf("- Median share below $8.30/day: %.1f%% in the G7 versus %.1f%% in BRICS, so G7 inequality is moderate but prosperity is near universal, while BRICS inequality is similar but a large share of people remain below the upper-middle-income line.", bloc_tab[bloc == "G7", p830], bloc_tab[bloc == "BRICS", p830]), sep = "\n")
+cat(sprintf("- No recent survey data: %s.", paste(pw[!code %in% cw[!is.na(gini), code], name], collapse = ", ")), sep = "\n")
+cat("- Selected giants:", sep = "\n")
+big <- cw[code %in% c("CHN", "IND", "USA", "BRA", "RUS")]
+cat(sprintf("    - **%s**: $3.00 rate %.1f%%, $8.30 rate %.1f%%, Gini %.1f (%d).", big$country, big$p300, big$p830, big$gini, big$pov_year), sep = "\n")
+```
+
+# Conclusions and caveats
+
+```{r}
+#| results: asis
+cat(sprintf("1. Poverty has fallen at all three lines (world $3.00 rate: %.1f%% in 1990 to %.1f%% in %d), but the fall is much slower at higher lines, and the $8.30 rate is still %.1f%%.", w90$p300, wlast$p300, wlast$year, wlast$p830), sep = "\n")
+cat(sprintf("2. Poverty is highly concentrated: %s has the highest regional rate at $3.00/day (%.1f%%).", rg$country[1], rg$value[1]), sep = "\n")
+cat(sprintf("3. Inequality matters: across %d countries the correlation between Gini and the $4.20 poverty rate is %.2f.", cw[!is.na(gini) & !is.na(p420), .N], cw[, cor(gini, p420, use = "complete.obs")]), sep = "\n")
+cat(sprintf("4. Growth reached the poor unevenly: the bottom 40%% outgrew the mean in %d of %d countries.", cw[premium > 0, .N], cw[!is.na(premium), .N]), sep = "\n")
+cat(sprintf("5. World powers are not uniform: median Gini is %.1f for the G7 and %.1f for BRICS, against %.1f for other countries.", bloc_tab[bloc == "G7", gini], bloc_tab[bloc == "BRICS", gini], bloc_tab[bloc == "Rest of world", gini]), sep = "\n")
+```
+
+**Caveats.** Survey years differ across countries, so latest observations are not perfectly comparable. Poverty lines are in 2021 PPP and are not comparable with older vintages. Income and consumption surveys are mixed. Group medians across countries are unweighted. Aggregates carry no Gini or distribution data. Slum data are modelled estimates with sparse regional series.

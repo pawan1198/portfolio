@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pawan1198.github.io/portfolio/index.html</loc>
-    <lastmod>2026-11-15T16:32:57.461Z</lastmod>
+    <lastmod>2026-11-15T16:38:04.607Z</lastmod>
   </url>
   <url>
     <loc>https://pawan1198.github.io/portfolio/shiny_app.html</loc>
@@ -143,5 +143,9 @@
   <url>
     <loc>https://pawan1198.github.io/portfolio/data_vizs/world_health_education_report.html</loc>
     <lastmod>2026-11-15T16:32:02.241Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pawan1198.github.io/portfolio/data_vizs/IMF_Renewable_Energy_Report.html</loc>
+    <lastmod>2026-11-15T16:37:19.585Z</lastmod>
   </url>
 </urlset>

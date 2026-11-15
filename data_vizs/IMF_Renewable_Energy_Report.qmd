@@ -1,0 +1,815 @@
+---
+title: "IMF Renewable Energy Statistics: World Power, Countries, Groups and Regions"
+subtitle: "Reproducible analysis with data.table, ggplot2 and ggiraph"
+author: "Pawan"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    embed-resources: true
+    theme: cosmo
+    code-tools: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Purpose and conventions
+
+This report analyses the IMF/IRENA Renewable Energy dataset (`IMF_Renewable_Energy.xlsx`). It covers installed capacity, electricity generation and public investment for 247 labelled entities over 2000 to 2023. The questions are:
+
+1. How big is the **world** renewable fleet, and how fast is it growing?
+2. Which **countries** lead, and where does **India** stand against the global powers?
+3. How do **groups** (G20, G7, Advanced Economies, Emerging Market and Developing Economies) and **regions** compare?
+4. Which statistical results hold up once the data are reconciled?
+
+Code conventions: `data.table` for all wrangling, `ggplot2` plus `ggiraph` for interactive plots, no user-defined functions, no loading of any other package apart from `readxl` to read the workbook.
+
+```{r setup}
+library(data.table)
+library(ggplot2)
+library(ggiraph)
+library(readxl)
+```
+
+## Interactive economics theme
+
+The theme is a plain object, not a function. Every plot below adds it and is wrapped with `girafe()` using the shared hover and tooltip options.
+
+```{r theme}
+theme_econ <- theme_minimal(base_size = 12) +
+  theme(
+    plot.title       = element_text(face = "bold", size = 14, colour = "#1a1a2e"),
+    plot.subtitle    = element_text(size = 10.5, colour = "#4a4a6a", margin = margin(b = 8)),
+    plot.caption     = element_text(size = 8.5, colour = "#888888", hjust = 0),
+    axis.title       = element_text(size = 10.5, colour = "#333355"),
+    axis.text        = element_text(size = 9.5, colour = "#444466"),
+    panel.grid.major = element_line(colour = "#e8e8f0", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    legend.position  = "bottom",
+    legend.title     = element_text(face = "bold"),
+    strip.text       = element_text(face = "bold", colour = "#1a1a2e"),
+    plot.background  = element_rect(fill = "#fafafe", colour = NA),
+    panel.background = element_rect(fill = "#fafafe", colour = NA)
+  )
+
+ggi_opts <- list(
+  opts_hover(css = "stroke-width:2.5px;opacity:1;"),
+  opts_hover_inv(css = "opacity:0.35;"),
+  opts_tooltip(css = "background:#1a1a2e;color:#ffffff;padding:6px 9px;border-radius:5px;font-size:12px;"),
+  opts_toolbar(saveaspng = TRUE)
+)
+
+pal_src <- c(Solar = "#FFB300", Wind = "#42A5F5", Hydro = "#26C6DA", Bio = "#66BB6A", Fossil = "#EF5350")
+src_cap <- "Source: IMF/IRENA Renewable Energy Statistics. Renewable = solar + wind + hydropower (excl. pumped storage) + bioenergy."
+```
+
+# Data preparation and inspection
+
+## Read and inspect the wide table
+
+The workbook is wide: one column per year. The first header carries a byte-order mark, so it is renamed. Year headers arrive as `2000.0`, `2001.0`, and so on, so they are matched with a pattern instead of typed.
+
+```{r read}
+raw <- as.data.table(read_excel("~/imf/renewable_energy/IMF_Renewable_Energy.xlsx"))
+setnames(raw, 1, "DATASET")
+
+# Some entity names are double-encoded in the workbook (e.g. "TÃ¼rkiye"). Re-read their bytes as UTF-8.
+raw[, COUNTRY := fifelse(grepl("Ã", COUNTRY, fixed = TRUE),
+                         { y <- iconv(COUNTRY, "UTF-8", "latin1"); Encoding(y) <- "UTF-8"; y },
+                         COUNTRY)]
+
+ycols <- grep("^20", names(raw), value = TRUE)
+raw[, .(rows = .N, entities = uniqueN(COUNTRY), sources = uniqueN(ENERGY_SOURCE), year_columns = length(ycols))]
+raw[, .N, by = INDICATOR]
+```
+
+## Reshape wide to long with `melt()`
+
+**Why.** Analysis needs YEAR as a variable. `melt()` turns 24 year columns into rows so that grouping, joins and plotting work on one value column.
+
+**How.** `id.vars` keep the identifying columns, `measure.vars` are the year columns. Each original row becomes up to 24 rows of (entity, indicator, source, year, value).
+
+```{r melt}
+long <- melt(raw, id.vars = c("COUNTRY", "INDICATOR", "ENERGY_SOURCE"),
+             measure.vars = ycols, variable.name = "YEAR", value.name = "VALUE")
+long[, YEAR  := as.integer(as.numeric(as.character(YEAR)))]
+long[, VALUE := as.numeric(VALUE)]
+long[, IND := fcase(grepl("Capacity", INDICATOR), "CAP",
+                    grepl("Generation", INDICATOR), "GEN",
+                    default = "INV")]
+srcmap <- data.table(
+  ENERGY_SOURCE = c("Solar energy", "Wind energy", "Hydropower (excl. Pumped Storage)", "Bioenergy", "Fossil fuels"),
+  SRC           = c("Solar", "Wind", "Hydro", "Bio", "Fossil"))
+long[, SRC := ENERGY_SOURCE]
+long[srcmap, SRC := i.SRC, on = "ENERGY_SOURCE"]
+long[, .(cells = .N, missing = sum(is.na(VALUE)), missing_pct = round(mean(is.na(VALUE)) * 100, 1)), by = IND]
+```
+
+## Classify entities: country, region, sub-region, group
+
+**Why.** The dataset mixes countries with aggregates (regions, sub-regions, G20, G7, income-style groups). Adding an aggregate to its own members double counts. Every world total, share or rank below depends on this classification.
+
+**How.** Three name vectors list the aggregates, and `fcase()` labels every other entity a country. A small lookup join shortens long IMF names for plots.
+
+```{r classify}
+regs    <- c("Africa", "Americas", "Asia", "Europe", "Oceania")
+subregs <- c("Central Asia", "Eastern Asia", "Eastern Europe", "Latin America and the Caribbean (LAC)",
+             "North America", "Northern Africa", "Northern Europe", "Oceania sub-regions",
+             "Southern Asia", "South-eastern Asia", "Southern Europe", "Sub-Saharan Africa (SSA)",
+             "Western Asia", "Western Europe")
+grps    <- c("G20", "G7", "Advanced Economies", "Emerging Market and Developing Economies")
+
+long[, TYPE := fcase(COUNTRY %in% regs, "Region", COUNTRY %in% subregs, "Sub-region",
+                     COUNTRY %in% grps, "Group", default = "Country")]
+
+lab <- data.table(
+  COUNTRY = c("China, People's Republic of", "United States", "Korea, Republic of", "Russian Federation",
+              "Egypt, Arab Republic of", "Iran, Islamic Republic of", "Netherlands, The",
+              "Taiwan Province of China", "Emerging Market and Developing Economies", "Advanced Economies"),
+  LABEL   = c("China", "USA", "South Korea", "Russia", "Egypt", "Iran", "Netherlands",
+              "Taiwan", "EMDE", "Advanced Econ."))
+long[lab, LABEL := i.LABEL, on = "COUNTRY"]
+long[is.na(LABEL), LABEL := sub(",.*$", "", COUNTRY)]
+
+long[, .(entities = uniqueN(COUNTRY)), by = TYPE][order(-entities)]
+```
+
+## Clean, de-duplicate and write the tidy file
+
+```{r clean}
+n_before <- nrow(long)
+long <- long[!is.na(VALUE)]
+data.table(rows_before = n_before, rows_after = nrow(long), dropped_missing = n_before - nrow(long))
+
+# duplicate key check: any entity-indicator-source-year seen twice?
+long[, .N, by = .(COUNTRY, IND, ENERGY_SOURCE, YEAR)][N > 1]
+
+fwrite(long, "imf_re_long_clean.csv")
+
+cap <- long[IND == "CAP"]
+gen <- long[IND == "GEN"]
+inv <- long[IND == "INV"]
+re_src <- c("Solar energy", "Wind energy", "Hydropower (excl. Pumped Storage)", "Bioenergy")
+
+long[, .(first_year = min(YEAR), last_year = max(YEAR), rows = .N), by = IND]
+```
+
+# Data reconciliation
+
+**Why.** The dataset has no "World" row. A world total can be built from regions or from the Advanced plus Emerging groups. If both agree, and country rows also agree, the totals are trustworthy. A mismatch would mean double counting or missing entities.
+
+**How.** For 2023 capacity, each source is summed three ways with `data.table` conditional sums inside `j`, and the percentage gap is computed.
+
+```{r reconcile}
+rec <- cap[YEAR == 2023, .(
+  regions_GW   = round(sum(VALUE[TYPE == "Region"]) / 1000, 1),
+  groups_GW    = round(sum(VALUE[COUNTRY %in% c("Advanced Economies", "Emerging Market and Developing Economies")]) / 1000, 1),
+  countries_GW = round(sum(VALUE[TYPE == "Country"]) / 1000, 1)
+), by = SRC]
+rec[, `:=`(gap_regions_vs_groups_pct = round((regions_GW - groups_GW) / groups_GW * 100, 2),
+           gap_countries_vs_regions_pct = round((countries_GW - regions_GW) / regions_GW * 100, 2))]
+rec
+```
+
+**Why the naive sum is wrong.** Summing every row for 2023 mixes countries, sub-regions, regions and groups. The next table measures the size of that error against the reconciled world total.
+
+```{r naive}
+naive <- cap[YEAR == 2023 & SRC != "Fossil", .(all_rows_GW = round(sum(VALUE) / 1000, 0))]
+true_world <- cap[YEAR == 2023 & TYPE == "Region" & SRC != "Fossil", .(world_GW = round(sum(VALUE) / 1000, 0))]
+data.table(naive_sum_GW = naive$all_rows_GW, reconciled_world_GW = true_world$world_GW,
+           overstatement_x = round(naive$all_rows_GW / true_world$world_GW, 1))
+```
+
+From here on, **World = sum of the five regions**, countries come only from `TYPE == "Country"`, and aggregates are used only as labelled groups.
+
+# World power
+
+## World capacity by source
+
+**Why.** The trajectory of the world fleet, and the renewable share of it, is the headline indicator of the energy transition.
+
+**How.** Capacity is filtered to the five regions, summed by year and source, and cast wide to compute totals, shares and year-on-year growth. The compound annual growth rate is
+
+$$\text{CAGR} = \left(\frac{V_T}{V_0}\right)^{1/T} - 1 .$$
+
+```{r world}
+world <- cap[TYPE == "Region", .(GW = sum(VALUE) / 1000), by = .(YEAR, SRC)]
+world[, GROUP := fifelse(SRC == "Fossil", "Fossil", "Renewable")]
+world_grp <- world[, .(GW = sum(GW)), by = .(YEAR, GROUP)]
+world_w <- dcast(world_grp, YEAR ~ GROUP, value.var = "GW")
+world_w[, `:=`(TOTAL = Renewable + Fossil, RE_SHARE = Renewable / (Renewable + Fossil) * 100)]
+world_w[, `:=`(RE_YOY = (Renewable / shift(Renewable) - 1) * 100, FF_YOY = (Fossil / shift(Fossil) - 1) * 100)]
+world_w[YEAR %in% c(2000, 2005, 2010, 2015, 2020, 2023), .(YEAR, Renewable = round(Renewable), Fossil = round(Fossil),
+        RE_SHARE = round(RE_SHARE, 1), RE_YOY = round(RE_YOY, 1), FF_YOY = round(FF_YOY, 1))]
+```
+
+```{r world-cagr}
+world_w[YEAR %in% c(2000, 2023), .(
+  RE_CAGR_pct = round(((Renewable[2] / Renewable[1])^(1 / 23) - 1) * 100, 2),
+  FF_CAGR_pct = round(((Fossil[2] / Fossil[1])^(1 / 23) - 1) * 100, 2),
+  RE_multiple = round(Renewable[2] / Renewable[1], 1))]
+world[YEAR == 2023, .(SRC, GW = round(GW, 1), SHARE_OF_TOTAL_pct = round(GW / sum(GW) * 100, 1))][order(-GW)]
+```
+
+```{r p1, fig.width=9, fig.height=5.5}
+yrs <- c(2000, 2005, 2010, 2015, 2020, 2023)
+w1 <- world[YEAR %in% yrs]
+w1[, SRC := factor(SRC, levels = c("Fossil", "Hydro", "Bio", "Wind", "Solar"))]
+w1[, tip := paste0(SRC, " ", YEAR, ": ", round(GW), " GW")]
+tot1 <- w1[, .(GW = sum(GW)), by = YEAR]
+
+p1 <- ggplot(w1, aes(x = factor(YEAR), y = GW, fill = SRC)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = paste(SRC, YEAR)), width = 0.7) +
+  geom_text(data = w1[GW >= 100], aes(label = round(GW)), position = position_stack(vjust = 0.5), size = 3, colour = "#1a1a2e") +
+  geom_text(data = tot1, aes(x = factor(YEAR), y = GW, label = paste0(round(GW), " GW")),
+            inherit.aes = FALSE, vjust = -0.5, fontface = "bold", size = 3.4) +
+  annotate("text", x = 1.1, y = max(tot1$GW) * 0.93, hjust = 0, size = 3.4, colour = "#4a4a6a",
+           label = "World = sum of 5 regions (reconciled)") +
+  scale_fill_manual(values = pal_src, name = "Source") +
+  labs(title = "World installed electricity capacity by source",
+       subtitle = "Gigawatts; renewables grew faster than fossil capacity throughout",
+       x = "Year", y = "Installed capacity (GW)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p1, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+```
+
+## Renewable share of world capacity and generation
+
+**Why.** Capacity measures potential; generation measures delivered electricity. Comparing both shares shows how much of the capacity build-out translates into actual output.
+
+**How.** The same region-based world sum is used for generation. The source stores zeros for regional generation in 2023, which are placeholders, not measurements, so the generation share stops at the last year with a positive total.
+
+```{r world-gen}
+# Regional generation for 2023 is zero-filled in the source: treat zero totals as "not reported".
+gen[TYPE == "Region", .(zero_cells = sum(VALUE == 0), cells = .N), by = YEAR][YEAR >= 2020]
+world_gen <- gen[TYPE == "Region" & SRC %in% c("Solar", "Wind", "Hydro", "Bio", "Fossil"),
+                 .(GWh = sum(VALUE)), by = .(YEAR, SRC)]
+world_gen[, GROUP := fifelse(SRC == "Fossil", "Fossil", "Renewable")]
+gen_w <- dcast(world_gen[, .(GWh = sum(GWh)), by = .(YEAR, GROUP)], YEAR ~ GROUP, value.var = "GWh")
+gen_w <- gen_w[Renewable + Fossil > 0]
+gen_w[, GEN_RE_SHARE := Renewable / (Renewable + Fossil) * 100]
+gen_last <- gen_w[, max(YEAR)]
+share_dt <- merge(world_w[, .(YEAR, CAP_RE_SHARE = RE_SHARE)], gen_w[, .(YEAR, GEN_RE_SHARE)], by = "YEAR", all.x = TRUE)
+share_dt[YEAR %in% c(2000, 2005, 2010, 2015, 2020, gen_last, 2023), .(YEAR, CAP_RE_SHARE = round(CAP_RE_SHARE, 1), GEN_RE_SHARE = round(GEN_RE_SHARE, 1))]
+```
+
+```{r p2, fig.width=9, fig.height=5}
+s2 <- melt(share_dt, id.vars = "YEAR", variable.name = "METRIC", value.name = "PCT")
+s2 <- s2[!is.na(PCT)]
+s2[, METRIC := fifelse(METRIC == "CAP_RE_SHARE", "Share of capacity", "Share of generation")]
+s2[, tip := paste0(METRIC, " ", YEAR, ": ", round(PCT, 1), "%")]
+lab2 <- s2[YEAR %in% c(2000, 2010, 2020) | YEAR == max(YEAR), .SD, by = METRIC][, .SD[!duplicated(YEAR)], by = METRIC]
+
+p2 <- ggplot(s2, aes(x = YEAR, y = PCT, colour = METRIC, group = METRIC)) +
+  geom_line_interactive(aes(data_id = METRIC), linewidth = 1.2) +
+  geom_point_interactive(aes(tooltip = tip, data_id = paste(METRIC, YEAR)), size = 2.2) +
+  geom_text(data = lab2, aes(label = paste0(round(PCT, 1), "%")), vjust = -0.9, size = 3.3, fontface = "bold", show.legend = FALSE) +
+  geom_vline(xintercept = 2015, linetype = "dashed", colour = "#E53935", alpha = 0.7) +
+  annotate("text", x = 2014.6, y = max(s2$PCT), label = "Paris Agreement (2015)", hjust = 1, size = 3.2, colour = "#E53935") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.12))) +
+  scale_colour_manual(values = c("Share of capacity" = "#1565C0", "Share of generation" = "#EF6C00"), name = NULL) +
+  scale_x_continuous(breaks = seq(2000, 2023, 3)) +
+  labs(title = "Renewable share of world electricity: capacity versus generation",
+       subtitle = "Capacity share rises faster than generation share because solar and wind run at lower capacity factors",
+       x = "Year", y = "Renewable share (%)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p2, width_svg = 9, height_svg = 5, options = ggi_opts)
+```
+
+# Countries and India versus the global powers
+
+## Country league table, 2023
+
+**Why.** Ranking countries on renewable capacity identifies the global powers and sets the benchmark India is compared with.
+
+**How.** Only `TYPE == "Country"` rows are used, so aggregates cannot appear. Renewable capacity is summed over the four renewable sources per country-year, then ranked with `frank()`.
+
+```{r country}
+cty_re <- cap[TYPE == "Country" & SRC != "Fossil", .(GW = sum(VALUE) / 1000), by = .(LABEL, YEAR)]
+cty_ff <- cap[TYPE == "Country" & SRC == "Fossil", .(FF_GW = sum(VALUE) / 1000), by = .(LABEL, YEAR)]
+cty <- merge(cty_re, cty_ff, by = c("LABEL", "YEAR"), all.x = TRUE)
+cty[, RE_SHARE := fifelse(is.na(FF_GW), NA_real_, GW / (GW + FF_GW) * 100)]
+
+c23 <- cty[YEAR == 2023]
+c23[, RANK := frank(-GW, ties.method = "min")]
+world_re_2023 <- world_w[YEAR == 2023, Renewable]
+c23[, SHARE_WORLD := GW / world_re_2023 * 100]
+top15 <- c23[order(RANK)][1:15, .(RANK, LABEL, RE_GW = round(GW, 1), SHARE_OF_WORLD_pct = round(SHARE_WORLD, 1), RE_SHARE_OWN_pct = round(RE_SHARE, 1))]
+top15
+c23[LABEL == "India", .(RANK, of = nrow(c23), RE_GW = round(GW, 1), SHARE_OF_WORLD_pct = round(SHARE_WORLD, 1))]
+```
+
+```{r p3, fig.width=9, fig.height=6}
+t3 <- c23[order(RANK)][1:15]
+t3[, IS_INDIA := fifelse(LABEL == "India", "India", "Other")]
+t3[, tip := paste0(LABEL, " (rank ", RANK, ")\n", round(GW, 1), " GW, ", round(SHARE_WORLD, 1), "% of world")]
+p3 <- ggplot(t3, aes(x = reorder(LABEL, GW), y = GW, fill = IS_INDIA)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = LABEL), width = 0.7, show.legend = FALSE) +
+  geom_text(aes(label = paste0(round(GW), " GW")), hjust = -0.15, size = 3.4, fontface = "bold") +
+  annotate("text", x = 3, y = max(t3$GW) * 1.05, size = 3.4, colour = "#4a4a6a", hjust = 1,
+           label = paste0("Top 3 = ", round(sum(t3[RANK <= 3, SHARE_WORLD])), "% of world renewable capacity")) +
+  scale_fill_manual(values = c(India = "#E63946", Other = "#90A4AE")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
+  coord_flip() +
+  labs(title = "Top 15 countries by renewable installed capacity, 2023",
+       subtitle = "Gigawatts; India highlighted in red", x = NULL, y = "Renewable capacity (GW)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p3, width_svg = 9, height_svg = 6, options = ggi_opts)
+```
+
+## India against global powers over time
+
+**Why.** A single-year ranking hides trajectory. Plotting India with the leading economies shows whether it is converging on or diverging from them.
+
+**How.** Six economies are selected and each series is labelled at its 2023 end point.
+
+```{r p4, fig.width=9, fig.height=5.5}
+peers <- c("India", "China", "USA", "Brazil", "Germany", "Japan")
+d4 <- cty[LABEL %in% peers]
+d4[, tip := paste0(LABEL, " ", YEAR, ": ", round(GW, 1), " GW")]
+e4 <- d4[YEAR == 2023][order(GW)]
+e4[, YL := GW]
+for (i in 2:nrow(e4)) set(e4, i = i, j = "YL", value = max(e4$GW[i], e4$YL[i - 1] + 45))
+pal_peer <- c(India = "#E63946", China = "#2196F3", USA = "#4CAF50", Brazil = "#9C27B0", Germany = "#FF9800", Japan = "#00BCD4")
+p4 <- ggplot(d4, aes(x = YEAR, y = GW, colour = LABEL, group = LABEL)) +
+  geom_line_interactive(aes(data_id = LABEL), linewidth = 1.1) +
+  geom_point_interactive(aes(tooltip = tip, data_id = LABEL), size = 1.6) +
+  geom_text(data = e4, aes(y = YL, label = paste0(LABEL, " ", round(GW), " GW")), hjust = -0.08, size = 3.2, fontface = "bold", show.legend = FALSE) +
+  scale_colour_manual(values = pal_peer, name = "Economy") +
+  scale_x_continuous(breaks = seq(2000, 2023, 4), limits = c(2000, 2028)) +
+  labs(title = "Renewable installed capacity: India versus global powers",
+       subtitle = "Gigawatts, 2000 to 2023", x = "Year", y = "Renewable capacity (GW)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p4, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+```
+
+## Growth: CAGR 2010 to 2023 among the largest countries
+
+**Why.** CAGR removes the effect of starting size so fast and slow builders are comparable.
+
+**How.** The 20 largest renewable countries in 2023 are cast to a 2010 versus 2023 table, and the formula above is applied with T = 13.
+
+```{r cagr}
+top20 <- c23[order(RANK)][1:20, LABEL]
+cg <- dcast(cty[LABEL %in% top20 & YEAR %in% c(2010, 2023)], LABEL ~ YEAR, value.var = "GW")
+setnames(cg, c("2010", "2023"), c("GW_2010", "GW_2023"))
+cg[, CAGR_pct := ((GW_2023 / GW_2010)^(1 / 13) - 1) * 100]
+cg[, CAGR_RANK := frank(-CAGR_pct, ties.method = "min")]
+cg[order(CAGR_RANK), .(CAGR_RANK, LABEL, GW_2010 = round(GW_2010, 1), GW_2023 = round(GW_2023, 1), CAGR_pct = round(CAGR_pct, 1))]
+```
+
+```{r p6, fig.width=9, fig.height=6}
+cg[, IS_INDIA := fifelse(LABEL == "India", "India", "Other")]
+cg[, tip := paste0(LABEL, "\nCAGR ", round(CAGR_pct, 1), "%\n", round(GW_2010, 1), " GW to ", round(GW_2023, 1), " GW")]
+p6 <- ggplot(cg, aes(x = reorder(LABEL, CAGR_pct), y = CAGR_pct, fill = IS_INDIA)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = LABEL), width = 0.7, show.legend = FALSE) +
+  geom_text(aes(label = paste0(round(CAGR_pct, 1), "%")), hjust = -0.15, size = 3.3, fontface = "bold") +
+  geom_hline(yintercept = ((world_w[YEAR == 2023, Renewable] / world_w[YEAR == 2010, Renewable])^(1 / 13) - 1) * 100,
+             linetype = "dashed", colour = "#1a1a2e") +
+  annotate("text", x = 2, y = ((world_w[YEAR == 2023, Renewable] / world_w[YEAR == 2010, Renewable])^(1 / 13) - 1) * 100 + 0.3,
+           label = "World CAGR", hjust = 0, size = 3.2, colour = "#1a1a2e") +
+  scale_fill_manual(values = c(India = "#E63946", Other = "#90A4AE")) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
+  coord_flip() +
+  labs(title = "Renewable capacity CAGR, 2010 to 2023: 20 largest countries",
+       subtitle = "Dashed line = world CAGR", x = NULL, y = "CAGR (%)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p6, width_svg = 9, height_svg = 6, options = ggi_opts)
+```
+
+## India's energy mix and rank by source
+
+**Why.** Totals hide composition. India's mix shows which technology drove the build-out, and its rank per source shows where it is a global power.
+
+**How.** Country rows are ranked within each source with `frank()` by group, and India's rows are extracted.
+
+```{r india-rank}
+rk <- cap[TYPE == "Country" & YEAR == 2023 & VALUE > 0]
+rk[, `:=`(RANK = frank(-VALUE, ties.method = "min"), OF = .N), by = SRC]
+rk[LABEL == "India", .(SRC, GW = round(VALUE / 1000, 1), RANK, OF)][order(RANK)]
+rk[RANK <= 3 & SRC != "Fossil", .(SRC, RANK, LABEL, GW = round(VALUE / 1000, 1))][order(SRC, RANK)]
+```
+
+```{r p5, fig.width=9, fig.height=5.5}
+im <- cap[LABEL == "India" & SRC != "Fossil" & YEAR %in% seq(2000, 2023, 3), .(YEAR, SRC, GW = VALUE / 1000)]
+im <- rbind(im, cap[LABEL == "India" & SRC != "Fossil" & YEAR == 2023, .(YEAR, SRC, GW = VALUE / 1000)])
+im <- unique(im)
+im[, SRC := factor(SRC, levels = c("Bio", "Hydro", "Wind", "Solar"))]
+im[, tip := paste0(SRC, " ", YEAR, ": ", round(GW, 1), " GW")]
+imt <- im[, .(GW = sum(GW)), by = YEAR]
+p5 <- ggplot(im, aes(x = factor(YEAR), y = GW, fill = SRC)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = paste(SRC, YEAR)), width = 0.7) +
+  geom_text(data = im[GW >= 8], aes(label = round(GW)), position = position_stack(vjust = 0.5), size = 3) +
+  geom_text(data = imt, aes(x = factor(YEAR), y = GW, label = paste0(round(GW), " GW")), inherit.aes = FALSE, vjust = -0.5, fontface = "bold", size = 3.3) +
+  scale_fill_manual(values = pal_src, name = "Source") +
+  labs(title = "India's renewable capacity mix", subtitle = "Gigawatts; solar overtakes wind and hydro in the latest years",
+       x = "Year", y = "Installed capacity (GW)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p5, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+```
+
+## India: solar and wind year-on-year growth
+
+**Why.** Year-on-year growth shows acceleration and slowdown phases that totals smooth over.
+
+**How.** After sorting by year within each source, growth is `(value / shift(value) - 1) * 100`. Early years start from a near-zero base, so the plot window is capped and labels appear only for visible bars.
+
+```{r p10, fig.width=9, fig.height=5}
+iy <- cap[LABEL == "India" & SRC %in% c("Solar", "Wind")][order(SRC, YEAR)]
+iy[, YOY := (VALUE / shift(VALUE) - 1) * 100, by = SRC]
+iy <- iy[YEAR >= 2010 & !is.na(YOY)]
+iy[, tip := paste0(SRC, " ", YEAR, ": ", round(YOY, 1), "% (", round(VALUE / 1000, 2), " GW)")]
+p10 <- ggplot(iy, aes(x = YEAR, y = YOY, fill = SRC)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = paste(SRC, YEAR)), position = "dodge", width = 0.75) +
+  geom_text(data = iy[YOY <= 150], aes(label = round(YOY)), position = position_dodge(width = 0.75), vjust = -0.3, size = 2.7) +
+  geom_hline(yintercept = 0, colour = "#444466") +
+  annotate("text", x = 2010.3, y = 140, hjust = 0, size = 3.1, colour = "#4a4a6a",
+           label = "Bars above 150% are cut off (low base); see tooltips") +
+  coord_cartesian(ylim = c(-5, 150)) +
+  scale_fill_manual(values = pal_src, name = "Source") +
+  scale_x_continuous(breaks = 2010:2023) +
+  labs(title = "India: year-on-year capacity growth, solar versus wind", subtitle = "Percent change on previous year",
+       x = "Year", y = "YoY growth (%)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p10, width_svg = 9, height_svg = 5, options = ggi_opts)
+```
+
+## Public investment in renewables (share of GDP)
+
+**Why.** Investment effort, scaled by GDP, shows whether a country's build-out is matched by public spending.
+
+**How.** Investment-share rows are summed over technologies per country-year. Most countries report zero in any year, and a few small economies are extreme outliers (for example Palau), so the benchmark is the *median among countries reporting a positive value*.
+
+```{r invest}
+ic <- inv[TYPE == "Country", .(PCT = sum(VALUE)), by = .(LABEL, YEAR)]
+im2 <- ic[, .(MEDIAN = median(PCT[PCT > 0]), P75 = quantile(PCT[PCT > 0], 0.75), REPORTING = sum(PCT > 0), COUNTRIES = .N), by = YEAR]
+ii <- ic[LABEL == "India", .(YEAR, INDIA = PCT)]
+inv_cmp <- merge(im2, ii, by = "YEAR", all.x = TRUE)
+inv_cmp[YEAR %in% c(2010, 2015, 2020, max(YEAR)), .(YEAR, COUNTRIES, REPORTING, MEDIAN_POSITIVE = signif(MEDIAN, 3), P75_POSITIVE = signif(P75, 3), INDIA = signif(INDIA, 3))]
+```
+
+```{r p12, fig.width=9, fig.height=5}
+i12 <- melt(inv_cmp[, .(YEAR, `Median of reporting countries` = MEDIAN, India = INDIA)], id.vars = "YEAR", variable.name = "SERIES", value.name = "PCT")
+i12 <- i12[!is.na(PCT)]
+i12[, tip := paste0(SERIES, " ", YEAR, ": ", signif(PCT, 3), "% of GDP")]
+e12 <- i12[YEAR == max(YEAR)]
+p12 <- ggplot(i12, aes(x = YEAR, y = PCT, colour = SERIES, group = SERIES)) +
+  geom_line_interactive(aes(data_id = SERIES), linewidth = 1.2) +
+  geom_point_interactive(aes(tooltip = tip, data_id = paste(SERIES, YEAR)), size = 2) +
+  geom_text(data = e12, aes(label = paste0(signif(PCT, 2), "%")), vjust = -0.9, size = 3.2, fontface = "bold", show.legend = FALSE) +
+  scale_colour_manual(values = c("Median of reporting countries" = "#607D8B", India = "#E63946"), name = NULL) +
+  labs(title = "Public renewable investment: India versus median reporting country",
+       subtitle = "Share of GDP (%), summed over technologies; values are very small, read the labels", x = "Year", y = "% of GDP",
+       caption = "Source: IMF/IRENA Renewable Energy Statistics (public investment indicator).") +
+  theme_econ
+girafe(ggobj = p12, width_svg = 9, height_svg = 5, options = ggi_opts)
+```
+
+# Groups and regions
+
+## Group and region comparison, 2023
+
+**Why.** G20 and G7 describe the economic powers, and Advanced versus Emerging economies describes the development divide. Comparing each group's *size* and *renewable share of its own mix* separates a big fleet from a clean fleet.
+
+**How.** For each aggregate entity, renewable and fossil capacity are summed with conditional sums in `j`. India and China are added as country reference rows.
+
+```{r groups}
+ents <- c(grps, regs, "India", "China, People's Republic of")
+ag <- cap[YEAR == 2023 & COUNTRY %in% ents, .(
+  TYPE = TYPE[1],
+  RE_GW = sum(VALUE[SRC != "Fossil"]) / 1000,
+  FF_GW = sum(VALUE[SRC == "Fossil"]) / 1000,
+  SOLAR_GW = sum(VALUE[SRC == "Solar"]) / 1000,
+  WIND_GW = sum(VALUE[SRC == "Wind"]) / 1000), by = LABEL]
+ag[, `:=`(RE_SHARE_OWN = RE_GW / (RE_GW + FF_GW) * 100, SHARE_WORLD_RE = RE_GW / world_re_2023 * 100)]
+ag[order(-RE_GW), .(TYPE, LABEL, RE_GW = round(RE_GW), FF_GW = round(FF_GW), SOLAR_GW = round(SOLAR_GW), WIND_GW = round(WIND_GW),
+                    RE_SHARE_OWN_pct = round(RE_SHARE_OWN, 1), SHARE_WORLD_RE_pct = round(SHARE_WORLD_RE, 1))]
+```
+
+```{r p7, fig.width=10, fig.height=6}
+g7 <- melt(ag[, .(LABEL, TYPE, `Share of world renewable capacity (%)` = SHARE_WORLD_RE, `Renewable share of own capacity (%)` = RE_SHARE_OWN)],
+           id.vars = c("LABEL", "TYPE"), variable.name = "METRIC", value.name = "PCT")
+g7[, tip := paste0(LABEL, " (", TYPE, ")\n", METRIC, ": ", round(PCT, 1))]
+p7 <- ggplot(g7, aes(x = reorder(LABEL, PCT), y = PCT, fill = TYPE)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = LABEL), width = 0.7) +
+  geom_text(aes(label = round(PCT, 1)), hjust = -0.15, size = 3) +
+  scale_fill_manual(values = c(Group = "#5C6BC0", Region = "#26A69A", Country = "#E63946"), name = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  coord_flip() +
+  facet_wrap(~METRIC, scales = "free") +
+  labs(title = "Groups, regions and reference countries, 2023",
+       subtitle = "Left: who owns the world fleet. Right: how clean each fleet is (groups overlap, so shares do not add to 100)",
+       x = NULL, y = NULL, caption = src_cap) +
+  theme_econ
+girafe(ggobj = p7, width_svg = 10, height_svg = 6, options = ggi_opts)
+```
+
+## Renewable versus fossil capacity by region
+
+**Why.** The regional balance of clean versus fossil capacity shows where the transition is furthest along.
+
+**How.** The five regions are summed per type, and the renewable share of own mix is labelled above each pair.
+
+```{r p8, fig.width=9, fig.height=5.5}
+r8 <- cap[YEAR == 2023 & TYPE == "Region", .(GW = sum(VALUE) / 1000), by = .(LABEL, GROUP = fifelse(SRC == "Fossil", "Fossil", "Renewable"))]
+r8s <- dcast(r8, LABEL ~ GROUP, value.var = "GW")
+r8s[, SHARE := Renewable / (Renewable + Fossil) * 100]
+r8[r8s, SHARE := i.SHARE, on = "LABEL"]
+r8[, AXIS := paste0(LABEL, "\nRE share ", round(SHARE), "%")]
+r8[, tip := paste0(LABEL, " ", GROUP, ": ", round(GW), " GW")]
+p8 <- ggplot(r8, aes(x = reorder(AXIS, -GW), y = GW, fill = GROUP)) +
+  geom_col_interactive(aes(tooltip = tip, data_id = paste(LABEL, GROUP)), position = "dodge", width = 0.7) +
+  geom_text(aes(label = round(GW)), position = position_dodge(width = 0.7), vjust = -0.4, size = 3.2) +
+  scale_fill_manual(values = c(Fossil = "#EF5350", Renewable = "#42A5F5"), name = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Renewable versus fossil installed capacity by region, 2023", subtitle = "Gigawatts",
+       x = NULL, y = "Installed capacity (GW)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p8, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+```
+
+## Sub-regions: renewable share heat map
+
+**Why.** Sub-regions are the finest consistent geography in the file and expose differences hidden inside continental totals.
+
+**How.** Sub-region renewable and fossil capacity are summed for six snapshot years, then converted to a share and drawn as tiles.
+
+```{r p9, fig.width=10, fig.height=6}
+yrs9 <- c(2000, 2005, 2010, 2015, 2020, 2023)
+sr <- cap[TYPE == "Sub-region" & YEAR %in% yrs9, .(RE = sum(VALUE[SRC != "Fossil"]), FF = sum(VALUE[SRC == "Fossil"])), by = .(LABEL, YEAR)]
+sr[, SHARE := RE / (RE + FF) * 100]
+sr <- sr[!is.na(SHARE)]
+ord <- sr[YEAR == 2023][order(SHARE), LABEL]
+sr[, LABEL := factor(LABEL, levels = ord)]
+sr[, tip := paste0(LABEL, " ", YEAR, "\nRenewable share: ", round(SHARE, 1), "%\nRenewable: ", round(RE / 1000, 1), " GW")]
+p9 <- ggplot(sr, aes(x = factor(YEAR), y = LABEL, fill = SHARE)) +
+  geom_tile_interactive(aes(tooltip = tip, data_id = paste(LABEL, YEAR)), colour = "white", linewidth = 0.6) +
+  geom_text(aes(label = round(SHARE)), size = 3, colour = "#1a1a2e") +
+  scale_fill_gradient(low = "#FFF3E0", high = "#1B5E20", name = "Renewable share (%)") +
+  labs(title = "Renewable share of installed capacity by sub-region", subtitle = "Percent of sub-region capacity; sorted by 2023 share",
+       x = "Year", y = NULL, caption = src_cap) +
+  theme_econ + theme(legend.position = "right")
+girafe(ggobj = p9, width_svg = 10, height_svg = 6, options = ggi_opts)
+```
+
+## Groups over time: renewable share of own capacity
+
+**Why.** Levels in 2023 do not show who is moving fastest. Share paths for the groups and for India show convergence or divergence.
+
+**How.** Renewable share is computed by group-year, then plotted with end-point labels.
+
+```{r p13, fig.width=9, fig.height=5.5}
+ent13 <- c("G20", "G7", "Advanced Economies", "Emerging Market and Developing Economies", "India", "China, People's Republic of")
+s13 <- cap[COUNTRY %in% ent13, .(RE = sum(VALUE[SRC != "Fossil"]), FF = sum(VALUE[SRC == "Fossil"])), by = .(LABEL, YEAR)]
+s13[, SHARE := RE / (RE + FF) * 100]
+s13[, tip := paste0(LABEL, " ", YEAR, ": ", round(SHARE, 1), "%")]
+e13 <- s13[YEAR == 2023][order(SHARE)]
+e13[, YL := SHARE]
+for (i in 2:nrow(e13)) set(e13, i = i, j = "YL", value = max(e13$SHARE[i], e13$YL[i - 1] + 2.1))
+pal13 <- c(G20 = "#795548", G7 = "#607D8B", `Advanced Econ.` = "#5C6BC0", EMDE = "#26A69A", India = "#E63946", China = "#2196F3")
+p13 <- ggplot(s13, aes(x = YEAR, y = SHARE, colour = LABEL, group = LABEL)) +
+  geom_line_interactive(aes(data_id = LABEL), linewidth = 1.1) +
+  geom_point_interactive(aes(tooltip = tip, data_id = LABEL), size = 1.5) +
+  geom_text(data = e13, aes(y = YL, label = paste0(LABEL, " ", round(SHARE), "%")), hjust = -0.08, size = 3.2, fontface = "bold", show.legend = FALSE) +
+  scale_colour_manual(values = pal13, name = NULL) +
+  scale_x_continuous(breaks = seq(2000, 2023, 4), limits = c(2000, 2029)) +
+  labs(title = "Renewable share of own installed capacity: groups versus India and China", subtitle = "Percent, 2000 to 2023",
+       x = "Year", y = "Renewable share (%)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p13, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+```
+
+# Statistical analysis
+
+## Descriptive statistics of the country distribution
+
+**Why.** Before any test, the shape of the distribution matters. Renewable capacity across countries is very uneven, so the mean, median and spread show how misleading an "average country" would be. The skewness coefficient and top-5 share quantify concentration.
+
+**How.** Country-level renewable capacity for 2023 is summarised in one `j` expression: mean, median, standard deviation, IQR, 90th percentile, skewness
+$$g_1=\frac{\tfrac1n\sum (x_i-\bar x)^3}{s^3},$$
+and the share of the five largest countries. India's percentile is the share of countries at or below India's value.
+
+```{r desc}
+d23 <- c23[GW > 0]
+d23[, .(countries = .N,
+        mean_GW = round(mean(GW), 2), median_GW = round(median(GW), 3), sd_GW = round(sd(GW), 2),
+        IQR_GW = round(IQR(GW), 3), p90_GW = round(quantile(GW, 0.9), 2), max_GW = round(max(GW), 1),
+        skewness = round(mean((GW - mean(GW))^3) / sd(GW)^3, 2),
+        top5_share_pct = round(sum(tail(sort(GW), 5)) / sum(GW) * 100, 1),
+        india_percentile = round(mean(GW <= GW[LABEL == "India"]) * 100, 1))]
+```
+
+```{r p11, fig.width=9, fig.height=5.5}
+b11 <- cap[TYPE == "Country" & YEAR == 2023 & VALUE > 0 & SRC != "Fossil"]
+b11[, GW := VALUE / 1000]
+i11 <- b11[LABEL == "India"]
+i11[, tip := paste0("India ", SRC, ": ", round(GW, 1), " GW")]
+p11 <- ggplot(b11, aes(x = SRC, y = GW, fill = SRC)) +
+  geom_boxplot(width = 0.55, alpha = 0.7, outlier.shape = 21, outlier.colour = "grey50") +
+  geom_point_interactive(data = i11, aes(tooltip = tip, data_id = SRC), colour = "#E63946", size = 4.5, shape = 18) +
+  geom_text(data = i11, aes(label = paste0("India ", round(GW, 1))), colour = "#E63946", hjust = -0.2, size = 3.1, fontface = "bold") +
+  scale_y_log10() +
+  scale_fill_manual(values = pal_src, guide = "none") +
+  labs(title = "Distribution of country capacity by source, 2023", subtitle = "Log scale; box = IQR; red diamond = India",
+       x = NULL, y = "Capacity (GW, log scale)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p11, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+```
+
+## Concentration: top-5 share, HHI and Gini by source
+
+**Why.** Concentration shows how dependent the world fleet is on a handful of countries. High values mean global outcomes hinge on a few policy decisions.
+
+**How.** For each source, country values are sorted and three measures are computed inside `j`: top-5 share, the Herfindahl-Hirschman index $\mathrm{HHI}=10^4\sum s_i^2$ with $s_i$ the country share, and the Gini coefficient
+$$G=\frac{\sum_{i=1}^n (2i-n-1)\,x_{(i)}}{n\sum x_{(i)}}.$$
+
+```{r concentration}
+cap[TYPE == "Country" & YEAR == 2023 & VALUE > 0, {
+  x <- sort(VALUE)
+  n <- length(x)
+  .(countries = n,
+    top5_share_pct = round(sum(tail(x, 5)) / sum(x) * 100, 1),
+    HHI = round(sum((x / sum(x))^2) * 1e4),
+    Gini = round(sum((2 * seq_len(n) - n - 1) * x) / (n * sum(x)), 3))
+}, by = SRC][order(-HHI)]
+```
+
+## Log-linear trend regression
+
+**Why.** A regression on log capacity gives the *average annual growth rate* with a measure of fit. Levels grow exponentially, so a straight-line fit on raw capacity would misstate growth.
+
+**How.** For each series, `lm(log(GW) ~ YEAR)` is fitted inside a `data.table` grouped call. The slope $b$ is converted to a growth rate $g=(e^{b}-1)\times100$, with $R^2$ and the slope's p-value.
+
+```{r trend}
+ts_dt <- rbind(
+  world_w[, .(SERIES = "World renewable", YEAR, GW = Renewable)],
+  world_w[, .(SERIES = "World fossil", YEAR, GW = Fossil)],
+  cty[LABEL == "India", .(SERIES = "India renewable", YEAR, GW)],
+  cty[LABEL == "China", .(SERIES = "China renewable", YEAR, GW)],
+  cty[LABEL == "USA", .(SERIES = "USA renewable", YEAR, GW)])
+ts_dt <- ts_dt[GW > 0]
+trend <- ts_dt[, {
+  m <- lm(log(GW) ~ YEAR)
+  s <- summary(m)$coefficients
+  .(growth_pct_per_year = round((exp(s["YEAR", 1]) - 1) * 100, 2), r_squared = round(summary(m)$r.squared, 3),
+    p_value = signif(s["YEAR", 4], 3), n_years = .N)
+}, by = SERIES]
+trend
+```
+
+```{r p14, fig.width=9, fig.height=5.5}
+t14 <- ts_dt[SERIES %in% c("World renewable", "World fossil", "India renewable")]
+t14[, tip := paste0(SERIES, " ", YEAR, ": ", round(GW, 1), " GW")]
+tl <- trend[SERIES %in% c("World renewable", "World fossil", "India renewable")]
+tl[, YPOS := fcase(SERIES == "World fossil", 12000, SERIES == "World renewable", 7500, default = 4700)]
+p14 <- ggplot(t14, aes(x = YEAR, y = GW, colour = SERIES)) +
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE, linewidth = 0.7, alpha = 0.15) +
+  geom_point_interactive(aes(tooltip = tip, data_id = paste(SERIES, YEAR)), size = 2) +
+  geom_text(data = tl, aes(x = 2000, y = YPOS, label = paste0(SERIES, ": ", growth_pct_per_year, "%/yr, R2 ", r_squared)),
+            inherit.aes = FALSE, hjust = 0, size = 3.2, fontface = "bold") +
+  scale_y_log10() +
+  scale_colour_manual(values = c("World renewable" = "#1565C0", "World fossil" = "#EF5350", "India renewable" = "#E63946"), name = NULL) +
+  labs(title = "Log-linear trends in installed capacity", subtitle = "Straight lines on a log axis = constant percentage growth",
+       x = "Year", y = "Capacity (GW, log scale)", caption = src_cap) +
+  theme_econ
+girafe(ggobj = p14, width_svg = 9, height_svg = 5.5, options = ggi_opts)
+```
+
+## Panel regression with country fixed effects
+
+**Why.** Country-by-country slopes can be noisy. A panel with country fixed effects estimates the *common* growth rate across the largest 30 renewable countries while removing permanent size differences between countries.
+
+**How.** `lm(log(GW) ~ YEAR + factor(country))` is fitted on the 30 largest countries from 2010 onward. The `YEAR` coefficient is the within-country growth rate. A second table ranks individual country growth rates so India's position is visible.
+
+```{r panel}
+top30 <- c23[order(RANK)][1:30, LABEL]
+pn <- cty[LABEL %in% top30 & YEAR >= 2010 & GW > 0]
+m_fe <- lm(log(GW) ~ YEAR + factor(LABEL), data = pn)
+sf <- summary(m_fe)$coefficients
+data.table(common_growth_pct = round((exp(sf["YEAR", 1]) - 1) * 100, 2), std_error = round(sf["YEAR", 2], 4),
+           t_value = round(sf["YEAR", 3], 1), p_value = signif(sf["YEAR", 4], 3),
+           r_squared = round(summary(m_fe)$r.squared, 3), observations = nobs(m_fe))
+
+gr <- pn[, {
+  m <- lm(log(GW) ~ YEAR)
+  .(growth_pct = round((exp(coef(m)[2]) - 1) * 100, 1), r2 = round(summary(m)$r.squared, 3))
+}, by = LABEL][order(-growth_pct)]
+gr[, RANK := .I]
+gr[RANK <= 8 | LABEL == "India"]
+```
+
+## Correlation: India solar versus wind
+
+**Why.** Do solar and wind move together because of shared policy, or are they substitutes? Both series trend upward, so a correlation in levels is inflated by the shared trend. Correlating *annual additions* removes the trend.
+
+**How.** Capacity is cast wide by year. `cor.test()` is run on levels and on first differences (annual additions in MW) so the two answers can be compared.
+
+```{r corr}
+isw <- dcast(cap[LABEL == "India" & SRC %in% c("Solar", "Wind")], YEAR ~ SRC, value.var = "VALUE")
+isw[, `:=`(D_SOLAR = Solar - shift(Solar), D_WIND = Wind - shift(Wind))]
+ct_lvl <- cor.test(isw$Solar, isw$Wind)
+ct_dif <- cor.test(isw$D_SOLAR, isw$D_WIND)
+data.table(basis = c("Levels (MW)", "Annual additions (MW)"),
+           pearson_r = round(c(ct_lvl$estimate, ct_dif$estimate), 3),
+           p_value = signif(c(ct_lvl$p.value, ct_dif$p.value), 3),
+           n = c(ct_lvl$parameter + 2, ct_dif$parameter + 2))
+```
+
+## Normality of the country distribution
+
+**Why.** Many tests (t-test, ANOVA) assume roughly normal data. If the raw distribution is strongly skewed, a log transform or a rank-based test is needed.
+
+**How.** The Shapiro-Wilk statistic $W$ is computed on raw and on $\log_{10}$ country renewable capacity. $W$ near 1 means close to normal, and a small p-value rejects normality.
+
+```{r normality}
+sh_raw <- shapiro.test(d23$GW)
+sh_log <- shapiro.test(log10(d23$GW))
+data.table(scale = c("Raw GW", "log10 GW"), W = round(c(sh_raw$statistic, sh_log$statistic), 4),
+           p_value = signif(c(sh_raw$p.value, sh_log$p.value), 3), n = nrow(d23))
+```
+
+## Hypothesis test: do emerging economies grow renewables faster than advanced ones?
+
+**Why.** The development divide is central to energy policy. A paired test asks whether, year by year, the emerging group's capacity growth differs from the advanced group's.
+
+**How.** Annual percentage growth of renewable capacity is computed per group, cast wide by year, and compared with a paired t-test and the rank-based Wilcoxon signed-rank test. Pairing by year removes global shocks common to both groups. Annual growth rates are serially correlated, so p-values are indicative rather than exact.
+
+```{r hypothesis}
+gg <- cap[COUNTRY %in% c("Advanced Economies", "Emerging Market and Developing Economies") & SRC != "Fossil",
+          .(GW = sum(VALUE) / 1000), by = .(LABEL, YEAR)][order(LABEL, YEAR)]
+gg[, YOY := (GW / shift(GW) - 1) * 100, by = LABEL]
+gw <- dcast(gg[!is.na(YOY)], YEAR ~ LABEL, value.var = "YOY")
+setnames(gw, c("Advanced Econ.", "EMDE"), c("AE", "EMDE"))
+tt <- t.test(gw$EMDE, gw$AE, paired = TRUE)
+wt <- wilcox.test(gw$EMDE, gw$AE, paired = TRUE, exact = FALSE)
+gw[, .(mean_yoy_AE_pct = round(mean(AE), 2), mean_yoy_EMDE_pct = round(mean(EMDE), 2), years = .N)]
+data.table(test = c("Paired t-test", "Wilcoxon signed-rank"),
+           statistic = round(c(tt$statistic, wt$statistic), 2), p_value = signif(c(tt$p.value, wt$p.value), 3))
+```
+
+## ANOVA: do world growth rates differ by technology?
+
+**Why.** If solar, wind, hydro and bioenergy grew at the same pace, technology would not matter for planning. ANOVA tests whether mean annual growth differs by source.
+
+**How.** World annual growth per source is computed with `shift()`, then `aov(YOY ~ source)` gives the F test, and the rank-based Kruskal-Wallis test confirms it without normality assumptions.
+
+```{r anova}
+wy <- world[SRC != "Fossil"][order(SRC, YEAR)]
+wy[, YOY := (GW / shift(GW) - 1) * 100, by = SRC]
+wy <- wy[!is.na(YOY)]
+wy[, .(mean_yoy_pct = round(mean(YOY), 1), sd_pct = round(sd(YOY), 1), years = .N), by = SRC][order(-mean_yoy_pct)]
+av <- summary(aov(YOY ~ SRC, data = wy))[[1]]
+kw <- kruskal.test(YOY ~ factor(SRC), data = wy)
+data.table(test = c("One-way ANOVA", "Kruskal-Wallis"),
+           statistic = round(c(av[1, "F value"], kw$statistic), 2),
+           p_value = signif(c(av[1, "Pr(>F)"], kw$p.value), 3))
+```
+
+# Key findings
+
+```{r findings-vars, include=FALSE}
+k_re   <- world_w[YEAR == 2023, Renewable]
+k_ff   <- world_w[YEAR == 2023, Fossil]
+k_sh23 <- world_w[YEAR == 2023, RE_SHARE]
+k_sh00 <- world_w[YEAR == 2000, RE_SHARE]
+k_mult <- world_w[YEAR == 2023, Renewable] / world_w[YEAR == 2000, Renewable]
+k_ind  <- c23[LABEL == "India"]
+k_top3 <- c23[order(RANK)][1:3, LABEL]
+k_top3s <- sum(c23[RANK <= 3, SHARE_WORLD])
+k_cg   <- cg[LABEL == "India"]
+k_tr_w <- trend[SERIES == "World renewable", growth_pct_per_year]
+k_tr_f <- trend[SERIES == "World fossil", growth_pct_per_year]
+k_tr_i <- trend[SERIES == "India renewable", growth_pct_per_year]
+k_naive <- naive$all_rows_GW / true_world$world_GW
+k_inv  <- inv_cmp[YEAR == max(YEAR)]
+k_sw_l <- ct_lvl$estimate
+k_sw_d <- ct_dif$estimate
+k_sw_p <- ct_dif$p.value
+k_aeg  <- gw[, mean(AE)]
+k_emg  <- gw[, mean(EMDE)]
+k_p_t  <- tt$p.value
+k_ae_sh <- ag[LABEL == "Advanced Econ.", RE_SHARE_OWN]
+k_em_sh <- ag[LABEL == "EMDE", RE_SHARE_OWN]
+k_em_w  <- ag[LABEL == "EMDE", SHARE_WORLD_RE]
+k_g20_w <- ag[LABEL == "G20", SHARE_WORLD_RE]
+k_g7_w  <- ag[LABEL == "G7", SHARE_WORLD_RE]
+```
+
+* **Reconciled world.** Regions and the Advanced plus Emerging groups agree exactly. World renewable capacity in 2023 is about `r round(k_re)` GW against `r round(k_ff)` GW of fossil capacity. Summing every row without removing aggregates overstates the world renewable fleet about `r round(k_naive, 1)` times.
+* **Growth.** World renewable capacity grew about `r round(k_mult, 1)` times from 2000 to 2023, a log-linear rate near `r k_tr_w`% a year, against `r k_tr_f`% for fossil. The renewable share of capacity moved from `r round(k_sh00, 1)`% to `r round(k_sh23, 1)`%.
+* **Global powers.** The top three countries (`r paste(k_top3, collapse = ", ")`) hold `r round(k_top3s)`% of world renewable capacity.
+* **India.** India ranks `r k_ind$RANK` of `r nrow(c23)` countries with `r round(k_ind$GW, 1)` GW, `r round(k_ind$SHARE_WORLD, 1)`% of the world fleet. Its 2010 to 2023 CAGR is `r round(k_cg$CAGR_pct, 1)`% (rank `r k_cg$CAGR_RANK` among the 20 largest), and its log-linear trend is `r k_tr_i`% a year.
+* **Investment.** India's public renewable investment in the latest year is `r format(k_inv$INDIA, scientific = FALSE, digits = 2)`% of GDP against a median of `r format(k_inv$MEDIAN, scientific = FALSE, digits = 2)`% among the `r k_inv$REPORTING` countries that report a positive value.
+* **Groups and regions.** Emerging and Developing Economies own `r round(k_em_w)`% of world renewable capacity and Advanced Economies the rest. The G20 holds `r round(k_g20_w)`% and the G7 `r round(k_g7_w)`%. The renewable share of each group's own capacity is similar (`r round(k_ae_sh, 1)`% advanced, `r round(k_em_sh, 1)`% emerging), but emerging economies grow renewables faster: `r round(k_emg, 1)`% a year against `r round(k_aeg, 1)`% (paired t-test p = `r format(k_p_t, digits = 2)`). Europe has the highest renewable share among regions and Africa the lowest.
+* **Statistics.** Country capacity is extremely skewed (skewness above 12) and non-normal, so log transforms and rank-based tests are used. India's solar and wind capacity correlate at r = `r round(k_sw_l, 2)` in levels, but only r = `r round(k_sw_d, 2)` (p = `r format(k_sw_p, digits = 2)`) in annual additions, so most of the apparent co-movement is the shared upward trend. Technologies differ significantly in growth: solar averaged the fastest annual growth, hydro the slowest.
+
+# Limitations
+
+* Capacity covers four renewable sources plus fossil fuels. Geothermal, marine and pumped storage are not in the capacity indicator, so renewable capacity is slightly understated.
+* Hong Kong, Taiwan and small territories are listed as separate economies, as in the source file.
+* Annual growth series are serially correlated, so p-values from tests on yearly rates are indicative.
+* Interactive ggiraph output needs HTML. PDF or Word export keeps tables and code but not the hover behaviour.
